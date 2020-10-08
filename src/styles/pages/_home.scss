@@ -1,0 +1,46 @@
+// WebGL Specific Styles
+body {
+  margin: 0;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#fps {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  width: 85px;
+  height: 80px;
+  font-size: 20pt;
+  font-weight: bold;
+  color: #999;
+  z-index: 1;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#inline-interactive {
+  height: 11px;
+  width: 11px;
+  margin: 0 0.25rem;
+  content: url('../../assets/interactiveContent.svg');
+}
+
+#interactive-icon {
+  top: calc(30% - 38px);
+}
+
+.tutorial-icon {
+  max-width: 150px;
+  height: auto;
+}

@@ -1,0 +1,57 @@
+type User @model(subscriptions: null) @key(name: "ByEmail", fields: ["email"], queryField: "userByEmail") {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String
+  company: String
+  companySize: String
+  companyAddress1: String
+  companyCity: String
+  companyState: String
+  companyPostalCode: String
+  avatar: String
+  title: String
+  conversations: [ConvoLink] @connection(keyName: "byConvoUser", fields: ["id"])
+  messages: [Message] @connection(keyName: "byAuthor", fields: ["id"])
+}
+
+type Conversation @model(subscriptions: null) {
+  id: ID!
+  name: String!
+  members: [String!]!
+  messages: [Message] @connection(keyName: "byConversationByDate", fields: ["id"])
+  associated: [ConvoLink] @connection(keyName: "byUserConvo", fields: ["id"])
+}
+
+type Message
+  @model(subscriptions: null, queries: null)
+  @key(name: "byAuthor", fields: ["authorId", "id"], queryField: "messageByAuthor")
+  @key(name: "byAuthorByDate", fields: ["authorId", "createdAt"], queryField: "messageByAuthorByDate")
+  @key(name: "byConversation", fields: ["conversationId", "id"], queryField: "messageByConversation")
+  @key(name: "byConversationByDate", fields: ["conversationId", "createdAt"], queryField: "messageByConversationDate") {
+  id: ID!
+  content: String!
+  authorId: ID!
+  conversationId: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type ConvoLink
+  @model(mutations: { create: "createConvoLink", update: "updateConvoLink" }, queries: null, subscriptions: null)
+  @key(name: "byConvoUser", fields: ["userId", "conversationId"])
+  @key(name: "byUserConvo", fields: ["conversationId", "userId"]) {
+  id: ID!
+  userId: ID!
+  conversationId: ID!
+  user: User! @connection(fields: ["userId"])
+  conversation: Conversation! @connection(fields: ["conversationId"])
+}
+
+type Subscription {
+  onCreateConvoLink(convoLinkUserId: ID!): ConvoLink @aws_subscribe(mutations: ["createConvoLink"])
+  onCreateMessage(conversationId: ID!): Message @aws_subscribe(mutations: ["createMessage"])
+  onCreateGlobalMessage: Message @aws_subscribe(mutations: ["createMessage"])
+  onCreateUser: User @aws_subscribe(mutations: ["createUser"])
+}

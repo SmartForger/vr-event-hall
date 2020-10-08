@@ -1,0 +1,204 @@
+.sign-in {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  z-index: 1;
+
+  .spacer {
+    display: none;
+    @media screen and (min-width: 769px) {
+      display: flex;
+      flex: 1;
+    }
+  }
+}
+
+#loadingpage {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  background-color: black;
+  z-index: 3;
+
+  svg {
+    height: auto;
+    width: 175px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .MuiCircularProgress-root {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    top: calc(50% - 150px);
+    left: calc(50% - 150px);
+
+    svg {
+      height: 100%;
+      width: 100%;
+      color: #fff;
+    }
+  }
+}
+
+.login {
+  color: $black;
+  flex: 1;
+  padding: 0 10%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background: white;
+  z-index: 1;
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 0;
+    z-index: 1;
+    @media screen and (min-width: 769px) {
+      margin-top: 1rem;
+    }
+
+    small {
+      font-weight: normal;
+      font-size: 0.9rem;
+    }
+  }
+
+  .logo {
+    margin-left: -25px;
+    //position: absolute;
+    top: 8px;
+    @media screen and (min-width: 769px) {
+      top: 32px;
+    }
+  }
+
+  .input {
+    color: $black;
+    margin-bottom: 16px;
+    outline: none !important;
+
+    ::placeholder {
+      color: $black;
+    }
+
+    div {
+      outline: none !important;
+
+      &:hover,
+      &.Mui-focused {
+        fieldset {
+          border-color: lightgray;
+        }
+      }
+    }
+
+    input {
+      outline: none !important;
+      color: $black;
+    }
+
+    fieldset {
+      border-color: lightgray;
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 32px;
+
+    &.title-box {
+      margin-top: 0;
+    }
+
+    @media screen and (min-width: 769px) {
+      margin-top: 0;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    a {
+      font-size: 0.85rem;
+      text-decoration: underline;
+      cursor: pointer;
+
+      &.sign-up {
+        margin-left: 4px;
+      }
+    }
+
+    p {
+      font-size: 0.85rem;
+    }
+  }
+
+  .button {
+    width: 80%;
+    padding: 10px 16px;
+    margin-bottom: 32px;
+    font-size: 0.85rem;
+    @media screen and (min-width: 769px) {
+      width: 30%;
+      margin-bottom: 0;
+    }
+  }
+
+  .message {
+    margin-bottom: 1rem;
+  }
+}
+
+.drag-drop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80px;
+  background: #eee;
+  margin-bottom: 16px;
+
+  span {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.bg-img {
+  background-size: cover;
+  background-position: center;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  @media screen and (min-width: 769px) {
+    background-image: url('../../assets/welcome-bg.png');
+    flex: 1;
+    .bg-img-overlay {
+      height: 100%;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+div[data-test='authenticator-error'] {
+  color: red !important;
+  position: fixed;
+  top: 0;
+  left: 8px;
+  padding: 16px 8px;
+  z-index: 99;
+}

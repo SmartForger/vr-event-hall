@@ -1,0 +1,63 @@
+/**
+ * Only put classes that are one liners here
+ */
+
+// Text Alignment
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-center {
+  text-align: center;
+}
+
+// Positioning
+.position-relative {
+  position: relative !important;
+}
+.position-absolute {
+  position: absolute !important;
+}
+
+// Cursors
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+// Flexbox
+.d-flex {
+  display: flex;
+}
+.justify-content-center {
+  justify-content: center;
+}
+.align-items-center {
+  align-items: center;
+}
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+// Display
+.d-inline {
+  display: inline;
+}
+.d-inline-block {
+  display: inline-block;
+}
+.d-block {
+  display: block;
+}
+
+.user-avatar {
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+  display: inline-block;
+}

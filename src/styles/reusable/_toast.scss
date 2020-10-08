@@ -1,0 +1,22 @@
+.Toastify__toast {
+}
+.Toastify__toast--default {
+  background: $white;
+  color: $black;
+}
+.Toastify__toast--info {
+  background: $cool-teal;
+  color: $black;
+}
+.Toastify__toast--success {
+  background: $blurple;
+  color: $white;
+}
+.Toastify__toast--warning {
+  background: orange;
+  color: $white;
+}
+.Toastify__toast--error {
+  background: $radical-pink;
+  color: $white;
+}

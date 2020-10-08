@@ -1,0 +1,11 @@
+{
+    "AppSyncApiName": "5genterprise",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "auth5genterprise8b56ce08",
+            "Outputs.UserPoolId"
+        ]
+    }
+}
