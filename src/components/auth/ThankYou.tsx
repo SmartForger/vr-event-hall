@@ -26,11 +26,8 @@ export const ThankYou: FC<ThankYouProps> = () => {
       </Grid>
       <Grid item container spacing={1}>
         <Grid item xs={12} sm={6}>
-          <PillButton
-            className={classes.button}
-            backgroundColor='transparent'
-            href='https://www.verizon.com/business/virtual-events/thrive-mobile-technology-event/'
-          >
+          {/* TODO: What is the URL for the event? */}
+          <PillButton className={classes.button} backgroundColor='transparent' href=''>
             Event Info
           </PillButton>
         </Grid>

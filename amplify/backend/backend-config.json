@@ -1,27 +1,28 @@
 {
-  "auth": {
-    "5genterprise8b56ce08": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [],
-      "customAuth": false
-    }
-  },
-  "api": {
-    "5genterprise": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
-      "output": {
-        "authConfig": {
-          "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "auth5genterprise8b56ce08"
-            }
-          },
-          "additionalAuthenticationProviders": []
-        }
-      }
-    }
+	"auth": {
+	  "5genterprise8b56ce08": {
+		"service": "Cognito",
+		"providerPlugin": "awscloudformation",
+		"dependsOn": [],
+		"customAuth": false
+	  }
+	},
+	"api": {
+	  "5genterprise": {
+		"service": "AppSync",
+		"providerPlugin": "awscloudformation",
+		"output": {
+		  "authConfig": {
+			"defaultAuthentication": {
+			  "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+			  "userPoolConfig": {
+				"userPoolId": "auth5genterprise8b56ce08"
+			  }
+			},
+			"additionalAuthenticationProviders": []
+		  }
+		}
+	  }
+	}
   }
-}
+  
