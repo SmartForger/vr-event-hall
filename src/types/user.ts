@@ -13,11 +13,8 @@ export interface IUser {
   conversations?: object[]
   messages?: object[]
   status?: string
-  companySize?: string
-  companyAddress1?: string
-  companyCity?: string
-  companyState?: string
-  companyPostalCode?: string
+  street?: string
+  postalCode?: string
   createdAt?: string
   updatedAt?: string
 }

@@ -1,3 +1,5 @@
+import { StringDictionary } from 'babylonjs'
+
 export interface IDictionary {
   [key: string]: {
     [key: string]: string
@@ -57,10 +59,6 @@ export interface IPasswordReqDict {
 export interface IRegistrationDict {
   avatarInstructions: string
   city: string
-  company: string
-  companyAddress: string
-  companyName: string
-  companySize: string
   completeRegistration: string
   country: string
   dropImage: string
@@ -68,6 +66,8 @@ export interface IRegistrationDict {
   employeeRange2: string
   employeeRange3: string
   joinUs: string
+  mailingAddress: string
+  mailingAddressReason: string
   phoneNumber: string
   selectedImage: string
   state: string

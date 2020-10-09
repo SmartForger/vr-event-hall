@@ -32,12 +32,10 @@ interface IRegErrors {
   lastName: string
   phoneNumber: string
   title: string
-  company: string
-  companySize: string
-  companyAddress1: string
-  companyCity: string
-  companyState: string
-  companyPostalCode: string
+  addressStreet: string
+  addressCity: string
+  addressState: string
+  addressPostalCode: string
 }
 export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, setUser }) => {
   const classes = useStyles()
@@ -48,24 +46,20 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     email: userEmail,
     phoneNumber: '',
     title: '',
-    company: '',
-    companySize: '',
-    companyAddress1: '',
-    companyCity: '',
-    companyState: '',
-    companyPostalCode: ''
+    street: '',
+    city: '',
+    state: '',
+    postalCode: ''
   }
   const initialErrors: IRegErrors = {
     firstName: '',
     lastName: '',
     phoneNumber: '',
     title: '',
-    company: '',
-    companySize: '',
-    companyAddress1: '',
-    companyCity: '',
-    companyState: '',
-    companyPostalCode: ''
+    addressStreet: '',
+    addressCity: '',
+    addressState: '',
+    addressPostalCode: ''
   }
   const [userInfo, setUserInfo] = useState<IUser>(initialUser)
   const [loading, setLoading] = useState<boolean>(false)
@@ -125,14 +119,12 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         ? I18n.get('invalidPhone')
         : '',
       title: !userInfo.title ? I18n.get('requiredField') : '',
-      company: !userInfo.company ? I18n.get('requiredField') : '',
-      companySize: !userInfo.companySize ? I18n.get('requiredField') : '',
-      companyAddress1: !userInfo.companyAddress1 ? I18n.get('requiredField') : '',
-      companyCity: !userInfo.companyCity ? I18n.get('requiredField') : '',
-      companyState: !userInfo.companyState ? I18n.get('requiredField') : '',
-      companyPostalCode: !userInfo.companyPostalCode
+      addressStreet: !userInfo.street ? I18n.get('requiredField') : '',
+      addressCity: !userInfo.city ? I18n.get('requiredField') : '',
+      addressState: !userInfo.state ? I18n.get('requiredField') : '',
+      addressPostalCode: !userInfo.postalCode
         ? I18n.get('requiredField')
-        : !validateZip(userInfo.companyPostalCode as string)
+        : !validateZip(userInfo.postalCode as string)
         ? I18n.get('invalidZip')
         : ''
     }
@@ -246,55 +238,24 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <TextField
-            variant='outlined'
-            label={I18n.get('companyName')}
-            error={!!errors.company}
-            helperText={errors.company}
-            onFocus={() => setErrors({ ...errors, company: '' })}
-            fullWidth
-            className={classes.input}
-            type='text'
-            name='company'
-            required
-            onChange={handleChange}
-            onKeyPress={handleKeyPress}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth variant='outlined' className={classes.input} required error={!!errors.companySize}>
-            <InputLabel id='company-size-input'>{I18n.get('companySize')}</InputLabel>
-            <Select
-              labelId='company-size-input'
-              fullWidth
-              value={userInfo.companySize}
-              label={I18n.get('companySize')}
-              onFocus={() => setErrors({ ...errors, companySize: '' })}
-              onChange={(e: React.ChangeEvent<{ value: unknown }>) =>
-                setUserInfo({ ...userInfo, companySize: e.target.value as string })
-              }
-            >
-              <MenuItem value='0-49'>{I18n.get('employeeRange1')}</MenuItem>
-              <MenuItem value='49-499'>{I18n.get('employeeRange2')}</MenuItem>
-              <MenuItem value='500+'>{I18n.get('employeeRange3')}</MenuItem>
-            </Select>
-            {!!errors.companySize && <FormHelperText>{errors.companySize}</FormHelperText>}
-          </FormControl>
+        <Grid item xs={12}>
+          <Typography variant='h5'>{I18n.get('mailingAddress')}</Typography>
+          <Typography variant='body1' paragraph>
+            {I18n.get('mailingAddressReason')}
+          </Typography>
         </Grid>
 
         <Grid item xs={12}>
           <TextField
             variant='outlined'
-            label={I18n.get('companyAddress')}
-            error={!!errors.companyAddress1}
-            helperText={errors.companyAddress1}
-            onFocus={() => setErrors({ ...errors, companyAddress1: '' })}
+            label={I18n.get('mailingAddress')}
+            error={!!errors.addressStreet}
+            helperText={errors.addressStreet}
+            onFocus={() => setErrors({ ...errors, addressStreet: '' })}
             fullWidth
             className={classes.input}
             type='text'
-            name='companyAddress1'
+            name='street'
             required
             onChange={handleChange}
             onKeyPress={handleKeyPress}
@@ -305,13 +266,13 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           <TextField
             variant='outlined'
             label={I18n.get('city')}
-            error={!!errors.companyCity}
-            helperText={errors.companyCity}
-            onFocus={() => setErrors({ ...errors, companyCity: '' })}
+            error={!!errors.addressCity}
+            helperText={errors.addressCity}
+            onFocus={() => setErrors({ ...errors, addressCity: '' })}
             fullWidth
             className={classes.input}
             type='text'
-            name='companyCity'
+            name='city'
             required
             onChange={handleChange}
             onKeyPress={handleKeyPress}
@@ -327,16 +288,16 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             filterOptions={createFilterOptions({ matchFrom: 'start', stringify: option => option.label })}
             getOptionLabel={option => option.value}
             onChange={(_: any, newValue: IOption | null) =>
-              setUserInfo({ ...userInfo, companyState: newValue ? newValue.value : '' })
+              setUserInfo({ ...userInfo, state: newValue ? newValue.value : '' })
             }
             renderOption={option => option.label}
             renderInput={params => (
               <TextField
                 {...params}
                 className={classes.input}
-                error={!!errors.companyState}
-                helperText={errors.companyState}
-                onFocus={() => setErrors({ ...errors, companyState: '' })}
+                error={!!errors.addressState}
+                helperText={errors.addressState}
+                onFocus={() => setErrors({ ...errors, addressState: '' })}
                 required
                 fullWidth
                 label={I18n.get('state')}
@@ -350,13 +311,13 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           <TextField
             variant='outlined'
             label={I18n.get('zip')}
-            error={!!errors.companyPostalCode}
-            helperText={errors.companyPostalCode}
-            onFocus={() => setErrors({ ...errors, companyPostalCode: '' })}
+            error={!!errors.addressPostalCode}
+            helperText={errors.addressPostalCode}
+            onFocus={() => setErrors({ ...errors, addressPostalCode: '' })}
             fullWidth
             className={classes.input}
             type='text'
-            name='companyPostalCode'
+            name='postalCode'
             required
             onChange={handleChange}
             onKeyPress={handleKeyPress}
