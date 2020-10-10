@@ -56,6 +56,20 @@ export interface IPasswordReqDict {
   passwordReqSymbol: string
 }
 
+export interface IBreakoutSession {
+  id: string
+  name: string
+  presenter: string
+  description: string
+}
+export interface IBreakoutDict {
+  registerForABreakout: string
+  reserverYourBreakoutBlurb: string
+  breakoutSession: string
+  // breakouts: IBreakoutSession[]
+  finish: string
+  skip: string
+}
 export interface IRegistrationDict {
   avatarInstructions: string
   city: string
@@ -72,6 +86,10 @@ export interface IRegistrationDict {
   selectedImage: string
   state: string
   titlePosition: string
+  aboutYourCompany: string
+  companySize: string
+  companyAddress: string
+  companyName: string
   youreIn: string
   zip: string
 }

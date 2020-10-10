@@ -1,4 +1,4 @@
-import { ICommonDict, IErrorDict, IPasswordReqDict, IRegistrationDict } from 'types'
+import { ICommonDict, IErrorDict, IPasswordReqDict, IBreakoutDict, IRegistrationDict } from 'types'
 
 const common: ICommonDict = {
   alreadyHaveAnAccount: 'Already have an account?',
@@ -39,12 +39,33 @@ const registration: IRegistrationDict = {
   joinUs: 'Join us for 5G<br /> Innovation Sessions',
   mailingAddress: 'Mailing address',
   mailingAddressReason: 'To receive a special program package, subject to availability while supplies last.',
+  companyAddress: 'Organization address',
+  companyName: 'Organization Name',
   phoneNumber: 'Phone Number',
   selectedImage: 'Selected image: ',
   state: 'State',
+  aboutYourCompany: 'About your organization',
+  companySize: 'Organization Size',
   titlePosition: 'Title / Position',
   youreIn: "Congrats, You're In!",
   zip: 'Postal Code'
+}
+
+const breakout: IBreakoutDict = {
+  registerForABreakout: 'Register for a breakout session',
+  reserverYourBreakoutBlurb:
+    'Following our hour-long discussion we’ll be featuring several breakout sessions in the heathcare, financial, manufacturing, retail, and media industries. Capacity is limited to 200 attendees each. Please make your selection to save your spot!',
+  breakoutSession: 'Breakout session',
+  // breakouts: [
+  //   {
+  //     id: 'financial-services',
+  //     name: 'Financial Services',
+  //     presenter: 'Presenter: TBD',
+  //     description: 'Short Description TBD'
+  //   }
+  // ],
+  finish: 'Finish',
+  skip: 'Skip'
 }
 
 const passwordRequirements: IPasswordReqDict = {
@@ -70,4 +91,4 @@ const errors: IErrorDict = {
   requiredField: 'Required Field'
 }
 
-export const en = { ...common, ...passwordRequirements, ...errors, ...registration }
+export const en = { ...common, ...passwordRequirements, ...errors, ...registration, ...breakout }
