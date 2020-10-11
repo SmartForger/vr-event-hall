@@ -57,7 +57,7 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
       <Grid item container spacing={2} justify='center'>
         <Grid item xs={12}>
           <FormControl fullWidth variant='outlined' className={classes.input}>
-            <InputLabel id='company-size-input'>{I18n.get('breakoutSession')}</InputLabel>
+            <InputLabel id='breakout-session-input'>{I18n.get('breakoutSession')}</InputLabel>
             <Select
               labelId='breakout-session-id'
               fullWidth
@@ -65,9 +65,8 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
               label={I18n.get('breakoutSession')}
               onChange={(e: React.ChangeEvent<{ value: unknown }>) => setSelectedBreakout(e.target.value as string)}
             >
-              {/* {I18n.get('breakouts').map((sessionDetails: IBreakoutSession, index: number) => (
-                <MenuItem key={index} value={sessionDetails.id}>{sessionDetails.name}</MenuItem>
-              ))} */}
+              <MenuItem value={I18n.get('breakoutSession1Id')}>{I18n.get('breakoutSession1Name')}</MenuItem>
+              <MenuItem value={I18n.get('breakoutSession2Id')}>{I18n.get('breakoutSession2Name')}</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -75,39 +74,58 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
 
       {/* session details blurb */}
       <Grid item container alignItems='center'>
-        {/* {I18n.get('breakouts').map((breakoutDetails: IBreakoutSession) => {
-          return (
-            <>
-              {selectedBreakout === breakoutDetails.id ?
-                <>
-                  <Typography component='h5' paragraph>
-                    {breakoutDetails.presenter}
-                  </Typography>
-                  <Typography component='p' paragraph>
-                    {breakoutDetails.description}
-                  </Typography>
-                </>
-              : null }
-            </>
-          );
-        })} */}
+        {selectedBreakout === I18n.get('breakoutSession1Id') ? (
+          <>
+            <Grid item xs={12}>
+              <Typography variant='h5' paragraph>
+                {I18n.get('breakoutSession1Presenter')}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography component='p' paragraph>
+                {I18n.get('breakoutSession1Description')}
+              </Typography>
+            </Grid>
+          </>
+        ) : null}
+        {selectedBreakout === I18n.get('breakoutSession2Id') ? (
+          <>
+            <Grid item xs={12}>
+              <Typography variant='h5' paragraph>
+                {I18n.get('breakoutSession2Presenter')}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography component='p' paragraph>
+                {I18n.get('breakoutSession2Description')}
+              </Typography>
+            </Grid>
+          </>
+        ) : null}
       </Grid>
-
-      <Grid item container xs={12} sm={6}>
-        <PillButton loading={loading} type='submit' onClick={() => reserveBreakout()} className={classes.button}>
-          {I18n.get('finish')}
-        </PillButton>
-      </Grid>
-      <Grid item container xs={12} sm={6}>
-        <PillButton
-          loading={loading}
-          type='submit'
-          onClick={() => setAuthState(AuthFlowSteps.ThankYou)}
-          backgroundColor='transparent'
-          className={classes.button}
-        >
-          {I18n.get('skip')}
-        </PillButton>
+      <Grid container>
+        <Grid item xs={12} sm={6}>
+          <PillButton
+            loading={loading}
+            type='submit'
+            onClick={() => reserveBreakout()}
+            solid
+            className={classes.button}
+          >
+            {I18n.get('finish')}
+          </PillButton>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <PillButton
+            loading={loading}
+            type='submit'
+            onClick={() => setAuthState(AuthFlowSteps.ThankYou)}
+            backgroundColor='transparent'
+            className={classes.button}
+          >
+            {I18n.get('skip')}
+          </PillButton>
+        </Grid>
       </Grid>
     </Grid>
   )

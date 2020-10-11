@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { I18n, Auth } from 'aws-amplify'
 import { makeStyles, Theme, Grid, Typography } from '@material-ui/core'
 
 import { PillButton } from 'components'
@@ -12,23 +13,29 @@ export const ThankYou: FC<ThankYouProps> = () => {
     <Grid container direction='column' justify='center' spacing={2}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
-          We look forward to seeing you!
+          {I18n.get('lookForwardToSeeingYou')}
         </Typography>
       </Grid>
       <Grid item>
         <Typography component='p' paragraph>
-          Your registration is complete! We look forward to seeing you at the GSMA Thrive on October 27–29, 2020.
+          {I18n.get('registrationCompleteBlurb')}
         </Typography>
 
         <Typography component='p' paragraph>
-          Please check your email for the registration confirmation and for updates as the event approaches.
+          {I18n.get('stayTuned')}
         </Typography>
       </Grid>
       <Grid item container spacing={1}>
         <Grid item xs={12} sm={6}>
+          {/* TODO: What is the URL for the verizon hub */}
+          <PillButton className={classes.button} solid href=''>
+            {I18n.get('verizonHub')}
+          </PillButton>
+        </Grid>
+        <Grid item xs={12} sm={6}>
           {/* TODO: What is the URL for the event? */}
           <PillButton className={classes.button} backgroundColor='transparent' href=''>
-            Event Info
+            {I18n.get('eventInfo')}
           </PillButton>
         </Grid>
       </Grid>

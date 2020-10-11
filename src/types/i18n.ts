@@ -66,7 +66,14 @@ export interface IBreakoutDict {
   registerForABreakout: string
   reserverYourBreakoutBlurb: string
   breakoutSession: string
-  // breakouts: IBreakoutSession[]
+  breakoutSession1Id: string
+  breakoutSession1Name: string
+  breakoutSession1Presenter: string
+  breakoutSession1Description: string
+  breakoutSession2Id: string
+  breakoutSession2Name: string
+  breakoutSession2Presenter: string
+  breakoutSession2Description: string
   finish: string
   skip: string
 }
@@ -92,4 +99,12 @@ export interface IRegistrationDict {
   companyName: string
   youreIn: string
   zip: string
+}
+
+export interface IThankYouDict {
+  lookForwardToSeeingYou: string
+  registrationCompleteBlurb: string
+  stayTuned: string
+  eventInfo: string
+  verizonHub: string
 }

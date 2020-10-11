@@ -1,4 +1,4 @@
-import { ICommonDict, IErrorDict, IPasswordReqDict, IBreakoutDict, IRegistrationDict } from 'types'
+import { ICommonDict, IErrorDict, IPasswordReqDict, IBreakoutDict, IThankYouDict, IRegistrationDict } from 'types'
 
 const common: ICommonDict = {
   alreadyHaveAnAccount: 'Already have an account?',
@@ -56,14 +56,14 @@ const breakout: IBreakoutDict = {
   reserverYourBreakoutBlurb:
     'Following our hour-long discussion we’ll be featuring several breakout sessions in the heathcare, financial, manufacturing, retail, and media industries. Capacity is limited to 200 attendees each. Please make your selection to save your spot!',
   breakoutSession: 'Breakout session',
-  // breakouts: [
-  //   {
-  //     id: 'financial-services',
-  //     name: 'Financial Services',
-  //     presenter: 'Presenter: TBD',
-  //     description: 'Short Description TBD'
-  //   }
-  // ],
+  breakoutSession1Id: 'financial-services',
+  breakoutSession1Name: 'Financial Services',
+  breakoutSession1Presenter: 'Presenter: TBD',
+  breakoutSession1Description: 'Financial Services Short Description (TBD)',
+  breakoutSession2Id: 'TBD-session',
+  breakoutSession2Name: 'Second Session TBD',
+  breakoutSession2Presenter: 'Presenter: TBD',
+  breakoutSession2Description: 'Second Session Short Description (TBD)',
   finish: 'Finish',
   skip: 'Skip'
 }
@@ -75,6 +75,15 @@ const passwordRequirements: IPasswordReqDict = {
   passwordReqLowerCase: 'Must contain at least one lower-case letter',
   passwordReqNumber: 'Must contain at least one number',
   passwordReqSymbol: 'Must contain at least one special character'
+}
+
+const thankYou: IThankYouDict = {
+  lookForwardToSeeingYou: 'We look forward to seeing you!',
+  registrationCompleteBlurb:
+    'Your registration is complete! We look forward to seeing you at the 5G Innovation Sessions on November 12, 2020.',
+  stayTuned: ' Please check your email for the registration confirmation and for updates as the event approaches.',
+  eventInfo: 'Event Info',
+  verizonHub: 'Verizon Hub'
 }
 
 const errors: IErrorDict = {
@@ -91,4 +100,4 @@ const errors: IErrorDict = {
   requiredField: 'Required Field'
 }
 
-export const en = { ...common, ...passwordRequirements, ...errors, ...registration, ...breakout }
+export const en = { ...common, ...passwordRequirements, ...errors, ...registration, ...breakout, ...thankYou }
