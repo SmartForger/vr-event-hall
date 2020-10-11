@@ -236,6 +236,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
       <Grid item container spacing={2}>
         <Grid item xs={12}>
           {/* TODO: Add Image selector for profile picture */}
+          <br />
           UPLOAD PROFILE PIC HERE
         </Grid>
 
@@ -415,7 +416,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         <Typography variant='h2' className={classes.heading} paragraph>
           <span dangerouslySetInnerHTML={{ __html: I18n.get('joinUs') }}></span>
         </Typography>
-        <Typography variant='h5' className={classes.heading} paragraph>
+        <Typography variant='h5' paragraph>
           {I18n.get('aboutYourCompany')}
         </Typography>
       </Grid>
