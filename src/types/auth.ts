@@ -7,7 +7,8 @@ export enum AuthFlowSteps {
   SignIn = 'signIn',
   SignUp = 'signUp',
   ThankYou = 'thankYou',
-  BreakoutSessions = 'breakoutSelection'
+  BreakoutSessions = 'breakoutSelection',
+  Survey = 'survey'
 }
 
 export interface IAuthFlowState {

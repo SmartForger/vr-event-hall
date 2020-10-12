@@ -12,6 +12,7 @@ import {
   SignIn,
   ForgotPassword,
   BreakoutSessions,
+  // Survey,
   ThankYou
 } from './index'
 import { AuthFlowSteps, IUser } from 'types'
@@ -24,7 +25,7 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
   const queryParams = new URLSearchParams(useLocation().search)
   const classes = useStyles(props)
 
-  const [authState, setAuthState] = useState<AuthFlowSteps>(AuthFlowSteps.SignIn)
+  const [authState, setAuthState] = useState<AuthFlowSteps>(AuthFlowSteps.Register)
   const [userEmail, setUserEmail] = useState<string>('')
   const [userPd, setUserPd] = useState<string>('')
 
@@ -67,6 +68,9 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
               {authState === AuthFlowSteps.BreakoutSessions && (
                 <BreakoutSessions setAuthState={setAuthState} userEmail={userEmail} />
               )}
+              {/* {authState === AuthFlowSteps.Suruvey && (
+                <Survey setAuthState={setAuthState} userEmail={userEmail} />
+              )} */}
               {authState === AuthFlowSteps.ThankYou && <ThankYou />}
               {authState === AuthFlowSteps.ForgotPassword && <ForgotPassword setAuthState={setAuthState} />}
             </Grid>
