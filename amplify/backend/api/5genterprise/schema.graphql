@@ -15,11 +15,10 @@ type User @model(subscriptions: null) @key(name: "ByEmail", fields: ["email"], q
   city: String
   state: String
   postalCode: String
-  avatar: String
   title: String
   conversations: [ConvoLink] @connection(keyName: "byConvoUser", fields: ["id"])
   messages: [Message] @connection(keyName: "byAuthor", fields: ["id"])
-  sessions: [Session] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
+  sessions: [UserSessionReservation] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
 }
 
 type Conversation @model(subscriptions: null) {
@@ -63,16 +62,16 @@ type Message
   updatedAt: AWSDateTime!
 }
 
-type SurveyQuestion @model(subscription: null, queries: null) {
+type SurveyQuestion @model(subscriptions: null, queries: null) {
     id: ID!
     name: String!
 }
 
-type SurveyAnswer @model(subscription: null, queries: null) {
+type SurveyAnswer @model(subscriptions: null, queries: null) {
     id: ID!
     answer: String!
-    userId: String!
-    questionId: String!
+    userId: ID!
+    questionId: ID!
     user: User! @connection(fields: ["userId"])
     question: SurveyQuestion! @connection(fields: ["questionId"])
 }

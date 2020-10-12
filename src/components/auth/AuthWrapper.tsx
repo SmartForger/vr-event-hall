@@ -25,7 +25,7 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
   const queryParams = new URLSearchParams(useLocation().search)
   const classes = useStyles(props)
 
-  const [authState, setAuthState] = useState<AuthFlowSteps>(AuthFlowSteps.Register)
+  const [authState, setAuthState] = useState<AuthFlowSteps>(AuthFlowSteps.SignUp)
   const [userEmail, setUserEmail] = useState<string>('')
   const [userPd, setUserPd] = useState<string>('')
 
@@ -114,6 +114,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     padding: '0 4rem',
+    marginBottom: '2rem',
     [theme.breakpoints.down('md')]: {
       width: '70%'
     },
@@ -121,8 +122,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
       backgroundColor: '#fff',
       alignItems: 'flex-start',
-      padding: 0,
-      marginBottom: '2rem'
+      padding: 0
     }
   },
   authStateWrapper: {

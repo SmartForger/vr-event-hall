@@ -13,6 +13,7 @@ import {
   FormHelperText
 } from '@material-ui/core'
 import { Autocomplete, createFilterOptions } from '@material-ui/lab'
+import { useDropzone } from 'react-dropzone'
 import { v4 as uuid } from 'uuid'
 import axios from 'axios'
 
@@ -32,10 +33,10 @@ interface IPersonalRegErrors {
   lastName: string
   phoneNumber: string
   title: string
-  personalAddress1: string
-  personalCity: string
-  personalState: string
-  personalPostalCode: string
+  address1: string
+  city: string
+  state: string
+  postalCode: string
 }
 
 interface ICompanyRegErrors {
@@ -62,20 +63,20 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     companyCity: '',
     companyState: '',
     companyPostalCode: '',
-    personalAddress1: '',
-    personalCity: '',
-    personalState: '',
-    personalPostalCode: ''
+    address1: '',
+    city: '',
+    state: '',
+    postalCode: ''
   }
   const initialPersonalErrors: IPersonalRegErrors = {
     firstName: '',
     lastName: '',
     phoneNumber: '',
     title: '',
-    personalAddress1: '',
-    personalCity: '',
-    personalState: '',
-    personalPostalCode: ''
+    address1: '',
+    city: '',
+    state: '',
+    postalCode: ''
   }
   const initialCompanyErrors: ICompanyRegErrors = {
     company: '',
@@ -103,6 +104,10 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     }
     // eslint-disable-next-line
   }, [userEmail])
+
+  const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({
+    accept: 'image/jpeg, image/png'
+  })
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { target } = e
@@ -151,12 +156,12 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         ? I18n.get('invalidPhone')
         : '',
       title: !userInfo.title ? I18n.get('requiredField') : '',
-      personalAddress1: !userInfo.personalAddress1 ? I18n.get('requiredField') : '',
-      personalCity: !userInfo.personalCity ? I18n.get('requiredField') : '',
-      personalState: !userInfo.personalState ? I18n.get('requiredField') : '',
-      personalPostalCode: !userInfo.personalPostalCode
+      address1: !userInfo.address1 ? I18n.get('requiredField') : '',
+      city: !userInfo.city ? I18n.get('requiredField') : '',
+      state: !userInfo.state ? I18n.get('requiredField') : '',
+      postalCode: !userInfo.postalCode
         ? I18n.get('requiredField')
-        : !validateZip(userInfo.personalPostalCode as string)
+        : !validateZip(userInfo.postalCode as string)
         ? I18n.get('invalidZip')
         : ''
     }
@@ -235,9 +240,18 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
 
       <Grid item container spacing={2}>
         <Grid item xs={12}>
-          {/* TODO: Add Image selector for profile picture */}
-          <br />
-          UPLOAD PROFILE PIC HERE
+          <div {...getRootProps()} className={classes.dragDrop}>
+            <input {...getInputProps()} />
+            {isDragActive ? (
+              <p>{I18n.get('dropImgae')}</p>
+            ) : acceptedFiles[0] ? (
+              <p>
+                {I18n.get('selectedImage')} {acceptedFiles[0].name}
+              </p>
+            ) : (
+              <p>{I18n.get('avatarInstructions')}</p>
+            )}
+          </div>
         </Grid>
 
         <Grid item xs={12} sm={6}>
@@ -319,13 +333,13 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           <TextField
             variant='outlined'
             label={I18n.get('mailingAddress')}
-            error={!!personalErrors.personalAddress1}
-            helperText={personalErrors.personalAddress1}
-            onFocus={() => setPersonalErrors({ ...personalErrors, personalAddress1: '' })}
+            error={!!personalErrors.address1}
+            helperText={personalErrors.address1}
+            onFocus={() => setPersonalErrors({ ...personalErrors, address1: '' })}
             fullWidth
             className={classes.input}
             type='text'
-            name='personalAddress1'
+            name='address1'
             required
             onChange={handleChange}
             onKeyPress={handleKeyPress}
@@ -336,13 +350,13 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           <TextField
             variant='outlined'
             label={I18n.get('city')}
-            error={!!personalErrors.personalCity}
-            helperText={personalErrors.personalCity}
-            onFocus={() => setPersonalErrors({ ...personalErrors, personalCity: '' })}
+            error={!!personalErrors.city}
+            helperText={personalErrors.city}
+            onFocus={() => setPersonalErrors({ ...personalErrors, city: '' })}
             fullWidth
             className={classes.input}
             type='text'
-            name='personalCity'
+            name='city'
             required
             onChange={handleChange}
             onKeyPress={handleKeyPress}
@@ -358,16 +372,16 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             filterOptions={createFilterOptions({ matchFrom: 'start', stringify: option => option.label })}
             getOptionLabel={option => option.value}
             onChange={(_: any, newValue: IOption | null) =>
-              setUserInfo({ ...userInfo, personalState: newValue ? newValue.value : '' })
+              setUserInfo({ ...userInfo, state: newValue ? newValue.value : '' })
             }
             renderOption={option => option.label}
             renderInput={params => (
               <TextField
                 {...params}
                 className={classes.input}
-                error={!!personalErrors.personalState}
-                helperText={personalErrors.personalState}
-                onFocus={() => setPersonalErrors({ ...personalErrors, personalState: '' })}
+                error={!!personalErrors.state}
+                helperText={personalErrors.state}
+                onFocus={() => setPersonalErrors({ ...personalErrors, state: '' })}
                 required
                 fullWidth
                 label={I18n.get('state')}
@@ -381,13 +395,13 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           <TextField
             variant='outlined'
             label={I18n.get('zip')}
-            error={!!personalErrors.personalPostalCode}
-            helperText={personalErrors.personalPostalCode}
-            onFocus={() => setPersonalErrors({ ...personalErrors, personalPostalCode: '' })}
+            error={!!personalErrors.postalCode}
+            helperText={personalErrors.postalCode}
+            onFocus={() => setPersonalErrors({ ...personalErrors, postalCode: '' })}
             fullWidth
             className={classes.input}
             type='text'
-            name='personalPostalCode'
+            name='postalCode'
             required
             onChange={handleChange}
             onKeyPress={handleKeyPress}
@@ -548,7 +562,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
       <Grid item>
         <PillButton
           type='submit'
-          onClick={() => advanceToCompanyForm()}
+          onClick={() => submitUser()}
           loading={loading}
           className={classes.button}
           backgroundColor='transparent'

@@ -11,11 +11,11 @@ export interface IUser {
   conversations?: object[]
   messages?: object[]
   status?: string
-  personalAddress1?: string
-  personalPostalCode?: string
-  personalCity?: string
-  personalState?: string
-  personalCountry?: string
+  address1?: string
+  postalCode?: string
+  city?: string
+  state?: string
+  country?: string
   companyAddress1?: string
   companyPostalCode?: string
   companyCity?: string

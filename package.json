@@ -24,7 +24,7 @@
     "hoist-non-react-statics": "^3.3.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-dropzone": "^11.0.1",
+    "react-dropzone": "^11.2.0",
     "react-joyride": "^2.2.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
