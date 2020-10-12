@@ -40,8 +40,7 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
   }, [])
 
   const getCurrentUser = async () => {
-    debugger
-    const foundUser = await graphQLQuery(userByEmail, 'userByEmail', { userEmail })
+    const foundUser = await graphQLQuery(userByEmail, 'userByEmail', { email: userEmail })
     if (!foundUser) {
       setAuthState(AuthFlowSteps.Register)
     }
@@ -71,7 +70,7 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
     setLoading(true)
     try {
       const userRes = await getCurrentUser()
-      await graphQLMutation('createSessionReserv', {
+      await graphQLMutation('createSessionReservation', {
         userId: userRes.id,
         sessionId: selectedBreakoutId
       })

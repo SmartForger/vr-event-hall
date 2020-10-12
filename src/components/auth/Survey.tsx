@@ -33,7 +33,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
   }, [])
 
   const getCurrentUser = async () => {
-    const foundUser = await graphQLQuery(userByEmail, 'userByEmail', { userEmail })
+    const foundUser = await graphQLQuery(userByEmail, 'userByEmail', { user: userEmail })
     if (!foundUser) {
       setAuthState(AuthFlowSteps.Register)
     }

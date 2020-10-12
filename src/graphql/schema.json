@@ -3841,7 +3841,7 @@
               "deprecationReason": null
             },
             {
-              "name": "createSessionReserv",
+              "name": "createSessionReservation",
               "description": null,
               "args": [
                 {
@@ -3878,7 +3878,7 @@
               "deprecationReason": null
             },
             {
-              "name": "updateSessionReserv",
+              "name": "updateSessionReservation",
               "description": null,
               "args": [
                 {

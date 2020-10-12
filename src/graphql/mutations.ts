@@ -296,12 +296,12 @@ export const deleteSession = /* GraphQL */ `
     }
   }
 `
-export const createSessionReserv = /* GraphQL */ `
-  mutation CreateSessionReserv(
+export const createSessionReservation = /* GraphQL */ `
+  mutation CreateSessionReservation(
     $input: CreateUserSessionReservationInput!
     $condition: ModelUserSessionReservationConditionInput
   ) {
-    createSessionReserv(input: $input, condition: $condition) {
+    createSessionReservation(input: $input, condition: $condition) {
       id
       userId
       sessionId
@@ -346,12 +346,12 @@ export const createSessionReserv = /* GraphQL */ `
     }
   }
 `
-export const updateSessionReserv = /* GraphQL */ `
-  mutation UpdateSessionReserv(
+export const updateSessionReservation = /* GraphQL */ `
+  mutation UpdateSessionReservation(
     $input: UpdateUserSessionReservationInput!
     $condition: ModelUserSessionReservationConditionInput
   ) {
-    updateSessionReserv(input: $input, condition: $condition) {
+    updateSessionReservation(input: $input, condition: $condition) {
       id
       userId
       sessionId
