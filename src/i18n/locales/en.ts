@@ -1,4 +1,12 @@
-import { ICommonDict, IErrorDict, IPasswordReqDict, IBreakoutDict, IThankYouDict, IRegistrationDict } from 'types'
+import {
+  ICommonDict,
+  IErrorDict,
+  IPasswordReqDict,
+  IBreakoutDict,
+  IThankYouDict,
+  IRegistrationDict,
+  ISurveyDict
+} from 'types'
 
 const common: ICommonDict = {
   alreadyHaveAnAccount: 'Already have an account?',
@@ -25,6 +33,14 @@ const common: ICommonDict = {
   signIn: 'Sign In',
   signUp: 'Sign Up',
   submit: 'Submit'
+}
+
+const survey: ISurveyDict = {
+  surveyTitle: 'Couple of Questions',
+  surveyInstructions: '(TBD)Text Needed',
+  'question-keynoteSpeaker':
+    'Do you have any questions for our key note speaker? Help us kick off the event with Bozoma Saint John.',
+  'question-learningObjectives': 'What do you want to learn about 5G? What do you want to get out of this event?'
 }
 
 const registration: IRegistrationDict = {
@@ -56,14 +72,21 @@ const breakout: IBreakoutDict = {
   reserverYourBreakoutBlurb:
     'Following our hour-long discussion we’ll be featuring several breakout sessions in the heathcare, financial, manufacturing, retail, and media industries. Capacity is limited to 200 attendees each. Please make your selection to save your spot!',
   breakoutSession: 'Breakout session',
-  breakoutSession1Id: 'financial-services',
-  breakoutSession1Name: 'Financial Services',
-  breakoutSession1Presenter: 'Presenter: TBD',
-  breakoutSession1Description: 'Financial Services Short Description (TBD)',
-  breakoutSession2Id: 'TBD-session',
-  breakoutSession2Name: 'Second Session TBD',
-  breakoutSession2Presenter: 'Presenter: TBD',
-  breakoutSession2Description: 'Second Session Short Description (TBD)',
+  'breakoutSessionName-healthcareInsurance': 'Healthcare, Insurance & Life Sciences',
+  'breakoutSessionPresenter-healthcareInsurance': '',
+  'breakoutSessionDescription-healthcareInsurance': '',
+  'breakoutSessionName-retailTravelDistribution': 'Retail/Hospitality, Travel & Distribution',
+  'breakoutSessionPresenter-retailTravelDistribution': '',
+  'breakoutSessionDescription-retailTravelDistribution': '',
+  'breakoutSessionName-financialServices': 'Financial Services',
+  'breakoutSessionPresenter-financialServices': '',
+  'breakoutSessionDescription-financialServices': '',
+  'breakoutSessionName-manufacturingEnergyUtilities': 'Manufacturing, Automotive, Construction, Energy & Utilities',
+  'breakoutSessionPresenter-manufacturingEnergyUtilities': '',
+  'breakoutSessionDescription-manufacturingEnergyUtilities': '',
+  'breakoutSessionName-mediaEntertainmentTech': 'Media, Entertainment, Technology & Services',
+  'breakoutSessionPresenter-mediaEntertainmentTech': '',
+  'breakoutSessionDescription-mediaEntertainmentTech': '',
   finish: 'Finish',
   skip: 'Skip'
 }
@@ -100,4 +123,12 @@ const errors: IErrorDict = {
   requiredField: 'Required Field'
 }
 
-export const en = { ...common, ...passwordRequirements, ...errors, ...registration, ...breakout, ...thankYou }
+export const en = {
+  ...common,
+  ...passwordRequirements,
+  ...errors,
+  ...registration,
+  ...breakout,
+  ...survey,
+  ...thankYou
+}

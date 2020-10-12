@@ -1,5 +1,3 @@
-import { StringDictionary } from 'babylonjs'
-
 export interface IDictionary {
   [key: string]: {
     [key: string]: string
@@ -66,16 +64,30 @@ export interface IBreakoutDict {
   registerForABreakout: string
   reserverYourBreakoutBlurb: string
   breakoutSession: string
-  breakoutSession1Id: string
-  breakoutSession1Name: string
-  breakoutSession1Presenter: string
-  breakoutSession1Description: string
-  breakoutSession2Id: string
-  breakoutSession2Name: string
-  breakoutSession2Presenter: string
-  breakoutSession2Description: string
+  'breakoutSessionName-healthcareInsurance': string
+  'breakoutSessionPresenter-healthcareInsurance': string
+  'breakoutSessionDescription-healthcareInsurance': string
+  'breakoutSessionName-retailTravelDistribution': string
+  'breakoutSessionPresenter-retailTravelDistribution': string
+  'breakoutSessionDescription-retailTravelDistribution': string
+  'breakoutSessionName-financialServices': string
+  'breakoutSessionPresenter-financialServices': string
+  'breakoutSessionDescription-financialServices': string
+  'breakoutSessionName-manufacturingEnergyUtilities': string
+  'breakoutSessionPresenter-manufacturingEnergyUtilities': string
+  'breakoutSessionDescription-manufacturingEnergyUtilities': string
+  'breakoutSessionName-mediaEntertainmentTech': string
+  'breakoutSessionPresenter-mediaEntertainmentTech': string
+  'breakoutSessionDescription-mediaEntertainmentTech': string
   finish: string
   skip: string
+}
+
+export interface ISurveyDict {
+  surveyTitle: string
+  surveyInstructions: string
+  'question-keynoteSpeaker': string
+  'question-learningObjectives': string
 }
 export interface IRegistrationDict {
   avatarInstructions: string

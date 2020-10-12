@@ -9,6 +9,7 @@ export const createUser = /* GraphQL */ `
       firstName
       lastName
       email
+      avatar
       phoneNumber
       company
       companySize
@@ -16,7 +17,10 @@ export const createUser = /* GraphQL */ `
       companyCity
       companyState
       companyPostalCode
-      avatar
+      address1
+      city
+      state
+      postalCode
       title
       conversations {
         items {
@@ -34,6 +38,16 @@ export const createUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      sessions {
+        items {
+          id
+          userId
+          sessionId
           createdAt
           updatedAt
         }
@@ -51,6 +65,7 @@ export const updateUser = /* GraphQL */ `
       firstName
       lastName
       email
+      avatar
       phoneNumber
       company
       companySize
@@ -58,7 +73,10 @@ export const updateUser = /* GraphQL */ `
       companyCity
       companyState
       companyPostalCode
-      avatar
+      address1
+      city
+      state
+      postalCode
       title
       conversations {
         items {
@@ -76,6 +94,16 @@ export const updateUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      sessions {
+        items {
+          id
+          userId
+          sessionId
           createdAt
           updatedAt
         }
@@ -93,6 +121,7 @@ export const deleteUser = /* GraphQL */ `
       firstName
       lastName
       email
+      avatar
       phoneNumber
       company
       companySize
@@ -100,7 +129,10 @@ export const deleteUser = /* GraphQL */ `
       companyCity
       companyState
       companyPostalCode
-      avatar
+      address1
+      city
+      state
+      postalCode
       title
       conversations {
         items {
@@ -118,6 +150,16 @@ export const deleteUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      sessions {
+        items {
+          id
+          userId
+          sessionId
           createdAt
           updatedAt
         }
@@ -224,6 +266,146 @@ export const deleteConversation = /* GraphQL */ `
     }
   }
 `
+export const createSession = /* GraphQL */ `
+  mutation CreateSession($input: CreateSessionInput!, $condition: ModelSessionConditionInput) {
+    createSession(input: $input, condition: $condition) {
+      id
+      name
+      presenter
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSession = /* GraphQL */ `
+  mutation UpdateSession($input: UpdateSessionInput!, $condition: ModelSessionConditionInput) {
+    updateSession(input: $input, condition: $condition) {
+      id
+      name
+      presenter
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteSession = /* GraphQL */ `
+  mutation DeleteSession($input: DeleteSessionInput!, $condition: ModelSessionConditionInput) {
+    deleteSession(input: $input, condition: $condition) {
+      id
+      name
+      presenter
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createSessionReserv = /* GraphQL */ `
+  mutation CreateSessionReserv(
+    $input: CreateUserSessionReservationInput!
+    $condition: ModelUserSessionReservationConditionInput
+  ) {
+    createSessionReserv(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        presenter
+        description
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSessionReserv = /* GraphQL */ `
+  mutation UpdateSessionReserv(
+    $input: UpdateUserSessionReservationInput!
+    $condition: ModelUserSessionReservationConditionInput
+  ) {
+    updateSessionReserv(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        presenter
+        description
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const createMessage = /* GraphQL */ `
   mutation CreateMessage($input: CreateMessageInput!, $condition: ModelMessageConditionInput) {
     createMessage(input: $input, condition: $condition) {
@@ -260,6 +442,180 @@ export const deleteMessage = /* GraphQL */ `
     }
   }
 `
+export const createSurveyQuestion = /* GraphQL */ `
+  mutation CreateSurveyQuestion($input: CreateSurveyQuestionInput!, $condition: ModelSurveyQuestionConditionInput) {
+    createSurveyQuestion(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSurveyQuestion = /* GraphQL */ `
+  mutation UpdateSurveyQuestion($input: UpdateSurveyQuestionInput!, $condition: ModelSurveyQuestionConditionInput) {
+    updateSurveyQuestion(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteSurveyQuestion = /* GraphQL */ `
+  mutation DeleteSurveyQuestion($input: DeleteSurveyQuestionInput!, $condition: ModelSurveyQuestionConditionInput) {
+    deleteSurveyQuestion(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createSurveyAnswer = /* GraphQL */ `
+  mutation CreateSurveyAnswer($input: CreateSurveyAnswerInput!, $condition: ModelSurveyAnswerConditionInput) {
+    createSurveyAnswer(input: $input, condition: $condition) {
+      id
+      answer
+      userId
+      questionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        name
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSurveyAnswer = /* GraphQL */ `
+  mutation UpdateSurveyAnswer($input: UpdateSurveyAnswerInput!, $condition: ModelSurveyAnswerConditionInput) {
+    updateSurveyAnswer(input: $input, condition: $condition) {
+      id
+      answer
+      userId
+      questionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        name
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteSurveyAnswer = /* GraphQL */ `
+  mutation DeleteSurveyAnswer($input: DeleteSurveyAnswerInput!, $condition: ModelSurveyAnswerConditionInput) {
+    deleteSurveyAnswer(input: $input, condition: $condition) {
+      id
+      answer
+      userId
+      questionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        name
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const createConvoLink = /* GraphQL */ `
   mutation CreateConvoLink($input: CreateConvoLinkInput!, $condition: ModelConvoLinkConditionInput) {
     createConvoLink(input: $input, condition: $condition) {
@@ -271,6 +627,7 @@ export const createConvoLink = /* GraphQL */ `
         firstName
         lastName
         email
+        avatar
         phoneNumber
         company
         companySize
@@ -278,12 +635,18 @@ export const createConvoLink = /* GraphQL */ `
         companyCity
         companyState
         companyPostalCode
-        avatar
+        address1
+        city
+        state
+        postalCode
         title
         conversations {
           nextToken
         }
         messages {
+          nextToken
+        }
+        sessions {
           nextToken
         }
         createdAt
@@ -318,6 +681,7 @@ export const updateConvoLink = /* GraphQL */ `
         firstName
         lastName
         email
+        avatar
         phoneNumber
         company
         companySize
@@ -325,12 +689,18 @@ export const updateConvoLink = /* GraphQL */ `
         companyCity
         companyState
         companyPostalCode
-        avatar
+        address1
+        city
+        state
+        postalCode
         title
         conversations {
           nextToken
         }
         messages {
+          nextToken
+        }
+        sessions {
           nextToken
         }
         createdAt

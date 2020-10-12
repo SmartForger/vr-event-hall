@@ -9,6 +9,7 @@ export const getUser = /* GraphQL */ `
       firstName
       lastName
       email
+      avatar
       phoneNumber
       company
       companySize
@@ -16,7 +17,10 @@ export const getUser = /* GraphQL */ `
       companyCity
       companyState
       companyPostalCode
-      avatar
+      address1
+      city
+      state
+      postalCode
       title
       conversations {
         items {
@@ -39,6 +43,16 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
+      sessions {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -52,6 +66,7 @@ export const listUsers = /* GraphQL */ `
         firstName
         lastName
         email
+        avatar
         phoneNumber
         company
         companySize
@@ -59,12 +74,18 @@ export const listUsers = /* GraphQL */ `
         companyCity
         companyState
         companyPostalCode
-        avatar
+        address1
+        city
+        state
+        postalCode
         title
         conversations {
           nextToken
         }
         messages {
+          nextToken
+        }
+        sessions {
           nextToken
         }
         createdAt
@@ -126,6 +147,33 @@ export const listConversations = /* GraphQL */ `
     }
   }
 `
+export const getSession = /* GraphQL */ `
+  query GetSession($id: ID!) {
+    getSession(id: $id) {
+      id
+      name
+      presenter
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listSessions = /* GraphQL */ `
+  query ListSessions($filter: ModelSessionFilterInput, $limit: Int, $nextToken: String) {
+    listSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        presenter
+        description
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
 export const userByEmail = /* GraphQL */ `
   query UserByEmail(
     $email: String
@@ -140,6 +188,7 @@ export const userByEmail = /* GraphQL */ `
         firstName
         lastName
         email
+        avatar
         phoneNumber
         company
         companySize
@@ -147,12 +196,18 @@ export const userByEmail = /* GraphQL */ `
         companyCity
         companyState
         companyPostalCode
-        avatar
+        address1
+        city
+        state
+        postalCode
         title
         conversations {
           nextToken
         }
         messages {
+          nextToken
+        }
+        sessions {
           nextToken
         }
         createdAt
