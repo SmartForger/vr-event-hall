@@ -30,11 +30,12 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
   const getCurrentUser = async (email: string) => {
     const foundUser = await graphQLQuery(userByEmail, 'userByEmail', { email })
     if (foundUser) {
+      debugger
       if (!foundUser.avatar) {
         foundUser.avatar = defaultAvatar
       }
       // TODO: Uncomment after registration
-      setAuthState(AuthFlowSteps.ThankYou)
+      setAuthState(AuthFlowSteps.BreakoutSessions)
       // history.push(redirectRoute)
     } else {
       setAuthState(AuthFlowSteps.Register)

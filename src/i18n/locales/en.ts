@@ -36,8 +36,8 @@ const common: ICommonDict = {
 }
 
 const survey: ISurveyDict = {
-  surveyTitle: 'Couple of Questions',
-  surveyInstructions: '(TBD)Text Needed',
+  surveyTitle: 'Quick Survey',
+  surveyInstructions: "We'd love to hear from you.",
   'question-keynoteSpeaker':
     'Do you have any questions for our key note speaker? Help us kick off the event with Bozoma Saint John.',
   'question-learningObjectives': 'What do you want to learn about 5G? What do you want to get out of this event?'
@@ -69,7 +69,7 @@ const registration: IRegistrationDict = {
 
 const breakout: IBreakoutDict = {
   registerForABreakout: 'Register for a breakout session',
-  reserverYourBreakoutBlurb:
+  reserveYourBreakoutBlurb:
     'Following our hour-long discussion we’ll be featuring several breakout sessions in the heathcare, financial, manufacturing, retail, and media industries. Capacity is limited to 200 attendees each. Please make your selection to save your spot!',
   breakoutSession: 'Breakout session',
   'breakoutSessionName-healthcareInsurance': 'Healthcare, Insurance & Life Sciences',

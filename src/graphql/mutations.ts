@@ -271,8 +271,6 @@ export const createSession = /* GraphQL */ `
     createSession(input: $input, condition: $condition) {
       id
       name
-      presenter
-      description
       createdAt
       updatedAt
     }
@@ -283,8 +281,6 @@ export const updateSession = /* GraphQL */ `
     updateSession(input: $input, condition: $condition) {
       id
       name
-      presenter
-      description
       createdAt
       updatedAt
     }
@@ -295,8 +291,6 @@ export const deleteSession = /* GraphQL */ `
     deleteSession(input: $input, condition: $condition) {
       id
       name
-      presenter
-      description
       createdAt
       updatedAt
     }
@@ -344,8 +338,6 @@ export const createSessionReserv = /* GraphQL */ `
       session {
         id
         name
-        presenter
-        description
         createdAt
         updatedAt
       }
@@ -396,8 +388,6 @@ export const updateSessionReserv = /* GraphQL */ `
       session {
         id
         name
-        presenter
-        description
         createdAt
         updatedAt
       }

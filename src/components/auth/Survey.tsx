@@ -5,12 +5,13 @@ import { makeStyles, Theme, Grid, TextField, Link, Typography } from '@material-
 import { PillButton } from 'components'
 import { validateEmail } from 'helpers'
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
-import { userByEmail } from 'graphql/queries'
+import { userByEmail, listSurveyQuestions } from 'graphql/queries'
 import { AuthFlowSteps } from 'types'
 
 interface ISurveyQuestion {
   id: string
   name: string
+  userAnswer?: string
 }
 
 interface SurveyProps {
@@ -21,15 +22,13 @@ interface SurveyProps {
 export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
   const classes = useStyles()
   const [loading, setLoading] = useState<boolean>(false)
-  const [answer1, setAnswer1] = useState<string>('')
-  const [answer2, setAnswer2] = useState<string>('')
-
-  const hideSurveyQuestion1: boolean = true
+  const [surveyQuestions, setSurveyQuestions] = useState<Map<string, ISurveyQuestion>>(new Map())
 
   useEffect(() => {
+    getSurveyQuestions()
+
     return () => {
-      setAnswer1('')
-      setAnswer2('')
+      setSurveyQuestions(new Map())
     }
   }, [])
 
@@ -44,7 +43,15 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
   const getSurveyQuestions = async () => {
     setLoading(true)
     try {
-      const foundQuestions = await graphQLQuery(listSurveyQuestions, 'listSurveyQuestions', {})
+      const foundQuestions: ISurveyQuestion[] = await graphQLQuery(listSurveyQuestions, 'listSurveyQuestions', {})
+      const questionMap = new Map()
+
+      foundQuestions.forEach((q: ISurveyQuestion) => {
+        if (!questionMap.get(q.name)) {
+          questionMap.set(q.name, q)
+        }
+      })
+      setSurveyQuestions(questionMap)
       setLoading(false)
       return foundQuestions
     } catch (error) {
@@ -54,28 +61,34 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
 
   const submitSurvey = async () => {
     setLoading(true)
-    // try {
-    //   const userRes = await getCurrentUser()
-    //   const questionsRes = await getSurveyQuestions();
-    //   if (questionsRes.length > 0) {
-    //     for (const question of questionsRes) {
-    //       // if we have an answer for the question in state,
-    //       // create the answer on the backend
-    //       if ([`answer${question.name}`]) {
-    //         await graphQLMutation('createSurveyAnswer', {
-    //           userId: userRes.id,
-    //           questionId: question.id,
-    //           answer: [`answer${question.name}`]
-    //         });
-    //       }
-    //     }
-    //   }
-    //   setAuthState(AuthFlowSteps.Survey)
-    // } catch (error) {
-    //   console.log(error)
-    // } finally {
-    //   setLoading(false)
-    // }
+    try {
+      const userRes = await getCurrentUser()
+      if (surveyQuestions.size > 0) {
+        for (let [qName, question] of Array.from(surveyQuestions)) {
+          // if we have an answer for the question in state,
+          // create the answer on the backend
+          if (question.userAnswer) {
+            debugger
+            await graphQLMutation('createSurveyAnswer', {
+              userId: userRes.id,
+              questionId: question.id,
+              answer: question.userAnswer
+            })
+          }
+        }
+      }
+      setAuthState(AuthFlowSteps.ThankYou)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const answerSurveyQuestion = (question: ISurveyQuestion, answer: string): void => {
+    question.userAnswer = answer
+    surveyQuestions.set(question.name, question)
+    setSurveyQuestions(surveyQuestions)
   }
 
   return (
@@ -91,30 +104,25 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
         </Typography>
       </Grid>
       <Grid item container spacing={2}>
-        <Grid item xs={12} sm={6} md={12} lg={6}>
-          <TextField
-            fullWidth
-            className={classes.input}
-            multiline
-            id='survey-answer-1'
-            label={I18n.get('question1')}
-            variant='outlined'
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAnswer1(e.target.value)}
-            defaultValue={userEmail}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={12} lg={6}>
-          <TextField
-            fullWidth
-            className={classes.input}
-            multiline
-            id='survey-answer-1'
-            label={I18n.get('question2')}
-            variant='outlined'
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAnswer2(e.target.value)}
-          />
-        </Grid>
+        {Array.from(surveyQuestions).map(([qName, question], index: number) => (
+          <>
+            {qName !== 'keynoteSpeaker' ? (
+              <Grid item xs={12} sm={6} md={12} lg={6} key={index}>
+                <Typography component='p' paragraph>
+                  {I18n.get(`question-${qName}`)}
+                </Typography>
+                <TextField
+                  fullWidth
+                  className={classes.input}
+                  multiline
+                  id={`survey-answer-${qName}`}
+                  variant='outlined'
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => answerSurveyQuestion(question, e.target.value)}
+                />
+              </Grid>
+            ) : null}
+          </>
+        ))}
       </Grid>
       <Grid item>
         <PillButton

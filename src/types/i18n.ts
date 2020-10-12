@@ -54,15 +54,9 @@ export interface IPasswordReqDict {
   passwordReqSymbol: string
 }
 
-export interface IBreakoutSession {
-  id: string
-  name: string
-  presenter: string
-  description: string
-}
 export interface IBreakoutDict {
   registerForABreakout: string
-  reserverYourBreakoutBlurb: string
+  reserveYourBreakoutBlurb: string
   breakoutSession: string
   'breakoutSessionName-healthcareInsurance': string
   'breakoutSessionPresenter-healthcareInsurance': string

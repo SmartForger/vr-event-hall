@@ -551,7 +551,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             fullWidth
             className={classes.input}
             type='text'
-            name='companyPotalCode'
+            name='companyPostalCode'
             required
             onChange={handleChange}
             onKeyPress={handleKeyPress}

@@ -152,8 +152,6 @@ export const getSession = /* GraphQL */ `
     getSession(id: $id) {
       id
       name
-      presenter
-      description
       createdAt
       updatedAt
     }
@@ -165,8 +163,29 @@ export const listSessions = /* GraphQL */ `
       items {
         id
         name
-        presenter
-        description
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const getSurveyQuestion = /* GraphQL */ `
+  query GetSurveyQuestion($id: ID!) {
+    getSurveyQuestion(id: $id) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listSurveyQuestions = /* GraphQL */ `
+  query ListSurveyQuestions($filter: ModelSurveyQuestionFilterInput, $limit: Int, $nextToken: String) {
+    listSurveyQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
         createdAt
         updatedAt
       }

@@ -14,13 +14,13 @@ import {
 } from '@material-ui/core'
 
 import { PillButton, PasswordRequirementsTooltip } from 'components'
-import { AuthFlowSteps, IUser, IOption, IBreakoutSession } from 'types'
+import { AuthFlowSteps, IUser, IOption } from 'types'
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
 import { userByEmail, listSessions } from 'graphql/queries'
 
-interface ISession {
-  id: String
-  name: String
+interface IBreakoutSession {
+  id: string
+  name: string
 }
 
 interface BreakoutSessionsProps {
@@ -31,9 +31,16 @@ interface BreakoutSessionsProps {
 export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, userEmail }) => {
   const classes = useStyles()
   const [loading, setLoading] = useState<boolean>(false)
-  const [selectedBreakout, setSelectedBreakout] = useState<string>('')
+  const [breakoutSessions, setBreakoutSessions] = useState<Map<string, IBreakoutSession>>(new Map())
+  const [selectedBreakoutId, setSelectedBreakoutId] = useState<string>('')
+
+  useEffect(() => {
+    getBreakoutSessions()
+    return () => setSelectedBreakoutId('')
+  }, [])
 
   const getCurrentUser = async () => {
+    debugger
     const foundUser = await graphQLQuery(userByEmail, 'userByEmail', { userEmail })
     if (!foundUser) {
       setAuthState(AuthFlowSteps.Register)
@@ -44,7 +51,15 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
   const getBreakoutSessions = async () => {
     setLoading(true)
     try {
-      const foundSessions = await graphQLQuery(listSessions, 'listSessions', {})
+      const foundSessions: IBreakoutSession[] = await graphQLQuery(listSessions, 'listSessions', {})
+      const sessionMap = new Map()
+
+      foundSessions.forEach((q: IBreakoutSession) => {
+        if (!sessionMap.get(q.name)) {
+          sessionMap.set(q.name, q)
+        }
+      })
+      setBreakoutSessions(sessionMap)
       setLoading(false)
       return foundSessions
     } catch (error) {
@@ -56,19 +71,10 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
     setLoading(true)
     try {
       const userRes = await getCurrentUser()
-      const sessionsRes = await getBreakoutSessions()
-      const sessionsToReserve: ISession[] = sessionsRes.filter((session: ISession) => {
-        if (selectedBreakout === session.name) {
-          return true
-        }
+      await graphQLMutation('createSessionReserv', {
+        userId: userRes.id,
+        sessionId: selectedBreakoutId
       })
-      if (sessionsToReserve.length > 0) {
-        await graphQLMutation('createSessionReserv', {
-          userId: userRes.id,
-          sessionId: sessionsToReserve[0].id
-        })
-      }
-
       setAuthState(AuthFlowSteps.Survey)
     } catch (error) {
       console.log(error)
@@ -95,16 +101,17 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
             <InputLabel id='breakout-session-input'>{I18n.get('breakoutSession')}</InputLabel>
             <Select
               labelId='breakout-session-id'
+              name='select-breakout-session'
               fullWidth
-              value={selectedBreakout}
+              value={selectedBreakoutId}
               label={I18n.get('breakoutSession')}
-              onChange={(e: React.ChangeEvent<{ value: unknown }>) => setSelectedBreakout(e.target.value as string)}
+              onChange={(e: React.ChangeEvent<{ value: unknown }>) => setSelectedBreakoutId(e.target.value as string)}
             >
-              <MenuItem value={I18n.get('breakoutSession1Id')}>{I18n.get('breakoutSession1Name')}</MenuItem>
-              <MenuItem value={I18n.get('breakoutSession2Id')}>{I18n.get('breakoutSession2Name')}</MenuItem>
-              <MenuItem value={I18n.get('breakoutSession3Id')}>{I18n.get('breakoutSession3Name')}</MenuItem>
-              <MenuItem value={I18n.get('breakoutSession4Id')}>{I18n.get('breakoutSession4Name')}</MenuItem>
-              <MenuItem value={I18n.get('breakoutSession5Id')}>{I18n.get('breakoutSession5Name')}</MenuItem>
+              {Array.from(breakoutSessions).map(([sessionName, session], index: number) => (
+                <MenuItem value={session.id} key={`${index}-${sessionName}`}>
+                  {I18n.get(`breakoutSessionName-${session.name}`)}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
@@ -112,96 +119,31 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
 
       {/* session details blurb */}
       <Grid item container alignItems='center'>
-        {selectedBreakout === I18n.get('breakoutSession1Id') ? (
-          <>
-            <Grid item xs={12}>
-              {I18n.get('breakoutSession1Presenter') ? (
-                <Typography variant='h5' paragraph>
-                  {I18n.get('breakoutSession1Presenter')}
-                </Typography>
-              ) : null}
-            </Grid>
-            <Grid item xs={12}>
-              {I18n.get('breakoutSession1Description') ? (
-                <Typography component='p' paragraph>
-                  {I18n.get('breakoutSession1Description')}
-                </Typography>
-              ) : null}
-            </Grid>
-          </>
-        ) : null}
-        {selectedBreakout === I18n.get('breakoutSession2Id') ? (
-          <>
-            <Grid item xs={12}>
-              {I18n.get('breakoutSession2Presenter') ? (
-                <Typography variant='h5' paragraph>
-                  {I18n.get('breakoutSession2Presenter')}
-                </Typography>
-              ) : null}
-            </Grid>
-            <Grid item xs={12}>
-              {I18n.get('breakoutSession2Description') ? (
-                <Typography component='p' paragraph>
-                  {I18n.get('breakoutSession2Description')}
-                </Typography>
-              ) : null}
-            </Grid>
-          </>
-        ) : null}
-        {selectedBreakout === I18n.get('breakoutSession3Id') ? (
-          <>
-            <Grid item xs={12}>
-              {I18n.get('breakoutSession3Presenter') ? (
-                <Typography variant='h5' paragraph>
-                  {I18n.get('breakoutSession3Presenter')}
-                </Typography>
-              ) : null}
-            </Grid>
-            <Grid item xs={12}>
-              {I18n.get('breakoutSession3Description') ? (
-                <Typography component='p' paragraph>
-                  {I18n.get('breakoutSession3Description')}
-                </Typography>
-              ) : null}
-            </Grid>
-          </>
-        ) : null}
-        {selectedBreakout === I18n.get('breakoutSession4Id') ? (
-          <>
-            <Grid item xs={12}>
-              {I18n.get('breakoutSession4Presenter') ? (
-                <Typography variant='h5' paragraph>
-                  {I18n.get('breakoutSession4Presenter')}
-                </Typography>
-              ) : null}
-            </Grid>
-            <Grid item xs={12}>
-              {I18n.get('breakoutSession4Description') ? (
-                <Typography component='p' paragraph>
-                  {I18n.get('breakoutSession4Description')}
-                </Typography>
-              ) : null}
-            </Grid>
-          </>
-        ) : null}
-        {selectedBreakout === I18n.get('breakoutSession5Id') ? (
-          <>
-            <Grid item xs={12}>
-              {I18n.get('breakoutSession5Presenter') ? (
-                <Typography variant='h5' paragraph>
-                  {I18n.get('breakoutSession5Presenter')}
-                </Typography>
-              ) : null}
-            </Grid>
-            <Grid item xs={12}>
-              {I18n.get('breakoutSession5Description') ? (
-                <Typography component='p' paragraph>
-                  {I18n.get('breakoutSession5Description')}
-                </Typography>
-              ) : null}
-            </Grid>
-          </>
-        ) : null}
+        {Array.from(breakoutSessions).map(([sessionName, session], index: number) => {
+          if (session.id === selectedBreakoutId) {
+            // If we've set presenter and description text for the session, show it
+            // Note: We are expecting to set these values after the initial deployment.
+            // Once the values are added to the en.ts locale file they will display appropriately.
+            return (
+              <>
+                <Grid item xs={12}>
+                  {I18n.get(`breakoutSessionPresenter-${sessionName}`, false) ? (
+                    <Typography variant='h5' paragraph>
+                      {I18n.get(`breakoutSessionPresenter-${sessionName}`)}
+                    </Typography>
+                  ) : null}
+                </Grid>
+                <Grid item xs={12}>
+                  {I18n.get(`breakoutSessionDescription-${sessionName}`, false) ? (
+                    <Typography component='p' paragraph>
+                      {I18n.get(`breakoutSessionDescription-${sessionName}`)}
+                    </Typography>
+                  ) : null}
+                </Grid>
+              </>
+            )
+          }
+        })}
       </Grid>
       <Grid container>
         <Grid item xs={12} sm={6}>
