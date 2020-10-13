@@ -145,29 +145,19 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
           }
         })}
       </Grid>
-      <Grid container>
-        <Grid item xs={12} sm={6}>
-          <PillButton
-            loading={loading}
-            type='submit'
-            onClick={() => reserveBreakout()}
-            solid
-            className={classes.button}
-          >
-            {I18n.get('finish')}
-          </PillButton>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <PillButton
-            loading={loading}
-            type='submit'
-            onClick={() => setAuthState(AuthFlowSteps.Survey)}
-            backgroundColor='transparent'
-            className={classes.button}
-          >
-            {I18n.get('skip')}
-          </PillButton>
-        </Grid>
+      <Grid container item xs={12}>
+        <PillButton loading={loading} type='submit' onClick={() => reserveBreakout()} solid className={classes.button}>
+          {I18n.get('finish')}
+        </PillButton>
+        <PillButton
+          loading={loading}
+          type='submit'
+          onClick={() => setAuthState(AuthFlowSteps.Survey)}
+          backgroundColor='transparent'
+          className={classes.button}
+        >
+          {I18n.get('skip')}
+        </PillButton>
       </Grid>
     </Grid>
   )
@@ -191,7 +181,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   button: {
-    width: 165
+    width: 165,
+    marginRight: '20px'
   },
   input: {
     color: '#000',
