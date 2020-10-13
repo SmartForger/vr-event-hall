@@ -27,14 +27,11 @@ export const ThankYou: FC<ThankYouProps> = () => {
       </Grid>
       <Grid item container spacing={1}>
         <Grid item xs={12} sm={6}>
-          {/* TODO: What is the URL for the verizon hub */}
-          <PillButton className={classes.button} solid href=''>
-            {I18n.get('verizonHub')}
-          </PillButton>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          {/* TODO: What is the URL for the event? */}
-          <PillButton className={classes.button} backgroundColor='transparent' href=''>
+          <PillButton
+            className={classes.button}
+            backgroundColor='transparent'
+            href='https://www.verizon.com/business/virtual-events/11-12-smb-enterprise-5g-innovation-session/'
+          >
             {I18n.get('eventInfo')}
           </PillButton>
         </Grid>
@@ -65,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inlineButton: {
     color: '#000',
-    margin: '0 .5rem',
+    margin: '0.5rem',
     fontFamily: 'Verizon-Regular',
     textDecoration: 'underline'
   }

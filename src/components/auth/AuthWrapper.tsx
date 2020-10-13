@@ -25,7 +25,7 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
   const queryParams = new URLSearchParams(useLocation().search)
   const classes = useStyles(props)
 
-  const [authState, setAuthState] = useState<AuthFlowSteps>(AuthFlowSteps.Register)
+  const [authState, setAuthState] = useState<AuthFlowSteps>(AuthFlowSteps.SignUp)
   const [userEmail, setUserEmail] = useState<string>('')
   const [userPd, setUserPd] = useState<string>('')
 
