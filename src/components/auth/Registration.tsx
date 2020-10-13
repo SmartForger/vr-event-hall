@@ -1,5 +1,5 @@
 import React, { FC, useState, ChangeEvent, useEffect } from 'react'
-import { I18n } from 'aws-amplify'
+import { I18n, Storage } from 'aws-amplify'
 import {
   TextField,
   makeStyles,
@@ -119,9 +119,20 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
 
   const createNewUser = async () => {
     try {
-      const newUserRes = await graphQLMutation(createUser, userInfo)
-      //@ts-ignore
-      return newUserRes.data.user
+      if (acceptedFiles && acceptedFiles[0]) {
+        const file = acceptedFiles[0]
+        const avatar = `${userInfo.id}.${file.type.split('/')[1]}`
+        // eslint-disable-next-line
+        await Promise.all([
+          Storage.put(avatar, file, { level: 'public', contentType: file.type }),
+          graphQLMutation(createUser, {
+            ...userInfo,
+            avatar
+          })
+        ])
+      } else {
+        await graphQLMutation(createUser, userInfo)
+      }
     } catch (e) {
       console.log(e)
       return
