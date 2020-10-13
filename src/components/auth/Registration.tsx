@@ -10,8 +10,10 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  FormHelperText
+  FormHelperText,
+  Icon
 } from '@material-ui/core'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import { Autocomplete, createFilterOptions } from '@material-ui/lab'
 import { useDropzone } from 'react-dropzone'
 import { v4 as uuid } from 'uuid'
@@ -251,18 +253,33 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
 
       <Grid item container spacing={2}>
         <Grid item xs={12}>
-          <div {...getRootProps()} className={classes.dragDrop}>
-            <input {...getInputProps()} />
-            {isDragActive ? (
-              <p>{I18n.get('dropImgae')}</p>
-            ) : acceptedFiles[0] ? (
-              <p>
-                {I18n.get('selectedImage')} {acceptedFiles[0].name}
-              </p>
+          <Grid container>
+            {acceptedFiles[0] ? (
+              <Grid item xs={12} sm={6}>
+                <Typography variant='body2'>
+                  {I18n.get('selectedImage')} {acceptedFiles[0].name}
+                </Typography>
+              </Grid>
             ) : (
-              <p>{I18n.get('avatarInstructions')}</p>
+              <Grid item xs={12} sm={6}>
+                {/* TODO: replace this with approved svg icon once creative provides svg */}
+                <AccountCircleIcon fontSize='large' />
+              </Grid>
             )}
-          </div>
+            <Grid item xs={12} sm={6}>
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                <PillButton
+                  loading={loading}
+                  onClick={() => {}}
+                  backgroundColor='transparet'
+                  className={classes.button}
+                >
+                  {I18n.get('avatarInstructions')}
+                </PillButton>
+              </div>
+            </Grid>
+          </Grid>
         </Grid>
 
         <Grid item xs={12} sm={6}>
@@ -334,7 +351,9 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         </Grid>
 
         <Grid item xs={12}>
-          <Typography variant='h5'>{I18n.get('mailingAddress')}</Typography>
+          <Typography variant='h5' classes={{ root: classes.spaceAbove }}>
+            {I18n.get('mailingAddress')}
+          </Typography>
           <Typography variant='body1' paragraph>
             {I18n.get('mailingAddressReason')}
           </Typography>
@@ -594,27 +613,27 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
-    width: 165,
+    minWidth: 165,
     marginTop: '1rem',
     [theme.breakpoints.down('md')]: {
       marginBottom: '1rem',
       backgroundColor: '#fff !important'
     }
   },
-  dragDrop: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: 80,
-    backgroundColor: '#eee',
-    marginBottom: '1rem',
-    cursor: 'pointer',
-    padding: '0 .5rem',
-    '& span': {
-      textDecoration: 'underline',
-      cursor: 'pointer'
-    }
-  },
+  // dragDrop: {
+  //   display: 'flex',
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   minHeight: 80,
+  //   backgroundColor: 'transparent',
+  //   marginBottom: '1rem',
+  //   cursor: 'pointer',
+  //   padding: '0 .5rem',
+  //   '& span': {
+  //     textDecoration: 'underline',
+  //     cursor: 'pointer'
+  //   }
+  // },
   heading: {
     fontWeight: 700,
     fontSize: '3.125rem',
@@ -651,5 +670,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '0 .5rem',
     fontFamily: 'Verizon-Regular',
     textDecoration: 'underline'
+  },
+  spaceAbove: {
+    marginTop: '2rem'
   }
 }))

@@ -44,7 +44,7 @@ const survey: ISurveyDict = {
 }
 
 const registration: IRegistrationDict = {
-  avatarInstructions: 'Click to Browse or drag and drop an image here',
+  avatarInstructions: 'Upload image',
   city: 'City',
   completeRegistration: `To get started, let's set up your personal profile.`,
   country: 'Country',
