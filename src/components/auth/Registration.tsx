@@ -1,5 +1,5 @@
 import React, { FC, useState, ChangeEvent, useEffect } from 'react'
-import { I18n } from 'aws-amplify'
+import { I18n, Storage } from 'aws-amplify'
 import {
   TextField,
   makeStyles,
@@ -10,9 +10,12 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  FormHelperText
+  FormHelperText,
+  Icon
 } from '@material-ui/core'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import { Autocomplete, createFilterOptions } from '@material-ui/lab'
+import { useDropzone } from 'react-dropzone'
 import { v4 as uuid } from 'uuid'
 import axios from 'axios'
 
@@ -27,11 +30,18 @@ interface RegistrationProps {
   setAuthState: (state: AuthFlowSteps) => void
   setUser: (user: IUser) => void
 }
-interface IRegErrors {
+interface IPersonalRegErrors {
   firstName: string
   lastName: string
   phoneNumber: string
   title: string
+  address1: string
+  city: string
+  state: string
+  postalCode: string
+}
+
+interface ICompanyRegErrors {
   company: string
   companySize: string
   companyAddress1: string
@@ -39,6 +49,7 @@ interface IRegErrors {
   companyState: string
   companyPostalCode: string
 }
+
 export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, setUser }) => {
   const classes = useStyles()
   const initialUser: IUser = {
@@ -53,13 +64,23 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     companyAddress1: '',
     companyCity: '',
     companyState: '',
-    companyPostalCode: ''
+    companyPostalCode: '',
+    address1: '',
+    city: '',
+    state: '',
+    postalCode: ''
   }
-  const initialErrors: IRegErrors = {
+  const initialPersonalErrors: IPersonalRegErrors = {
     firstName: '',
     lastName: '',
     phoneNumber: '',
     title: '',
+    address1: '',
+    city: '',
+    state: '',
+    postalCode: ''
+  }
+  const initialCompanyErrors: ICompanyRegErrors = {
     company: '',
     companySize: '',
     companyAddress1: '',
@@ -67,9 +88,17 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     companyState: '',
     companyPostalCode: ''
   }
+
+  enum RegSection {
+    personal,
+    company
+  }
+
   const [userInfo, setUserInfo] = useState<IUser>(initialUser)
+  const [activeRegSection, setActiveRegSection] = useState<RegSection>(RegSection.personal)
   const [loading, setLoading] = useState<boolean>(false)
-  const [errors, setErrors] = useState<IRegErrors>(initialErrors)
+  const [personalErrors, setPersonalErrors] = useState<IPersonalRegErrors>(initialPersonalErrors)
+  const [companyErrors, setCompanyErrors] = useState<ICompanyRegErrors>(initialCompanyErrors)
 
   useEffect(() => {
     if (userEmail) {
@@ -77,6 +106,10 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     }
     // eslint-disable-next-line
   }, [userEmail])
+
+  const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({
+    accept: 'image/jpeg, image/png'
+  })
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { target } = e
@@ -88,9 +121,20 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
 
   const createNewUser = async () => {
     try {
-      const newUserRes = await graphQLMutation(createUser, userInfo)
-      //@ts-ignore
-      return newUserRes.data.user
+      if (acceptedFiles && acceptedFiles[0]) {
+        const file = acceptedFiles[0]
+        const avatar = `${userInfo.id}.${file.type.split('/')[1]}`
+        // eslint-disable-next-line
+        await Promise.all([
+          Storage.put(avatar, file, { level: 'public', contentType: file.type }),
+          graphQLMutation(createUser, {
+            ...userInfo,
+            avatar
+          })
+        ])
+      } else {
+        await graphQLMutation(createUser, userInfo)
+      }
     } catch (e) {
       console.log(e)
       return
@@ -115,8 +159,8 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     }
   }
 
-  const validateForm = (): boolean => {
-    const errorObj: IRegErrors = {
+  const validatePersonalForm = (): boolean => {
+    const errorObj: IPersonalRegErrors = {
       firstName: !userInfo.firstName ? I18n.get('requiredField') : '',
       lastName: !userInfo.lastName ? I18n.get('requiredField') : '',
       phoneNumber: !userInfo.phoneNumber
@@ -125,6 +169,27 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         ? I18n.get('invalidPhone')
         : '',
       title: !userInfo.title ? I18n.get('requiredField') : '',
+      address1: !userInfo.address1 ? I18n.get('requiredField') : '',
+      city: !userInfo.city ? I18n.get('requiredField') : '',
+      state: !userInfo.state ? I18n.get('requiredField') : '',
+      postalCode: !userInfo.postalCode
+        ? I18n.get('requiredField')
+        : !validateZip(userInfo.postalCode as string)
+        ? I18n.get('invalidZip')
+        : ''
+    }
+    const hasErrors = Object.keys(errorObj).some(key => errorObj[key] !== '')
+
+    if (hasErrors) {
+      setPersonalErrors(errorObj)
+      return true
+    }
+
+    return false
+  }
+
+  const validateCompanyForm = (): boolean => {
+    const errorObj: ICompanyRegErrors = {
       company: !userInfo.company ? I18n.get('requiredField') : '',
       companySize: !userInfo.companySize ? I18n.get('requiredField') : '',
       companyAddress1: !userInfo.companyAddress1 ? I18n.get('requiredField') : '',
@@ -140,7 +205,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     const hasErrors = Object.keys(errorObj).some(key => errorObj[key] !== '')
 
     if (hasErrors) {
-      setErrors(errorObj)
+      setCompanyErrors(errorObj)
       return true
     }
 
@@ -148,14 +213,14 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
   }
 
   const submitUser = async () => {
-    const hasErrors = validateForm()
+    const hasErrors = validateCompanyForm() && validatePersonalForm()
     if (!hasErrors) {
       setLoading(true)
       try {
         await createNewUser()
         await sendIntegrateData()
         // TODO: Remove later
-        setAuthState(AuthFlowSteps.ThankYou)
+        setAuthState(AuthFlowSteps.BreakoutSessions)
       } catch (error) {
         console.log(error)
       } finally {
@@ -164,27 +229,66 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      submitUser()
+  const advanceToCompanyForm = async () => {
+    const hasErrors = validatePersonalForm()
+    if (!hasErrors) {
+      setActiveRegSection(RegSection.company)
     }
   }
 
-  return (
-    <Grid container direction='column' justify='center'>
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      activeRegSection === RegSection.company ? submitUser() : advanceToCompanyForm()
+    }
+  }
+
+  // registration - part 1 - personal info
+  const personalRegForm = (
+    <>
       <Grid item>
         <Typography variant='h2' className={classes.heading} paragraph>
           <span dangerouslySetInnerHTML={{ __html: I18n.get('joinUs') }}></span>
         </Typography>
       </Grid>
+
       <Grid item container spacing={2}>
+        <Grid item xs={12}>
+          <Grid container>
+            {acceptedFiles[0] ? (
+              <Grid item xs={12} sm={6}>
+                <Typography variant='body2'>
+                  {I18n.get('selectedImage')} {acceptedFiles[0].name}
+                </Typography>
+              </Grid>
+            ) : (
+              <Grid item xs={12} sm={6}>
+                {/* TODO: replace this with approved svg icon once creative provides svg */}
+                <AccountCircleIcon fontSize='large' />
+              </Grid>
+            )}
+            <Grid item xs={12} sm={6}>
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                <PillButton
+                  loading={loading}
+                  onClick={() => {}}
+                  backgroundColor='transparet'
+                  className={classes.button}
+                >
+                  {I18n.get('avatarInstructions')}
+                </PillButton>
+              </div>
+            </Grid>
+          </Grid>
+        </Grid>
+
         <Grid item xs={12} sm={6}>
           <TextField
             variant='outlined'
             label={I18n.get('firstName')}
-            error={!!errors.firstName}
-            helperText={errors.firstName}
-            onFocus={() => setErrors({ ...errors, firstName: '' })}
+            error={!!personalErrors.firstName}
+            helperText={personalErrors.firstName}
+            onFocus={() => setPersonalErrors({ ...personalErrors, firstName: '' })}
             fullWidth
             className={classes.input}
             type='text'
@@ -199,9 +303,9 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           <TextField
             variant='outlined'
             label={I18n.get('lastName')}
-            error={!!errors.lastName}
-            helperText={errors.lastName}
-            onFocus={() => setErrors({ ...errors, lastName: '' })}
+            error={!!personalErrors.lastName}
+            helperText={personalErrors.lastName}
+            onFocus={() => setPersonalErrors({ ...personalErrors, lastName: '' })}
             fullWidth
             className={classes.input}
             type='text'
@@ -215,9 +319,9 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         <Grid item xs={12} sm={6}>
           <TextField
             variant='outlined'
-            error={!!errors.phoneNumber}
-            helperText={errors.phoneNumber}
-            onFocus={() => setErrors({ ...errors, phoneNumber: '' })}
+            error={!!personalErrors.phoneNumber}
+            helperText={personalErrors.phoneNumber}
+            onFocus={() => setPersonalErrors({ ...personalErrors, phoneNumber: '' })}
             label={I18n.get('phoneNumber')}
             fullWidth
             className={classes.input}
@@ -233,9 +337,9 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           <TextField
             variant='outlined'
             label={I18n.get('titlePosition')}
-            error={!!errors.title}
-            helperText={errors.title}
-            onFocus={() => setErrors({ ...errors, title: '' })}
+            error={!!personalErrors.title}
+            helperText={personalErrors.title}
+            onFocus={() => setPersonalErrors({ ...personalErrors, title: '' })}
             fullWidth
             className={classes.input}
             type='text'
@@ -246,13 +350,128 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           />
         </Grid>
 
+        <Grid item xs={12}>
+          <Typography variant='h5' classes={{ root: classes.spaceAbove }}>
+            {I18n.get('mailingAddress')}
+          </Typography>
+          <Typography variant='body1' paragraph>
+            {I18n.get('mailingAddressReason')}
+          </Typography>
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            variant='outlined'
+            label={I18n.get('mailingAddress')}
+            error={!!personalErrors.address1}
+            helperText={personalErrors.address1}
+            onFocus={() => setPersonalErrors({ ...personalErrors, address1: '' })}
+            fullWidth
+            className={classes.input}
+            type='text'
+            name='address1'
+            required
+            onChange={handleChange}
+            onKeyPress={handleKeyPress}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            variant='outlined'
+            label={I18n.get('city')}
+            error={!!personalErrors.city}
+            helperText={personalErrors.city}
+            onFocus={() => setPersonalErrors({ ...personalErrors, city: '' })}
+            fullWidth
+            className={classes.input}
+            type='text'
+            name='city'
+            required
+            onChange={handleChange}
+            onKeyPress={handleKeyPress}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <Autocomplete
+            id='state-select'
+            autoHighlight
+            autoSelect
+            options={States}
+            filterOptions={createFilterOptions({ matchFrom: 'start', stringify: option => option.label })}
+            getOptionLabel={option => option.value}
+            onChange={(_: any, newValue: IOption | null) =>
+              setUserInfo({ ...userInfo, state: newValue ? newValue.value : '' })
+            }
+            renderOption={option => option.label}
+            renderInput={params => (
+              <TextField
+                {...params}
+                className={classes.input}
+                error={!!personalErrors.state}
+                helperText={personalErrors.state}
+                onFocus={() => setPersonalErrors({ ...personalErrors, state: '' })}
+                required
+                fullWidth
+                label={I18n.get('state')}
+                variant='outlined'
+              ></TextField>
+            )}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            variant='outlined'
+            label={I18n.get('zip')}
+            error={!!personalErrors.postalCode}
+            helperText={personalErrors.postalCode}
+            onFocus={() => setPersonalErrors({ ...personalErrors, postalCode: '' })}
+            fullWidth
+            className={classes.input}
+            type='text'
+            name='postalCode'
+            required
+            onChange={handleChange}
+            onKeyPress={handleKeyPress}
+          />
+        </Grid>
+      </Grid>
+      {/* advance to the next section */}
+      <Grid item>
+        <PillButton
+          type='submit'
+          onClick={() => advanceToCompanyForm()}
+          loading={loading}
+          className={classes.button}
+          backgroundColor='transparent'
+        >
+          {I18n.get('continue')}
+        </PillButton>
+      </Grid>
+    </>
+  )
+
+  // registration - part 2 - company info
+  const companyRegForm = (
+    <>
+      <Grid item>
+        <Typography variant='h2' className={classes.heading} paragraph>
+          <span dangerouslySetInnerHTML={{ __html: I18n.get('joinUs') }}></span>
+        </Typography>
+        <Typography variant='h5' paragraph>
+          {I18n.get('aboutYourCompany')}
+        </Typography>
+      </Grid>
+      <Grid item container spacing={2}>
         <Grid item xs={12} sm={6}>
           <TextField
             variant='outlined'
             label={I18n.get('companyName')}
-            error={!!errors.company}
-            helperText={errors.company}
-            onFocus={() => setErrors({ ...errors, company: '' })}
+            error={!!companyErrors.company}
+            helperText={companyErrors.company}
+            onFocus={() => setCompanyErrors({ ...companyErrors, company: '' })}
             fullWidth
             className={classes.input}
             type='text'
@@ -264,14 +483,20 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <FormControl fullWidth variant='outlined' className={classes.input} required error={!!errors.companySize}>
+          <FormControl
+            fullWidth
+            variant='outlined'
+            className={classes.input}
+            required
+            error={!!companyErrors.companySize}
+          >
             <InputLabel id='company-size-input'>{I18n.get('companySize')}</InputLabel>
             <Select
               labelId='company-size-input'
               fullWidth
               value={userInfo.companySize}
               label={I18n.get('companySize')}
-              onFocus={() => setErrors({ ...errors, companySize: '' })}
+              onFocus={() => setCompanyErrors({ ...companyErrors, companySize: '' })}
               onChange={(e: React.ChangeEvent<{ value: unknown }>) =>
                 setUserInfo({ ...userInfo, companySize: e.target.value as string })
               }
@@ -280,7 +505,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
               <MenuItem value='49-499'>{I18n.get('employeeRange2')}</MenuItem>
               <MenuItem value='500+'>{I18n.get('employeeRange3')}</MenuItem>
             </Select>
-            {!!errors.companySize && <FormHelperText>{errors.companySize}</FormHelperText>}
+            {!!companyErrors.companySize && <FormHelperText>{companyErrors.companySize}</FormHelperText>}
           </FormControl>
         </Grid>
 
@@ -288,9 +513,9 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           <TextField
             variant='outlined'
             label={I18n.get('companyAddress')}
-            error={!!errors.companyAddress1}
-            helperText={errors.companyAddress1}
-            onFocus={() => setErrors({ ...errors, companyAddress1: '' })}
+            error={!!companyErrors.companyAddress1}
+            helperText={companyErrors.companyAddress1}
+            onFocus={() => setCompanyErrors({ ...companyErrors, companyAddress1: '' })}
             fullWidth
             className={classes.input}
             type='text'
@@ -305,9 +530,9 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           <TextField
             variant='outlined'
             label={I18n.get('city')}
-            error={!!errors.companyCity}
-            helperText={errors.companyCity}
-            onFocus={() => setErrors({ ...errors, companyCity: '' })}
+            error={!!companyErrors.companyCity}
+            helperText={companyErrors.companyCity}
+            onFocus={() => setCompanyErrors({ ...companyErrors, companyCity: '' })}
             fullWidth
             className={classes.input}
             type='text'
@@ -334,9 +559,9 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
               <TextField
                 {...params}
                 className={classes.input}
-                error={!!errors.companyState}
-                helperText={errors.companyState}
-                onFocus={() => setErrors({ ...errors, companyState: '' })}
+                error={!!companyErrors.companyState}
+                helperText={companyErrors.companyState}
+                onFocus={() => setCompanyErrors({ ...companyErrors, companyState: '' })}
                 required
                 fullWidth
                 label={I18n.get('state')}
@@ -350,9 +575,9 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           <TextField
             variant='outlined'
             label={I18n.get('zip')}
-            error={!!errors.companyPostalCode}
-            helperText={errors.companyPostalCode}
-            onFocus={() => setErrors({ ...errors, companyPostalCode: '' })}
+            error={!!companyErrors.companyPostalCode}
+            helperText={companyErrors.companyPostalCode}
+            onFocus={() => setCompanyErrors({ ...companyErrors, companyPostalCode: '' })}
             fullWidth
             className={classes.input}
             type='text'
@@ -363,6 +588,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           />
         </Grid>
       </Grid>
+      {/* advance to the next section */}
       <Grid item>
         <PillButton
           type='submit'
@@ -374,33 +600,40 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           {I18n.get('continue')}
         </PillButton>
       </Grid>
+    </>
+  )
+
+  // this reg form is split into two sections, personal and company
+  return (
+    <Grid container direction='column' justify='center'>
+      {activeRegSection === RegSection.personal ? personalRegForm : companyRegForm}
     </Grid>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
-    width: 165,
+    minWidth: 165,
     marginTop: '1rem',
     [theme.breakpoints.down('md')]: {
       marginBottom: '1rem',
       backgroundColor: '#fff !important'
     }
   },
-  dragDrop: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: 80,
-    backgroundColor: '#eee',
-    marginBottom: '1rem',
-    cursor: 'pointer',
-    padding: '0 .5rem',
-    '& span': {
-      textDecoration: 'underline',
-      cursor: 'pointer'
-    }
-  },
+  // dragDrop: {
+  //   display: 'flex',
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   minHeight: 80,
+  //   backgroundColor: 'transparent',
+  //   marginBottom: '1rem',
+  //   cursor: 'pointer',
+  //   padding: '0 .5rem',
+  //   '& span': {
+  //     textDecoration: 'underline',
+  //     cursor: 'pointer'
+  //   }
+  // },
   heading: {
     fontWeight: 700,
     fontSize: '3.125rem',
@@ -437,5 +670,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '0 .5rem',
     fontFamily: 'Verizon-Regular',
     textDecoration: 'underline'
+  },
+  spaceAbove: {
+    marginTop: '2rem'
   }
 }))

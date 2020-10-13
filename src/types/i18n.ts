@@ -54,13 +54,38 @@ export interface IPasswordReqDict {
   passwordReqSymbol: string
 }
 
+export interface IBreakoutDict {
+  registerForABreakout: string
+  reserveYourBreakoutBlurb: string
+  breakoutSession: string
+  'breakoutSessionName-healthcareInsurance': string
+  'breakoutSessionPresenter-healthcareInsurance': string
+  'breakoutSessionDescription-healthcareInsurance': string
+  'breakoutSessionName-retailTravelDistribution': string
+  'breakoutSessionPresenter-retailTravelDistribution': string
+  'breakoutSessionDescription-retailTravelDistribution': string
+  'breakoutSessionName-financialServices': string
+  'breakoutSessionPresenter-financialServices': string
+  'breakoutSessionDescription-financialServices': string
+  'breakoutSessionName-manufacturingEnergyUtilities': string
+  'breakoutSessionPresenter-manufacturingEnergyUtilities': string
+  'breakoutSessionDescription-manufacturingEnergyUtilities': string
+  'breakoutSessionName-mediaEntertainmentTech': string
+  'breakoutSessionPresenter-mediaEntertainmentTech': string
+  'breakoutSessionDescription-mediaEntertainmentTech': string
+  finish: string
+  skip: string
+}
+
+export interface ISurveyDict {
+  surveyTitle: string
+  surveyInstructions: string
+  'question-keynoteSpeaker': string
+  'question-learningObjectives': string
+}
 export interface IRegistrationDict {
   avatarInstructions: string
   city: string
-  company: string
-  companyAddress: string
-  companyName: string
-  companySize: string
   completeRegistration: string
   country: string
   dropImage: string
@@ -68,10 +93,24 @@ export interface IRegistrationDict {
   employeeRange2: string
   employeeRange3: string
   joinUs: string
+  mailingAddress: string
+  mailingAddressReason: string
   phoneNumber: string
   selectedImage: string
   state: string
   titlePosition: string
+  aboutYourCompany: string
+  companySize: string
+  companyAddress: string
+  companyName: string
   youreIn: string
   zip: string
+}
+
+export interface IThankYouDict {
+  lookForwardToSeeingYou: string
+  registrationCompleteBlurb: string
+  stayTuned: string
+  eventInfo: string
+  verizonHub: string
 }

@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { I18n, Auth } from 'aws-amplify'
 import { makeStyles, Theme, Grid, Typography } from '@material-ui/core'
 
 import { PillButton } from 'components'
@@ -12,16 +13,16 @@ export const ThankYou: FC<ThankYouProps> = () => {
     <Grid container direction='column' justify='center' spacing={2}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
-          We look forward to seeing you!
+          {I18n.get('lookForwardToSeeingYou')}
         </Typography>
       </Grid>
       <Grid item>
         <Typography component='p' paragraph>
-          Your registration is complete! We look forward to seeing you at the GSMA Thrive on October 27–29, 2020.
+          {I18n.get('registrationCompleteBlurb')}
         </Typography>
 
         <Typography component='p' paragraph>
-          Please check your email for the registration confirmation and for updates as the event approaches.
+          {I18n.get('stayTuned')}
         </Typography>
       </Grid>
       <Grid item container spacing={1}>
@@ -29,9 +30,9 @@ export const ThankYou: FC<ThankYouProps> = () => {
           <PillButton
             className={classes.button}
             backgroundColor='transparent'
-            href='https://www.verizon.com/business/virtual-events/thrive-mobile-technology-event/'
+            href='https://www.verizon.com/business/virtual-events/11-12-smb-enterprise-5g-innovation-session/'
           >
-            Event Info
+            {I18n.get('eventInfo')}
           </PillButton>
         </Grid>
       </Grid>
@@ -61,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inlineButton: {
     color: '#000',
-    margin: '0 .5rem',
+    margin: '0.5rem',
     fontFamily: 'Verizon-Regular',
     textDecoration: 'underline'
   }

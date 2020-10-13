@@ -3,6 +3,7 @@ type User @model(subscriptions: null) @key(name: "ByEmail", fields: ["email"], q
   firstName: String!
   lastName: String!
   email: String!
+  avatar: String
   phoneNumber: String
   company: String
   companySize: String
@@ -10,10 +11,14 @@ type User @model(subscriptions: null) @key(name: "ByEmail", fields: ["email"], q
   companyCity: String
   companyState: String
   companyPostalCode: String
-  avatar: String
+  address1: String
+  city: String
+  state: String
+  postalCode: String
   title: String
   conversations: [ConvoLink] @connection(keyName: "byConvoUser", fields: ["id"])
   messages: [Message] @connection(keyName: "byAuthor", fields: ["id"])
+  sessions: [UserSessionReservation] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
 }
 
 type Conversation @model(subscriptions: null) {
@@ -22,6 +27,22 @@ type Conversation @model(subscriptions: null) {
   members: [String!]!
   messages: [Message] @connection(keyName: "byConversationByDate", fields: ["id"])
   associated: [ConvoLink] @connection(keyName: "byUserConvo", fields: ["id"])
+}
+
+type Session @model(subscriptions: null) {
+  id: ID!
+  name: String!
+}
+
+type UserSessionReservation 
+  @model(mutations: { create: "createSessionReservation", update: "updateSessionReservation" }, queries: null, subscriptions: null)
+  @key(name: "bySessionUsersReservs", fields: ["userId", "sessionId"])
+  @key(name: "byUserSessionsReservs", fields: ["sessionId", "userId"]) {
+  id: ID!
+  userId: ID!
+  sessionId: ID!
+  user: User! @connection(fields: ["userId"])
+  session: Session! @connection(fields: ["sessionId"])
 }
 
 type Message
@@ -36,6 +57,20 @@ type Message
   conversationId: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
+}
+
+type SurveyQuestion @model(subscriptions: null) {
+    id: ID!
+    name: String!
+}
+
+type SurveyAnswer @model(subscriptions: null, queries: null) {
+    id: ID!
+    answer: String!
+    userId: ID!
+    questionId: ID!
+    user: User! @connection(fields: ["userId"])
+    question: SurveyQuestion! @connection(fields: ["questionId"])
 }
 
 type ConvoLink
