@@ -18,7 +18,7 @@ type User @model(subscriptions: null) @key(name: "ByEmail", fields: ["email"], q
   title: String
   conversations: [ConvoLink] @connection(keyName: "byConvoUser", fields: ["id"])
   messages: [Message] @connection(keyName: "byAuthor", fields: ["id"])
-  sessions: [UserSessionReservation] @connection(keyName: "byUserSessionsReservations", fields: ["id"])
+  sessions: [UserSessionReservation] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
 }
 
 type Conversation @model(subscriptions: null) {
@@ -36,8 +36,8 @@ type Session @model(subscriptions: null) {
 
 type UserSessionReservation 
   @model(mutations: { create: "createSessionReservation", update: "updateSessionReservation" }, queries: null, subscriptions: null)
-  @key(name: "bySessionUsersReservations", fields: ["userId", "sessionId"])
-  @key(name: "byUserSessionsReservations", fields: ["sessionId", "userId"]) {
+  @key(name: "bySessionUsersReservs", fields: ["userId", "sessionId"])
+  @key(name: "byUserSessionsReservs", fields: ["sessionId", "userId"]) {
   id: ID!
   userId: ID!
   sessionId: ID!

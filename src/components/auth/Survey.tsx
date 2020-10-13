@@ -6,6 +6,7 @@ import { PillButton } from 'components'
 import { validateEmail } from 'helpers'
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
 import { userByEmail, listSurveyQuestions } from 'graphql/queries'
+import { createSurveyAnswer } from 'graphql/mutations'
 import { AuthFlowSteps } from 'types'
 
 interface ISurveyQuestion {
@@ -33,7 +34,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
   }, [])
 
   const getCurrentUser = async () => {
-    const foundUser = await graphQLQuery(userByEmail, 'userByEmail', { user: userEmail })
+    const foundUser = await graphQLQuery(userByEmail, 'userByEmail', { email: userEmail })
     if (!foundUser) {
       setAuthState(AuthFlowSteps.Register)
     }
@@ -68,8 +69,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
           // if we have an answer for the question in state,
           // create the answer on the backend
           if (question.userAnswer) {
-            debugger
-            await graphQLMutation('createSurveyAnswer', {
+            await graphQLMutation(createSurveyAnswer, {
               userId: userRes.id,
               questionId: question.id,
               answer: question.userAnswer
@@ -107,7 +107,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
         {Array.from(surveyQuestions).map(([qName, question], index: number) => (
           <>
             {qName !== 'keynoteSpeaker' ? (
-              <Grid item xs={12} sm={6} md={12} lg={6} key={index}>
+              <Grid item xs={12} key={index}>
                 <Typography component='p' paragraph>
                   {I18n.get(`question-${qName}`)}
                 </Typography>

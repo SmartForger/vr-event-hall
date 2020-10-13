@@ -16,6 +16,7 @@ import {
 import { PillButton, PasswordRequirementsTooltip } from 'components'
 import { AuthFlowSteps, IUser, IOption } from 'types'
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
+import { createSessionReservation } from 'graphql/mutations'
 import { userByEmail, listSessions } from 'graphql/queries'
 
 interface IBreakoutSession {
@@ -70,7 +71,7 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
     setLoading(true)
     try {
       const userRes = await getCurrentUser()
-      await graphQLMutation('createSessionReservation', {
+      await graphQLMutation(createSessionReservation, {
         userId: userRes.id,
         sessionId: selectedBreakoutId
       })
