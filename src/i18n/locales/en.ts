@@ -118,6 +118,7 @@ const errors: IErrorDict = {
   invalidPassword: 'Password does not meet requirements',
   invalidPhone: 'Invalid Phone Number',
   invalidZip: 'Invalid Postal Code',
+  invalidCity: 'Invalid City',
   limitExceeded: 'Attempt limit exceeded. Please try again later.',
   passwordsMustMatch: 'Passwords must match.',
   requiredField: 'Required Field'
