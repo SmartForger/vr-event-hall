@@ -4,7 +4,17 @@ import { makeStyles, Theme, Grid } from '@material-ui/core'
 import { useLocation } from 'react-router-dom'
 
 import { Welcome } from 'components'
-import { SignUp, ConfirmSignUp, ResendCode, Registration, SignIn, ForgotPassword, ThankYou } from './index'
+import {
+  SignUp,
+  ConfirmSignUp,
+  ResendCode,
+  Registration,
+  SignIn,
+  ForgotPassword,
+  BreakoutSessions,
+  Survey,
+  ThankYou
+} from './index'
 import { AuthFlowSteps, IUser } from 'types'
 
 interface IAuthWrapper {
@@ -40,6 +50,9 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
         <div className={classes.authWrapper}>
           <Grid container className={classes.authStateWrapper} spacing={3} direction='column'>
             <Grid item xs={12}>
+              {authState === AuthFlowSteps.SignIn && (
+                <SignIn setAuthState={setAuthState} setUserEmail={setUserEmail} setUserPd={setUserPd} />
+              )}
               {authState === AuthFlowSteps.SignUp && (
                 <SignUp setAuthState={setAuthState} setUserEmail={setUserEmail} setUserPd={setUserPd} />
               )}
@@ -52,11 +65,12 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
               {authState === AuthFlowSteps.Register && (
                 <Registration userEmail={userEmail} setAuthState={setAuthState} setUser={props.setUser} />
               )}
-              {authState === AuthFlowSteps.SignIn && (
-                <SignIn setAuthState={setAuthState} setUserEmail={setUserEmail} setUserPd={setUserPd} />
+              {authState === AuthFlowSteps.BreakoutSessions && (
+                <BreakoutSessions setAuthState={setAuthState} userEmail={userEmail} />
               )}
-              {authState === AuthFlowSteps.ForgotPassword && <ForgotPassword setAuthState={setAuthState} />}
+              {authState === AuthFlowSteps.Survey && <Survey setAuthState={setAuthState} userEmail={userEmail} />}
               {authState === AuthFlowSteps.ThankYou && <ThankYou />}
+              {authState === AuthFlowSteps.ForgotPassword && <ForgotPassword setAuthState={setAuthState} />}
             </Grid>
           </Grid>
         </div>
@@ -98,6 +112,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     padding: '0 4rem',
+    marginBottom: '2rem',
     [theme.breakpoints.down('md')]: {
       width: '70%'
     },
@@ -105,8 +120,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
       backgroundColor: '#fff',
       alignItems: 'flex-start',
-      padding: 0,
-      marginBottom: '2rem'
+      padding: 0
     }
   },
   authStateWrapper: {

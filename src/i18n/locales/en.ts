@@ -1,4 +1,12 @@
-import { ICommonDict, IErrorDict, IPasswordReqDict, IRegistrationDict } from 'types'
+import {
+  ICommonDict,
+  IErrorDict,
+  IPasswordReqDict,
+  IBreakoutDict,
+  IThankYouDict,
+  IRegistrationDict,
+  ISurveyDict
+} from 'types'
 
 const common: ICommonDict = {
   alreadyHaveAnAccount: 'Already have an account?',
@@ -27,13 +35,17 @@ const common: ICommonDict = {
   submit: 'Submit'
 }
 
+const survey: ISurveyDict = {
+  surveyTitle: 'Quick Survey',
+  surveyInstructions: "We'd love to hear from you.",
+  'question-keynoteSpeaker':
+    'Do you have any questions for our key note speaker? Help us kick off the event with Bozoma Saint John.',
+  'question-learningObjectives': 'What do you want to learn about 5G? What do you want to get out of this event?'
+}
+
 const registration: IRegistrationDict = {
-  avatarInstructions: 'Click to Browse or drag and drop an image here',
+  avatarInstructions: 'Upload image',
   city: 'City',
-  company: 'Company',
-  companyAddress: 'Organization Address',
-  companyName: 'Organization Name',
-  companySize: 'Organization Size',
   completeRegistration: `To get started, let's set up your personal profile.`,
   country: 'Country',
   dropImage: 'Drop the image here...',
@@ -41,12 +53,42 @@ const registration: IRegistrationDict = {
   employeeRange2: '50 - 499 Employees',
   employeeRange3: '500+ Employees',
   joinUs: 'Join us for 5G<br /> Innovation Sessions',
+  mailingAddress: 'Mailing address',
+  mailingAddressReason: 'To receive a special program package, subject to availability while supplies last.',
+  companyAddress: 'Organization address',
+  companyName: 'Organization Name',
   phoneNumber: 'Phone Number',
   selectedImage: 'Selected image: ',
   state: 'State',
+  aboutYourCompany: 'About your organization',
+  companySize: 'Organization Size',
   titlePosition: 'Title / Position',
   youreIn: "Congrats, You're In!",
   zip: 'Postal Code'
+}
+
+const breakout: IBreakoutDict = {
+  registerForABreakout: 'Register for a breakout session',
+  reserveYourBreakoutBlurb:
+    'Following our hour-long discussion we’ll be featuring several breakout sessions in the heathcare, financial, manufacturing, retail, and media industries. Capacity is limited to 200 attendees each. Please make your selection to save your spot!',
+  breakoutSession: 'Breakout session',
+  'breakoutSessionName-healthcareInsurance': 'Healthcare, Insurance & Life Sciences',
+  'breakoutSessionPresenter-healthcareInsurance': '',
+  'breakoutSessionDescription-healthcareInsurance': '',
+  'breakoutSessionName-retailTravelDistribution': 'Retail/Hospitality, Travel & Distribution',
+  'breakoutSessionPresenter-retailTravelDistribution': '',
+  'breakoutSessionDescription-retailTravelDistribution': '',
+  'breakoutSessionName-financialServices': 'Financial Services',
+  'breakoutSessionPresenter-financialServices': '',
+  'breakoutSessionDescription-financialServices': '',
+  'breakoutSessionName-manufacturingEnergyUtilities': 'Manufacturing, Automotive, Construction, Energy & Utilities',
+  'breakoutSessionPresenter-manufacturingEnergyUtilities': '',
+  'breakoutSessionDescription-manufacturingEnergyUtilities': '',
+  'breakoutSessionName-mediaEntertainmentTech': 'Media, Entertainment, Technology & Services',
+  'breakoutSessionPresenter-mediaEntertainmentTech': '',
+  'breakoutSessionDescription-mediaEntertainmentTech': '',
+  finish: 'Finish',
+  skip: 'Skip'
 }
 
 const passwordRequirements: IPasswordReqDict = {
@@ -56,6 +98,15 @@ const passwordRequirements: IPasswordReqDict = {
   passwordReqLowerCase: 'Must contain at least one lower-case letter',
   passwordReqNumber: 'Must contain at least one number',
   passwordReqSymbol: 'Must contain at least one special character'
+}
+
+const thankYou: IThankYouDict = {
+  lookForwardToSeeingYou: 'We look forward to seeing you!',
+  registrationCompleteBlurb:
+    'Your registration is complete! We look forward to seeing you at the 5G Innovation Sessions on November 12, 2020.',
+  stayTuned: ' Please check your email for the registration confirmation and for updates as the event approaches.',
+  eventInfo: 'Event Info',
+  verizonHub: 'Verizon Hub'
 }
 
 const errors: IErrorDict = {
@@ -72,4 +123,12 @@ const errors: IErrorDict = {
   requiredField: 'Required Field'
 }
 
-export const en = { ...common, ...passwordRequirements, ...errors, ...registration }
+export const en = {
+  ...common,
+  ...passwordRequirements,
+  ...errors,
+  ...registration,
+  ...breakout,
+  ...survey,
+  ...thankYou
+}

@@ -13,6 +13,7 @@ export const onCreateConvoLink = /* GraphQL */ `
         firstName
         lastName
         email
+        avatar
         phoneNumber
         company
         companySize
@@ -20,12 +21,18 @@ export const onCreateConvoLink = /* GraphQL */ `
         companyCity
         companyState
         companyPostalCode
-        avatar
+        address1
+        city
+        state
+        postalCode
         title
         conversations {
           nextToken
         }
         messages {
+          nextToken
+        }
+        sessions {
           nextToken
         }
         createdAt
@@ -80,6 +87,7 @@ export const onCreateUser = /* GraphQL */ `
       firstName
       lastName
       email
+      avatar
       phoneNumber
       company
       companySize
@@ -87,7 +95,10 @@ export const onCreateUser = /* GraphQL */ `
       companyCity
       companyState
       companyPostalCode
-      avatar
+      address1
+      city
+      state
+      postalCode
       title
       conversations {
         items {
@@ -105,6 +116,16 @@ export const onCreateUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      sessions {
+        items {
+          id
+          userId
+          sessionId
           createdAt
           updatedAt
         }
