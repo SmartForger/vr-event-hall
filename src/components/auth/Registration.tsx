@@ -120,20 +120,23 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
   }
 
   const createNewUser = async () => {
+    const lowerCaseEmail: string = userInfo.email?.toLowerCase() || ''
     try {
       if (acceptedFiles && acceptedFiles[0]) {
         const file = acceptedFiles[0]
         const avatar = `${userInfo.id}.${file.type.split('/')[1]}`
+
         // eslint-disable-next-line
         await Promise.all([
           Storage.put(avatar, file, { level: 'public', contentType: file.type }),
           graphQLMutation(createUser, {
             ...userInfo,
+            email: lowerCaseEmail,
             avatar
           })
         ])
       } else {
-        await graphQLMutation(createUser, userInfo)
+        await graphQLMutation(createUser, { ...userInfo, email: lowerCaseEmail })
       }
     } catch (e) {
       console.log(e)

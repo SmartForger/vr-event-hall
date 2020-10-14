@@ -5,6 +5,9 @@ import { createConversation, createConvoLink } from './mutations'
 import { IUser } from 'types'
 
 export const graphQLQuery = async (query: string, queryName: string, options: any = {}) => {
+  if (options.email) {
+    options.email = options.email.toLowerCase()
+  }
   const { data }: any = await API.graphql(graphqlOperation(query, options))
   // checks for list queries vs individual item queries
   if (data[queryName].items) {
