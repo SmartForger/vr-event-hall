@@ -274,33 +274,24 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
 
       <Grid item container spacing={2}>
         <Grid item xs={12}>
-          <Grid container>
-            {acceptedFiles[0] ? (
-              <Grid item xs={12} sm={6}>
-                <Typography variant='body2'>
-                  {I18n.get('selectedImage')} {acceptedFiles[0].name}
-                </Typography>
-              </Grid>
-            ) : (
-              <Grid item xs={12} sm={6}>
-                {/* TODO: replace this with approved svg icon once creative provides svg */}
-                <AccountCircleIcon fontSize='large' />
-              </Grid>
-            )}
-            <Grid item xs={12} sm={6}>
-              <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                <PillButton
-                  loading={loading}
-                  onClick={() => {}}
-                  backgroundColor='transparet'
-                  className={classes.button}
-                >
-                  {I18n.get('avatarInstructions')}
-                </PillButton>
-              </div>
-            </Grid>
-          </Grid>
+          {acceptedFiles[0] ? (
+            <Typography variant='body2'>
+              {I18n.get('selectedImage')} {acceptedFiles[0].name}
+            </Typography>
+          ) : (
+            <AccountCircleIcon fontSize='large' classes={{ root: classes.inlineAvatarIcon }} />
+          )}
+          <div {...getRootProps()} className={classes.inlineAvatarUpload}>
+            <input {...getInputProps()} />
+            <PillButton
+              loading={loading}
+              onClick={() => {}}
+              backgroundColor='transparet'
+              className={classes.inlinePillButton}
+            >
+              {I18n.get('avatarInstructions')}
+            </PillButton>
+          </div>
         </Grid>
 
         <Grid item xs={12} sm={6}>
@@ -694,5 +685,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   spaceAbove: {
     marginTop: '2rem'
+  },
+  inlineAvatarIcon: {
+    display: 'inline-block',
+    marginTop: '20px',
+    marginRight: '20px'
+  },
+  inlineAvatarUpload: {
+    display: 'inline-block',
+    marginTop: '-6px'
+  },
+  inlinePillButton: {
+    minWidth: 165,
+    marginTop: 0,
+    [theme.breakpoints.down('md')]: {
+      marginBottom: '1rem',
+      backgroundColor: '#fff !important'
+    }
   }
 }))
