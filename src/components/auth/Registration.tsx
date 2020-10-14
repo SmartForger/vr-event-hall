@@ -21,7 +21,7 @@ import axios from 'axios'
 
 import { PillButton } from 'components'
 import { AuthFlowSteps, IUser, IOption } from 'types'
-import { States, validatePhoneNumber, validateZip } from 'helpers'
+import { States, validatePhoneNumber, validateZip, validateNonNumeric } from 'helpers'
 import { graphQLMutation } from 'graphql/helpers'
 import { createUser } from 'graphql/mutations'
 
@@ -107,6 +107,12 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     // eslint-disable-next-line
   }, [userEmail])
 
+  useEffect(() => {
+    return () => {
+      setUserInfo(initialUser)
+    }
+  }, [])
+
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({
     accept: 'image/jpeg, image/png'
   })
@@ -162,7 +168,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     }
   }
 
-  const validatePersonalForm = (): boolean => {
+  const personalFormHasErrors = (): boolean => {
     const errorObj: IPersonalRegErrors = {
       firstName: !userInfo.firstName ? I18n.get('requiredField') : '',
       lastName: !userInfo.lastName ? I18n.get('requiredField') : '',
@@ -173,7 +179,11 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         : '',
       title: !userInfo.title ? I18n.get('requiredField') : '',
       address1: !userInfo.address1 ? I18n.get('requiredField') : '',
-      city: !userInfo.city ? I18n.get('requiredField') : '',
+      city: !userInfo.city
+        ? I18n.get('requiredField')
+        : !validateNonNumeric(userInfo.city as string)
+        ? I18n.get('invalidCity')
+        : '',
       state: !userInfo.state ? I18n.get('requiredField') : '',
       postalCode: !userInfo.postalCode
         ? I18n.get('requiredField')
@@ -191,12 +201,16 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     return false
   }
 
-  const validateCompanyForm = (): boolean => {
+  const companyFormHasErrors = (): boolean => {
     const errorObj: ICompanyRegErrors = {
       company: !userInfo.company ? I18n.get('requiredField') : '',
       companySize: !userInfo.companySize ? I18n.get('requiredField') : '',
       companyAddress1: !userInfo.companyAddress1 ? I18n.get('requiredField') : '',
-      companyCity: !userInfo.companyCity ? I18n.get('requiredField') : '',
+      companyCity: !userInfo.companyCity
+        ? I18n.get('requiredField')
+        : !validateNonNumeric(userInfo.companyCity as string)
+        ? I18n.get('invalidCity')
+        : '',
       companyState: !userInfo.companyState ? I18n.get('requiredField') : '',
       companyPostalCode: !userInfo.companyPostalCode
         ? I18n.get('requiredField')
@@ -216,7 +230,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
   }
 
   const submitUser = async () => {
-    const hasErrors = validateCompanyForm() && validatePersonalForm()
+    const hasErrors = companyFormHasErrors() || personalFormHasErrors()
     if (!hasErrors) {
       setLoading(true)
       try {
@@ -233,9 +247,13 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
   }
 
   const advanceToCompanyForm = async () => {
-    const hasErrors = validatePersonalForm()
+    const hasErrors = personalFormHasErrors()
     if (!hasErrors) {
       setActiveRegSection(RegSection.company)
+      setUserInfo({
+        ...initialUser,
+        ...userInfo
+      })
     }
   }
 
