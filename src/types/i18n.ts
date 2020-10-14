@@ -40,6 +40,7 @@ export interface IErrorDict {
   invalidPassword: string
   invalidPhone: string
   invalidZip: string
+  invalidCity: string
   limitExceeded: string
   passwordsMustMatch: string
   requiredField: string

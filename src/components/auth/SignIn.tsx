@@ -58,7 +58,7 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
     } else {
       setLoading(true)
       try {
-        const user = await Auth.signIn(email, password)
+        const user = await Auth.signIn(email.toLowerCase(), password)
         setUserEmail(email)
         getCurrentUser(user.attributes.email)
       } catch (error) {
