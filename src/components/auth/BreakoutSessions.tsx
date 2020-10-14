@@ -182,7 +182,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     width: 165,
-    marginRight: '20px'
+    marginRight: '20px',
+    marginBottom: '20px'
   },
   input: {
     color: '#000',
