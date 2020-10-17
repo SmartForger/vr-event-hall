@@ -177,18 +177,23 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         : !validatePhoneNumber(userInfo.phoneNumber as string)
         ? I18n.get('invalidPhone')
         : '',
-      title: !userInfo.title ? I18n.get('requiredField') : '',
-      address1: !userInfo.address1 ? I18n.get('requiredField') : '',
-      city: !userInfo.city
-        ? I18n.get('requiredField')
-        : !validateNonNumeric(userInfo.city as string)
-        ? I18n.get('invalidCity')
+
+      title: '',
+      // no longer required
+      address1: '',
+      // no longer required
+      city: /\S+/g.test(userInfo.city || '')
+        ? !validateNonNumeric(userInfo.city as string)
+          ? I18n.get('invalidCity')
+          : ''
         : '',
-      state: !userInfo.state ? I18n.get('requiredField') : '',
-      postalCode: !userInfo.postalCode
-        ? I18n.get('requiredField')
-        : !validateZip(userInfo.postalCode as string)
-        ? I18n.get('invalidZip')
+      // no longer required
+      state: '',
+      // no longer required
+      postalCode: /\S+/g.test(userInfo.postalCode || '')
+        ? !validateZip(userInfo.postalCode as string)
+          ? I18n.get('invalidZip')
+          : ''
         : ''
     }
     const hasErrors = Object.keys(errorObj).some(key => errorObj[key] !== '')
@@ -286,7 +291,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             <PillButton
               loading={loading}
               onClick={() => {}}
-              backgroundColor='transparet'
+              backgroundColor='transparent'
               className={classes.inlinePillButton}
             >
               {I18n.get('avatarInstructions')}
@@ -345,7 +350,8 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        {/* Temporarily Removing */}
+        {/* <Grid item xs={12} sm={6}>
           <TextField
             variant='outlined'
             label={I18n.get('titlePosition')}
@@ -360,7 +366,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             onChange={handleChange}
             onKeyPress={handleKeyPress}
           />
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12}>
           <Typography variant='h5' classes={{ root: classes.spaceAbove }}>
@@ -382,7 +388,6 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             className={classes.input}
             type='text'
             name='address1'
-            required
             onChange={handleChange}
             onKeyPress={handleKeyPress}
           />
@@ -399,7 +404,6 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             className={classes.input}
             type='text'
             name='city'
-            required
             onChange={handleChange}
             onKeyPress={handleKeyPress}
           />
@@ -424,7 +428,6 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
                 error={!!personalErrors.state}
                 helperText={personalErrors.state}
                 onFocus={() => setPersonalErrors({ ...personalErrors, state: '' })}
-                required
                 fullWidth
                 label={I18n.get('state')}
                 variant='outlined'
@@ -444,7 +447,6 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             className={classes.input}
             type='text'
             name='postalCode'
-            required
             onChange={handleChange}
             onKeyPress={handleKeyPress}
           />
@@ -687,13 +689,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: '2rem'
   },
   inlineAvatarIcon: {
+    position: 'relative',
+    top: '12px',
     display: 'inline-block',
     marginTop: '20px',
     marginRight: '20px'
   },
   inlineAvatarUpload: {
-    display: 'inline-block',
-    marginTop: '-6px'
+    display: 'inline-block'
   },
   inlinePillButton: {
     minWidth: 165,

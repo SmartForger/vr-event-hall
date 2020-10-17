@@ -14,7 +14,8 @@ const common: ICommonDict = {
   completeRegistration: 'Complete Registration',
   confirmationCode: 'Confirmation Code',
   confirmEmail: 'Confirm E-mail',
-  confirmEmailInstructions: 'A Confirmation Code was sent to your E-mail.',
+  confirmEmailInstructions:
+    'A confirmation code was sent to your e-mail. Didn’t receive it? Check your spam folder or resend code.',
   confirmPassword: 'Confirm Password',
   continue: 'Continue',
   dontHaveAnAccount: "Don't have an account?",
@@ -36,7 +37,7 @@ const common: ICommonDict = {
 }
 
 const survey: ISurveyDict = {
-  surveyTitle: 'Quick Survey',
+  surveyTitle: 'Quick Survey.',
   surveyInstructions: "We'd love to hear from you.",
   'question-keynoteSpeaker':
     'Do you have any questions for our key note speaker? Help us kick off the event with Bozoma Saint John.',
@@ -44,7 +45,7 @@ const survey: ISurveyDict = {
 }
 
 const registration: IRegistrationDict = {
-  avatarInstructions: 'Upload image',
+  avatarInstructions: 'Upload picture for event profile',
   city: 'City',
   completeRegistration: `To get started, let's set up your personal profile.`,
   country: 'Country',
@@ -52,9 +53,10 @@ const registration: IRegistrationDict = {
   employeeRange1: '0 - 50 Employees',
   employeeRange2: '50 - 499 Employees',
   employeeRange3: '500+ Employees',
-  joinUs: 'Join us for 5G<br /> Innovation Sessions',
+  joinUs: 'Join us for 5G<br /> Innovation Sessions.',
   mailingAddress: 'Mailing address',
-  mailingAddressReason: 'To receive a special program package, subject to availability while supplies last.',
+  mailingAddressReason:
+    'If you would like to receive a complimentary program package, please provide your mailing address below.',
   companyAddress: 'Organization address',
   companyName: 'Organization Name',
   phoneNumber: 'Phone Number',
@@ -68,9 +70,9 @@ const registration: IRegistrationDict = {
 }
 
 const breakout: IBreakoutDict = {
-  registerForABreakout: 'Register for a breakout session',
+  registerForABreakout: 'Register for a breakout session.',
   reserveYourBreakoutBlurb:
-    'Following our hour-long discussion we’ll be featuring several breakout sessions in the heathcare, financial, manufacturing, retail, and media industries. Capacity is limited to 200 attendees each. Please make your selection to save your spot!',
+    "Following the presentations, you'll have an opportunity to hear how your business can take advantage of the full, transformative power of 5G.  Let our experts take you on a deeper dive into vertical-specific use cases to demonstrate how your business can benefit from Verizon's 5G.<br/>Each session includes a live Q&A. Capacity is limited to 200 attendees each. Please make your selection to save your spot!",
   breakoutSession: 'Breakout session',
   'breakoutSessionName-healthcareInsurance': 'Healthcare, Insurance & Life Sciences',
   'breakoutSessionPresenter-healthcareInsurance': '',
