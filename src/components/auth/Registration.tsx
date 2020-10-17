@@ -177,7 +177,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         : !validatePhoneNumber(userInfo.phoneNumber as string)
         ? I18n.get('invalidPhone')
         : '',
-
+      // temporarily not required
       title: '',
       // no longer required
       address1: '',
