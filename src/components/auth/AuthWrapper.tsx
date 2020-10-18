@@ -113,7 +113,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '46%',
     display: 'flex',
     alignItems: 'center',
-    padding: '0 4rem',
+    padding: '90px 4rem',
     [theme.breakpoints.down('md')]: {
       width: '70%'
     },
