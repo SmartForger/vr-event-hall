@@ -106,6 +106,7 @@ export interface IRegistrationDict {
   companyName: string
   youreIn: string
   zip: string
+  emailWillBecomeUsername: string
 }
 
 export interface IThankYouDict {
