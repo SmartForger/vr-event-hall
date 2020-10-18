@@ -92,7 +92,7 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
       </Grid>
       <Grid item container alignItems='center'>
         <Typography component='p' paragraph>
-          {I18n.get('reserveYourBreakoutBlurb')}
+          <span dangerouslySetInnerHTML={{ __html: I18n.get('reserveYourBreakoutBlurb') }}></span>
         </Typography>
       </Grid>
       <Grid item container spacing={2} justify='center'>
@@ -147,7 +147,7 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
       </Grid>
       <Grid container item xs={12}>
         <PillButton loading={loading} type='submit' onClick={() => reserveBreakout()} solid className={classes.button}>
-          {I18n.get('finish')}
+          {I18n.get('next')}
         </PillButton>
         <PillButton
           loading={loading}

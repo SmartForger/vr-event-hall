@@ -168,7 +168,11 @@ export const SignUp: FC<SignUpProps> = ({ setAuthState, setUserEmail, setUserPd 
           />
         </Grid>
       </Grid>
-
+      <Grid item container xs={12}>
+        <Typography variant='body2' paragraph classes={{ root: classes.emailNote }}>
+          {I18n.get('emailWillBecomeUsername')}
+        </Typography>
+      </Grid>
       <Grid item container xs={12}>
         <PillButton
           loading={loading}
@@ -248,5 +252,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       cursor: 'pointer'
     }
+  },
+  emailNote: {
+    color: '#979797',
+    fontSize: '14px'
   }
 }))

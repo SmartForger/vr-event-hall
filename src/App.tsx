@@ -13,7 +13,7 @@ import { store } from 'configs'
 import { dict } from 'i18n'
 import { IUser } from 'types'
 import { theme } from 'helpers'
-import AuthBG from 'assets/welcome-bg.png'
+import AuthBG from 'assets/entrp-welcome-bg.jpg'
 
 I18n.putVocabularies(dict)
 
@@ -33,7 +33,6 @@ const App = () => {
               <NotificationProvider>
                 <Notifications />
                 <MeetingProvider>
-                  <Header />
                   <Router>
                     <Switch>
                       <Route exact path='/'>
@@ -41,6 +40,7 @@ const App = () => {
                       </Route>
                       <UserAuthenticatedRoutes user={user} setUser={setUser}>
                         <Route exact path='/event'>
+                          <Header />
                           <GameWrapper user={user} />
                         </Route>
                       </UserAuthenticatedRoutes>
