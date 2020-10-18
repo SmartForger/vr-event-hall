@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { makeStyles, Theme, Grid } from '@material-ui/core'
 import { useLocation } from 'react-router-dom'
 
-import { Welcome } from 'components'
+import { Welcome, Header } from 'components'
 import {
   SignUp,
   ConfirmSignUp,
@@ -45,6 +45,7 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
 
   return (
     <div className={classNames(classes.root, props.backgroundImage && classes.backgroundImage)}>
+      <Header />
       {authState === AuthFlowSteps.Welcome && <Welcome setAuthState={setAuthState} />}
       {authState !== AuthFlowSteps.Welcome && (
         <div className={classes.authWrapper}>
@@ -81,7 +82,7 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minHeight: 'calc(100% - 125px - 90px)',
+    minHeight: 'calc(100vh - 125px - 90px)',
     height: 'initial',
     width: '100%',
     color: '#000',
@@ -99,20 +100,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       ? {
           [theme.breakpoints.up('lg')]: {
             backgroundImage: `url(${props.backgroundImage})`,
-            backgroundPosition: 'center',
+            backgroundPosition: 'right',
             backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover'
+            backgroundSize: 'contain'
           }
         }
       : {},
   authWrapper: {
-    backgroundColor: 'transparent',
-    height: '100%',
-    width: '50%',
+    backgroundColor: '#fff',
+    minHeight: 'calc(100vh - 125px)',
+    marginTop: '-90px',
+    width: '46%',
     display: 'flex',
     alignItems: 'center',
     padding: '0 4rem',
-    marginBottom: '2rem',
     [theme.breakpoints.down('md')]: {
       width: '70%'
     },
@@ -124,7 +125,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   authStateWrapper: {
-    width: '80%',
+    width: '100%',
     [theme.breakpoints.down('md')]: {
       width: '90%'
     },
