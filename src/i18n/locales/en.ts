@@ -66,7 +66,8 @@ const registration: IRegistrationDict = {
   companySize: 'Organization Size',
   titlePosition: 'Title / Position',
   youreIn: "Congrats, You're In!",
-  zip: 'Postal Code'
+  zip: 'Postal Code',
+  emailWillBecomeUsername: 'Your email will automatically become your username.'
 }
 
 const breakout: IBreakoutDict = {
