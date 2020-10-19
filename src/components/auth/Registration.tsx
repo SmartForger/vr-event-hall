@@ -150,24 +150,6 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     }
   }
 
-  const sendIntegrateData = async () => {
-    try {
-      const response = await axios({
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        url: 'https://f1chjtarbg.execute-api.us-east-1.amazonaws.com/prod/integrate',
-        data: {
-          user: { ...userInfo }
-        }
-      })
-      return response.data
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   const personalFormHasErrors = (): boolean => {
     const errorObj: IPersonalRegErrors = {
       firstName: !userInfo.firstName ? I18n.get('requiredField') : '',
@@ -240,7 +222,6 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
       setLoading(true)
       try {
         await createNewUser()
-        await sendIntegrateData()
         // TODO: Remove later
         setAuthState(AuthFlowSteps.BreakoutSessions)
       } catch (error) {
