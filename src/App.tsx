@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { MeetingProvider, NotificationProvider, darkTheme } from 'amazon-chime-sdk-component-library-react'
 import { ThemeProvider as MuiThemeProvider, StylesProvider } from '@material-ui/core'
@@ -38,13 +38,14 @@ const App = () => {
                       <Route exact path='/'>
                         <AuthWrapper backgroundImage={AuthBG} setUser={setUser} />
                       </Route>
-                      <UserAuthenticatedRoutes user={user} setUser={setUser}>
-                        <Route exact path='/event'>
-                          <Header />
-                          <GameWrapper user={user} />
-                        </Route>
-                      </UserAuthenticatedRoutes>
+                      {/*<UserAuthenticatedRoutes user={user} setUser={setUser}>*/}
+                      {/*  <Route exact path='/event'>*/}
+                      {/*    <Header />*/}
+                      {/*    <GameWrapper user={user} />*/}
+                      {/*  </Route>*/}
+                      {/*</UserAuthenticatedRoutes>*/}
                     </Switch>
+                    <Redirect from='*' to='/' />
                   </Router>
                   <Footer />
                 </MeetingProvider>
