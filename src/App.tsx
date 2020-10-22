@@ -13,7 +13,7 @@ import { store } from 'configs'
 import { dict } from 'i18n'
 import { IUser } from 'types'
 import { theme } from 'helpers'
-import AuthBG from 'assets/entrp-welcome-bg.jpg'
+import AuthBG from 'assets/entrp-welcome-bg.png'
 
 I18n.putVocabularies(dict)
 
