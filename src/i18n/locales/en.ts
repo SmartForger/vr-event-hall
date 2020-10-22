@@ -53,6 +53,11 @@ const registration: IRegistrationDict = {
   employeeRange1: '0 - 50 Employees',
   employeeRange2: '50 - 499 Employees',
   employeeRange3: '500+ Employees',
+  cSuite: 'C-Suite',
+  vp: 'VP',
+  director: 'Director',
+  manager: 'Manager',
+  staff: 'Staff',
   joinUs: 'Join us for 5G<br /> Innovation Sessions.',
   mailingAddress: 'Mailing address',
   mailingAddressReason:
