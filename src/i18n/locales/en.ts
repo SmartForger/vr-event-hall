@@ -106,7 +106,7 @@ const passwordRequirements: IPasswordReqDict = {
 const thankYou: IThankYouDict = {
   lookForwardToSeeingYou: 'We look forward to seeing you!',
   registrationCompleteBlurb:
-    'Your registration is complete! We look forward to seeing you at the 5G Innovation Sessions on November 12, 2020.',
+    'Your registration is complete! We look forward to seeing you at the 5G Innovation Sessions on November 18, 2020.',
   stayTuned: ' Please check your email for the registration confirmation and for updates as the event approaches.',
   eventInfo: 'Event Info',
   verizonHub: 'Verizon Hub'
