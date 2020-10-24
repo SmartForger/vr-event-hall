@@ -106,6 +106,11 @@ export interface IRegistrationDict {
   companyName: string
   youreIn: string
   zip: string
+  cSuite: string
+  vp: string
+  director: string
+  manager: string
+  staff: string
   emailWillBecomeUsername: string
 }
 

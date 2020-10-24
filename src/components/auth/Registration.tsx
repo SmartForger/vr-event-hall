@@ -150,24 +150,6 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     }
   }
 
-  const sendIntegrateData = async () => {
-    try {
-      const response = await axios({
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        url: 'https://f1chjtarbg.execute-api.us-east-1.amazonaws.com/prod/integrate',
-        data: {
-          user: { ...userInfo }
-        }
-      })
-      return response.data
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   const personalFormHasErrors = (): boolean => {
     const errorObj: IPersonalRegErrors = {
       firstName: !userInfo.firstName ? I18n.get('requiredField') : '',
@@ -240,7 +222,6 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
       setLoading(true)
       try {
         await createNewUser()
-        await sendIntegrateData()
         // TODO: Remove later
         setAuthState(AuthFlowSteps.BreakoutSessions)
       } catch (error) {
@@ -350,23 +331,28 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           />
         </Grid>
 
-        {/* Temporarily Removing */}
-        {/* <Grid item xs={12} sm={6}>
-          <TextField
-            variant='outlined'
-            label={I18n.get('titlePosition')}
-            error={!!personalErrors.title}
-            helperText={personalErrors.title}
-            onFocus={() => setPersonalErrors({ ...personalErrors, title: '' })}
-            fullWidth
-            className={classes.input}
-            type='text'
-            name='title'
-            required
-            onChange={handleChange}
-            onKeyPress={handleKeyPress}
-          />
-        </Grid> */}
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth variant='outlined' className={classes.input} required error={!!personalErrors.title}>
+            <InputLabel id='personal-size-input'>{I18n.get('titlePosition')}</InputLabel>
+            <Select
+              labelId='personal-size-input'
+              fullWidth
+              value={userInfo.title}
+              label={I18n.get('titlePosition')}
+              onFocus={() => setPersonalErrors({ ...personalErrors, title: '' })}
+              onChange={(e: React.ChangeEvent<{ value: unknown }>) =>
+                setUserInfo({ ...userInfo, title: e.target.value as string })
+              }
+            >
+              <MenuItem value='c-suite'>{I18n.get('cSuite')}</MenuItem>
+              <MenuItem value='vp'>{I18n.get('vp')}</MenuItem>
+              <MenuItem value='director'>{I18n.get('director')}</MenuItem>
+              <MenuItem value='manager'>{I18n.get('manager')}</MenuItem>
+              <MenuItem value='staff'>{I18n.get('staff')}</MenuItem>
+            </Select>
+            {!!personalErrors.title && <FormHelperText>{personalErrors.title}</FormHelperText>}
+          </FormControl>
+        </Grid>
 
         <Grid item xs={12}>
           <Typography variant='h5' classes={{ root: classes.spaceAbove }}>
