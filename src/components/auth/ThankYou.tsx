@@ -30,7 +30,7 @@ export const ThankYou: FC<ThankYouProps> = () => {
           <PillButton
             className={classes.button}
             backgroundColor='transparent'
-            href='https://www.verizon.com/business/virtual-events/11-12-smb-enterprise-5g-innovation-session/'
+            href='https://enterprise.verizon.com/resources/events/11-18-smb-enterprise-5g-innovation-session/'
           >
             {I18n.get('eventInfo')}
           </PillButton>
