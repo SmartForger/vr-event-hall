@@ -23,11 +23,5 @@
         }
       }
     }
-  },
-  "storage": {
-    "enterprisestorage": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation"
-    }
   }
 }
