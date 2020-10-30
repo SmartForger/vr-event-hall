@@ -6,14 +6,14 @@ import { ThemeProvider as MuiThemeProvider, StylesProvider } from '@material-ui/
 import { ThemeProvider as StyledThemeProvider } from 'styled-components'
 import { I18n } from 'aws-amplify'
 // Components
-import { UserAuthenticatedRoutes, AuthWrapper, Notifications, Header, Footer } from 'components'
+import { Notifications, Footer } from 'components'
 import { GameWrapper } from 'UI'
 // Helpers
 import { store } from 'configs'
 import { dict } from 'i18n'
 import { IUser } from 'types'
 import { theme } from 'helpers'
-import AuthBG from 'assets/entrp-welcome-bg.jpg'
+import { AnalyticsWrapper } from './components/router/AnalyticsWrapper'
 
 I18n.putVocabularies(dict)
 
@@ -34,18 +34,7 @@ const App = () => {
                 <Notifications />
                 <MeetingProvider>
                   <Router>
-                    <Switch>
-                      <Route exact path='/'>
-                        <AuthWrapper backgroundImage={AuthBG} setUser={setUser} />
-                      </Route>
-                      {/*<UserAuthenticatedRoutes user={user} setUser={setUser}>*/}
-                      {/*  <Route exact path='/event'>*/}
-                      {/*    <Header />*/}
-                      {/*    <GameWrapper user={user} />*/}
-                      {/*  </Route>*/}
-                      {/*</UserAuthenticatedRoutes>*/}
-                    </Switch>
-                    <Redirect from='*' to='/' />
+                    <AnalyticsWrapper setUser={setUser} />
                   </Router>
                   <Footer />
                 </MeetingProvider>
