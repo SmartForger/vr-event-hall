@@ -53,6 +53,11 @@ const registration: IRegistrationDict = {
   employeeRange1: '0 - 50 Employees',
   employeeRange2: '50 - 499 Employees',
   employeeRange3: '500+ Employees',
+  cSuite: 'C-Suite',
+  vp: 'VP',
+  director: 'Director',
+  manager: 'Manager',
+  staff: 'Staff',
   joinUs: 'Join us for 5G<br /> Innovation Sessions.',
   mailingAddress: 'Mailing address',
   mailingAddressReason:
@@ -106,7 +111,7 @@ const passwordRequirements: IPasswordReqDict = {
 const thankYou: IThankYouDict = {
   lookForwardToSeeingYou: 'We look forward to seeing you!',
   registrationCompleteBlurb:
-    'Your registration is complete! We look forward to seeing you at the 5G Innovation Sessions on November 12, 2020.',
+    'Your registration is complete! We look forward to seeing you at the 5G Innovation Sessions on November 18, 2020.',
   stayTuned: ' Please check your email for the registration confirmation and for updates as the event approaches.',
   eventInfo: 'Event Info',
   verizonHub: 'Verizon Hub'
