@@ -150,6 +150,36 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     }
   }
 
+  const sendIntegrateData = async () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search)
+      const utmCampaignParams = {
+        utm_source: urlParams.get('utm_source') || '',
+        utm_medium: urlParams.get('utm_medium') || '',
+        utm_campaign: urlParams.get('utm_campaign') || '',
+        utm_term: urlParams.get('utm_term') || '',
+        utm_content: urlParams.get('utm_content') || ''
+      }
+
+      const response = await axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        url: 'https://f1chjtarbg.execute-api.us-east-1.amazonaws.com/prod/integrate',
+        data: {
+          user: { ...userInfo, ...utmCampaignParams, createdAt: new Date().getTime(), status: 'Registered' },
+          event: 'enterprise'
+        }
+      })
+      // Remove URL params
+      window.history.replaceState({}, document.title, '/')
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const personalFormHasErrors = (): boolean => {
     const errorObj: IPersonalRegErrors = {
       firstName: !userInfo.firstName ? I18n.get('requiredField') : '',
@@ -222,6 +252,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
       setLoading(true)
       try {
         await createNewUser()
+        await sendIntegrateData()
         // TODO: Remove later
         setAuthState(AuthFlowSteps.BreakoutSessions)
       } catch (error) {
