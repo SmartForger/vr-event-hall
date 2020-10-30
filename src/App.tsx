@@ -35,7 +35,6 @@ const App = () => {
                 <MeetingProvider>
                   <Router>
                     <AnalyticsWrapper setUser={setUser} />
-                    <Redirect from='*' to='/' />
                   </Router>
                   <Footer />
                 </MeetingProvider>
