@@ -252,6 +252,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
       setLoading(true)
       try {
         await createNewUser()
+        await sendIntegrateData()
         // TODO: Remove later
         setAuthState(AuthFlowSteps.BreakoutSessions)
       } catch (error) {
