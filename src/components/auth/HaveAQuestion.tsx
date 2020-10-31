@@ -1,9 +1,8 @@
 import React, { FC, useState, useEffect } from 'react'
-import { I18n, Auth } from 'aws-amplify'
-import { makeStyles, Theme, Grid, TextField, Link, Typography } from '@material-ui/core'
+import { I18n } from 'aws-amplify'
+import { makeStyles, Theme, Grid, TextField, Typography } from '@material-ui/core'
 
 import { PillButton } from 'components'
-import { validateEmail } from 'helpers'
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
 import { userByEmail, listSurveyQuestions } from 'graphql/queries'
 import { createSurveyAnswer } from 'graphql/mutations'
@@ -15,22 +14,22 @@ interface ISurveyQuestion {
   userAnswer?: string
 }
 
-interface SurveyProps {
+interface HaveAQuestionProps {
   userEmail: string
   setAuthState: (state: AuthFlowSteps) => void
 }
 
-export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
+export const HaveAQuestion: FC<HaveAQuestionProps> = ({ userEmail, setAuthState }) => {
   const classes = useStyles()
   const [loading, setLoading] = useState<boolean>(false)
-  const [surveyQuestions, setSurveyQuestions] = useState<Map<string, ISurveyQuestion>>(new Map())
+  const [question, setQuestion] = useState<ISurveyQuestion>({
+    id: '',
+    name: '',
+    userAnswer: ''
+  })
 
   useEffect(() => {
-    getSurveyQuestions()
-
-    return () => {
-      setSurveyQuestions(new Map())
-    }
+    getSurveyQuestion()
   }, [])
 
   const getCurrentUser = async () => {
@@ -41,43 +40,12 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
     return foundUser
   }
 
-  const getSurveyQuestions = async () => {
+  const getSurveyQuestion = async () => {
     setLoading(true)
     try {
       const foundQuestions: ISurveyQuestion[] = await graphQLQuery(listSurveyQuestions, 'listSurveyQuestions', {})
-      const questionMap = new Map()
-
-      foundQuestions.forEach((q: ISurveyQuestion) => {
-        if (!questionMap.get(q.name)) {
-          questionMap.set(q.name, q)
-        }
-      })
-      setSurveyQuestions(questionMap)
-      setLoading(false)
-      return foundQuestions
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const submitSurvey = async () => {
-    setLoading(true)
-    try {
-      const userRes = await getCurrentUser()
-      if (surveyQuestions.size > 0) {
-        for (let [qName, question] of Array.from(surveyQuestions)) {
-          // if we have an answer for the question in state,
-          // create the answer on the backend
-          if (question.userAnswer) {
-            await graphQLMutation(createSurveyAnswer, {
-              userId: userRes.id,
-              questionId: question.id,
-              answer: question.userAnswer
-            })
-          }
-        }
-      }
-      setAuthState(AuthFlowSteps.ThankYou)
+      const q = foundQuestions.find(question => question.name === 'industrySpecificQuestion')
+      q && setQuestion(q)
     } catch (error) {
       console.log(error)
     } finally {
@@ -85,44 +53,51 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
     }
   }
 
-  const answerSurveyQuestion = (question: ISurveyQuestion, answer: string): void => {
-    question.userAnswer = answer
-    surveyQuestions.set(question.name, question)
-    setSurveyQuestions(surveyQuestions)
+  const submitSurvey = async () => {
+    setLoading(true)
+    try {
+      const userRes = await getCurrentUser()
+      if (question) {
+        await graphQLMutation(createSurveyAnswer, {
+          userId: userRes.id,
+          questionId: question.id,
+          answer: question.userAnswer
+        })
+      }
+      setAuthState(AuthFlowSteps.Survey)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <Grid container direction='column' justify='center' spacing={2}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
-          {I18n.get('surveyTitle')}
+          Have a question?
         </Typography>
       </Grid>
       <Grid item>
         <Typography component='p' display='inline'>
-          {I18n.get('surveyInstructions')}
+          If you have an industry-specific 5G question you would like addressed during the breakout, let us know here!
         </Typography>
       </Grid>
       <Grid item container spacing={2}>
-        {Array.from(surveyQuestions).map(([qName, question], index: number) => (
-          <>
-            {qName !== 'keynoteSpeaker' && qName !== 'industrySpecificQuestion' ? (
-              <Grid item xs={12} key={index}>
-                <Typography component='p' paragraph>
-                  {I18n.get(`question-${qName}`)}
-                </Typography>
-                <TextField
-                  fullWidth
-                  className={classes.input}
-                  multiline
-                  id={`survey-answer-${qName}`}
-                  variant='outlined'
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => answerSurveyQuestion(question, e.target.value)}
-                />
-              </Grid>
-            ) : null}
-          </>
-        ))}
+        <TextField
+          id='have-a-question'
+          fullWidth
+          multiline
+          rows={4}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setQuestion({ ...question, userAnswer: e.target.value })
+          }
+          variant='outlined'
+          inputProps={{
+            placeholder: 'Enter question'
+          }}
+        />
       </Grid>
       <Grid item>
         <PillButton
