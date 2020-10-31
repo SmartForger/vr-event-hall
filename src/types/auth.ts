@@ -8,6 +8,7 @@ export enum AuthFlowSteps {
   SignUp = 'signUp',
   ThankYou = 'thankYou',
   BreakoutSessions = 'breakoutSelection',
+  HaveAQuestion = 'haveAQuestion',
   Survey = 'survey'
 }
 

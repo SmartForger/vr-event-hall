@@ -75,7 +75,7 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
         userId: userRes.id,
         sessionId: selectedBreakoutId
       })
-      setAuthState(AuthFlowSteps.Survey)
+      setAuthState(AuthFlowSteps.HaveAQuestion)
     } catch (error) {
       console.log(error)
     } finally {

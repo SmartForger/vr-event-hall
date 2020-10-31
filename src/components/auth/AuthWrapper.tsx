@@ -12,6 +12,7 @@ import {
   SignIn,
   ForgotPassword,
   BreakoutSessions,
+  HaveAQuestion,
   Survey,
   ThankYou
 } from './index'
@@ -68,6 +69,9 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
               )}
               {authState === AuthFlowSteps.BreakoutSessions && (
                 <BreakoutSessions setAuthState={setAuthState} userEmail={userEmail} />
+              )}
+              {authState === AuthFlowSteps.HaveAQuestion && (
+                <HaveAQuestion setAuthState={setAuthState} userEmail={userEmail} />
               )}
               {authState === AuthFlowSteps.Survey && <Survey setAuthState={setAuthState} userEmail={userEmail} />}
               {authState === AuthFlowSteps.ThankYou && <ThankYou />}
