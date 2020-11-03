@@ -33,6 +33,10 @@ export const States: IOption[] = [
     value: 'DC'
   },
   {
+    label: 'Delaware',
+    value: 'DE'
+  },
+  {
     label: 'Florida',
     value: 'FL'
   },
