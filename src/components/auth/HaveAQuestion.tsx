@@ -57,7 +57,7 @@ export const HaveAQuestion: FC<HaveAQuestionProps> = ({ userEmail, setAuthState 
     setLoading(true)
     try {
       const userRes = await getCurrentUser()
-      if (question) {
+      if (question && question.id && question.userAnswer) {
         await graphQLMutation(createSurveyAnswer, {
           userId: userRes.id,
           questionId: question.id,
@@ -104,7 +104,7 @@ export const HaveAQuestion: FC<HaveAQuestionProps> = ({ userEmail, setAuthState 
           type='submit'
           loading={loading}
           className={classes.button}
-          onClick={() => submitSurvey()}
+          onClick={submitSurvey}
           backgroundColor='transparent'
         >
           {I18n.get('continue')}

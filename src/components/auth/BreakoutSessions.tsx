@@ -1,20 +1,9 @@
 import React, { FC, useState, useEffect } from 'react'
-import { I18n, Auth } from 'aws-amplify'
-import {
-  makeStyles,
-  Theme,
-  Grid,
-  TextField,
-  Link,
-  Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
-} from '@material-ui/core'
+import { I18n } from 'aws-amplify'
+import { makeStyles, Theme, Grid, Typography, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core'
 
-import { PillButton, PasswordRequirementsTooltip } from 'components'
-import { AuthFlowSteps, IUser, IOption } from 'types'
+import { PillButton } from 'components'
+import { AuthFlowSteps } from 'types'
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
 import { createSessionReservation } from 'graphql/mutations'
 import { userByEmail, listSessions } from 'graphql/queries'
@@ -143,6 +132,7 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
               </>
             )
           }
+          return null
         })}
       </Grid>
       <Grid container item xs={12}>

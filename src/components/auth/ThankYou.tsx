@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { I18n, Auth } from 'aws-amplify'
+import { I18n } from 'aws-amplify'
 import { makeStyles, Theme, Grid, Typography } from '@material-ui/core'
 
 import { PillButton } from 'components'

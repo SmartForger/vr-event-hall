@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { MeetingProvider, NotificationProvider, darkTheme } from 'amazon-chime-sdk-component-library-react'
 import { ThemeProvider as MuiThemeProvider, StylesProvider } from '@material-ui/core'
@@ -7,7 +7,6 @@ import { ThemeProvider as StyledThemeProvider } from 'styled-components'
 import { I18n } from 'aws-amplify'
 // Components
 import { Notifications, Footer } from 'components'
-import { GameWrapper } from 'UI'
 // Helpers
 import { store } from 'configs'
 import { dict } from 'i18n'
@@ -19,7 +18,8 @@ I18n.putVocabularies(dict)
 
 // Init
 const App = () => {
-  const [user, setUser] = useState<IUser>()
+  // eslint-disable-next-line
+  const [_, setUser] = useState<IUser>()
   useEffect(() => {
     I18n.setLanguage('en')
   }, [])
