@@ -1,9 +1,8 @@
 import React, { FC, useState, useEffect } from 'react'
-import { I18n, Auth } from 'aws-amplify'
-import { makeStyles, Theme, Grid, TextField, Link, Typography } from '@material-ui/core'
+import { I18n } from 'aws-amplify'
+import { makeStyles, Theme, Grid, TextField, Typography } from '@material-ui/core'
 
 import { PillButton } from 'components'
-import { validateEmail } from 'helpers'
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
 import { userByEmail, listSurveyQuestions } from 'graphql/queries'
 import { createSurveyAnswer } from 'graphql/mutations'
@@ -65,7 +64,8 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
     try {
       const userRes = await getCurrentUser()
       if (surveyQuestions.size > 0) {
-        for (let [qName, question] of Array.from(surveyQuestions)) {
+        // eslint-disable-next-line
+        for (let [_, question] of Array.from(surveyQuestions)) {
           // if we have an answer for the question in state,
           // create the answer on the backend
           if (question.userAnswer) {
