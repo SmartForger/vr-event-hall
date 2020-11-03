@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { I18n, Auth } from 'aws-amplify'
 import { makeStyles, Theme, Grid, TextField, Link, Typography } from '@material-ui/core'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 
 import { PillButton } from 'components'
 import { validateEmail } from 'helpers'
@@ -19,7 +19,7 @@ interface SignInProps {
 export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd, redirectRoute = '/event' }) => {
   const defaultAvatar = 'defaultAvatar.jpg'
   const classes = useStyles()
-  const history = useHistory()
+  // const history = useHistory()
   const [loading, setLoading] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')

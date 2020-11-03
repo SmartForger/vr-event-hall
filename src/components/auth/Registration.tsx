@@ -10,8 +10,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  FormHelperText,
-  Icon
+  FormHelperText
 } from '@material-ui/core'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import { Autocomplete, createFilterOptions } from '@material-ui/lab'
@@ -111,9 +110,10 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     return () => {
       setUserInfo(initialUser)
     }
+    // eslint-disable-next-line
   }, [])
 
-  const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({
+  const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
     accept: 'image/jpeg, image/png'
   })
 
