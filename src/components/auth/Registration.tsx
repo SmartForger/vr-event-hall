@@ -532,8 +532,8 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
                 setUserInfo({ ...userInfo, companySize: e.target.value as string })
               }
             >
-              <MenuItem value='0-49'>{I18n.get('employeeRange1')}</MenuItem>
-              <MenuItem value='49-499'>{I18n.get('employeeRange2')}</MenuItem>
+              <MenuItem value='0-9'>{I18n.get('employeeRange1')}</MenuItem>
+              <MenuItem value='10-499'>{I18n.get('employeeRange2')}</MenuItem>
               <MenuItem value='500+'>{I18n.get('employeeRange3')}</MenuItem>
             </Select>
             {!!companyErrors.companySize && <FormHelperText>{companyErrors.companySize}</FormHelperText>}
