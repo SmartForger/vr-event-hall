@@ -271,6 +271,52 @@ export const createSession = /* GraphQL */ `
     createSession(input: $input, condition: $condition) {
       id
       name
+      description
+      active
+      conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      admins {
+        items {
+          id
+          userId
+          sessionId
+          userType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pinnedMessageId
+      pinnedMessage {
+        id
+        content
+        authorId
+        conversationId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -281,6 +327,52 @@ export const updateSession = /* GraphQL */ `
     updateSession(input: $input, condition: $condition) {
       id
       name
+      description
+      active
+      conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      admins {
+        items {
+          id
+          userId
+          sessionId
+          userType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pinnedMessageId
+      pinnedMessage {
+        id
+        content
+        authorId
+        conversationId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -291,6 +383,52 @@ export const deleteSession = /* GraphQL */ `
     deleteSession(input: $input, condition: $condition) {
       id
       name
+      description
+      active
+      conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      admins {
+        items {
+          id
+          userId
+          sessionId
+          userType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pinnedMessageId
+      pinnedMessage {
+        id
+        content
+        authorId
+        conversationId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -338,6 +476,31 @@ export const createSessionReservation = /* GraphQL */ `
       session {
         id
         name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -388,6 +551,31 @@ export const updateSessionReservation = /* GraphQL */ `
       session {
         id
         name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -714,24 +902,245 @@ export const updateConvoLink = /* GraphQL */ `
     }
   }
 `
-
-export const createContactRequest = /* GraphQL */ `
-  mutation CreateContactRequest($input: CreateContactRequestInput!, $condition: ModelContactRequestConditionInput) {
-    createContactRequest(input: $input, condition: $condition) {
+export const createAdminLink = /* GraphQL */ `
+  mutation CreateAdminLink($input: CreateAdminUserInput!, $condition: ModelAdminUserConditionInput) {
+    createAdminLink(input: $input, condition: $condition) {
       id
-      firstName
-      lastName
-      phoneNumber
-      email
-      message
-      demo
       userId
+      sessionId
+      userType
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
   }
 `
-
+export const updateAdminLink = /* GraphQL */ `
+  mutation UpdateAdminLink($input: UpdateAdminUserInput!, $condition: ModelAdminUserConditionInput) {
+    updateAdminLink(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      userType
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createPollAnswer = /* GraphQL */ `
+  mutation CreatePollAnswer($input: CreatePollAnswersInput!, $condition: ModelPollAnswersConditionInput) {
+    createPollAnswer(input: $input, condition: $condition) {
+      id
+      pollId
+      userId
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createNotification = /* GraphQL */ `
+  mutation CreateNotification($input: CreateNotificationInput!, $condition: ModelNotificationConditionInput) {
+    createNotification(input: $input, condition: $condition) {
+      id
+      type
+      body
+      button
+      link
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateNotification = /* GraphQL */ `
+  mutation UpdateNotification($input: UpdateNotificationInput!, $condition: ModelNotificationConditionInput) {
+    updateNotification(input: $input, condition: $condition) {
+      id
+      type
+      body
+      button
+      link
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteNotification = /* GraphQL */ `
+  mutation DeleteNotification($input: DeleteNotificationInput!, $condition: ModelNotificationConditionInput) {
+    deleteNotification(input: $input, condition: $condition) {
+      id
+      type
+      body
+      button
+      link
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createEventConfig = /* GraphQL */ `
+  mutation CreateEventConfig($input: CreateEventConfigInput!, $condition: ModelEventConfigConditionInput) {
+    createEventConfig(input: $input, condition: $condition) {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateEventConfig = /* GraphQL */ `
+  mutation UpdateEventConfig($input: UpdateEventConfigInput!, $condition: ModelEventConfigConditionInput) {
+    updateEventConfig(input: $input, condition: $condition) {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteEventConfig = /* GraphQL */ `
+  mutation DeleteEventConfig($input: DeleteEventConfigInput!, $condition: ModelEventConfigConditionInput) {
+    deleteEventConfig(input: $input, condition: $condition) {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const createUserInteraction = /* GraphQL */ `
   mutation CreateUserInteraction($input: CreateUserInteractionInput!, $condition: ModelUserInteractionConditionInput) {
     createUserInteraction(input: $input, condition: $condition) {
@@ -745,14 +1154,17 @@ export const createUserInteraction = /* GraphQL */ `
     }
   }
 `
-
-export const createPollAnswer = /* GraphQL */ `
-  mutation CreatePollAnswer($input: CreatePollAnswersInput!, $condition: ModelPollAnswersConditionInput) {
-    createPollAnswer(input: $input, condition: $condition) {
+export const createContactRequest = /* GraphQL */ `
+  mutation CreateContactRequest($input: CreateContactRequestInput!, $condition: ModelContactRequestConditionInput) {
+    createContactRequest(input: $input, condition: $condition) {
       id
-      pollId
+      firstName
+      lastName
+      phoneNumber
+      email
+      message
+      demo
       userId
-      answer
       createdAt
       updatedAt
     }

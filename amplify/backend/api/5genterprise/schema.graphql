@@ -29,39 +29,10 @@ type Conversation @model(subscriptions: null) {
   associated: [ConvoLink] @connection(keyName: "byUserConvo", fields: ["id"])
 }
 
-type Message
-@model(subscriptions: null, queries: null)
-@key(name: "byAuthor", fields: ["authorId", "id"], queryField: "messageByAuthor")
-@key(name: "byAuthorByDate", fields: ["authorId", "createdAt"], queryField: "messageByAuthorByDate")
-@key(name: "byConversation", fields: ["conversationId", "id"], queryField: "messageByConversation")
-@key(name: "byConversationByDate", fields: ["conversationId", "createdAt"], queryField: "messageByConversationDate")
-@key(name: "byUndeletedMessagesByDate", fields: ["conversationId", "deleted", "createdAt"]) {
-  id: ID!
-  content: String!
-  authorId: ID!
-  author: User @connection(fields: ["authorId"])
-  conversationId: ID!
-  deleted: String
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
-}
-
-type ConvoLink
-@model(mutations: { create: "createConvoLink", update: "updateConvoLink" }, queries: null, subscriptions: null)
-@key(name: "byConvoUser", fields: ["userId", "conversationId"])
-@key(name: "byUserConvo", fields: ["conversationId", "userId"]) {
-  id: ID!
-  userId: ID!
-  conversationId: ID!
-  user: User! @connection(fields: ["userId"])
-  conversation: Conversation! @connection(fields: ["conversationId"])
-}
-
-
 type Session
-@model(subscriptions: null)
-@key(name: "byActiveSession", fields: ["active", "id"])
-@key(name: "bySessionConversation", fields: ["conversationId", "id"], queryField: "sessionByConversationId") {
+  @model(subscriptions: null)
+  # @key(name: "byActiveSession", fields: ["active", "id"])
+  @key(name: "bySessionConversation", fields: ["conversationId", "id"], queryField: "sessionByConversationId") {
   id: ID!
   name: String!
   description: String
@@ -75,8 +46,12 @@ type Session
   pinnedMessage: Message @connection(fields: ["pinnedMessageId"])
 }
 
-type UserSessionReservation 
-  @model(mutations: { create: "createSessionReservation", update: "updateSessionReservation" }, queries: null, subscriptions: null)
+type UserSessionReservation
+  @model(
+    mutations: { create: "createSessionReservation", update: "updateSessionReservation" }
+    queries: null
+    subscriptions: null
+  )
   @key(name: "bySessionUsersReservs", fields: ["userId", "sessionId"])
   @key(name: "byUserSessionsReservs", fields: ["sessionId", "userId"]) {
   id: ID!
@@ -86,21 +61,44 @@ type UserSessionReservation
   session: Session! @connection(fields: ["sessionId"])
 }
 
+type Message
+  @model(subscriptions: null, queries: null)
+  @key(name: "byAuthor", fields: ["authorId", "id"], queryField: "messageByAuthor")
+  @key(name: "byAuthorByDate", fields: ["authorId", "createdAt"], queryField: "messageByAuthorByDate")
+  @key(name: "byConversation", fields: ["conversationId", "id"], queryField: "messageByConversation")
+  @key(name: "byConversationByDate", fields: ["conversationId", "createdAt"], queryField: "messageByConversationDate") {
+  id: ID!
+  content: String!
+  authorId: ID!
+  conversationId: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
 
 type SurveyQuestion @model(subscriptions: null) {
-    id: ID!
-    name: String!
+  id: ID!
+  name: String!
 }
 
 type SurveyAnswer @model(subscriptions: null, queries: null) {
-    id: ID!
-    answer: String!
-    userId: ID!
-    questionId: ID!
-    user: User! @connection(fields: ["userId"])
-    question: SurveyQuestion! @connection(fields: ["questionId"])
+  id: ID!
+  answer: String!
+  userId: ID!
+  questionId: ID!
+  user: User! @connection(fields: ["userId"])
+  question: SurveyQuestion! @connection(fields: ["questionId"])
 }
 
+type ConvoLink
+  @model(mutations: { create: "createConvoLink", update: "updateConvoLink" }, queries: null, subscriptions: null)
+  @key(name: "byConvoUser", fields: ["userId", "conversationId"])
+  @key(name: "byUserConvo", fields: ["conversationId", "userId"]) {
+  id: ID!
+  userId: ID!
+  conversationId: ID!
+  user: User! @connection(fields: ["userId"])
+  conversation: Conversation! @connection(fields: ["conversationId"])
+}
 
 enum AdminUserType {
   sme
@@ -108,9 +106,9 @@ enum AdminUserType {
 }
 
 type AdminUser
-@model(mutations: { create: "createAdminLink", update: "updateAdminLink" }, queries: null, subscriptions: null)
-@key(name: "byAdminUser", fields: ["userId", "sessionId"])
-@key(name: "byAdminSession", fields: ["sessionId", "userId"]) {
+  @model(mutations: { create: "createAdminLink", update: "updateAdminLink" }, queries: null, subscriptions: null)
+  @key(name: "byAdminUser", fields: ["userId", "sessionId"])
+  @key(name: "byAdminSession", fields: ["sessionId", "userId"]) {
   id: ID!
   userId: ID!
   sessionId: ID!
@@ -120,16 +118,15 @@ type AdminUser
 }
 
 type PollAnswers
-@model(subscriptions: null, mutations: { create: "createPollAnswer"}),
-@key(name: "byPoll", fields: ["pollId"], queryField: "answersByPoll") {
+  @model(subscriptions: null, mutations: { create: "createPollAnswer" })
+  @key(name: "byPoll", fields: ["pollId"], queryField: "answersByPoll") {
   id: ID!
   pollId: String!
   userId: String!
   answer: String!
 }
 
-type Notification
-@model(subscriptions: null, queries: null)  {
+type Notification @model(subscriptions: null, queries: null) {
   id: ID!
   type: String!
   body: String!
@@ -161,7 +158,12 @@ type EventConfig @model(queries: { list: null, get: "getEventConfig" }) {
   environment: Environment
 }
 
-type UserInteraction @model(queries: null, subscriptions: null, mutations: { create: "createUserInteraction", update: null, delete: null }) {
+type UserInteraction
+  @model(
+    queries: null
+    subscriptions: null
+    mutations: { create: "createUserInteraction", update: null, delete: null }
+  ) {
   id: ID!
   trigger: String!
   type: String!
@@ -169,7 +171,12 @@ type UserInteraction @model(queries: null, subscriptions: null, mutations: { cre
   userId: String!
 }
 
-type ContactRequest @model(queries: null, subscriptions: null, mutations: { create: "createContactRequest", update: null, delete: null }) {
+type ContactRequest
+  @model(
+    queries: null
+    subscriptions: null
+    mutations: { create: "createContactRequest", update: null, delete: null }
+  ) {
   id: ID!
   firstName: String!
   lastName: String!
