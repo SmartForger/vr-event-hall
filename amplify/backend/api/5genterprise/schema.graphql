@@ -29,13 +29,29 @@ type Conversation @model(subscriptions: null) {
   associated: [ConvoLink] @connection(keyName: "byUserConvo", fields: ["id"])
 }
 
-type Session @model(subscriptions: null) {
+type Session
+  @model(subscriptions: null)
+  # @key(name: "byActiveSession", fields: ["active", "id"])
+  @key(name: "bySessionConversation", fields: ["conversationId", "id"], queryField: "sessionByConversationId") {
   id: ID!
   name: String!
+  description: String
+  # will still be true or false but Booleans are not indexable in dynamo
+  active: String!
+  conversationId: ID!
+  conversation: Conversation @connection(fields: ["conversationId"])
+  admins: [AdminUser] @connection(keyName: "byAdminSession", fields: ["id"])
+  users: [UserSessionReservation] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
+  pinnedMessageId: ID!
+  pinnedMessage: Message @connection(fields: ["pinnedMessageId"])
 }
 
-type UserSessionReservation 
-  @model(mutations: { create: "createSessionReservation", update: "updateSessionReservation" }, queries: null, subscriptions: null)
+type UserSessionReservation
+  @model(
+    mutations: { create: "createSessionReservation", update: "updateSessionReservation" }
+    queries: null
+    subscriptions: null
+  )
   @key(name: "bySessionUsersReservs", fields: ["userId", "sessionId"])
   @key(name: "byUserSessionsReservs", fields: ["sessionId", "userId"]) {
   id: ID!
@@ -60,17 +76,17 @@ type Message
 }
 
 type SurveyQuestion @model(subscriptions: null) {
-    id: ID!
-    name: String!
+  id: ID!
+  name: String!
 }
 
 type SurveyAnswer @model(subscriptions: null, queries: null) {
-    id: ID!
-    answer: String!
-    userId: ID!
-    questionId: ID!
-    user: User! @connection(fields: ["userId"])
-    question: SurveyQuestion! @connection(fields: ["questionId"])
+  id: ID!
+  answer: String!
+  userId: ID!
+  questionId: ID!
+  user: User! @connection(fields: ["userId"])
+  question: SurveyQuestion! @connection(fields: ["questionId"])
 }
 
 type ConvoLink
@@ -84,9 +100,99 @@ type ConvoLink
   conversation: Conversation! @connection(fields: ["conversationId"])
 }
 
+enum AdminUserType {
+  sme
+  moderator
+}
+
+type AdminUser
+  @model(mutations: { create: "createAdminLink", update: "updateAdminLink" }, queries: null, subscriptions: null)
+  @key(name: "byAdminUser", fields: ["userId", "sessionId"])
+  @key(name: "byAdminSession", fields: ["sessionId", "userId"]) {
+  id: ID!
+  userId: ID!
+  sessionId: ID!
+  userType: AdminUserType
+  user: User! @connection(fields: ["userId"])
+  session: Session! @connection(fields: ["sessionId"])
+}
+
+type PollAnswers
+  @model(subscriptions: null, mutations: { create: "createPollAnswer" })
+  @key(name: "byPoll", fields: ["pollId"], queryField: "answersByPoll") {
+  id: ID!
+  pollId: String!
+  userId: String!
+  answer: String!
+}
+
+type Notification @model(subscriptions: null, queries: null) {
+  id: ID!
+  type: String!
+  body: String!
+  button: String
+  link: String
+}
+
+enum EventStage {
+  REGISTRATION
+  PRESHOW
+  COUNTDOWN
+  LIVESTREAM
+  POSTSHOW
+}
+
+enum Environment {
+  LOCAL
+  DEV
+  STAGING
+  PROD
+}
+
+type EventConfig @model(queries: { list: null, get: "getEventConfig" }) {
+  id: String
+  name: String
+  stage: EventStage
+  streamStartTime: String
+  useBackupStream: Boolean
+  environment: Environment
+}
+
+type UserInteraction
+  @model(
+    queries: null
+    subscriptions: null
+    mutations: { create: "createUserInteraction", update: null, delete: null }
+  ) {
+  id: ID!
+  trigger: String!
+  type: String!
+  name: String!
+  userId: String!
+}
+
+type ContactRequest
+  @model(
+    queries: null
+    subscriptions: null
+    mutations: { create: "createContactRequest", update: null, delete: null }
+  ) {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  phoneNumber: String!
+  email: String!
+  message: String!
+  demo: String
+  userId: String!
+}
+
 type Subscription {
   onCreateConvoLink(convoLinkUserId: ID!): ConvoLink @aws_subscribe(mutations: ["createConvoLink"])
   onCreateMessage(conversationId: ID!): Message @aws_subscribe(mutations: ["createMessage"])
+  onUpdateMessage(conversationId: ID!): Message @aws_subscribe(mutations: ["updateMessage"])
   onCreateGlobalMessage: Message @aws_subscribe(mutations: ["createMessage"])
   onCreateUser: User @aws_subscribe(mutations: ["createUser"])
+  onCreateNotification: Notification @aws_subscribe(mutations: ["createNotification"])
+  onUpdateSession(id: ID!): Session @aws_subscribe(mutations: ["updateSession"])
 }

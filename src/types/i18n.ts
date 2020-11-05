@@ -121,3 +121,19 @@ export interface IThankYouDict {
   eventInfo: string
   verizonHub: string
 }
+
+export interface IScenesDict {
+  exploreSceneTitle: string
+  exploreSceneBlurb: string
+  sessionsSceneTitle: string
+  sessionsSceneBlurb: string
+  clickAndDragToExplore: string
+  theEventWillBeginIn: string
+  theEventWillStartOn: string
+  explore: string
+  sessions: string
+  connect: string
+  liveStream: string
+  startingSoon: string
+  goToLiveStream: string
+}

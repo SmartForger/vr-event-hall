@@ -152,6 +152,52 @@ export const getSession = /* GraphQL */ `
     getSession(id: $id) {
       id
       name
+      description
+      active
+      conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      admins {
+        items {
+          id
+          userId
+          sessionId
+          userType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pinnedMessageId
+      pinnedMessage {
+        id
+        content
+        authorId
+        conversationId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -163,6 +209,31 @@ export const listSessions = /* GraphQL */ `
       items {
         id
         name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -190,6 +261,47 @@ export const listSurveyQuestions = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`
+export const getPollAnswers = /* GraphQL */ `
+  query GetPollAnswers($id: ID!) {
+    getPollAnswers(id: $id) {
+      id
+      pollId
+      userId
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listPollAnswerss = /* GraphQL */ `
+  query ListPollAnswerss($filter: ModelPollAnswersFilterInput, $limit: Int, $nextToken: String) {
+    listPollAnswerss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        pollId
+        userId
+        answer
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const getEventConfig = /* GraphQL */ `
+  query GetEventConfig($id: ID!) {
+    getEventConfig(id: $id) {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
+      createdAt
+      updatedAt
     }
   }
 `
@@ -228,6 +340,58 @@ export const userByEmail = /* GraphQL */ `
         }
         sessions {
           nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const sessionByConversationId = /* GraphQL */ `
+  query SessionByConversationId(
+    $conversationId: ID
+    $id: ModelIDKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelSessionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    sessionByConversationId(
+      conversationId: $conversationId
+      id: $id
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -345,6 +509,33 @@ export const messageByConversationDate = /* GraphQL */ `
         content
         authorId
         conversationId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const answersByPoll = /* GraphQL */ `
+  query AnswersByPoll(
+    $pollId: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelPollAnswersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    answersByPoll(
+      pollId: $pollId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        pollId
+        userId
+        answer
         createdAt
         updatedAt
       }

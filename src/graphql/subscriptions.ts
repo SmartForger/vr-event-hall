@@ -68,6 +68,18 @@ export const onCreateMessage = /* GraphQL */ `
     }
   }
 `
+export const onUpdateMessage = /* GraphQL */ `
+  subscription OnUpdateMessage($conversationId: ID!) {
+    onUpdateMessage(conversationId: $conversationId) {
+      id
+      content
+      authorId
+      conversationId
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const onCreateGlobalMessage = /* GraphQL */ `
   subscription OnCreateGlobalMessage {
     onCreateGlobalMessage {
@@ -131,6 +143,117 @@ export const onCreateUser = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onCreateNotification = /* GraphQL */ `
+  subscription OnCreateNotification {
+    onCreateNotification {
+      id
+      type
+      body
+      button
+      link
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateSession = /* GraphQL */ `
+  subscription OnUpdateSession($id: ID!) {
+    onUpdateSession(id: $id) {
+      id
+      name
+      description
+      active
+      conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      admins {
+        items {
+          id
+          userId
+          sessionId
+          userType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pinnedMessageId
+      pinnedMessage {
+        id
+        content
+        authorId
+        conversationId
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onCreateEventConfig = /* GraphQL */ `
+  subscription OnCreateEventConfig {
+    onCreateEventConfig {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateEventConfig = /* GraphQL */ `
+  subscription OnUpdateEventConfig {
+    onUpdateEventConfig {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onDeleteEventConfig = /* GraphQL */ `
+  subscription OnDeleteEventConfig {
+    onDeleteEventConfig {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
       createdAt
       updatedAt
     }

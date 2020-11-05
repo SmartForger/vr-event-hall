@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 import authReducer from 'redux/auth'
 import chatReducer from 'redux/chat'
+import menuReducer from 'redux/menu'
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    chat: chatReducer
+    chat: chatReducer,
+    menu: menuReducer
   }
 })
 

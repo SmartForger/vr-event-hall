@@ -73,10 +73,6 @@
   textarea {
     //height: 140px !important;
   }
-  .video-react-controls-enabled {
-    height: 100vh !important;
-    padding-top: 0 !important;
-  }
 }
 
 /* ----------- iPhone 6+, 7+ and 8+ ----------- */
@@ -121,16 +117,6 @@
   .messages {
     min-height: calc(250px - 90px) !important;
     max-height: calc(250px - 90px) !important;
-  }
-  .text-section {
-    //height: unset !important;
-  }
-  textarea {
-    //height: 140px !important;
-  }
-  .video-react-controls-enabled {
-    height: 100vh !important;
-    padding-top: 0 !important;
   }
 }
 
@@ -177,16 +163,6 @@
     min-height: calc(250px - 90px) !important;
     max-height: calc(250px - 90px) !important;
   }
-  .text-section {
-    //height: unset !important;
-  }
-  textarea {
-    //height: 140px !important;
-  }
-  .video-react-controls-enabled {
-    height: 100vh !important;
-    padding-top: 0 !important;
-  }
 }
 
 .welcome-modal {
@@ -226,7 +202,7 @@
   }
   .image {
     width: 0;
-    background: url('../../assets/entrp-welcome-bg.jpg') no-repeat center center;
+    background: url('../../assets/welcome-bg.png') no-repeat center center;
     background-size: cover;
     @include sm-min {
       width: 50%;

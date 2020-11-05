@@ -14,12 +14,20 @@ export type MapMarkerProps = {
 export const MapMarker = (props: MapMarkerProps) => {
   function goto3Dlocation(location) {
     if (props.mapLocation.babylonParam === location) return
+    const ifx: HTMLIFrameElement = document.getElementById('ifx') as HTMLIFrameElement
+    if (ifx != null && ifx.contentWindow != null) {
+      var JSON: string = '{"command":"teleport","param":"' + location + '"}'
+      ifx.contentWindow.postMessage(JSON, '*') // Tell babylon scene controller to teleport to the specified location
+    }
 
-    const instance = BABYLON['SceneManager'].GetInstance()
-    const gobjScene = instance.getScene().getNodeByName('Scene')
-    const scriptMain = instance.findSceneComponent('PROJECT.VX360SceneController', gobjScene)
-
-    scriptMain.teleport(location)
+    // DEPRECIATED
+    // var instance = BABYLON['SceneManager'].GetInstance()
+    // var gobjScene = instance.getScene().getNodeByName('Scene')
+    // var scriptMain = instance.findSceneComponent(
+    //  'PROJECT.VX360SceneController',
+    //  gobjScene
+    // )
+    // scriptMain.teleport(location)
   }
 
   return (
