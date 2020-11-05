@@ -3,13 +3,26 @@ import styled from 'styled-components'
 export const StyledChatSection = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
+
+  @media (max-width: 960px), screen and (max-height: 540px) {
+    margin-bottom: 8px;
+  }
 `
 
 export const StyledChatSectionItem = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: 12px;
+  font-size: 18px;
+  line-weight: 1;
+  font-weight: normal;
 
   &:hover {
     cursor: pointer;
+  }
+
+  @media (max-width: 960px), screen and (max-height: 540px) {
+    font-size: 12px;
+    margin-bottom: 8px;
   }
 `
 
@@ -17,13 +30,22 @@ export const StyledChatSectionHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
+  font-family: 'Verizon-Bold';
+
+  @media (max-width: 960px), screen and (max-height: 540px) {
+    margin-bottom: 10px;
+  }
 `
 
 export const StyledChatSectionHeaderTitle = styled.h3`
-  font-size: 1.25rem,
-  margin: 0,
-  font-weight: bold
+  font-weight: bold;
+  font-size: 18px;
+  margin: 0;
+
+  @media (max-width: 960px), screen and (max-height: 540px) {
+    font-size: 16px;
+  }
 `
 
 export const StyledNotificationIcon = styled.div`
@@ -42,6 +64,7 @@ export const StyledNotificationIcon = styled.div`
 `
 
 export const StyledUserName = styled.span`
+  margin-right: 15px;
   color: #fff;
 `
 
@@ -69,7 +92,6 @@ export const StyledLeftContent = styled.div`
 export const StyledDirectMessageItem = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
 `
 
@@ -77,6 +99,13 @@ export const StyledDirectMessage = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+
+  .MuiSvgIcon-root {
+    position: absolute;
+    right: 0;
+    font-size: 26px;
+  }
 `
 
 export const StyledChannel = styled.div`

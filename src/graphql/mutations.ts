@@ -714,3 +714,47 @@ export const updateConvoLink = /* GraphQL */ `
     }
   }
 `
+
+export const createContactRequest = /* GraphQL */ `
+  mutation CreateContactRequest($input: CreateContactRequestInput!, $condition: ModelContactRequestConditionInput) {
+    createContactRequest(input: $input, condition: $condition) {
+      id
+      firstName
+      lastName
+      phoneNumber
+      email
+      message
+      demo
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const createUserInteraction = /* GraphQL */ `
+  mutation CreateUserInteraction($input: CreateUserInteractionInput!, $condition: ModelUserInteractionConditionInput) {
+    createUserInteraction(input: $input, condition: $condition) {
+      id
+      trigger
+      type
+      name
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const createPollAnswer = /* GraphQL */ `
+  mutation CreatePollAnswer($input: CreatePollAnswersInput!, $condition: ModelPollAnswersConditionInput) {
+    createPollAnswer(input: $input, condition: $condition) {
+      id
+      pollId
+      userId
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`

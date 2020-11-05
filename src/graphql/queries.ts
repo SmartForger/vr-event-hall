@@ -352,3 +352,98 @@ export const messageByConversationDate = /* GraphQL */ `
     }
   }
 `
+
+export const sessionByConversationId = /* GraphQL */ `
+  query SessionByConversationId(
+    $conversationId: ID
+    $id: ModelIDKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelSessionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    sessionByConversationId(
+      conversationId: $conversationId
+      id: $id
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const getEventConfig = /* GraphQL */ `
+  query GetEventConfig($id: ID!) {
+    getEventConfig(id: $id) {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const answersByPoll = /* GraphQL */ `
+  query AnswersByPoll(
+    $pollId: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelPollAnswersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    answersByPoll(
+      pollId: $pollId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        pollId
+        userId
+        answer
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`

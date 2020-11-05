@@ -1,234 +1,244 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Scene } from 'babylonjs/scene'
 import { useWindowSize } from 'react-use'
+import { I18n } from 'aws-amplify'
 import { Step } from 'react-joyride'
+import { Grid, makeStyles, Snackbar, Typography } from '@material-ui/core'
+import { useHistory } from 'react-router-dom'
+
+// Redux
+import { useDispatch, useSelector } from 'react-redux'
+import { menuDrawerOpen, toggleDrawer } from 'redux/menu'
 
 // Components
-import { Chat, LiveStream, MapMarker, ProfileMenu, Video, Loader, PillButton, Toast, Tutorial, Modal } from 'components'
+import {
+  About,
+  Contact,
+  Header,
+  Loader,
+  Modal,
+  Navigation,
+  PillButton,
+  ProfileMenu,
+  SceneWrapper,
+  Support,
+  Tutorial
+} from 'components'
+import { ToastAlert, Video } from 'components/shared'
+import { graphQLSubscription } from 'graphql/helpers'
+// TODO: rename once we  have the real thing
+import { onCreateNotification } from 'graphql/subscriptions'
 import Receiver from '../Receiver'
 
 // Helpers
-import { IUser, ITeleportLocation, AnchorType } from 'types'
-import { tutorialSteps } from '../helpers'
+import { ISession, Sessions, tutorialSteps } from '../helpers'
+import { GameFlowStepsConfig } from '../helpers/steps'
+import {
+  ETouchpoints,
+  EventStages,
+  GameFlowSteps,
+  IDemo,
+  ITeleportLocation,
+  IUser,
+  INoticeConfig,
+  TNoticeType,
+  ISubscriptionObject
+} from 'types'
+import { Demos } from '../helpers/demos'
+import { Alert } from '@material-ui/lab'
+import { incrementNotification } from '../redux/chat'
 
 interface IModalConfig {
   videoSrc?: string
   trackSrc?: string
   streamSrc?: string
   imgSource?: string
+  demo?: string
+  type?: string
 }
 
 interface GameWrapperProps {
   user?: IUser
   users?: IUser[]
+  eventStage?: EventStages
+  streamStartTime?: string
 }
 
-export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStage, streamStartTime }) => {
+  const dispatch = useDispatch()
 
+  // Selectors
+  const drawerOpen = useSelector(menuDrawerOpen)
+  const history = useHistory()
   const { width } = useWindowSize()
+  const classes = useStyles()
 
   const localStorage = window.localStorage
-  const localStorageTutorialEnabled = localStorage.getItem('tutorialEnabled')
-  const [showTutorial, setShowTutorial] = useState<boolean>(
-    localStorageTutorialEnabled ? localStorageTutorialEnabled === 'true' : true
-  )
+  const [eSSClosed, setESSClosed] = useState<boolean>(false)
+
+  // notice configs
+  const [activeNotice, setActiveNotice] = useState<INoticeConfig>({})
+  let noticeSubscription = useRef<ISubscriptionObject | null>(null)
+
+  /*
+   * const [showTutorial, setShowTutorial] = useState<boolean>(
+   *   localStorageTutorialEnabled ? localStorageTutorialEnabled === 'true' : true
+   * )
+   */
   const [stepsEnabled, setStepsEnabled] = useState<boolean>(false)
   const [scene, setScene] = useState<Scene>()
   const [showModal, setShowModal] = useState<boolean>(false)
-  const [modalConfig, setmodalConfig] = useState<IModalConfig>({})
-  const [mapLocation, setMapLocation] = useState<ITeleportLocation>({
+  const [modalConfig, setModalConfig] = useState<IModalConfig>({})
+  const [mapLocation] = useState<ITeleportLocation>({
     babylonParam: 'Hall',
     name: 'Hall'
   })
-  const [anchorFlags, setAnchorFlags] = useState({ right: false })
   const [steps, setSteps] = useState<Step[]>(tutorialSteps)
   const [gameLoading, setGameLoading] = useState<boolean>(true)
-  const [percentLoaded, setPercentLoaded] = useState<number>(0)
-  const teleportLocations: ITeleportLocation[] = [
-    {
-      babylonParam: 'Entryway',
-      name: 'Entryway'
-    },
-    {
-      babylonParam: 'Lounge',
-      name: 'Lounge'
-    },
-    {
-      babylonParam: 'Gallery',
-      name: 'Gallery'
-    },
-    {
-      babylonParam: 'Roundtable',
-      name: 'Roundtable'
-    },
-    {
-      babylonParam: 'Concert Hall',
-      name: 'Concert Hall'
-    }
-  ]
+  const [hideExploreText, setHideExploreText] = useState<boolean>(false)
+  const [hideSessionsText, setHideSessionsText] = useState<boolean>(false)
+  const [showGUI, setShowGUI] = useState<boolean>(false)
+  const [loaderOptions, setLoaderOptions] = useState<any>({})
+  const [gameState, setGameState] = useState<GameFlowSteps>(GameFlowSteps.Intro)
+  const [prevGameState, setPrevGameState] = useState<GameFlowSteps>(GameFlowSteps.Intro)
+  const [activeDemo, setActiveDemo] = useState<IDemo>(Demos.mecExplainer)
+  const [activeSession, setActiveSession] = useState<ISession>(Sessions['5GBusiness'])
+  const [activeTouchpoint, setActiveTouchpoint] = useState<ETouchpoints>(ETouchpoints.None)
+  const [conversationId, setConversationId] = useState<string>('')
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [infoMessage, setInfoMessage] = useState<string | null>(null)
 
-  const toggleDrawer = (
-    event: React.KeyboardEvent | React.MouseEvent,
-    anchor: AnchorType,
-    open: boolean,
-    location: string = 'drawer'
-  ) => {
-    if (
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
-    ) {
+  const handleToggleDrawer = () => dispatch(toggleDrawer(!drawerOpen))
+
+  const goto3Dlocation = location => {
+    const ifx: HTMLIFrameElement = document.getElementById('ifx') as HTMLIFrameElement
+    const welcomeSteps = [GameFlowSteps.Intro, GameFlowSteps.Welcome, GameFlowSteps.Connect]
+    let newLocation = location
+
+    if ([GameFlowSteps.Sessions, GameFlowSteps.Explore].includes(location)) {
+      window.postMessage(`{"command":"location", "param": "${location}"}`, '*')
+    } else if (welcomeSteps.includes(prevGameState) && welcomeSteps.includes(location)) {
+      setPrevGameState(location)
       return
     }
 
-    if (location === 'drawer') {
-      setAnchorFlags({ ...anchorFlags, [anchor]: open })
-    } else {
-      setAnchorFlags({ ...anchorFlags, [anchor]: open })
-      goto3Dlocation(location)
-    }
-  }
+    setPrevGameState(location)
+    triggerAnimation(newLocation)
 
-  const goto3Dlocation = location => {
-    var instance = BABYLON['SceneManager'].GetInstance()
-    var gobjScene = instance.getScene().getNodeByName('Scene')
-    var scriptMain = instance.findSceneComponent('PROJECT.VX360SceneController', gobjScene)
-    scriptMain.teleport(location)
+    function triggerAnimation(newLocation) {
+      if (ifx != null && ifx.contentWindow != null) {
+        try {
+          //@ts-ignore
+          if (ifx.contentWindow.PROJECT) {
+            //@ts-ignore
+            ifx.contentWindow.PROJECT.AnimatorManager.Instance.GetAnimator('ThriveAnimator').animator.setInteger(
+              'State',
+              GameFlowStepsConfig[newLocation].animation.state
+            )
+          }
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    }
   }
 
   const onSceneSetup = () => {
     setScene((window as any)['scene'])
-    // setShowLoading(false);
   }
 
-  const toggleTutorial = bool => {
-    if (anchorFlags.right) {
-      setAnchorFlags({ right: false })
-    }
-    setShowTutorial(bool)
+  const toggleTutorial = (bool: boolean) => {
+    // setShowTutorial(bool)
     setStepsEnabled(false)
     localStorage.setItem('tutorialEnabled', bool.toString())
   }
 
-  const dismissWelcomeModal = () => {
-    setShowTutorial(false)
-    setStepsEnabled(true)
+  ///////////////////////////////////////////////////////////
+  // Babylon Scene Loader Window Hooks
+  ///////////////////////////////////////////////////////////
+  window['loadScene'] = (sceneFile: string, queryString?: string) => {
+    setLoaderOptions({ indeterminate: false, percentLoaded: 0 })
+    let url: string = '/babylon/engine.html?scene=' + sceneFile
+    if (queryString != null) url += queryString
+    const ifx: HTMLIFrameElement = document.getElementById('ifx') as HTMLIFrameElement
+    if (ifx != null) ifx.src = url
   }
-
-  // TODO: Move to provider or store
-
-  useEffect(() => {
-    setGameLoading(true)
-    const antialias = true,
-      adaptive = true,
-      offline = false
-    const sceneFile = 'vx360.babylon'
-    const scenePath = 'scene/'
-    const divcvs = canvasRef.current
-
-    Receiver.init(onSceneSetup, setmodalConfig, setShowModal, setMapLocation, teleportLocations)
-
-    if (window.BABYLON) {
-      const engine = new BABYLON.Engine(divcvs, antialias, undefined, adaptive)
-      engine.enableOfflineSupport = offline
-      engine.clear(new BABYLON.Color4(0, 0, 0, 0), true, true)
-
-      window.addEventListener('resize', () => {
-        engine.resize()
-      })
-
-      BABYLON.SceneLoader.ShowLoadingScreen = false
-      const xmlhttp = new XMLHttpRequest()
-      let textureTotal
-      let textureCount = 0
-      const scene = new BABYLON.Scene(engine)
-
-      xmlhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-          const arrTextures = JSON.parse(this.responseText)
-          textureTotal = arrTextures.length
-          for (let i = 0; i < arrTextures.length; i++) {
-            const texture = arrTextures[i]
-            const ext = texture.split('.').pop()
-            if (ext !== 'env') {
-              new BABYLON.Texture(
-                scenePath + texture,
-                scene,
-                undefined,
-                undefined,
-                undefined,
-                // eslint-disable-next-line
-                () => {
-                  textureCount++
-                  updateProgress()
-                  if (textureCount === textureTotal - 3) {
-                    loadScene()
-                  }
-                }
-              )
-            } else {
-              new BABYLON.CubeTexture(
-                scenePath + texture,
-                scene,
-                undefined,
-                undefined,
-                undefined,
-                // eslint-disable-next-line
-                () => {
-                  textureCount++
-                  updateProgress()
-                  if (textureCount === textureTotal - 3) {
-                    loadScene()
-                  }
-                },
-                undefined,
-                undefined,
-                false
-              )
-            }
+  window['updateStatus'] = (status: string, details: string, state: number) => {
+    setLoaderOptions({ indeterminate: true, loadingStatus: status, loadingDetails: details, loadingState: state })
+  }
+  window['updateProgress'] = (progress: number) => {
+    setLoaderOptions({ indeterminate: false, percentLoaded: progress })
+  }
+  window['loadSceneComplete'] = () => {
+    if (!window.scene) {
+      window.scene = true
+      window.postMessage('{"command":"initialised"}', '*') // Tell React part that the scene is set up
+    }
+    setGameLoading(false)
+    setTimeout(() => {
+      setShowGUI(true)
+    }, GameFlowStepsConfig[GameFlowSteps.Intro].animation.time)
+  }
+  ///////////////////////////////////////////////////////////
+  // Babylon Web Socket Window Hook
+  ///////////////////////////////////////////////////////////
+  window['socketConnect'] = connection => {
+    if (window['io'] != null) {
+      if (window.state == null) window.state = {}
+      window.state['socket'] = window['io'].connect(connection, { transports: ['websocket'] })
+      if (window.state['socket'] != null) {
+        window.state['socket'].on('connect', () => {
+          if (window.state.onSocketConnect) {
+            window.state.onSocketConnect()
           }
-        }
-      }
-      xmlhttp.open('GET', scenePath + 'textures.json', true)
-      xmlhttp.send()
-
-      const updateProgress = () => {
-        let percentLoaded = Math.round((textureCount * 50) / textureTotal)
-        setPercentLoaded(percentLoaded)
-      }
-
-      const loadScene = () => {
-        // @ts-ignore
-        BABYLON.SceneManager.LoadScene(
-          scenePath,
-          sceneFile,
-          engine,
-          newScene => {
-            setPercentLoaded(100)
-            window.scene = newScene
-            window.scene.executeWhenReady(() => {
-              // Tell React part that the scene is set up
-              window.postMessage('{"command":"initialised"}', '*')
-
-              setGameLoading(false)
-              engine.runRenderLoop(() => {
-                window.scene.render()
-              })
-
-              if (divcvs) {
-                divcvs.style.opacity = '1'
-              }
-            })
-          },
-          evt => {
-            if (evt.lengthComputable) {
-              var loaded = (evt.loaded * 50) / evt.total + 50
-              setPercentLoaded(loaded)
+          window.state['socket'].on('disconnect', () => {
+            if (window.state.onSocketDisconnect) {
+              window.state.onSocketDisconnect()
             }
-          }
-        )
+          })
+        })
       }
     }
+    return window.state != null && window.state['socket'] != null ? window.state['socket'] : null
+  }
+  ///////////////////////////////////////////////////////////
+
+  useEffect(() => {
+    setLoaderOptions({ indeterminate: false, percentLoaded: 0 })
+
+    const defaultSceneFile = 'VX360-Hybrid.gltf'
+
+    Receiver.init(
+      onSceneSetup,
+      setHideExploreText,
+      setHideSessionsText,
+      setGameState,
+      setActiveDemo,
+      setActiveSession,
+      setActiveTouchpoint,
+      setModalConfig,
+      setShowModal,
+      setConversationId,
+      user
+    )
+
+    window.loadScene(defaultSceneFile)
+
+    const newNotificationCreated = data => {
+      const notification = data.onCreateNotification
+
+      // in case there's extra stuff in the notice from the subscription
+      const uiNotice: INoticeConfig = {
+        type: notification.type,
+        body: notification.body,
+        button: notification.button,
+        link: notification.link
+      }
+      setActiveNotice(uiNotice)
+    }
+    // I think this means we will subscribe to ANY new notice
+    noticeSubscription.current = graphQLSubscription(onCreateNotification, {}, newNotificationCreated)
     // eslint-disable-next-line
   }, [])
 
@@ -251,43 +261,75 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users }) => {
     }
   }, [width])
 
+  useEffect(() => {
+    goto3Dlocation(gameState)
+  }, [gameState])
+
+  useEffect(() => {
+    if (!drawerOpen && conversationId) {
+      handleToggleDrawer()
+    }
+  }, [conversationId])
+
+  const noticeButtonClick = () => {
+    switch (activeNotice.type) {
+      case 'demo':
+        // go to demos
+        setGameState(GameFlowSteps.Explore)
+        break
+      case 'session':
+        // go to a specific session
+        setGameState(GameFlowSteps.Session)
+        setActiveSession(Sessions[activeNotice?.link || '5GBusiness'])
+        break
+      case 'external':
+        // open an external link in a new tab
+        window.open(activeNotice.link)
+        break
+      default:
+        console.warn('notice')
+    }
+    setActiveNotice({})
+  }
+
   return (
     <div id='game'>
-      <canvas id='cvs' ref={canvasRef} />
-      {gameLoading ? <Loader percentLoaded={percentLoaded} /> : null}
+      <iframe id='ifx' width='100%' height='100%' scrolling='no' frameBorder='0' title='ifx' />
+      {gameLoading && <Loader loaderOptions={loaderOptions} />}
+      {!gameLoading && showGUI && (
+        <>
+          <Header>
+            <Navigation activeTab={gameState} setActiveTab={setGameState} />
+          </Header>
+          <SceneWrapper
+            changeActiveTouchpoint={setActiveTouchpoint}
+            changeScene={setGameState}
+            activeScene={gameState}
+            prevScene={prevGameState}
+            hideExploreText={hideExploreText}
+            hideSessionsText={hideSessionsText}
+            user={user}
+            activeDemo={activeDemo}
+            activeSession={activeSession}
+            activeTouchpoint={activeTouchpoint}
+            drawerOpen={drawerOpen}
+            setSuccessMessage={setSuccessMessage}
+            setErrorMessage={setErrorMessage}
+          />
+          <ProfileMenu
+            toggleTutorial={() => toggleTutorial(true)}
+            toggleDrawer={handleToggleDrawer}
+            setGameState={setGameState}
+            mapLocation={mapLocation}
+            drawerOpen={drawerOpen}
+            user={user}
+          />
+        </>
+      )}
       {!gameLoading && scene && (
         <>
           <Tutorial run={stepsEnabled} steps={steps} onClose={() => toggleTutorial(false)} />
-          <Modal open={showTutorial} onClose={dismissWelcomeModal}>
-            <div id='welcome-modal' className='welcome-modal'>
-              <div className='text'>
-                <h2 className='heading'>Welcome to Vx360, {user && user.firstName}!</h2>
-                <div className='body'>
-                  Immersive, web-based, device agnostic, and optimized for desktop and mobile, the Vx360 platform boasts
-                  360 degree exploration of a virtual event space that can be completely customized for your next event.
-                </div>
-                <div className='actions'>
-                  <PillButton type='button' className='button' variant='outlined' onClick={dismissWelcomeModal}>
-                    Continue
-                  </PillButton>
-                </div>
-              </div>
-              <div className='image'></div>
-            </div>
-          </Modal>
-          <Video
-            visible={Boolean(showModal && modalConfig && modalConfig.videoSrc)}
-            setVisibility={setShowModal}
-            videoSrc={modalConfig.videoSrc}
-            trackSrc={modalConfig.trackSrc}
-          />
-          <LiveStream
-            visible={Boolean(showModal && modalConfig && modalConfig.streamSrc)}
-            setVisibility={setShowModal}
-            streamSrc={modalConfig.streamSrc}
-            user={user}
-            users={users}
-          />
+          <Video videoSrc={modalConfig.videoSrc || ''} />
           <Modal
             open={Boolean(showModal && modalConfig && modalConfig.imgSource)}
             onClose={setShowModal}
@@ -295,20 +337,87 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users }) => {
           >
             <img src={modalConfig.imgSource} style={{ height: '100%', width: '100%' }} alt='Modal' />
           </Modal>
-          <MapMarker teleportLocations={teleportLocations} mapLocation={mapLocation} />
-          <Chat user={user} users={users} />
-          <ProfileMenu
-            anchorFlags={anchorFlags}
-            toggleTutorial={() => toggleTutorial(true)}
-            toggleDrawer={toggleDrawer}
-            teleportLocations={teleportLocations}
-            mapLocation={mapLocation}
-            user={user}
-            users={users}
-          />
-          <Toast />
+          {showModal && modalConfig.type === 'about' && <About showModal={showModal} setShowModal={setShowModal} />}
+          {showModal && modalConfig.type === 'connect' && (
+            <Contact
+              setSuccessMessage={setSuccessMessage}
+              setErrorMessage={setErrorMessage}
+              showModal={showModal}
+              setShowModal={setShowModal}
+              user={user}
+              demo={modalConfig.demo}
+            />
+          )}
+          {showModal && modalConfig.type === 'support' && (
+            <Support
+              setSuccessMessage={setSuccessMessage}
+              setErrorMessage={setErrorMessage}
+              showModal={showModal}
+              setShowModal={setShowModal}
+              user={user}
+            />
+          )}
+
+          {/* Toast for Notice */}
+          <ToastAlert type='notice' isOpen={!!activeNotice?.type} onClose={() => setActiveNotice({})}>
+            <Grid container>
+              <Grid item xs={12}>
+                <Typography variant='h5' paragraph classes={{ root: classes.toastESSTitle }}>
+                  {activeNotice?.body}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <PillButton
+                  type='button'
+                  className='button'
+                  variant='outlined'
+                  textColor='white'
+                  backgroundColor='black'
+                  onClick={() => noticeButtonClick()}
+                  classes={{ root: classes.toastESSButton }}
+                >
+                  {activeNotice?.button}
+                </PillButton>
+              </Grid>
+            </Grid>
+          </ToastAlert>
+
+          {(Boolean(successMessage) || Boolean(errorMessage) || Boolean(infoMessage)) && (
+            <Snackbar
+              className={classes.toastPosition}
+              open={Boolean(successMessage) || Boolean(errorMessage) || Boolean(infoMessage)}
+              autoHideDuration={5000}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              onClose={() => {
+                successMessage && setSuccessMessage(null)
+                errorMessage && setErrorMessage(null)
+                infoMessage && setInfoMessage(null)
+              }}
+            >
+              <Alert severity={successMessage ? 'success' : infoMessage ? 'info' : 'error'} variant='filled'>
+                {successMessage ? successMessage : infoMessage ? infoMessage : errorMessage}
+              </Alert>
+            </Snackbar>
+          )}
         </>
       )}
     </div>
   )
 }
+
+const useStyles = makeStyles({
+  toastESSTitle: {},
+  toastESSButton: {
+    height: '24px',
+    padding: '12px 24px',
+    fontSize: '12px',
+    marginBottom: '1rem',
+    '&:hover': {
+      backgroundColor: 'black',
+      color: 'white'
+    }
+  },
+  toastPosition: {
+    right: 88
+  }
+})

@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react'
 import { UserActivityProvider, VideoTileGrid } from 'amazon-chime-sdk-component-library-react'
 
-import { Modal } from 'components'
+import { Modal } from 'components/shared'
 import { StyledLayout, StyledContent } from './Styled'
 import MeetingControls from '../MeetingControls'
 import MeetingDetails from '../MeetingDetails'

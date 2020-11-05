@@ -1,22 +1,4 @@
 {
-  "master": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-5genterprise-master-155507-authRole",
-      "UnauthRoleArn": "arn:aws:iam::675340416359:role/amplify-5genterprise-master-155507-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::675340416359:role/amplify-5genterprise-master-155507-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-5genterprise-master-155507-deployment",
-      "UnauthRoleName": "amplify-5genterprise-master-155507-unauthRole",
-      "StackName": "amplify-5genterprise-master-155507",
-      "StackId": "arn:aws:cloudformation:us-east-1:675340416359:stack/amplify-5genterprise-master-155507/00b85690-0d8e-11eb-a180-0a479dbf9bdf",
-      "AmplifyAppId": "d10v2753180hiw"
-    },
-    "categories": {
-      "auth": {
-        "5genterprise8b56ce08": {}
-      }
-    }
-  },
   "dev": {
     "awscloudformation": {
       "AuthRoleName": "amplify-5genterprise-dev-192132-authRole",
@@ -27,6 +9,24 @@
       "UnauthRoleName": "amplify-5genterprise-dev-192132-unauthRole",
       "StackName": "amplify-5genterprise-dev-192132",
       "StackId": "arn:aws:cloudformation:us-east-1:675340416359:stack/amplify-5genterprise-dev-192132/023b6d10-09bd-11eb-8bae-0a34514375d1",
+      "AmplifyAppId": "d10v2753180hiw"
+    },
+    "categories": {
+      "auth": {
+        "5genterprise8b56ce08": {}
+      }
+    }
+  },
+  "master": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-5genterprise-master-155507-authRole",
+      "UnauthRoleArn": "arn:aws:iam::675340416359:role/amplify-5genterprise-master-155507-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::675340416359:role/amplify-5genterprise-master-155507-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-5genterprise-master-155507-deployment",
+      "UnauthRoleName": "amplify-5genterprise-master-155507-unauthRole",
+      "StackName": "amplify-5genterprise-master-155507",
+      "StackId": "arn:aws:cloudformation:us-east-1:675340416359:stack/amplify-5genterprise-master-155507/00b85690-0d8e-11eb-a180-0a479dbf9bdf",
       "AmplifyAppId": "d10v2753180hiw"
     },
     "categories": {

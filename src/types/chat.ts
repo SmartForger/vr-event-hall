@@ -17,11 +17,12 @@ export interface IChatChannel {
 }
 
 export interface IMessageInput {
-  id: string
+  id?: string
   createdAt: string | number
-  messageConversationId: string
+  conversationId: string
   content: string
   authorId?: string
+  deleted?: string
 }
 
 export interface IConversation {
@@ -45,6 +46,7 @@ export interface IPerson {
 }
 
 export interface IMessage {
+  id: string
   content: string
   author: {
     id: string
@@ -52,4 +54,34 @@ export interface IMessage {
     lastName: string
     email: string
   }
+  deleted?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface IAdminUser {
+  userType: 'sme' | 'moderator'
+  user: IUser
+  userId: string
+}
+
+export interface IAdminUserItems {
+  items: IAdminUser[]
+}
+
+export interface IUserItems {
+  items: IUser[]
+}
+
+export interface IDemoSession {
+  id
+  name: string
+  description: string
+  active?: string
+  conversationId: string
+  conversation?: IConversation
+  admins: IAdminUserItems
+  users: IUserItems
+  pinnedMessageId: string
+  pinnedMessage: IMessage
 }
