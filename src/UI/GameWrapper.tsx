@@ -209,7 +209,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   useEffect(() => {
     setLoaderOptions({ indeterminate: false, percentLoaded: 0 })
 
-    const defaultSceneFile = 'VX360-Hybrid.gltf'
+    const defaultSceneFile = 'VerizonEnterprise.gltf'
 
     Receiver.init(
       onSceneSetup,

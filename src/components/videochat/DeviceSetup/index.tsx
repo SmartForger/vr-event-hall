@@ -15,9 +15,6 @@ export const DeviceSetup: FC<DeviceSetupProps> = ({ confirmStart }) => {
   return (
     <StyledContainer>
       <StyledLayout>
-        <Heading tag='h1' level={3} css='align-self: flex-start'>
-          Device settings
-        </Heading>
         <DeviceSelection />
         <MeetingJoinDetails meetingId={meetingManager.meetingId || ''} confirmStart={confirmStart} />
       </StyledLayout>
