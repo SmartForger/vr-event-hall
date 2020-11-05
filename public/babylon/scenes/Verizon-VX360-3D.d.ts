@@ -545,44 +545,6 @@ declare module PROJECT {
     }
 }
 declare module PROJECT {
-    /**
-    * Babylon Script Component
-    * @class DemoRaceController
-    */
-    class DemoRaceController extends BABYLON.ScriptComponent {
-        private countdownState;
-        private countdownImage1;
-        private countdownImage2;
-        private countdownImage3;
-        private countdownImageGo;
-        private countdownImagesLoaded;
-        private countdownSound1;
-        private countdownSound2;
-        private countdownSound3;
-        private countdownSoundGo;
-        private countdownSoundsLoaded;
-        private mustangOneVehicle;
-        private mustangTwoVehicle;
-        private mustangThreeVehicle;
-        private mustangFourVehicle;
-        private startPositionHeight;
-        private startCountdownVolume;
-        protected awake(): void;
-        protected start(): void;
-        protected update(): void;
-        protected awakeDemoController(): void;
-        protected initDemoController(): Promise<void>;
-        protected updateDemoController(): void;
-        protected updateNextCountdown(): void;
-        protected processNextCountdown(milliseconds: number): void;
-        protected hideCountdownItems(): void;
-        protected killCountdownItems(): void;
-        protected startDemoController(): void;
-        protected static CreateMustangVehicle(scene: BABYLON.Scene, container: BABYLON.AssetContainer, prefab: string, name: string, player: BABYLON.PlayerNumber, startPosition: BABYLON.AbstractMesh, heightOffset: number, enableInput: boolean, attachCamera: boolean, topSpeed: number, powerRatio: number, skillLevel: number, bodyColor: BABYLON.Color3, wheelColor?: BABYLON.Color3, wheelType?: number, decalIndex?: number): BABYLON.TransformNode;
-        protected static EnableMustangVehicle(mustangVehicle: BABYLON.TransformNode, enableInput: boolean): void;
-    }
-}
-declare module PROJECT {
     interface ITrackNode {
         radius: number;
         position: BABYLON.IUnityVector3;
@@ -1025,6 +987,15 @@ declare module PROJECT {
 declare module MVRK {
     /**
     * Babylon Script Component
+    * @class CaptionManager
+    */
+    class CaptionManager extends BABYLON.ScriptComponent {
+        protected awake(): void;
+    }
+}
+declare module MVRK {
+    /**
+    * Babylon Script Component
     * @class CaptionSystem
     */
     class CaptionSystem extends BABYLON.ScriptComponent {
@@ -1032,7 +1003,9 @@ declare module MVRK {
         private displayTimer;
         private domElement;
         private textTracks;
+        private userLocale;
         logCaptions: boolean;
+        getUserLocale(): string;
         getCaptionType(): number;
         protected m_captionElement: HTMLElement;
         protected m_captionSource: BABYLON.WebVideoPlayer | BABYLON.AudioSource;
@@ -1043,6 +1016,7 @@ declare module MVRK {
         protected destroy(): void;
         /** Register handler that is triggered on vtt caption cue changed */
         onUpdateCaptionObservable: BABYLON.Observable<string>;
+        constructor(transform: BABYLON.TransformNode, scene: BABYLON.Scene, properties?: any);
         protected awakeCaptionSystem(): void;
         protected startCaptionSystem(): void;
         protected updateCaptionSystem(): void;
@@ -1050,8 +1024,7 @@ declare module MVRK {
         private attachCaptionSystem;
         private postCaptionMessage;
         private formatTextTrackKind;
-        static EnableTextTracks(source: HTMLVideoElement | HTMLAudioElement, enable: boolean): void;
-        static SetDefaultTextTrack(source: HTMLVideoElement | HTMLAudioElement, index: number): void;
+        static EnableDefaultTextTrack(source: HTMLVideoElement | HTMLAudioElement, enable: boolean): void;
     }
     /**
      * Text Track Interface Data
@@ -1061,7 +1034,19 @@ declare module MVRK {
         trackLabel: string;
         trackAsset: BABYLON.IUnityDefaultAsset;
         trackLanguage: string;
-        isDefaultTrack: boolean;
+    }
+}
+declare module MVRK {
+    /**
+    * Babylon Script Component
+    * @class SceneSoundSystem
+    */
+    class SceneSoundSystem extends BABYLON.ScriptComponent {
+        private static _MUSIC;
+        static get MUSIC(): MVRK.SoundManager;
+        private static _SFX;
+        static get SFX(): MVRK.SoundManager;
+        protected start(): void;
     }
 }
 declare module MVRK {
@@ -1074,39 +1059,69 @@ declare module MVRK {
         private groupName;
         getIsReady(): boolean;
         getGroupName(): string;
-        protected m_soundMap: Map<string, BABYLON.Sound>;
-        protected m_soundList: BABYLON.Sound[];
+        protected m_soundMap: Map<string, BABYLON.AudioSource>;
+        protected m_soundList: BABYLON.AudioSource[];
         protected awake(): void;
         protected start(): void;
         protected update(): void;
         protected destroy(): void;
-        /**
-         * Get a sound track by name
-         */
-        getSound(name: string): BABYLON.Sound;
         /**
          * Play the sound track by name
          * @param time (optional) Start the sound after X seconds. Start immediately (0) by default.
          * @param offset (optional) Start the sound at a specific time in seconds
          * @param length (optional) Sound duration (in seconds)
          */
-        playSound(name: string, time?: number, offset?: number, length?: number): boolean;
+        playTrack(name: string, time?: number, offset?: number, length?: number): boolean;
+        /**
+         * Pause the sound track by name
+         * @param time (optional) Start the sound after X seconds. Start immediately (0) by default.
+         */
+        pauseTrack(name: string): boolean;
+        /**
+         * Pause the sound for all tracks in the group
+         * @param time (optional) Stop the sound after X seconds. Stop immediately (0) by default.
+         */
+        pauseAllTracks(): void;
         /**
          * Stop the sound track by name
          * @param time (optional) Start the sound after X seconds. Start immediately (0) by default.
          */
-        stopSound(name: string, time?: number): boolean;
+        stopTrack(name: string, time?: number): boolean;
         /**
          * Stop the sound for all tracks in the group
          * @param time (optional) Stop the sound after X seconds. Stop immediately (0) by default.
          */
-        stopGroupSound(time?: number): void;
+        stopAllTracks(time?: number): void;
+        /**
+         * Mute the sound track by name
+         * @param time (optional) Start the sound after X seconds. Start immediately (0) by default.
+         */
+        muteTrack(name: string, time?: number): boolean;
+        /**
+         * Unmute the sound track by name
+         * @param time (optional) Start the sound after X seconds. Start immediately (0) by default.
+         */
+        unmuteTrack(name: string, time?: number): boolean;
+        /**
+         * Mutes the volume for all sound tracks in the group
+         * @param time Define time for gradual change to new volume
+         */
+        muteAllTracks(time?: number): void;
+        /**
+         * Unmutes the volume for all sound tracks in the group
+         * @param time Define time for gradual change to new volume
+         */
+        unmuteAllTracks(time?: number): void;
         /**
          * Sets the volume for all sound tracks in the group
          * @param volume Define the new volume of the sound
          * @param time Define time for gradual change to new volume
          */
         setGroupVolume(volume: number, time?: number): void;
+        /**
+         * Get a sound source by name
+         */
+        getAudioSource(name: string): BABYLON.AudioSource;
     }
 }
 declare module MVRK {
@@ -1142,13 +1157,72 @@ declare module MVRK {
     * @class PopupTrigger
     */
     class PopupTrigger extends BABYLON.ScriptComponent {
-        private triggerType;
-        private triggerParam;
+        triggerType: string;
+        triggerParam: string;
         private triggerFocus;
         private abstractMesh;
+        /** Register handler that is triggered when the mesh has been picked */
+        onPickTriggerObservable: BABYLON.Observable<BABYLON.AbstractMesh>;
         protected awake(): void;
+        sendMessage(): void;
+        registerNewTrigger(): void;
         private gradualFocus;
         private lerpCameraView;
+    }
+}
+declare module MVRK {
+    /**
+    * Babylon Script Component State Class
+    * @class State
+    */
+    abstract class State {
+        abstract onEnter(): void;
+        abstract onExit(): void;
+        abstract canChangeState(): boolean;
+        abstract onStateChangeFail(): void;
+        tick(): void;
+    }
+    /**
+    * Babylon Stateful Script Component
+    * @class StatefulScriptComponent
+    */
+    abstract class StatefulScriptComponent extends BABYLON.ScriptComponent {
+        private _currentState;
+        /** Gets the current script component state */
+        getCurrentState(): MVRK.State;
+        /** Sets the new script component state */
+        setState(newState: MVRK.State, forced?: boolean): boolean;
+        /** Register handler that is triggered when the animation ik setup has been triggered */
+        onStateChangeObservable: BABYLON.Observable<State>;
+    }
+}
+declare module MVRK {
+    /**
+    * Babylon Script Component
+    * @class BillboardMesh
+    */
+    class BillboardMesh extends BABYLON.ScriptComponent {
+        private camera;
+        protected awake(): void;
+        protected update(): void;
+    }
+}
+declare module MVRK {
+    /**
+    * Babylon Script Component
+    * @class BlinkManager
+    */
+    class BlinkManager extends BABYLON.ScriptComponent {
+        private enableBlinking;
+        private blinkingState;
+        private blinkingTimer;
+        blinkTimeout: number;
+        /** Register handler that is triggered when the blink change has been triggered */
+        onBlinkUpdateObservable: BABYLON.Observable<boolean>;
+        protected awake(): void;
+        protected update(): void;
+        protected destroy(): void;
+        enableBlinkMode(blinking: boolean): void;
     }
 }
 declare module MVRK {
@@ -1183,6 +1257,19 @@ declare module MVRK {
 declare module MVRK {
     /**
     * Babylon Script Component
+    * @class RuntimeTexture
+    */
+    class RuntimeTexture extends BABYLON.ScriptComponent {
+        protected m_dynamicTexture: BABYLON.Texture;
+        protected m_dynamicMaterial: BABYLON.Material;
+        protected awake(): void;
+        protected destroy(): void;
+        setTextureUrl(url: string, invertY?: boolean, createMipmaps?: boolean): void;
+    }
+}
+declare module MVRK {
+    /**
+    * Babylon Script Component
     * @class SpriteAnimation
     */
     class SpriteAnimation extends BABYLON.ScriptComponent {
@@ -1211,7 +1298,39 @@ declare module MVRK {
      * @class SceneLoader
      */
     class SceneLoader {
+        static TeleFade: {
+            Speed: number;
+            Timeout: number;
+            Multiplier: number;
+            Limit: number;
+            SceneFile: any;
+        };
         static SwitchScene(sceneFile: string): void;
+        static FadeToBlack(blanket: HTMLDivElement, speed: number): void;
+        static FadeToScene(blanket: HTMLDivElement, speed: number): void;
+        static LoadSceneComplete(): void;
+    }
+}
+declare module MVRK {
+    /**
+     * Babylon system utilities helper class
+     * @class System
+     */
+    class System {
+        static GetUserInfo(): MVRK.IUserInfo;
+        static GetGameLobbyInfo(): MVRK.IGameLobby;
+    }
+    /**
+     * User Info Interface
+     */
+    interface IUserInfo {
+        firstName: string;
+        lastName: string;
+        locale: string;
+        email: string;
+    }
+    interface IGameLobby {
+        id: string;
     }
 }
 declare module PROJECT {
@@ -1220,13 +1339,7 @@ declare module PROJECT {
     * @class AnchorInSpot
     */
     class AnchorInSpot extends BABYLON.ScriptComponent {
-        constructor(transform: BABYLON.TransformNode, scene: BABYLON.Scene, properties?: any);
-        protected awake(): void;
-        protected start(): void;
         protected update(): void;
-        protected late(): void;
-        protected after(): void;
-        protected destroy(): void;
     }
 }
 declare module PROJECT {
@@ -1254,21 +1367,6 @@ declare module PROJECT {
 declare module PROJECT {
     /**
     * Babylon Script Component
-    * @class BillboardMesh
-    */
-    class BillboardMesh extends BABYLON.ScriptComponent {
-        private camera;
-        protected awake(): void;
-        protected start(): void;
-        protected update(): void;
-        protected late(): void;
-        protected after(): void;
-        protected destroy(): void;
-    }
-}
-declare module PROJECT {
-    /**
-    * Babylon Script Component
     * @class LimitedDrag
     */
     class LimitedDrag extends BABYLON.ScriptComponent {
@@ -1276,7 +1374,6 @@ declare module PROJECT {
         leftBound: number;
         rightBound: number;
         canDrag: boolean;
-        constructor(transform: BABYLON.TransformNode, scene: BABYLON.Scene, properties?: any);
         protected awake(): void;
         protected start(): void;
         protected update(): void;
@@ -1307,18 +1404,45 @@ declare module PROJECT {
     * @class Rotator
     */
     class Rotator extends BABYLON.ScriptComponent {
+        private inertiaFactor;
+        private speed;
         private drag;
-        private axis;
-        private angle;
-        private direction;
-        private tempPointerX;
-        constructor(transform: BABYLON.TransformNode, scene: BABYLON.Scene, properties?: any);
+        private max;
+        private min;
+        private lastSafePoint;
+        private _mouseObs;
+        private _abm;
+        private _animatior;
         protected awake(): void;
         protected start(): void;
         protected update(): void;
-        protected late(): void;
-        protected after(): void;
+        private _addMouseObs;
+        private _removeMouseObs;
         protected destroy(): void;
+    }
+}
+declare module PROJECT {
+    /**
+    * Babylon Script Component
+    * @class SessionDetail
+    */
+    class SessionDetail extends BABYLON.ScriptComponent {
+        private sessionTexture;
+        getSessionTexture(): BABYLON.IUnityTexture;
+        protected awake(): void;
+        protected destroy(): void;
+    }
+}
+declare module PROJECT {
+    /**
+    * Babylon Script Component
+    * @class SessionManager
+    */
+    class SessionManager extends BABYLON.ScriptComponent {
+        private runtimeTexture;
+        protected awake(): void;
+        protected destroy(): void;
+        protected handleTriggerPick(mesh: BABYLON.AbstractMesh): void;
     }
 }
 declare module BABYLON {
@@ -1714,15 +1838,85 @@ declare module BABYLON {
         private _playonawake;
         private _spatialblend;
         private _reverbzonemix;
+        private _lastmutedvolume;
         private _bypasseffects;
         private _bypassreverbzones;
         private _bypasslistenereffects;
+        private _initializedReadyInstance;
         getSoundClip(): BABYLON.Sound;
         getAudioElement(): HTMLAudioElement;
+        /** Register handler that is triggered when the audio clip is ready */
+        onReadyObservable: Observable<Sound>;
         protected awake(): void;
         protected destroy(): void;
         protected awakeAudioSource(): void;
         protected destroyAudioSource(): void;
+        /**
+         * Gets the ready status for track
+         */
+        isReady(): boolean;
+        /**
+         * Gets the playing status for track
+         */
+        isPlaying(): boolean;
+        /**
+         * Gets the paused status for track
+         */
+        isPaused(): boolean;
+        /**
+         * Play the sound track
+         * @param time (optional) Start the sound after X seconds. Start immediately (0) by default.
+         * @param offset (optional) Start the sound at a specific time in seconds
+         * @param length (optional) Sound duration (in seconds)
+         */
+        play(time?: number, offset?: number, length?: number): boolean;
+        /**
+         * Pause the sound track
+         */
+        pause(): boolean;
+        /**
+         * Stop the sound track
+         * @param time (optional) Start the sound after X seconds. Start immediately (0) by default.
+         */
+        stop(time?: number): boolean;
+        /**
+         * Mute the sound track
+         * @param time (optional) Mute the sound after X seconds. Start immediately (0) by default.
+         */
+        mute(time?: number): boolean;
+        /**
+         * Unmute the sound track
+         * @param time (optional) Unmute the sound after X seconds. Start immediately (0) by default.
+         */
+        unmute(time?: number): boolean;
+        /**
+         * Gets the volume of the track
+         */
+        getVolume(): number;
+        /**
+         * Sets the volume of the track
+         * @param volume Define the new volume of the sound
+         * @param time Define time for gradual change to new volume
+         */
+        setVolume(volume: number, time?: number): boolean;
+        /**
+         * Gets the spatial sound option of the track
+         */
+        getSpatialSound(): boolean;
+        /**
+         * Gets the spatial sound option of the track
+         * @param value Define the value of the spatial sound
+         */
+        setSpatialSound(value: boolean): void;
+        /**
+         * Sets the sound track playback speed
+         * @param rate the audio playback rate
+         */
+        setPlaybackSpeed(rate: number): void;
+        /**
+         * Gets the current time of the track
+         */
+        getCurrentTrackTime(): number;
     }
 }
 declare module BABYLON {
@@ -2039,6 +2233,20 @@ declare module BABYLON {
 }
 declare module BABYLON {
     /**
+     * Babylon realtime reflection system pro class (Unity Style Realtime Reflection Probes)
+     * @class RealtimeReflection - All rights reserved (c) 2020 Mackey Kinard
+     */
+    class RealtimeReflection extends BABYLON.ScriptComponent {
+        protected awake(): void;
+        protected start(): void;
+        protected update(): void;
+        protected late(): void;
+        protected after(): void;
+        protected destroy(): void;
+    }
+}
+declare module BABYLON {
+    /**
      * Babylon full rigidbody physics pro class (Native Bullet Physics 2.82)
      * @class RigidbodyPhysics - All rights reserved (c) 2020 Mackey Kinard
      */
@@ -2199,7 +2407,7 @@ declare module BABYLON {
 }
 declare module BABYLON {
     /**
-     * Babylon web socket controller pro class (Socket.IO)
+     * Babylon window socket controller pro class (Socket.IO)
      * @class SocketController - All rights reserved (c) 2020 Mackey Kinard
      */
     class SocketController {
@@ -2208,9 +2416,9 @@ declare module BABYLON {
         /** Registers an handler for window socket disconnect event */
         static RegisterOnSocketDisconnect(func: () => void): void;
         /** Connects a window state socket */
-        static ConnectWindowSocket(connection: string): any;
+        static ConnectWindowSocket(connection: string): SocketIOClient.Socket;
         /** Get the window state socket */
-        static GetWindowSocket(): any;
+        static GetWindowSocket(): SocketIOClient.Socket;
     }
 }
 declare module BABYLON {
@@ -2231,6 +2439,6 @@ declare module BABYLON {
         protected awakeWebVideoPlayer(): void;
         protected destroyWebVideoPlayer(): void;
         /** Set web video player source */
-        setVideoSource(src: string | string[] | HTMLVideoElement, generateMipMaps?: boolean, invertY?: boolean, samplingMode?: number, settings?: BABYLON.VideoTextureSettings): void;
+        setVideoSource(src: string | string[] | HTMLVideoElement, generateMipMaps?: boolean, invertY?: boolean, samplingMode?: number, settings?: BABYLON.VideoTextureSettings, volume?: number, speed?: number): void;
     }
 }
