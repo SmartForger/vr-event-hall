@@ -55,7 +55,12 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
             <Grid container className={classes.authStateWrapper} spacing={3} direction='column'>
               <Grid item xs={12}>
                 {authState === AuthFlowSteps.SignIn && (
-                  <SignIn setAuthState={setAuthState} setUserEmail={setUserEmail} setUserPd={setUserPd} />
+                  <SignIn
+                    setAuthState={setAuthState}
+                    setUserEmail={setUserEmail}
+                    setUserPd={setUserPd}
+                    redirectRoute='/event'
+                  />
                 )}
                 {authState === AuthFlowSteps.SignUp && (
                   <SignUp setAuthState={setAuthState} setUserEmail={setUserEmail} setUserPd={setUserPd} />

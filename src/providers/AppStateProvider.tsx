@@ -12,9 +12,11 @@ const initialState = {
 export const AppContext = createContext<{
   appState: IAppContextObject
   dispatch: Dispatch<any>
+  setUser: (payload: IUser) => void
 }>({
   appState: initialState,
-  dispatch: () => null
+  dispatch: () => null,
+  setUser: () => null
 })
 
 const reducer = (state, action) => {
@@ -32,7 +34,11 @@ const reducer = (state, action) => {
 export const AppStateProvider = props => {
   const [appState, dispatch] = useReducer(reducer, initialState)
 
-  return <AppContext.Provider value={{ appState, dispatch }}>{props.children}</AppContext.Provider>
+  const setUser = (payload: IUser) => {
+    return dispatch({ type: 'SET_USER', payload })
+  }
+
+  return <AppContext.Provider value={{ appState, dispatch, setUser }}>{props.children}</AppContext.Provider>
 }
 
 export const useAppState = () => useContext(AppContext)
