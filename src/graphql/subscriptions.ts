@@ -263,19 +263,6 @@ export const onUpdateSession = /* GraphQL */ `
       description
       active
       conversationId
-      conversation {
-        id
-        name
-        members
-        messages {
-          nextToken
-        }
-        associated {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       admins {
         items {
           id
@@ -285,7 +272,6 @@ export const onUpdateSession = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        nextToken
       }
       users {
         items {
@@ -308,18 +294,6 @@ export const onUpdateSession = /* GraphQL */ `
           lastName
           email
           avatar
-          phoneNumber
-          company
-          companySize
-          companyAddress1
-          companyCity
-          companyState
-          companyPostalCode
-          address1
-          city
-          state
-          postalCode
-          title
           createdAt
           updatedAt
         }
@@ -368,19 +342,9 @@ export const onUpdateSession = /* GraphQL */ `
         }
         nextToken
       }
-      pollAnswers {
-        items {
-          id
-          sessionId
-          userId
-          answer
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       qaActive
       presenterPins
+      muted
       createdAt
       updatedAt
     }

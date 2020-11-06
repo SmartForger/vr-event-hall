@@ -7,6 +7,7 @@ import { createMessage } from 'graphql/mutations'
 import { graphQLMutation } from 'graphql/helpers'
 import { IMessageInput } from 'types'
 import { useChatContext, useVideoChatContext } from 'providers'
+import { QuestionDisabledIcon, QuestionIcon } from 'assets'
 
 interface MessageInputProps {
   userId: string
@@ -15,8 +16,9 @@ interface MessageInputProps {
 
 export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
   const classes = useStyles()
-  const [newMessage, setNewMessage] = useState<string>('')
   const { videoChatState } = useVideoChatContext()
+  const [newMessage, setNewMessage] = useState<string>('')
+  const [questionMode, setQuestionMode] = useState<boolean>(false)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage(event.target.value)
@@ -40,6 +42,10 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
     setNewMessage('')
   }
 
+  const toggleQuestionMode = () => {
+    setQuestionMode(prevState => !prevState)
+  }
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -53,6 +59,9 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
           onKeyDown={sendMessage}
         />
         <div className={classes.icons}>
+          <IconButton disabled={!videoChatState?.session?.qaActive} onClick={toggleQuestionMode}>
+            {videoChatState?.session?.qaActive && questionMode ? <QuestionIcon /> : <QuestionDisabledIcon />}
+          </IconButton>
           <IconButton
             className={`${classes.iconButton} ${classes.submitButton}`}
             aria-label='send'
