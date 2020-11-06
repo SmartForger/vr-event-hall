@@ -185,8 +185,9 @@
     (async function() {
         window.scene = null;
         window.toolkit = true;
-        var versionStamp = '6f4519af-8e67-483e-aff7-e6aff78ad11a';
-        var pagetype = "project", defaultscene= "VerizonEnterprise.gltf", physics = false, navmesh = true, renderengine = 0, animstartup= 0, antialias = true, adaptive = false, timeout = 1, autoclose=true, datax = "#00FF00", folder = "scenes/", title = "Verizon-VX360-3D";
+        var versionStamp = '33a961f7-c828-4326-abb5-8b3da1370a77';
+        var pagetype = "project", defaultscene= "VerizonEnterprise.gltf", physics = false, navmesh = true, renderengine = 0, animstartup= 0, antialias = true, adaptive = true, timeout = 1, autoclose=true, datax = "#00FF00", folder = "scenes/", title = "Verizon-VX360-3D";
+        var maxsize = true, maxwidth = 1920, maxheight = 1080;
         var loaded = false, paused = false, downloaded = 0;
         var proj = document.getElementById("proj");
         var panel = document.getElementById("panel");
@@ -206,7 +207,7 @@
         // ************************************************************************ //
         // STATS PANEL - Setup Performance Stats Information Panel                  //
         // ************************************************************************ //
-        var showStatsPanel = true;
+        var showStatsPanel = false;
         if (showStatsPanel === true && typeof FPSMeter !== "undefined") {
             var stats = 'fps';
             var look = 'colorful';
@@ -265,8 +266,7 @@
         // ************************************************************************ //
         // SCENE MANAGER - Attach Project Loadeing Screen Event Handler             //
         // ************************************************************************ //
-        BABYLON.SceneLoader.CleanBoneMatrixWeights = true;
-        if (BABYLON.SceneManager != null) BABYLON.SceneManager.AnimationStartMode = animstartup;
+        // BABYLON.SceneLoader.CleanBoneMatrixWeights = true;
         // ************************************************************************ //
         // LOADING SCREEN - Attach Project Loadeing Screen Event Handler            //
         // ************************************************************************ //
@@ -357,6 +357,7 @@
                             }
                         }
                     });
+                    resizeRenderingCanvas();                    
                     if (autoclose) window.setTimeout(window.hideSceneLoader, timeout * 1000);
                     else window.hideSceneLoader();
                 });
@@ -440,6 +441,24 @@
                 showErrorMessage(ex4.message || "Unknown Bullet Exception");
             }
         }
+        var resizeRenderingCanvas = function() {
+            engine.resize();
+            if (maxsize === true) {
+                if (divcvs.width < divcvs.height) {
+                    if (divcvs.height > maxheight) {
+                        var wratio = maxheight / divcvs.height;
+                        divcvs.height = maxheight;
+                        divcvs.width *= wratio;
+                    }
+                } else {
+                    if (divcvs.width > maxwidth) {
+                        var hratio = maxwidth / divcvs.width;
+                        divcvs.width = maxwidth;
+                        divcvs.height *= hratio;
+                    }    
+                }           
+            }            
+        }
         // ************************************************************************ //
         // BABYLON ENGINE - Create Engine And Load Project Scene Hiearchy           //
         // ************************************************************************ //
@@ -469,7 +488,7 @@
         // ************************************************************************ //
         // DEFAULT LOADER - Initialize Default Scene Loading                        //
         // ************************************************************************ //
-        window.addEventListener("resize", function() { engine.resize(); });
+        window.addEventListener("resize", function() { resizeRenderingCanvas(); });
         window.addEventListener("DOMContentLoaded", function() { bulletPhysicsLoader(); });
     })();
     </script>
