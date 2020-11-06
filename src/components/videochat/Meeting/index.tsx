@@ -26,7 +26,7 @@ export const VideoChatModal: FC<VideoChatModalProps> = ({ visible, setVisible, s
       <Modal open={visible} onClose={() => setVisible(false)}>
         <StyledLayout showNav={false} showRoster={false}>
           <StyledContent>
-            <VideoTileGrid className='videos' noRemoteVideoView={<MeetingDetails meetingInfo={meetingInfo} />} />
+            <VideoTileGrid className='videos' noRemoteVideoView={<MeetingDetails />} />
             <MeetingControls setVisible={setVisible} />
           </StyledContent>
         </StyledLayout>

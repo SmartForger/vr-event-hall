@@ -1,7 +1,5 @@
 import React from 'react'
 import {
-  ControlBarButton,
-  Phone,
   useMeetingManager,
   useRosterState,
   ActionType,
@@ -9,12 +7,15 @@ import {
   useNotificationDispatch
 } from 'amazon-chime-sdk-component-library-react'
 import { endChimeMeeting } from 'helpers'
+import { HangupIcon } from 'assets/HangupIcon'
+import { CustomControlBarButton } from '../MeetingControls/Styled'
 
 interface EndMeetingControlProps {
   setVisible: (val: boolean) => void
+  isPresenter?: boolean
 }
 
-export const EndMeetingControl: React.FC<EndMeetingControlProps> = ({ setVisible }) => {
+export const EndMeetingControl: React.FC<EndMeetingControlProps> = ({ setVisible, isPresenter }) => {
   const { roster } = useRosterState()
   const meetingManager = useMeetingManager()
   const dispatch = useNotificationDispatch()
@@ -31,7 +32,7 @@ export const EndMeetingControl: React.FC<EndMeetingControlProps> = ({ setVisible
         replaceAll: true
       }
     })
-    if (Object.keys(roster).length === 1) {
+    if (Object.keys(roster).length === 1 || isPresenter) {
       endChimeMeeting(meetingId)
     }
     setVisible(false)
@@ -41,5 +42,12 @@ export const EndMeetingControl: React.FC<EndMeetingControlProps> = ({ setVisible
     leaveNotifyAndRedirect('You left the meeting')
   }
 
-  return <ControlBarButton icon={<Phone />} onClick={() => leaveMeeting()} label='Leave' />
+  return (
+    <CustomControlBarButton
+      icon={<HangupIcon width='20' />}
+      onClick={() => leaveMeeting()}
+      label='Leave'
+      removeSideMargin='left'
+    />
+  )
 }

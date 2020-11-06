@@ -212,6 +212,203 @@ export const onUpdateSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      raisedHands {
+        items {
+          id
+          userId
+          sessionId
+          dismissed
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      questions {
+        items {
+          id
+          userId
+          sessionId
+          answered
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      polls {
+        items {
+          id
+          sessionId
+          active
+          name
+          question
+          optionA
+          optionB
+          optionC
+          optionD
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pollAnswers {
+        items {
+          id
+          sessionId
+          userId
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      qaActive
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateSessionPoll = /* GraphQL */ `
+  subscription OnUpdateSessionPoll($sessionId: ID!) {
+    onUpdateSessionPoll(sessionId: $sessionId) {
+      id
+      sessionId
+      active
+      name
+      question
+      optionA
+      optionB
+      optionC
+      optionD
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateSessionQuestion = /* GraphQL */ `
+  subscription OnUpdateSessionQuestion($sessionId: ID!) {
+    onUpdateSessionQuestion(sessionId: $sessionId) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answered
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onCreateRaisedHand = /* GraphQL */ `
+  subscription OnCreateRaisedHand($sessionId: ID!) {
+    onCreateRaisedHand(sessionId: $sessionId) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dismissed
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onCreateGlobalRaisedHand = /* GraphQL */ `
+  subscription OnCreateGlobalRaisedHand {
+    onCreateGlobalRaisedHand {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dismissed
       createdAt
       updatedAt
     }
@@ -254,6 +451,90 @@ export const onDeleteEventConfig = /* GraphQL */ `
       streamStartTime
       useBackupStream
       environment
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onCreateSessionPollAnswer = /* GraphQL */ `
+  subscription OnCreateSessionPollAnswer {
+    onCreateSessionPollAnswer {
+      id
+      sessionId
+      userId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateSessionPollAnswer = /* GraphQL */ `
+  subscription OnUpdateSessionPollAnswer {
+    onUpdateSessionPollAnswer {
+      id
+      sessionId
+      userId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answer
       createdAt
       updatedAt
     }

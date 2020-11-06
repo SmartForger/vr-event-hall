@@ -1,16 +1,17 @@
 import React, { FC, useEffect, useState } from 'react'
+import { useMeetingManager } from 'amazon-chime-sdk-component-library-react'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import { makeStyles, Theme, Container, Grid, Typography, Button, Box } from '@material-ui/core'
 
 // Components
 import { Video } from 'components/shared'
 
-// Styles
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-import { makeStyles, Theme, Container, Grid, Typography, Button } from '@material-ui/core'
-
 // Types
+import { createChimeMeeting } from 'helpers'
 import { ISession } from 'helpers/sessions'
-import { GameFlowStepsConfig } from '../../helpers/steps'
-import { GameFlowSteps } from '../../types'
+import { GameFlowStepsConfig } from 'helpers/steps'
+import { GameFlowSteps } from 'types'
+import { useAppState, UserAdminType, useVideoChatContext } from 'providers'
 
 interface SessionProps {
   session: ISession
@@ -19,6 +20,11 @@ interface SessionProps {
 
 export const Session: FC<SessionProps> = ({ session, setScene }) => {
   const classes = useStyles()
+  const meetingManager = useMeetingManager()
+  const { videoChatState, dispatch } = useVideoChatContext()
+  const {
+    appState: { user }
+  } = useAppState()
   const [renderSession, setRenderSession] = useState<boolean>(false)
   const assetUrl = 'https://d1oc551tl862q5.cloudfront.net/'
 
@@ -29,6 +35,26 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
       setRenderSession(true)
     }, timeoutTime)
   }, [])
+
+  const joinClassRoom = async () => {
+    dispatch({ type: 'SET_LOADING', payload: true })
+    if (videoChatState.presenters.includes(user?.id as string)) {
+      dispatch({ type: 'SET_DETAILS', payload: { adminType: UserAdminType.PRESENTER } })
+    } else if (videoChatState.moderators.includes(user?.id as string)) {
+      dispatch({ type: 'SET_DETAILS', payload: { adminType: UserAdminType.MODERATOR } })
+    }
+    const {
+      data: { meeting, attendee }
+    } = await createChimeMeeting({ meetingId: videoChatState.meetingId, userId: user?.id })
+
+    const joinData = {
+      meetingInfo: meeting.Meeting,
+      attendeeInfo: attendee.Attendee
+    }
+
+    await meetingManager.join(joinData)
+    dispatch({ type: 'SET_DETAILS', payload: { visible: true, isClassroom: true } })
+  }
 
   return (
     <>
@@ -56,14 +82,19 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
               <Typography component='p' variant='body2' color='textPrimary' gutterBottom>
                 {session.side.body}
               </Typography>
-              <Button
-                startIcon={<ArrowBackIcon />}
-                onClick={() => {
-                  setScene(GameFlowSteps.BackToSessions)
-                }}
-              >
-                Back
-              </Button>
+              <Box display='flex'>
+                <Button
+                  startIcon={<ArrowBackIcon />}
+                  onClick={() => {
+                    setScene(GameFlowSteps.BackToSessions)
+                  }}
+                >
+                  Back
+                </Button>
+                <Button onClick={joinClassRoom} variant='outlined'>
+                  Join Session
+                </Button>
+              </Box>
             </Grid>
             <Grid item xs={7} className={classes.contentContainer}>
               {session.video && <Video posterSrc={session.image || ''} videoSrc={`${assetUrl}${session.video}`} />}
