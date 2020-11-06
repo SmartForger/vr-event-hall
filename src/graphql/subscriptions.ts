@@ -269,6 +269,7 @@ export const onUpdateSession = /* GraphQL */ `
         nextToken
       }
       qaActive
+      presenterPins
       createdAt
       updatedAt
     }

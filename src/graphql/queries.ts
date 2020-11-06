@@ -253,6 +253,7 @@ export const getSession = /* GraphQL */ `
         nextToken
       }
       qaActive
+      presenterPins
       createdAt
       updatedAt
     }
@@ -303,6 +304,7 @@ export const listSessions = /* GraphQL */ `
           nextToken
         }
         qaActive
+        presenterPins
         createdAt
         updatedAt
       }
@@ -715,6 +717,7 @@ export const sessionByConversationId = /* GraphQL */ `
           nextToken
         }
         qaActive
+        presenterPins
         createdAt
         updatedAt
       }

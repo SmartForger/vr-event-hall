@@ -39,7 +39,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
     appState: { user }
   } = useAppState()
   const [presenterTileId, setPresenterTileId] = useState<number | null>(null)
-  const [currentSession, setCurrentSession] = useState<ISession | {}>({})
+  const [currentSession, setCurrentSession] = useState<ISession | null>(null)
   const [userStarted, setUserStarted] = useState<boolean>(false)
   const [pollResponse, setPollResponse] = useState<string>('')
   const [activePoll, setActivePoll] = useState<IPollObject | null>(null)
@@ -55,7 +55,8 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   const { videoChatState, dispatch } = useVideoChatContext()
   const [tabValue, setTabValue] = useState<number>(0)
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false)
-  let isPresenter = videoChatState.presenters.includes(user?.id as string)
+  let isPresenter = currentSession?.admins.items.some(admin => admin.userId === (user?.id as string))
+  let isVideoPresenter = currentSession?.presenterPins.includes(user?.id as string)
 
   const setLoading = useCallback((payload: boolean) => dispatch({ type: 'SET_LOADING', payload }), [])
   // useMeetingEndedRedirect(setLoading)
@@ -100,12 +101,11 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   useEffect(() => {
     setTimeout(() => setLoading(false), 1500)
     if (videoChatState.sessionId) {
-      // getSessionInfo()
+      getSessionInfo()
     }
-    // TODO clean up for multiple presenters
     // eslint-disable-next-line
-    if (videoChatState.presenters.includes(user?.id as string)) {
-      const tileId = getTileId(videoChatState.presenters[0])
+    if (videoChatState.presenterPins.includes(user?.id as string)) {
+      const tileId = getTileId(videoChatState.presenterPins[0])
       setPresenterTileId(tileId)
     }
 
@@ -115,8 +115,8 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   }, [])
 
   useEffect(() => {
-    if (!presenterTileId && !videoChatState.presenters.includes(user?.id as string)) {
-      const tileId = getTileId(videoChatState.presenters[0])
+    if (!presenterTileId && !videoChatState.presenterPins.includes(user?.id as string)) {
+      const tileId = getTileId(videoChatState.presenterPins[0])
       if (tileId) {
         setPresenterTileId(tileId)
       }
@@ -169,6 +169,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                   setVisible={setVisible}
                   isClassroom={true}
                   isPresenter={isPresenter}
+                  isVideoPresenter={isVideoPresenter}
                   toggleDrawer={toggleDrawer}
                 />
               </div>
@@ -197,7 +198,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                     >
                       <Tab label='Chat' className={classes.tab} />
                       <Tab label='People' className={classes.tab} />
-                      <Tab label={videoChatState.adminType ? 'Tools' : 'Details'} className={classes.tab} />
+                      <Tab label={isPresenter ? 'Tools' : 'Details'} className={classes.tab} />
                     </Tabs>
                   </Toolbar>
                   <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
@@ -206,7 +207,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                   <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
                     <PeoplePanel isAdmin={true} sessionId={videoChatState.sessionId} />
                   </TabPanel>
-                  {videoChatState.adminType ? (
+                  {isPresenter ? (
                     <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
                       <ToolsPanel />
                     </TabPanel>

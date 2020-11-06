@@ -49,6 +49,7 @@ type Session
   polls: [SessionPoll] @connection(keyName: "bySessionPoll", fields: ["id"])
   pollAnswers: [SessionPollAnswer] @connection(keyName: "bySessionPollAnswer", fields: ["id"])
   qaActive: Boolean
+  presenterPins: [String]
 }
 
 type UserSessionReservation

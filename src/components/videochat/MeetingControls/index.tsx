@@ -19,11 +19,18 @@ import { ChatIcon, SpeakerMuteIcon } from 'assets'
 interface MeetingControlProps {
   setVisible: (val: boolean) => void
   isPresenter?: boolean
+  isVideoPresenter?: boolean
   isClassroom?: boolean
   toggleDrawer?: ToggleDrawer
 }
 
-const MeetingControls: FC<MeetingControlProps> = ({ setVisible, isPresenter, isClassroom, toggleDrawer }) => {
+const MeetingControls: FC<MeetingControlProps> = ({
+  setVisible,
+  isPresenter,
+  isVideoPresenter,
+  isClassroom,
+  toggleDrawer
+}) => {
   const { isUserActive } = useUserActivityState()
   const { tiles } = useRemoteVideoTileState()
   // TODO keep in state
@@ -47,11 +54,11 @@ const MeetingControls: FC<MeetingControlProps> = ({ setVisible, isPresenter, isC
           label='Chat'
         />
         {isClassroom && !isPresenter ? <CustomRaiseHandControl sessionId={videoChatState.sessionId} /> : null}
-        {isClassroom && isPresenter && tiles.length < 4 ? <CustomVideoInputControl /> : null}
+        {isClassroom && isVideoPresenter && tiles.length < 4 ? <CustomVideoInputControl /> : null}
         {!isClassroom ? <CustomVideoInputControl /> : null}
         <EndMeetingControl setVisible={setVisible} isPresenter={isPresenter} />
         <section className='controls-menu-right'>
-          {(isClassroom && isPresenter) || !isClassroom ? <CustomContentShareControl /> : null}
+          {(isClassroom && isVideoPresenter) || !isClassroom ? <CustomContentShareControl /> : null}
           {isClassroom && isPresenter ? (
             <CustomControlBarButton
               icon={<SpeakerMuteIcon width={16} height={16} fill={videoChatState.globalMute ? 'white' : 'black'} />}

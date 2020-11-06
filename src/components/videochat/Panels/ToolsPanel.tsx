@@ -194,6 +194,8 @@ const useStyles = makeStyles(() => ({
 
 const Accordion = withStyles({
   root: {
+    backgroundColor: 'black',
+    color: 'white',
     borderBottom: '1px solid white',
     boxShadow: 'none',
     '&:last-child': {
