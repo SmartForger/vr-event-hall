@@ -29,9 +29,11 @@ export const Welcome: FC<WelcomeProps> = ({ user, setGameState }) => {
         </Grid>
         <Grid item>
           <Typography component='p' variant='body1' paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis
-            ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed
-            tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.
+            During this hour-long event, we’ll show how Verizon 5G Ultra Wideband can unleash new applications, use
+            cases and immersive customer experiences. With thought provoking discussions, cutting edge demos, and
+            breakout sessions customized to the way you work, you'll learn how to take advantage of the exciting and
+            transformative benefits of Verizon 5G. This is the 5G businesses have been waiting for. This is 5G built
+            right.
           </Typography>
         </Grid>
         <Grid item container spacing={1}>

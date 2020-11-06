@@ -5,7 +5,8 @@ import {
   IBreakoutDict,
   IThankYouDict,
   IRegistrationDict,
-  ISurveyDict
+  ISurveyDict,
+  IScenesDict
 } from 'types'
 
 const common: ICommonDict = {
@@ -132,6 +133,23 @@ const errors: IErrorDict = {
   requiredField: 'Required Field'
 }
 
+const scenes: IScenesDict = {
+  exploreSceneTitle: '5G will change everything.',
+  exploreSceneBlurb: "We're partnering with businesses and innovators to make groundbreaking 5G ideas a reality.",
+  sessionsSceneTitle: 'Talk with our experts.',
+  sessionsSceneBlurb:
+    'Hear from thought-provoking leaders who explain how Verizon 5G is already transforming industries.',
+  clickAndDragToExplore: 'Click and drag to explore',
+  theEventWillBeginIn: 'The next session will begin in',
+  theEventWillStartOn: 'The next session will start on',
+  explore: 'Explore',
+  sessions: 'Sessions',
+  connect: 'Connect',
+  liveStream: 'Live Stream',
+  startingSoon: 'The Digital Transformation of Venues speaker session begins now.',
+  goToLiveStream: 'Go to Live Stream'
+}
+
 export const en = {
   ...common,
   ...passwordRequirements,
@@ -139,5 +157,6 @@ export const en = {
   ...registration,
   ...breakout,
   ...survey,
-  ...thankYou
+  ...thankYou,
+  ...scenes
 }
