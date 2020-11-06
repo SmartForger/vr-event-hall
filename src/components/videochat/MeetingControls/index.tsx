@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { ControlBar, useUserActivityState } from 'amazon-chime-sdk-component-library-react'
+import { ControlBar, useRemoteVideoTileState, useUserActivityState } from 'amazon-chime-sdk-component-library-react'
 import { useTheme } from '@material-ui/core'
 
 import { EndMeetingControl } from '../EndMeetingControl'
@@ -25,6 +25,7 @@ interface MeetingControlProps {
 
 const MeetingControls: FC<MeetingControlProps> = ({ setVisible, isPresenter, isClassroom, toggleDrawer }) => {
   const { isUserActive } = useUserActivityState()
+  const { tiles } = useRemoteVideoTileState()
   // TODO keep in state
   const { videoChatState } = useVideoChatContext()
   const theme = useTheme()
@@ -46,7 +47,8 @@ const MeetingControls: FC<MeetingControlProps> = ({ setVisible, isPresenter, isC
           label='Chat'
         />
         {isClassroom && !isPresenter ? <CustomRaiseHandControl sessionId={videoChatState.sessionId} /> : null}
-        <CustomVideoInputControl />
+        {isClassroom && isPresenter && tiles.length < 4 ? <CustomVideoInputControl /> : null}
+        {!isClassroom ? <CustomVideoInputControl /> : null}
         <EndMeetingControl setVisible={setVisible} isPresenter={isPresenter} />
         <section className='controls-menu-right'>
           {(isClassroom && isPresenter) || !isClassroom ? <CustomContentShareControl /> : null}
