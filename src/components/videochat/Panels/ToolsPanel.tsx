@@ -7,7 +7,7 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 import { ExpandMore, ExpandLess } from '@material-ui/icons'
 
 import { useVideoChatContext } from 'providers'
-import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
+import { graphQLQuery, graphQLMutation, graphQLSubscription } from 'graphql/helpers'
 import { getSessionQuestionsAndPolls } from 'graphql/customQueries'
 import { ChatMessages } from 'components/menu/ChatMessages'
 import { IPollObject, IQuestionObject, ISubscriptionObject } from 'types'
@@ -22,8 +22,9 @@ export const ToolsPanel = () => {
 
   const { videoChatState } = useVideoChatContext()
 
-  let questionSubscription = useRef<ISubscriptionObject | null>(null)
-  let pollSubscription = useRef<ISubscriptionObject | null>(null)
+  // TODO: Add Subscriptions in Schema
+  // let questionSubscription = useRef<ISubscriptionObject | null>(null)
+  // let pollSubscription = useRef<ISubscriptionObject | null>(null)
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
     setExpanded(newExpanded ? panel : false)
