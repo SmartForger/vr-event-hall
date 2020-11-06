@@ -134,8 +134,9 @@ const errors: IErrorDict = {
 }
 
 const scenes: IScenesDict = {
-  exploreSceneTitle: '5G will change everything.',
-  exploreSceneBlurb: "We're partnering with businesses and innovators to make groundbreaking 5G ideas a reality.",
+  exploreSceneTitle: 'Experience the power of Verizon 5G Ultra Wideband.',
+  exploreSceneBlurb:
+    'What can Verizon 5G Ultra Wideband do for your business? Explore the various ways our 5G network is moving businesses like yours forward.',
   sessionsSceneTitle: 'Talk with our experts.',
   sessionsSceneBlurb:
     'Hear from thought-provoking leaders who explain how Verizon 5G is already transforming industries.',
