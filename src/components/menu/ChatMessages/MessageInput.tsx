@@ -3,7 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { IconButton, InputBase, Paper } from '@material-ui/core'
 import { SendOutlined as Send, Mood as Smile } from '@material-ui/icons'
 
-import { createMessage } from 'graphql/mutations'
+import { createMessage, createSessionQuestion } from 'graphql/mutations'
 import { graphQLMutation } from 'graphql/helpers'
 import { IMessageInput } from 'types'
 import { useChatContext, useVideoChatContext } from 'providers'
@@ -29,6 +29,18 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
       return
     }
     if (newMessage === '') return
+
+    if (questionMode) {
+      const question = {
+        sessionId: videoChatState?.session?.id || videoChatState?.sessionId,
+        answered: 'false',
+        content: newMessage,
+        userId: userId
+      }
+
+      await graphQLMutation(createSessionQuestion, question)
+      return setNewMessage('')
+    }
 
     const message: IMessageInput = {
       createdAt: new Date().toISOString(),
