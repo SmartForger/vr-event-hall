@@ -398,6 +398,7 @@ export const createSession = /* GraphQL */ `
       }
       qaActive
       presenterPins
+      muted
       createdAt
       updatedAt
     }
@@ -529,6 +530,7 @@ export const updateSession = /* GraphQL */ `
       }
       qaActive
       presenterPins
+      muted
       createdAt
       updatedAt
     }
@@ -660,6 +662,7 @@ export const deleteSession = /* GraphQL */ `
       }
       qaActive
       presenterPins
+      muted
       createdAt
       updatedAt
     }
@@ -747,6 +750,7 @@ export const createSessionReservation = /* GraphQL */ `
         }
         qaActive
         presenterPins
+        muted
         createdAt
         updatedAt
       }
@@ -837,6 +841,7 @@ export const updateSessionReservation = /* GraphQL */ `
         }
         qaActive
         presenterPins
+        muted
         createdAt
         updatedAt
       }
@@ -1336,6 +1341,7 @@ export const createAdminLink = /* GraphQL */ `
         }
         qaActive
         presenterPins
+        muted
         createdAt
         updatedAt
       }
@@ -1424,6 +1430,7 @@ export const updateAdminLink = /* GraphQL */ `
         }
         qaActive
         presenterPins
+        muted
         createdAt
         updatedAt
       }

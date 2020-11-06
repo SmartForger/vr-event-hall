@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { Button, List, ListItem, Typography } from '@material-ui/core'
 import MuiAccordion from '@material-ui/core/Accordion'
@@ -7,10 +7,11 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 import { ExpandMore, ExpandLess } from '@material-ui/icons'
 
 import { useVideoChatContext } from 'providers'
-import { graphQLQuery } from 'graphql/helpers'
+import { graphQLQuery, graphQLMutation, graphQLSubscription } from 'graphql/helpers'
 import { getSessionQuestionsAndPolls } from 'graphql/customQueries'
 import { ChatMessages } from 'components/menu/ChatMessages'
-import { IPollObject, IQuestionObject } from 'types'
+import { IPollObject, IQuestionObject, ISubscriptionObject } from 'types'
+import { updateSession, updateSessionPoll } from 'graphql/mutations'
 
 export const ToolsPanel = () => {
   const classes = useStyles()
@@ -18,9 +19,12 @@ export const ToolsPanel = () => {
   const [nestedExpanded, setNestedExpanded] = useState<string | false>('')
   const [questions, setQuestions] = useState<IQuestionObject[]>([])
   const [polls, setPolls] = useState<IPollObject[]>([])
-  const [qaOpen, setQAOpen] = useState<boolean>(false)
 
   const { videoChatState } = useVideoChatContext()
+
+  // TODO: Add Subscriptions in Schema
+  // let questionSubscription = useRef<ISubscriptionObject | null>(null)
+  // let pollSubscription = useRef<ISubscriptionObject | null>(null)
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
     setExpanded(newExpanded ? panel : false)
@@ -31,7 +35,9 @@ export const ToolsPanel = () => {
   }
 
   const getSessionQuestionsAndPollsInfo = async () => {
-    const session = await graphQLQuery(getSessionQuestionsAndPolls, 'getSession', { id: videoChatState.sessionId })
+    const session = await graphQLQuery(getSessionQuestionsAndPolls, 'getSession', {
+      id: videoChatState?.session?.id || videoChatState.sessionId
+    })
     setQuestions(session.questions.items)
     setPolls(session.polls.items)
   }
@@ -39,6 +45,20 @@ export const ToolsPanel = () => {
   useEffect(() => {
     getSessionQuestionsAndPollsInfo()
   }, [])
+
+  const toggleQA = async () => {
+    await graphQLMutation(updateSession, {
+      id: videoChatState?.session?.id || videoChatState.sessionId,
+      qaActive: !videoChatState?.session?.qaActive
+    })
+  }
+
+  const activatePoll = async (id: string) => {
+    await graphQLMutation(updateSessionPoll, {
+      id,
+      active: 'true'
+    })
+  }
 
   return (
     <>
@@ -49,21 +69,19 @@ export const ToolsPanel = () => {
           </Typography>
           <Button
             onClick={(e: React.MouseEvent) => {
-              if (qaOpen || expanded === 'panel1') {
-                e.stopPropagation()
-              }
-              setQAOpen(!qaOpen)
+              e.stopPropagation()
+              toggleQA()
             }}
             variant='outlined'
             className={`${classes.roundedButton} ${classes.qaButton}`}
           >
-            {qaOpen ? 'Close' : 'Open'} Q&A
+            {videoChatState?.session?.qaActive ? 'Close' : 'Open'} Q&A
           </Button>
         </AccordionSummary>
         <AccordionDetails className={classes.qaList}>
           <List>
             {questions
-              .filter(question => !question.answered)
+              .filter(question => question.answered === 'false')
               .map(question => (
                 <ListItem className={classes.questionListItem}>
                   <section className={classes.userInfo}>
@@ -74,7 +92,7 @@ export const ToolsPanel = () => {
                       Clear
                     </Button>
                   </section>
-                  <Typography>{question.content}</Typography>
+                  <Typography className={classes.questionContent}>{question.content}</Typography>
                 </ListItem>
               ))}
           </List>
@@ -100,6 +118,7 @@ export const ToolsPanel = () => {
                 <Button
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation()
+                    activatePoll(poll?.id || '')
                   }}
                   variant='outlined'
                   className={`${classes.roundedButton} ${classes.pollButton}`}
@@ -163,10 +182,19 @@ const useStyles = makeStyles(() => ({
   },
   subtitle: {
     fontWeight: 'bold',
-    fontSize: '1.15rem'
+    fontSize: '1.15rem',
+    color: 'black'
+  },
+  questionContent: {
+    color: 'black',
+    fontSize: '1rem',
+    width: '100%'
   },
   qaList: {
-    maxHeight: '250px'
+    maxHeight: '250px',
+    '& > ul': {
+      width: '100%'
+    }
   },
   questionListItem: {
     display: 'flex',
