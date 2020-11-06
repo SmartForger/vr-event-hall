@@ -27,6 +27,4 @@ export const useMeetingEndedRedirect = (onEnd: (val: boolean) => void) => {
       onEnd(false)
     }
   }, [meetingStatus])
-
-  return meetingStatus
 }

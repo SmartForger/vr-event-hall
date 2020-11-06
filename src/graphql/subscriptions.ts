@@ -63,6 +63,7 @@ export const onCreateMessage = /* GraphQL */ `
       content
       authorId
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -75,6 +76,7 @@ export const onUpdateMessage = /* GraphQL */ `
       content
       authorId
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -87,6 +89,7 @@ export const onCreateGlobalMessage = /* GraphQL */ `
       content
       authorId
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -128,6 +131,7 @@ export const onCreateUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -209,6 +213,7 @@ export const onUpdateSession = /* GraphQL */ `
         content
         authorId
         conversationId
+        deleted
         createdAt
         updatedAt
       }
