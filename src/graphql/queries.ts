@@ -196,6 +196,27 @@ export const getSession = /* GraphQL */ `
         id
         content
         authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
         conversationId
         deleted
         createdAt
@@ -253,6 +274,7 @@ export const getSession = /* GraphQL */ `
         nextToken
       }
       qaActive
+      presenterPins
       createdAt
       updatedAt
     }
@@ -303,6 +325,7 @@ export const listSessions = /* GraphQL */ `
           nextToken
         }
         qaActive
+        presenterPins
         createdAt
         updatedAt
       }
@@ -715,6 +738,7 @@ export const sessionByConversationId = /* GraphQL */ `
           nextToken
         }
         qaActive
+        presenterPins
         createdAt
         updatedAt
       }
@@ -743,6 +767,27 @@ export const messageByAuthor = /* GraphQL */ `
         id
         content
         authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
         conversationId
         deleted
         createdAt
@@ -773,6 +818,27 @@ export const messageByAuthorByDate = /* GraphQL */ `
         id
         content
         authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
         conversationId
         deleted
         createdAt
@@ -803,6 +869,27 @@ export const messageByConversation = /* GraphQL */ `
         id
         content
         authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
         conversationId
         deleted
         createdAt
@@ -833,6 +920,27 @@ export const messageByConversationDate = /* GraphQL */ `
         id
         content
         authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
         conversationId
         deleted
         createdAt

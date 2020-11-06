@@ -1,5 +1,5 @@
 import React, { useReducer, createContext, Dispatch, useContext } from 'react'
-import { IMessage, IUser } from 'types'
+import { IMessage, IUser, ISession } from 'types'
 import { UserAdminType } from './ChatProvider'
 
 interface IVideoChatContextObject {
@@ -13,8 +13,9 @@ interface IVideoChatContextObject {
   conversationUser: IUser | null
   adminType: UserAdminType
   sessionId: string
+  session: ISession | null
   globalMute: boolean
-  presenters: string[]
+  presenterPins: string[]
   moderators: string[]
   pinnedMessage: IMessage | null
 }
@@ -30,8 +31,9 @@ const initialState = {
   conversationUser: null,
   adminType: UserAdminType.GUEST,
   sessionId: '4a9b328b-85b5-4393-a232-550ac67962f9',
+  session: null,
   globalMute: false,
-  presenters: ['b1f1e0ca-a98e-47fc-9e5c-f897bcdeddb6'],
+  presenterPins: [],
   moderators: [],
   pinnedMessage: null
 }

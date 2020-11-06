@@ -6,10 +6,10 @@ import { MessageInput } from './MessageInput'
 import { MessageList } from './MessageList'
 
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
-import { onCreateMessage, onUpdateMessage } from 'graphql/subscriptions'
-import { useAppState, useChatContext } from 'providers'
-import { ISubscriptionObject, IUser } from 'types'
+import { useAppState, useVideoChatContext } from 'providers'
+import { ISubscriptionObject } from 'types'
 import { getConversationFiltered } from 'graphql/customQueries'
+import { onCreateMessageWithAuthor, onUpdateMessageWithAuthor } from 'graphql/customSubscriptions'
 
 interface ChatMessagesProps {
   internal?: boolean
@@ -20,7 +20,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal }) => {
   const {
     appState: { user }
   } = useAppState()
-  const { chatState } = useChatContext()
+  const { videoChatState } = useVideoChatContext()
 
   let [messages, setMessages] = useState<any>([])
   const listRef = useRef<VariableSizeProps>()
@@ -40,29 +40,29 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal }) => {
 
   const getConversationDetails = async () => {
     const conversation = await graphQLQuery(getConversationFiltered, 'getConversation', {
-      id: chatState.conversationId
+      id: videoChatState?.session?.conversationId || videoChatState.conversationId
     })
     setMessages(conversation.messages.items.filter(message => message.deleted !== 'true'))
 
     subscription.current = graphQLSubscription(
-      onCreateMessage,
-      { conversationId: chatState.conversationId },
+      onCreateMessageWithAuthor,
+      { conversationId: videoChatState?.session?.conversationId || videoChatState.conversationId },
       addNewMessage
     )
 
     updateSubscription.current = graphQLSubscription(
-      onUpdateMessage,
-      { conversationId: chatState.conversationId },
+      onUpdateMessageWithAuthor,
+      { conversationId: videoChatState?.session?.conversationId || videoChatState.conversationId },
       messageUpdated
     )
   }
 
   useEffect(() => {
-    if (chatState.conversationId) {
+    if (videoChatState?.session?.conversationId || videoChatState.conversationId) {
       getConversationDetails()
     }
     // eslint-disable-next-line
-  }, [chatState.conversationId])
+  }, [videoChatState?.session?.conversationId || videoChatState.conversationId])
 
   useEffect(() => {
     if (messages.length > 0) {

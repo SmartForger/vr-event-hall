@@ -6,7 +6,7 @@ import { SendOutlined as Send, Mood as Smile } from '@material-ui/icons'
 import { createMessage } from 'graphql/mutations'
 import { graphQLMutation } from 'graphql/helpers'
 import { IMessageInput } from 'types'
-import { useChatContext } from 'providers'
+import { useChatContext, useVideoChatContext } from 'providers'
 
 interface MessageInputProps {
   userId: string
@@ -16,7 +16,7 @@ interface MessageInputProps {
 export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
   const classes = useStyles()
   const [newMessage, setNewMessage] = useState<string>('')
-  const { chatState } = useChatContext()
+  const { videoChatState } = useVideoChatContext()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage(event.target.value)
@@ -30,7 +30,7 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
 
     const message: IMessageInput = {
       createdAt: new Date().toISOString(),
-      conversationId: chatState?.conversationId,
+      conversationId: videoChatState?.session?.conversationId || videoChatState?.conversationId,
       content: newMessage,
       authorId: userId,
       deleted: 'false'

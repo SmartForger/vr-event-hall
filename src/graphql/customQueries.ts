@@ -1,3 +1,5 @@
+import { graphQLQuery } from './helpers'
+
 export const getConversationFiltered = /* GraphQL */ `
   query GetConversation($id: ID!) {
     getConversation(id: $id) {
@@ -189,6 +191,16 @@ export const userByEmailBase = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`
+export const getAttendeeInfo = /* GraphQL */ `
+  query GetAttendeeInfo($id: ID!) {
+    getUser(id: $id) {
+      id
+      firstName
+      lastName
+      avatar
     }
   }
 `
