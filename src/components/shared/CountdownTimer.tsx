@@ -6,12 +6,14 @@ interface CountdownTimerProps extends CircularProgressProps {
   totalTime: number
   timerColor?: string
   labelColor?: string
+  onCountdownEnd?: () => void
 }
 
 export const CountdownTimer: FC<CountdownTimerProps> = ({
   totalTime,
   timerColor = 'white',
   labelColor = 'white',
+  onCountdownEnd,
   ...props
 }) => {
   const classes = useStyles()
@@ -20,7 +22,17 @@ export const CountdownTimer: FC<CountdownTimerProps> = ({
 
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setTimeValue(prevValue => (prevValue >= 1 ? prevValue - 1 : totalTime))
+      if (timeValue <= 2 && onCountdownEnd) {
+        onCountdownEnd()
+        return clearInterval(timer)
+      }
+      setTimeValue(prevValue => {
+        if (prevValue <= 1 && onCountdownEnd) {
+          onCountdownEnd()
+          clearInterval(timer)
+        }
+        return prevValue >= 1 ? prevValue - 1 : totalTime
+      })
       setTimeLeft(prevTime => (prevTime >= 100 + (100 / totalTime) * totalTime ? 100 : prevTime + 100 / totalTime))
     }, 1000)
 

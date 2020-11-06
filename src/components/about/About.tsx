@@ -22,8 +22,8 @@ interface AboutProps {
 export const About: FC<AboutProps> = ({
   setShowModal,
   showModal,
-  eventDate = 'October 27–29, 2020',
-  eventDescription = `Verizon is proud to be the lead sponsor for GSMA Thrive North America.\n\n During this three-day event, we'll show how Verizon 5G can unleash new applications, use cases and immersive customer experiences.\n\n With thought-provoking speakers, cutting-edge demos, and real-world case studies you'll learn how to take advantage of the exciting and transformative benefits of Verizon 5G.\n\n This is the 5G business has been waiting for. From the network businesses rely on.`
+  eventDate = 'November 12 at 2PM EST',
+  eventDescription = `During this hour-long event, we’ll show how Verizon 5G Ultra Wideband can unleash new applications, use cases and immersive customer experiences.<br /><br />With thought provoking discussions, cutting edge demos, and breakout sessions customized to the way you work, you'll learn how to take advantage of the exciting and transformative benefits of Verizon 5G.<br /><br />This is the 5G businesses have been waiting for. This is 5G built right.`
 }) => {
   const classes = useStyles()
 
@@ -39,14 +39,18 @@ export const About: FC<AboutProps> = ({
           <CloseIcon fontSize='large' />
         </IconButton>
         <Typography component='h1' variant='h4' color='textPrimary' gutterBottom>
-          Event info.
+          5G Innovation Sessions.
         </Typography>
         <Typography component='h6' variant='h6' color='textPrimary' gutterBottom>
           {eventDate}
         </Typography>
-        <Typography component='p' variant='body1' color='textPrimary' gutterBottom>
-          {eventDescription}
-        </Typography>
+        <Typography
+          component='p'
+          variant='body1'
+          color='textPrimary'
+          gutterBottom
+          dangerouslySetInnerHTML={{ __html: eventDescription }}
+        />
       </Box>
     </Modal>
   )

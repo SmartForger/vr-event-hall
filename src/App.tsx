@@ -72,8 +72,8 @@ const App = () => {
 
   useEffect(() => {
     I18n.setLanguage('en')
-    getEventConfiguration()
-    setupEventConfigSub()
+    // getEventConfiguration()
+    // setupEventConfigSub()
   }, [])
 
   return (

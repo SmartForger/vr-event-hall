@@ -18,15 +18,16 @@ import MeetingControls from '../MeetingControls'
 import MeetingDetails from '../MeetingDetails'
 import { StyledLayout, StyledContent } from './Styled'
 import { DetailsPanel, PeoplePanel, ToolsPanel } from '../Panels'
+import { PollDrawer } from '../PollDrawer'
 import { DeviceSetup } from '../DeviceSetup'
-import { ChatMessages, CountdownTimer, RadioButtons, TabPanel } from 'components'
+import { ChatMessages, TabPanel } from 'components'
 
 // import { useMeetingEndedRedirect } from 'hooks'
-import { useAppState, useChatContext, useVideoChatContext } from 'providers'
+import { useAppState, useVideoChatContext, PollProvider } from 'providers'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { getSession } from 'graphql/queries'
 import { onUpdateSession } from 'graphql/subscriptions'
-import { IPollObject, ISubscriptionObject, ISession } from 'types'
+import { ISubscriptionObject, ISession } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
 
@@ -40,8 +41,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   const [presenterTileId, setPresenterTileId] = useState<number | null>(null)
   const [currentSession, setCurrentSession] = useState<ISession | null>(null)
   const [userStarted, setUserStarted] = useState<boolean>(false)
-  const [pollResponse, setPollResponse] = useState<string>('')
-  const [activePoll, setActivePoll] = useState<IPollObject | null>(null)
+
   // Chime
   const { isVideoEnabled } = useLocalVideo()
   const { tiles, attendeeIdToTileId } = useRemoteVideoTileState()
@@ -147,120 +147,89 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
     setDrawerOpen(!drawerOpen)
   }
 
-  const handlePollResponse = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPollResponse(event.target.value)
-  }
-
   return (
     <UserActivityProvider>
-      <Modal open fullscreen onClose={() => setVisible(false)} className={classes.black}>
-        {userStarted ? (
-          <StyledLayout drawerWidth={drawerOpen ? 350 : 0}>
-            <StyledContent>
-              <div className='presenter'>
-                <MeetingDetails isClassroom={true} />
-                {isLocalUserSharing || sharingAttendeeId ? <ContentShare /> : null}
-                <VideoGrid
-                  layout='standard'
-                  size={isVideoEnabled ? tiles.length + 1 : tiles.length}
-                  style={isVideoEnabled || tiles.length > 0 ? {} : { backgroundColor: 'transparent' }}
-                >
-                  {isVideoEnabled ? (
-                    <LocalVideo className={isLocalUserSharing || sharingAttendeeId ? 'mini-video' : ''} />
-                  ) : null}
-                  {tiles.map(tileId => (
-                    <VideoTile style={{ border: '1px solid grey', gridArea: '' }} nameplate={`${tileId}`} />
-                  ))}
-                </VideoGrid>
-                <MeetingControls
-                  setVisible={setVisible}
-                  isClassroom={true}
-                  isPresenter={isPresenter}
-                  isVideoPresenter={isVideoPresenter}
-                  toggleDrawer={toggleDrawer}
-                />
-              </div>
-              <Drawer
-                anchor={'right'}
-                open={drawerOpen}
-                onClose={(e: React.KeyboardEvent | React.MouseEvent) => setDrawerOpen(false)}
-                ModalProps={{ hideBackdrop: true }}
-                variant='persistent'
-                classes={{
-                  paper: classes.messagePaper
-                }}
-              >
-                <div className={classes.logo}>
-                  <Logo />
-                </div>
-                <div className={classes.displayMenu}>
-                  <Toolbar className={classes.toolbar}>
-                    <Tabs
-                      value={tabValue}
-                      onChange={handleChange}
-                      className={classes.tabs}
-                      TabIndicatorProps={{
-                        style: { top: 0, backgroundColor: '#D52B1E', height: '4px' }
-                      }}
-                    >
-                      <Tab label='Chat' className={classes.tab} />
-                      <Tab label='People' className={classes.tab} />
-                      <Tab label={isPresenter ? 'Tools' : 'Details'} className={classes.tab} />
-                    </Tabs>
-                  </Toolbar>
-                  <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
-                    <ChatMessages />
-                  </TabPanel>
-                  <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
-                    <PeoplePanel isAdmin={true} sessionId={videoChatState.sessionId} />
-                  </TabPanel>
-                  {isPresenter ? (
-                    <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
-                      <ToolsPanel />
-                    </TabPanel>
-                  ) : (
-                    <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
-                      <DetailsPanel />
-                    </TabPanel>
-                  )}
-                </div>
-              </Drawer>
-              <Drawer
-                anchor='bottom'
-                open={activePoll !== null}
-                className={classes.pollDrawer}
-                ModalProps={{ hideBackdrop: true }}
-                classes={{
-                  paper: classes.messagePaper
-                }}
-              >
-                <div className={classes.pollHeader}>
-                  <Typography>{activePoll?.name}</Typography>
-                  <CountdownTimer totalTime={30} />
-                </div>
-                <div className={classes.pollContent}>
-                  <Typography variant='subtitle1'>{activePoll?.question}</Typography>
-                  <RadioButtons
-                    value={pollResponse}
-                    handleChange={handlePollResponse}
-                    options={{
-                      optionA: activePoll?.optionA,
-                      optionB: activePoll?.optionB,
-                      optionC: activePoll?.optionC,
-                      optionD: activePoll?.optionD
-                    }}
+      <PollProvider>
+        <Modal open fullscreen onClose={() => setVisible(false)} className={classes.black}>
+          {userStarted ? (
+            <StyledLayout drawerWidth={drawerOpen ? 350 : 0}>
+              <StyledContent>
+                <div className='presenter'>
+                  <MeetingDetails isClassroom={true} />
+                  {isLocalUserSharing || sharingAttendeeId ? <ContentShare /> : null}
+                  <VideoGrid
+                    layout='standard'
+                    size={isVideoEnabled ? tiles.length + 1 : tiles.length}
+                    style={isVideoEnabled || tiles.length > 0 ? {} : { backgroundColor: 'transparent' }}
+                  >
+                    {isVideoEnabled ? (
+                      <LocalVideo className={isLocalUserSharing || sharingAttendeeId ? 'mini-video' : ''} />
+                    ) : null}
+                    {tiles.map(tileId => (
+                      <VideoTile style={{ border: '1px solid grey', gridArea: '' }} nameplate={`${tileId}`} />
+                    ))}
+                  </VideoGrid>
+                  <MeetingControls
+                    setVisible={setVisible}
+                    isClassroom={true}
+                    isPresenter={isPresenter}
+                    isVideoPresenter={isVideoPresenter}
+                    toggleDrawer={toggleDrawer}
                   />
-                  <Button className={classes.pollSubmit} disabled={!pollResponse} onClick={() => setActivePoll(null)}>
-                    Submit
-                  </Button>
                 </div>
-              </Drawer>
-            </StyledContent>
-          </StyledLayout>
-        ) : (
-          <DeviceSetup confirmStart={setUserStarted} />
-        )}
-      </Modal>
+                <Drawer
+                  anchor={'right'}
+                  open={drawerOpen}
+                  onClose={(e: React.KeyboardEvent | React.MouseEvent) => setDrawerOpen(false)}
+                  ModalProps={{ hideBackdrop: true }}
+                  variant='persistent'
+                  classes={{
+                    paper: classes.messagePaper
+                  }}
+                >
+                  <div className={classes.logo}>
+                    <Logo />
+                  </div>
+                  <div className={classes.displayMenu}>
+                    <Toolbar className={classes.toolbar}>
+                      <Tabs
+                        value={tabValue}
+                        onChange={handleChange}
+                        className={classes.tabs}
+                        TabIndicatorProps={{
+                          style: { top: 0, backgroundColor: '#D52B1E', height: '4px' }
+                        }}
+                      >
+                        <Tab label='Chat' className={classes.tab} />
+                        <Tab label='People' className={classes.tab} />
+                        <Tab label={isPresenter ? 'Tools' : 'Details'} className={classes.tab} />
+                      </Tabs>
+                    </Toolbar>
+                    <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
+                      <ChatMessages />
+                    </TabPanel>
+                    <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
+                      <PeoplePanel isAdmin={true} sessionId={videoChatState.sessionId} />
+                    </TabPanel>
+                    {isPresenter ? (
+                      <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
+                        <ToolsPanel />
+                      </TabPanel>
+                    ) : (
+                      <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
+                        <DetailsPanel />
+                      </TabPanel>
+                    )}
+                  </div>
+                </Drawer>
+                <PollDrawer />
+              </StyledContent>
+            </StyledLayout>
+          ) : (
+            <DeviceSetup confirmStart={setUserStarted} />
+          )}
+        </Modal>
+      </PollProvider>
     </UserActivityProvider>
   )
 }
@@ -322,49 +291,5 @@ const useStyles = makeStyles(() => ({
   },
   black: {
     background: 'black'
-  },
-  pollDrawer: {
-    '&.MuiDrawer-root': {
-      left: 'calc(100% - 350px) !important'
-    },
-    '& .MuiDrawer-paperAnchorBottom': {
-      width: 350,
-      left: 'calc(100% - 350px)'
-    }
-  },
-  pollHeader: {
-    display: 'flex',
-    height: '60px',
-    alignItems: 'center',
-    background: 'black',
-    color: 'white',
-    justifyContent: 'space-between',
-    padding: '0 16px'
-  },
-  pollContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '16px 24px',
-    minHeight: '300px',
-    '& h6': {
-      marginBottom: '16px'
-    }
-  },
-  pollSubmit: {
-    width: '75px',
-    borderRadius: '16px',
-    background: 'black',
-    color: 'white',
-    textTransform: 'none',
-    padding: '2px 8px',
-    marginTop: '16px',
-    '&:disabled': {
-      color: 'white',
-      cursor: 'not-allowed'
-    },
-    '&:hover': {
-      background: 'black',
-      color: 'white'
-    }
   }
 }))

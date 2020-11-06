@@ -50,29 +50,30 @@ export const WelcomeScene: FC<IWelcomeProps> = ({ user, setGameState, activeScen
             </Grid>
             <Grid item>
               <Typography component='h2' variant='h2'>
-                The 5G Business has been waiting for.
+                Welcome to 5G Innovation Sessions.
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography component='p' paragraph>
-                Welcome to the Verizon 5G Innovation Sessions.
+                During this hour-long event, we’ll show how Verizon 5G Ultra Wideband can unleash new applications, use
+                cases and immersive customer experiences.
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography component='p' paragraph>
-                Over the next three days we'll show how Verizon 5G can unleash new applications, use cases and immersive
-                customer experiences.
+                With thought provoking discussions, cutting edge demos, and breakout sessions customized to the way you
+                work, you'll learn how to take advantage of the exciting and transformative benefits of Verizon 5G.
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography component='p' paragraph>
-                This is the 5G business has been waiting for. From the network businesses rely on.
+                This is the 5G businesses have been waiting for. This is 5G built right.
               </Typography>
             </Grid>
             <Grid item container spacing={1}>
               <Grid item xs={12} sm={6}>
                 <PillButton className={classes.button} backgroundColor='transparent' onClick={() => setShowVideo(true)}>
-                  Play
+                  Explore
                 </PillButton>
               </Grid>
             </Grid>

@@ -1,6 +1,7 @@
 export * from './chat'
 export * from './menu'
 export * from './demo'
+export * from './poll'
 export * from './game'
 export * from './user'
 export * from './i18n'
