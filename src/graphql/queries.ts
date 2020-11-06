@@ -38,6 +38,7 @@ export const getUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -107,6 +108,7 @@ export const getConversation = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -195,6 +197,7 @@ export const getSession = /* GraphQL */ `
         content
         authorId
         conversationId
+        deleted
         createdAt
         updatedAt
       }
@@ -283,6 +286,7 @@ export const listSessions = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -694,6 +698,7 @@ export const sessionByConversationId = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -739,6 +744,7 @@ export const messageByAuthor = /* GraphQL */ `
         content
         authorId
         conversationId
+        deleted
         createdAt
         updatedAt
       }
@@ -768,6 +774,7 @@ export const messageByAuthorByDate = /* GraphQL */ `
         content
         authorId
         conversationId
+        deleted
         createdAt
         updatedAt
       }
@@ -797,6 +804,7 @@ export const messageByConversation = /* GraphQL */ `
         content
         authorId
         conversationId
+        deleted
         createdAt
         updatedAt
       }
@@ -826,6 +834,7 @@ export const messageByConversationDate = /* GraphQL */ `
         content
         authorId
         conversationId
+        deleted
         createdAt
         updatedAt
       }

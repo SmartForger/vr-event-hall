@@ -38,6 +38,7 @@ export const createUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -94,6 +95,7 @@ export const updateUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -150,6 +152,7 @@ export const deleteUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -182,6 +185,7 @@ export const createConversation = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -214,6 +218,7 @@ export const updateConversation = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -246,6 +251,7 @@ export const deleteConversation = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -314,6 +320,7 @@ export const createSession = /* GraphQL */ `
         content
         authorId
         conversationId
+        deleted
         createdAt
         updatedAt
       }
@@ -422,6 +429,7 @@ export const updateSession = /* GraphQL */ `
         content
         authorId
         conversationId
+        deleted
         createdAt
         updatedAt
       }
@@ -530,6 +538,7 @@ export const deleteSession = /* GraphQL */ `
         content
         authorId
         conversationId
+        deleted
         createdAt
         updatedAt
       }
@@ -654,6 +663,7 @@ export const createSessionReservation = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -742,6 +752,7 @@ export const updateSessionReservation = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -773,6 +784,7 @@ export const createMessage = /* GraphQL */ `
       content
       authorId
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -785,6 +797,7 @@ export const updateMessage = /* GraphQL */ `
       content
       authorId
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -797,6 +810,7 @@ export const deleteMessage = /* GraphQL */ `
       content
       authorId
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -1146,6 +1160,7 @@ export const createAdminLink = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -1232,6 +1247,7 @@ export const updateAdminLink = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
