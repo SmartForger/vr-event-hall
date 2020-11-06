@@ -147,6 +147,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   }
 
   const onSceneSetup = () => {
+    console.log('ON SCENE SETUP')
     setScene((window as any)['scene'])
   }
 
@@ -201,6 +202,9 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
       window.state.showSceneLoader(false)
     } else {
       setGameLoading(false)
+      setTimeout(() => {
+        setShowGUI(true)
+      }, GameFlowStepsConfig[GameFlowSteps.Intro].animation.time)
     }
   }
   ///////////////////////////////////////////////////////////

@@ -26,7 +26,7 @@ export const CameraDevices = () => {
 
   return (
     <>
-      <Box marginRight={3}>
+      <Box marginRight={3} flex={1} width='40%'>
         <DeviceSelect
           label='Camera Source'
           id='camera-source'
@@ -35,7 +35,7 @@ export const CameraDevices = () => {
           handleChange={handleCameraChange}
         />
       </Box>
-      <Box marginRight={3} width='90%'>
+      <Box marginRight={3} width='90%' flex={1}>
         <DeviceSelect
           label='Video Quality'
           id='video-quality'

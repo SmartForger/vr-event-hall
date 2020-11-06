@@ -48,7 +48,7 @@ export const StyledAudioGroup = styled.div`
 `
 
 export const StyledVideoGroup = styled.div`
-  padding: 0 0 0 1rem;
+  padding: 0 0 0 1.5rem;
   @media (max-width: 900px) {
     padding: 0;
   }
