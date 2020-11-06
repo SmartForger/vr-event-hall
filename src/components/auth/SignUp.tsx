@@ -170,6 +170,9 @@ export const SignUp: FC<SignUpProps> = ({ setAuthState, setUserEmail, setUserPd 
       </Grid>
       <Grid item container xs={12}>
         <Typography variant='body2' paragraph classes={{ root: classes.emailNote }}>
+          {I18n.get('registerToSecureYourSpot')}
+        </Typography>
+        <Typography variant='body2' paragraph classes={{ root: classes.emailNote }}>
           {I18n.get('emailWillBecomeUsername')}
         </Typography>
       </Grid>
