@@ -158,27 +158,48 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   // Babylon Scene Loader Window Hooks
   ///////////////////////////////////////////////////////////
   window['loadScene'] = (sceneFile: string, queryString?: string) => {
-    setLoaderOptions({ indeterminate: false, percentLoaded: 0 })
-    let url: string = '/babylon/engine.html?scene=' + sceneFile
+    if (window.state != null && window.state.showSceneLoader != null) {
+      window.state.showSceneLoader(true)
+    } else {
+      setGameLoading(true)
+      setLoaderOptions({ indeterminate: false, percentLoaded: 0 })
+    }
+    let url: string = `${process.env.PUBLIC_URL}/babylon/engine.html?scene=${sceneFile}`
     if (queryString != null) url += queryString
     const ifx: HTMLIFrameElement = document.getElementById('ifx') as HTMLIFrameElement
-    if (ifx != null) ifx.src = url
+    if (ifx != null) {
+      if (ifx.contentWindow != null) {
+        ifx.contentWindow.location.replace(url)
+      } else ifx.src = url
+    }
   }
   window['updateStatus'] = (status: string, details: string, state: number) => {
-    setLoaderOptions({ indeterminate: true, loadingStatus: status, loadingDetails: details, loadingState: state })
+    if (window.state != null && window.state.updateSceneLoader != null) {
+      window.state.updateSceneLoader(status, details, state)
+    } else {
+      setLoaderOptions({ indeterminate: true, loadingStatus: status, loadingDetails: details, loadingState: state })
+    }
   }
   window['updateProgress'] = (progress: number) => {
-    setLoaderOptions({ indeterminate: false, percentLoaded: progress })
+    if (window.state != null && window.state.tickSceneLoader != null) {
+      window.state.tickSceneLoader(progress)
+    } else {
+      setLoaderOptions({ indeterminate: false, percentLoaded: progress })
+    }
+  }
+  window['showGameLoading'] = (show: boolean) => {
+    setGameLoading(show)
   }
   window['loadSceneComplete'] = () => {
     if (!window.scene) {
       window.scene = true
       window.postMessage('{"command":"initialised"}', '*') // Tell React part that the scene is set up
     }
-    setGameLoading(false)
-    setTimeout(() => {
-      setShowGUI(true)
-    }, GameFlowStepsConfig[GameFlowSteps.Intro].animation.time)
+    if (window.state != null && window.state.showSceneLoader != null) {
+      window.state.showSceneLoader(false)
+    } else {
+      setGameLoading(false)
+    }
   }
   ///////////////////////////////////////////////////////////
   // Babylon Web Socket Window Hook

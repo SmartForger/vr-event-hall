@@ -185,9 +185,9 @@
     (async function() {
         window.scene = null;
         window.toolkit = true;
-        var versionStamp = '5fdf80e6-6d96-4550-a29e-997d86d70de0';
-        var pagetype = "project", defaultscene= "VX360-Hybrid.gltf", physics = false, navmesh = true, renderengine = 0, animstartup= 0, antialias = true, adaptive = false, timeout = 1, autoclose=true, datax = "#00FF00", folder = "scenes/", title = "Verizon-VX360-3D";
-        var loaded = false, downloaded = 0;
+        var versionStamp = '6f4519af-8e67-483e-aff7-e6aff78ad11a';
+        var pagetype = "project", defaultscene= "VerizonEnterprise.gltf", physics = false, navmesh = true, renderengine = 0, animstartup= 0, antialias = true, adaptive = false, timeout = 1, autoclose=true, datax = "#00FF00", folder = "scenes/", title = "Verizon-VX360-3D";
+        var loaded = false, paused = false, downloaded = 0;
         var proj = document.getElementById("proj");
         var panel = document.getElementById("panel");
         var loader = document.getElementById("load");
@@ -333,7 +333,6 @@
         var executeSceneLoader = function(root, name) {
             var defaultDetails = "Loading " + name.toLowerCase();
             window.updateStatus("Loading", defaultDetails, 0);
-            BABYLON.Tools.Log("Loading scene file " + name.toLowerCase());
             BABYLON.SceneLoader.Load(root, name, engine, function(newscene) {
                 window.scene = newscene;
                 window.scene.executeWhenReady(function() {
@@ -347,12 +346,15 @@
                         camera.rotation = new BABYLON.Vector3(0, yrotation, 0);
                     }
                     engine.runRenderLoop(function() { 
-                        if (window.METER) {
-                            window.METER.tickStart();
-                            window.scene.render();
-                            window.METER.tick();
-                        } else {
-                            window.scene.render();
+                        paused = (BABYLON.SceneManager != null && BABYLON.SceneManager.PauseRenderLoop === true); 
+                        if (!paused) {
+                            if (window.METER) {
+                                window.METER.tickStart();
+                                window.scene.render();
+                                window.METER.tick();
+                            } else {
+                                window.scene.render();
+                            }
                         }
                     });
                     if (autoclose) window.setTimeout(window.hideSceneLoader, timeout * 1000);
@@ -363,11 +365,15 @@
                 var details = defaultDetails;
                 var lstate = BABYLON.Utilities.GetLoadingState();
                 switch (lstate) {
-                    case 1:     // PARSE NODE TRANSFORMS
-                        pstatus = "Parsing";
-                        details = "Parsing scene components";
+                    case 1:     // LOAD SCENE CONTENT
+                        pstatus = "Loading";
+                        details = defaultDetails;
                         break;
-                    case 2:     // PARSE SCENE COMPLETE
+                    case 2:     // PARSE SCENE BEGIN
+                        pstatus = "Parsing";
+                        details = "Parsing scene content";
+                        break;
+                    case 3:     // READY SCENE COMPLETE
                         pstatus = "Ready";
                         details = "Preparing scene content";
                         break;
