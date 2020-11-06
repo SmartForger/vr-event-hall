@@ -3,10 +3,11 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { IconButton, InputBase, Paper } from '@material-ui/core'
 import { SendOutlined as Send, Mood as Smile } from '@material-ui/icons'
 
-import { createMessage } from 'graphql/mutations'
+import { createMessage, createSessionQuestion } from 'graphql/mutations'
 import { graphQLMutation } from 'graphql/helpers'
 import { IMessageInput } from 'types'
 import { useChatContext, useVideoChatContext } from 'providers'
+import { QuestionDisabledIcon, QuestionIcon } from 'assets'
 
 interface MessageInputProps {
   userId: string
@@ -15,8 +16,9 @@ interface MessageInputProps {
 
 export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
   const classes = useStyles()
-  const [newMessage, setNewMessage] = useState<string>('')
   const { videoChatState } = useVideoChatContext()
+  const [newMessage, setNewMessage] = useState<string>('')
+  const [questionMode, setQuestionMode] = useState<boolean>(false)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage(event.target.value)
@@ -28,6 +30,18 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
     }
     if (newMessage === '') return
 
+    if (questionMode) {
+      const question = {
+        sessionId: videoChatState?.session?.id || videoChatState?.sessionId,
+        answered: 'false',
+        content: newMessage,
+        userId: userId
+      }
+
+      await graphQLMutation(createSessionQuestion, question)
+      return setNewMessage('')
+    }
+
     const message: IMessageInput = {
       createdAt: new Date().toISOString(),
       conversationId: videoChatState?.session?.conversationId || videoChatState?.conversationId,
@@ -38,6 +52,10 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
 
     await graphQLMutation(createMessage, message)
     setNewMessage('')
+  }
+
+  const toggleQuestionMode = () => {
+    setQuestionMode(prevState => !prevState)
   }
 
   return (
@@ -53,6 +71,9 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
           onKeyDown={sendMessage}
         />
         <div className={classes.icons}>
+          <IconButton disabled={!videoChatState?.session?.qaActive} onClick={toggleQuestionMode}>
+            {videoChatState?.session?.qaActive && questionMode ? <QuestionIcon /> : <QuestionDisabledIcon />}
+          </IconButton>
           <IconButton
             className={`${classes.iconButton} ${classes.submitButton}`}
             aria-label='send'

@@ -27,7 +27,10 @@ export const graphQLSubscription = (subscription: string, options: any, callback
   // ignoring for type issue with `.subscribe`
   // @ts-ignore
   return API.graphql(graphqlOperation(subscription, options)).subscribe({
-    next: ({ value: { data } }) => callback(data)
+    next: ({ value: { data, errors } }) => {
+      console.log(errors)
+      callback(data)
+    }
   })
 }
 

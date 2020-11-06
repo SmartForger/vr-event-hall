@@ -100,7 +100,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
 
     sessionUpdatedSubscription.current = graphQLSubscription(
       onUpdateSession,
-      { id: videoChatState.sessionId },
+      { id: videoChatState?.session?.id || videoChatState.sessionId },
       updateSessionInfo
     )
   }
