@@ -37,8 +37,8 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
       }
       setUser(foundUser)
       // TODO: Uncomment after registration
-      setAuthState(AuthFlowSteps.ThankYou)
-      // history.push(redirectRoute)
+      // setAuthState(AuthFlowSteps.ThankYou)
+      history.push(redirectRoute)
     } else {
       setAuthState(AuthFlowSteps.Register)
     }
