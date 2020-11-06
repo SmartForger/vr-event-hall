@@ -37,3 +37,15 @@ export const getConversationFiltered = /* GraphQL */ `
     }
   }
 `
+
+export const listSessionsForReservation = /* GraphQL */ `
+  query ListSessionsForReservation($filter: ModelSessionFilterInput, $limit: Int, $nextToken: String) {
+    listSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+      }
+      nextToken
+    }
+  }
+`
