@@ -7,7 +7,7 @@ import { ChatRow } from './ChatRow'
 // import { DialogCard } from 'components'
 
 import { ChatListContext, useAppState, useChatContext } from 'providers'
-import { useWindowSize } from 'hooks'
+import { useWindowSize } from 'hooks/useWindowSize'
 import { graphQLMutation } from 'graphql/helpers'
 import { updateMessage, updateSession } from 'graphql/mutations'
 import { IMessage, IUser } from 'types'
@@ -42,7 +42,7 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     appState: { user }
   } = useAppState()
   const { chatState, dispatch } = useChatContext()
-  // const { width } = useWindowSize()
+  const { width: windowWidth } = useWindowSize()
 
   const filteredMessages = messages.filter(
     message => message.id !== chatState?.session?.pinnedMessageId && message?.deleted !== 'true'
@@ -150,7 +150,7 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
   }
 
   return (
-    <ChatListContext.Provider value={{ setSize, windowWidth: window.innerWidth, onPin, onDelete, unPin, isAdmin }}>
+    <ChatListContext.Provider value={{ setSize, windowWidth, onPin, onDelete, unPin, isAdmin }}>
       {showDialog ? (
         <DialogCard
           title={dialogInfo[dialogType || ''].title}
