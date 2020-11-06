@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { Button, List, ListItem, Typography } from '@material-ui/core'
 import MuiAccordion from '@material-ui/core/Accordion'
@@ -10,8 +10,8 @@ import { useVideoChatContext } from 'providers'
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
 import { getSessionQuestionsAndPolls } from 'graphql/customQueries'
 import { ChatMessages } from 'components/menu/ChatMessages'
-import { IPollObject, IQuestionObject } from 'types'
-import { updateSession } from 'graphql/mutations'
+import { IPollObject, IQuestionObject, ISubscriptionObject } from 'types'
+import { updateSession, updateSessionPoll } from 'graphql/mutations'
 
 export const ToolsPanel = () => {
   const classes = useStyles()
@@ -19,9 +19,11 @@ export const ToolsPanel = () => {
   const [nestedExpanded, setNestedExpanded] = useState<string | false>('')
   const [questions, setQuestions] = useState<IQuestionObject[]>([])
   const [polls, setPolls] = useState<IPollObject[]>([])
-  const [qaOpen, setQAOpen] = useState<boolean>(false)
 
   const { videoChatState } = useVideoChatContext()
+
+  let questionSubscription = useRef<ISubscriptionObject | null>(null)
+  let pollSubscription = useRef<ISubscriptionObject | null>(null)
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
     setExpanded(newExpanded ? panel : false)
@@ -47,6 +49,13 @@ export const ToolsPanel = () => {
     await graphQLMutation(updateSession, {
       id: videoChatState?.session?.id || videoChatState.sessionId,
       qaActive: !videoChatState?.session?.qaActive
+    })
+  }
+
+  const activatePoll = async (id: string) => {
+    await graphQLMutation(updateSessionPoll, {
+      id,
+      active: 'true'
     })
   }
 
@@ -108,6 +117,7 @@ export const ToolsPanel = () => {
                 <Button
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation()
+                    activatePoll(poll?.id || '')
                   }}
                   variant='outlined'
                   className={`${classes.roundedButton} ${classes.pollButton}`}
