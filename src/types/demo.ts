@@ -79,14 +79,16 @@ export interface IDemoCollection {
 
 export enum E3DDemoNameVals {
   unknown = '0',
-  mecExplainer = '1',
+  fiveStatesOfReady = '1',
   fiveGCoverage = '2',
-  shotTracker = '3',
-  tata = '4',
-  avesha = '5',
+  mecExplainer = '3',
+  sot = '4',
+  tata = '5',
   ybvr = '6',
-  indy = '7',
-  fiveStatesOfReady = '8',
-  crowdVision = '9',
-  sot = '10'
+  shotTracker = '7',
+  avesha = '8',
+  iceMobility = '9',
+  indy = '10',
+  crowdVision = '11',
+  zixi = '12'
 }

@@ -111,7 +111,7 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
     >
       <div className={classes.pollHeader}>
         <Typography>{pollState?.question?.question}</Typography>
-        <CountdownTimer totalTime={10} onCountdownEnd={() => closePoll()} />
+        <CountdownTimer totalTime={30} onCountdownEnd={() => closePoll()} />
       </div>
       <div className={classes.pollContent}>
         <Typography variant='subtitle1'>{pollState?.question?.question}</Typography>

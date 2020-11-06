@@ -113,6 +113,12 @@ export default class Receiver {
                 case E3DDemoNameVals.sot:
                   newDemo = Demos.sot
                   break
+                case E3DDemoNameVals.iceMobility:
+                case E3DDemoNameVals.zixi:
+                  // TODO: Setu demos for two above
+                  // defaulting to sot
+                  newDemo = Demos.sot
+                  break
               }
               if (newDemo) {
                 graphQLMutation(createUserInteraction, {
