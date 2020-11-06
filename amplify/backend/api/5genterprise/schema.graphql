@@ -76,6 +76,7 @@ type Message
   id: ID!
   content: String!
   authorId: ID!
+  author: User! @connection(fields: ["authorId"])
   conversationId: ID!
   # will still be true or false but Booleans are not indexable in dynamo
   deleted: String!

@@ -6,7 +6,6 @@ import {
   useRemoteVideoTileState,
   ContentShare,
   useRosterState,
-  VideoTileGrid,
   VideoGrid,
   VideoTile,
   useLocalVideo,
@@ -23,7 +22,7 @@ import { DeviceSetup } from '../DeviceSetup'
 import { ChatMessages, CountdownTimer, RadioButtons, TabPanel } from 'components'
 
 // import { useMeetingEndedRedirect } from 'hooks'
-import { useAppState, useVideoChatContext } from 'providers'
+import { useAppState, useChatContext, useVideoChatContext } from 'providers'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { getSession } from 'graphql/queries'
 import { onUpdateSession } from 'graphql/subscriptions'
@@ -55,8 +54,8 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   const { videoChatState, dispatch } = useVideoChatContext()
   const [tabValue, setTabValue] = useState<number>(0)
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false)
-  let isPresenter = currentSession?.admins.items.some(admin => admin.userId === (user?.id as string))
-  let isVideoPresenter = currentSession?.presenterPins.includes(user?.id as string)
+  let isPresenter = videoChatState?.session?.admins.items.some(admin => admin.userId === (user?.id as string))
+  let isVideoPresenter = videoChatState?.session?.presenterPins.includes(user?.id as string)
 
   const setLoading = useCallback((payload: boolean) => dispatch({ type: 'SET_LOADING', payload }), [])
   // useMeetingEndedRedirect(setLoading)
@@ -78,6 +77,13 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   const updateSessionInfo = ({ onUpdateSession }) => {
     setGlobalMute(onUpdateSession.muted)
     setCurrentSession(onUpdateSession)
+    dispatch({
+      type: 'SET_DETAILS',
+      payload: {
+        session: onUpdateSession,
+        pinnedMessage: onUpdateSession.pinnedMessage
+      }
+    })
   }
 
   const getSessionInfo = async () => {
@@ -87,6 +93,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
     dispatch({
       type: 'SET_DETAILS',
       payload: {
+        session: session,
         pinnedMessage: session.pinnedMessage
       }
     })
