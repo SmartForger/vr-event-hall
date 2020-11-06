@@ -6,7 +6,8 @@ export const StyledContainer = styled.main`
   align-items: center;
   width: 100%;
   height: 100vh;
-  background: #333;
+  background: #fff;
+  color: #000;
 `
 
 export const StyledLayout = styled.section`

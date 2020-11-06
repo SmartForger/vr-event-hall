@@ -1,13 +1,13 @@
 import styled from 'styled-components'
 
 export const title = `
-  text-transform: uppercase;
   font-size: 1rem !important;
-  margin-bottom: 1.75rem;
+  margin-bottom: 8px;
+  font-weight: bold;
 `
 
 export const StyledPreviewGroup = styled.div`
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 `
 
 export const StyledWrapper = styled.div`
@@ -34,8 +34,13 @@ export const StyledWrapper = styled.div`
 `
 
 export const StyledAudioGroup = styled.div`
-  padding: 0 3rem 0 0;
-  border-right: 0.125rem solid #e6e6e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > div[data-testid='video-tile'] {
+    height: 100%;
+  }
   @media (max-width: 900px) {
     padding: 2rem 0 2rem 0;
     border-right: unset;
@@ -43,7 +48,7 @@ export const StyledAudioGroup = styled.div`
 `
 
 export const StyledVideoGroup = styled.div`
-  padding: 0 0 0 3rem;
+  padding: 0 0 0 1.5rem;
   @media (max-width: 900px) {
     padding: 0;
   }
@@ -51,4 +56,10 @@ export const StyledVideoGroup = styled.div`
 
 export const StyledInputGroup = styled.div`
   margin-bottom: 1.5rem;
+`
+
+export const preview = `
+  & > video {
+    border: 1px solid black;
+  }
 `

@@ -147,6 +147,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   }
 
   const onSceneSetup = () => {
+    console.log('ON SCENE SETUP')
     setScene((window as any)['scene'])
   }
 
@@ -201,6 +202,9 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
       window.state.showSceneLoader(false)
     } else {
       setGameLoading(false)
+      setTimeout(() => {
+        setShowGUI(true)
+      }, GameFlowStepsConfig[GameFlowSteps.Intro].animation.time)
     }
   }
   ///////////////////////////////////////////////////////////
@@ -230,7 +234,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   useEffect(() => {
     setLoaderOptions({ indeterminate: false, percentLoaded: 0 })
 
-    const defaultSceneFile = 'VX360-Hybrid.gltf'
+    const defaultSceneFile = 'VerizonEnterprise.gltf'
 
     Receiver.init(
       onSceneSetup,
