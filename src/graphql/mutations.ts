@@ -317,6 +317,58 @@ export const createSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      raisedHands {
+        items {
+          id
+          userId
+          sessionId
+          dismissed
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      questions {
+        items {
+          id
+          userId
+          sessionId
+          answered
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      polls {
+        items {
+          id
+          sessionId
+          active
+          name
+          question
+          optionA
+          optionB
+          optionC
+          optionD
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pollAnswers {
+        items {
+          id
+          sessionId
+          userId
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      qaActive
       createdAt
       updatedAt
     }
@@ -373,6 +425,58 @@ export const updateSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      raisedHands {
+        items {
+          id
+          userId
+          sessionId
+          dismissed
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      questions {
+        items {
+          id
+          userId
+          sessionId
+          answered
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      polls {
+        items {
+          id
+          sessionId
+          active
+          name
+          question
+          optionA
+          optionB
+          optionC
+          optionD
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pollAnswers {
+        items {
+          id
+          sessionId
+          userId
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      qaActive
       createdAt
       updatedAt
     }
@@ -429,6 +533,58 @@ export const deleteSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      raisedHands {
+        items {
+          id
+          userId
+          sessionId
+          dismissed
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      questions {
+        items {
+          id
+          userId
+          sessionId
+          answered
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      polls {
+        items {
+          id
+          sessionId
+          active
+          name
+          question
+          optionA
+          optionB
+          optionC
+          optionD
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pollAnswers {
+        items {
+          id
+          sessionId
+          userId
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      qaActive
       createdAt
       updatedAt
     }
@@ -501,6 +657,19 @@ export const createSessionReservation = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
         createdAt
         updatedAt
       }
@@ -576,6 +745,19 @@ export const updateSessionReservation = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
         createdAt
         updatedAt
       }
@@ -967,6 +1149,19 @@ export const createAdminLink = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
         createdAt
         updatedAt
       }
@@ -1040,6 +1235,19 @@ export const updateAdminLink = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
         createdAt
         updatedAt
       }
@@ -1165,6 +1373,302 @@ export const createContactRequest = /* GraphQL */ `
       message
       demo
       userId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createRaisedHand = /* GraphQL */ `
+  mutation CreateRaisedHand($input: CreateRaisedHandInput!, $condition: ModelRaisedHandConditionInput) {
+    createRaisedHand(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dismissed
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateRaisedHand = /* GraphQL */ `
+  mutation UpdateRaisedHand($input: UpdateRaisedHandInput!, $condition: ModelRaisedHandConditionInput) {
+    updateRaisedHand(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dismissed
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createSessionQuestion = /* GraphQL */ `
+  mutation CreateSessionQuestion($input: CreateSessionQuestionInput!, $condition: ModelSessionQuestionConditionInput) {
+    createSessionQuestion(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answered
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSessionQuestion = /* GraphQL */ `
+  mutation UpdateSessionQuestion($input: UpdateSessionQuestionInput!, $condition: ModelSessionQuestionConditionInput) {
+    updateSessionQuestion(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answered
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createSessionPoll = /* GraphQL */ `
+  mutation CreateSessionPoll($input: CreateSessionPollInput!, $condition: ModelSessionPollConditionInput) {
+    createSessionPoll(input: $input, condition: $condition) {
+      id
+      sessionId
+      active
+      name
+      question
+      optionA
+      optionB
+      optionC
+      optionD
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSessionPoll = /* GraphQL */ `
+  mutation UpdateSessionPoll($input: UpdateSessionPollInput!, $condition: ModelSessionPollConditionInput) {
+    updateSessionPoll(input: $input, condition: $condition) {
+      id
+      sessionId
+      active
+      name
+      question
+      optionA
+      optionB
+      optionC
+      optionD
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createSessionPollAnswer = /* GraphQL */ `
+  mutation CreateSessionPollAnswer(
+    $input: CreateSessionPollAnswerInput!
+    $condition: ModelSessionPollAnswerConditionInput
+  ) {
+    createSessionPollAnswer(input: $input, condition: $condition) {
+      id
+      sessionId
+      userId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSessionPollAnswer = /* GraphQL */ `
+  mutation UpdateSessionPollAnswer(
+    $input: UpdateSessionPollAnswerInput!
+    $condition: ModelSessionPollAnswerConditionInput
+  ) {
+    updateSessionPollAnswer(input: $input, condition: $condition) {
+      id
+      sessionId
+      userId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answer
       createdAt
       updatedAt
     }

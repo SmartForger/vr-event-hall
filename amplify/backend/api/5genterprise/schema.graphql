@@ -44,6 +44,11 @@ type Session
   users: [UserSessionReservation] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
   pinnedMessageId: ID!
   pinnedMessage: Message @connection(fields: ["pinnedMessageId"])
+  raisedHands: [RaisedHand] @connection(keyName: "bySessionByDate", fields: ["id"])
+  questions: [SessionQuestion] @connection(keyName: "bySessionQuestionByDate", fields: ["id"])
+  polls: [SessionPoll] @connection(keyName: "bySessionPoll", fields: ["id"])
+  pollAnswers: [SessionPollAnswer] @connection(keyName: "bySessionPollAnswer", fields: ["id"])
+  qaActive: Boolean
 }
 
 type UserSessionReservation
@@ -187,6 +192,72 @@ type ContactRequest
   userId: String!
 }
 
+type RaisedHand
+  @model(
+    mutations: { create: "createRaisedHand", update: "updateRaisedHand" }
+    queries: { get: "getRaisedHand" }
+    subscriptions: null
+  )
+  @key(name: "bySessionByDate", fields: ["sessionId", "createdAt"], queryField: "raisedHandByDate") {
+  id: ID!
+  userId: ID!
+  sessionId: ID!
+  user: User! @connection(fields: ["userId"])
+  # will still be true or false but Booleans are not indexable in dynamo
+  dismissed: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type SessionQuestion
+  @model(mutations: { create: "createSessionQuestion", update: "updateSessionQuestion" }, subscriptions: null)
+  @key(name: "bySessionQuestionByDate", fields: ["sessionId", "createdAt"], queryField: "questionByDate") {
+  id: ID!
+  userId: ID!
+  sessionId: ID!
+  user: User! @connection(fields: ["userId"])
+  # will still be true or false but Booleans are not indexable in dynamo
+  answered: String!
+  content: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type SessionPoll
+  @model(mutations: { create: "createSessionPoll", update: "updateSessionPoll" }, subscriptions: null)
+  @key(name: "bySessionPoll", fields: ["sessionId"]) {
+  id: ID!
+  sessionId: ID!
+  # will still be true or false but Booleans are not indexable in dynamo
+  active: String!
+  name: String!
+  question: String!
+  optionA: String
+  optionB: String
+  optionC: String
+  optionD: String
+  answer: AnswerOption!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum AnswerOption {
+  optionA
+  optionB
+  optionC
+  optionD
+}
+
+type SessionPollAnswer
+  @model(mutations: { create: "createSessionPollAnswer", update: "updateSessionPollAnswer" })
+  @key(name: "bySessionPollAnswer", fields: ["sessionId"]) {
+  id: ID!
+  sessionId: ID!
+  userId: ID!
+  user: User! @connection(fields: ["userId"])
+  answer: AnswerOption!
+}
+
 type Subscription {
   onCreateConvoLink(convoLinkUserId: ID!): ConvoLink @aws_subscribe(mutations: ["createConvoLink"])
   onCreateMessage(conversationId: ID!): Message @aws_subscribe(mutations: ["createMessage"])
@@ -195,4 +266,8 @@ type Subscription {
   onCreateUser: User @aws_subscribe(mutations: ["createUser"])
   onCreateNotification: Notification @aws_subscribe(mutations: ["createNotification"])
   onUpdateSession(id: ID!): Session @aws_subscribe(mutations: ["updateSession"])
+  onUpdateSessionPoll(sessionId: ID!): SessionPoll @aws_subscribe(mutations: ["updateSessionPoll"])
+  onUpdateSessionQuestion(sessionId: ID!): SessionQuestion @aws_subscribe(mutations: ["updateSessionQuestion"])
+  onCreateRaisedHand(sessionId: ID!): RaisedHand @aws_subscribe(mutations: ["createRaisedHand"])
+  onCreateGlobalRaisedHand: RaisedHand @aws_subscribe(mutations: ["createRaisedHand"])
 }

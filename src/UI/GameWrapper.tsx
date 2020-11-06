@@ -13,6 +13,7 @@ import { menuDrawerOpen, toggleDrawer } from 'redux/menu'
 // Components
 import {
   About,
+  ClassRoomContainer,
   Contact,
   Header,
   Loader,
@@ -47,6 +48,7 @@ import {
 import { Demos } from '../helpers/demos'
 import { Alert } from '@material-ui/lab'
 import { incrementNotification } from '../redux/chat'
+import { VideoChatProvider } from 'providers'
 
 interface IModalConfig {
   videoSrc?: string
@@ -317,111 +319,115 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
     <div id='game'>
       <iframe id='ifx' width='100%' height='100%' scrolling='no' frameBorder='0' title='ifx' />
       {gameLoading && <Loader loaderOptions={loaderOptions} />}
-      {!gameLoading && showGUI && (
-        <>
-          <Header>
-            <Navigation activeTab={gameState} setActiveTab={setGameState} />
-          </Header>
-          <SceneWrapper
-            changeActiveTouchpoint={setActiveTouchpoint}
-            changeScene={setGameState}
-            activeScene={gameState}
-            prevScene={prevGameState}
-            hideExploreText={hideExploreText}
-            hideSessionsText={hideSessionsText}
-            user={user}
-            activeDemo={activeDemo}
-            activeSession={activeSession}
-            activeTouchpoint={activeTouchpoint}
-            drawerOpen={drawerOpen}
-            setSuccessMessage={setSuccessMessage}
-            setErrorMessage={setErrorMessage}
-          />
-          <ProfileMenu
-            toggleTutorial={() => toggleTutorial(true)}
-            toggleDrawer={handleToggleDrawer}
-            setGameState={setGameState}
-            mapLocation={mapLocation}
-            drawerOpen={drawerOpen}
-            user={user}
-          />
-        </>
-      )}
-      {!gameLoading && scene && (
-        <>
-          <Tutorial run={stepsEnabled} steps={steps} onClose={() => toggleTutorial(false)} />
-          <Video videoSrc={modalConfig.videoSrc || ''} />
-          <Modal
-            open={Boolean(showModal && modalConfig && modalConfig.imgSource)}
-            onClose={setShowModal}
-            className='responsive-modal modal-video-only'
-          >
-            <img src={modalConfig.imgSource} style={{ height: '100%', width: '100%' }} alt='Modal' />
-          </Modal>
-          {showModal && modalConfig.type === 'about' && <About showModal={showModal} setShowModal={setShowModal} />}
-          {showModal && modalConfig.type === 'connect' && (
-            <Contact
+      <VideoChatProvider>
+        {!gameLoading && showGUI && (
+          <>
+            <Header>
+              <Navigation activeTab={gameState} setActiveTab={setGameState} />
+            </Header>
+            <SceneWrapper
+              changeActiveTouchpoint={setActiveTouchpoint}
+              changeScene={setGameState}
+              activeScene={gameState}
+              prevScene={prevGameState}
+              hideExploreText={hideExploreText}
+              hideSessionsText={hideSessionsText}
+              user={user}
+              activeDemo={activeDemo}
+              activeSession={activeSession}
+              activeTouchpoint={activeTouchpoint}
+              drawerOpen={drawerOpen}
               setSuccessMessage={setSuccessMessage}
               setErrorMessage={setErrorMessage}
-              showModal={showModal}
-              setShowModal={setShowModal}
-              user={user}
-              demo={modalConfig.demo}
             />
-          )}
-          {showModal && modalConfig.type === 'support' && (
-            <Support
-              setSuccessMessage={setSuccessMessage}
-              setErrorMessage={setErrorMessage}
-              showModal={showModal}
-              setShowModal={setShowModal}
+            <ProfileMenu
+              toggleTutorial={() => toggleTutorial(true)}
+              toggleDrawer={handleToggleDrawer}
+              setGameState={setGameState}
+              mapLocation={mapLocation}
+              drawerOpen={drawerOpen}
               user={user}
             />
-          )}
-
-          {/* Toast for Notice */}
-          <ToastAlert type='notice' isOpen={!!activeNotice?.type} onClose={() => setActiveNotice({})}>
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant='h5' paragraph classes={{ root: classes.toastESSTitle }}>
-                  {activeNotice?.body}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <PillButton
-                  type='button'
-                  className='button'
-                  variant='outlined'
-                  textColor='white'
-                  backgroundColor='black'
-                  onClick={() => noticeButtonClick()}
-                  classes={{ root: classes.toastESSButton }}
-                >
-                  {activeNotice?.button}
-                </PillButton>
-              </Grid>
-            </Grid>
-          </ToastAlert>
-
-          {(Boolean(successMessage) || Boolean(errorMessage) || Boolean(infoMessage)) && (
-            <Snackbar
-              className={classes.toastPosition}
-              open={Boolean(successMessage) || Boolean(errorMessage) || Boolean(infoMessage)}
-              autoHideDuration={5000}
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              onClose={() => {
-                successMessage && setSuccessMessage(null)
-                errorMessage && setErrorMessage(null)
-                infoMessage && setInfoMessage(null)
-              }}
+          </>
+        )}
+        {!gameLoading && scene && (
+          <>
+            <Tutorial run={stepsEnabled} steps={steps} onClose={() => toggleTutorial(false)} />
+            <Video videoSrc={modalConfig.videoSrc || ''} />
+            <Modal
+              open={Boolean(showModal && modalConfig && modalConfig.imgSource)}
+              onClose={setShowModal}
+              className='responsive-modal modal-video-only'
             >
-              <Alert severity={successMessage ? 'success' : infoMessage ? 'info' : 'error'} variant='filled'>
-                {successMessage ? successMessage : infoMessage ? infoMessage : errorMessage}
-              </Alert>
-            </Snackbar>
-          )}
-        </>
-      )}
+              <img src={modalConfig.imgSource} style={{ height: '100%', width: '100%' }} alt='Modal' />
+            </Modal>
+            {showModal && modalConfig.type === 'about' && <About showModal={showModal} setShowModal={setShowModal} />}
+            {showModal && modalConfig.type === 'connect' && (
+              <Contact
+                setSuccessMessage={setSuccessMessage}
+                setErrorMessage={setErrorMessage}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                user={user}
+                demo={modalConfig.demo}
+              />
+            )}
+            {showModal && modalConfig.type === 'support' && (
+              <Support
+                setSuccessMessage={setSuccessMessage}
+                setErrorMessage={setErrorMessage}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                user={user}
+              />
+            )}
+
+            <ClassRoomContainer />
+
+            {/* Toast for Notice */}
+            <ToastAlert type='notice' isOpen={!!activeNotice?.type} onClose={() => setActiveNotice({})}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography variant='h5' paragraph classes={{ root: classes.toastESSTitle }}>
+                    {activeNotice?.body}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <PillButton
+                    type='button'
+                    className='button'
+                    variant='outlined'
+                    textColor='white'
+                    backgroundColor='black'
+                    onClick={() => noticeButtonClick()}
+                    classes={{ root: classes.toastESSButton }}
+                  >
+                    {activeNotice?.button}
+                  </PillButton>
+                </Grid>
+              </Grid>
+            </ToastAlert>
+
+            {(Boolean(successMessage) || Boolean(errorMessage) || Boolean(infoMessage)) && (
+              <Snackbar
+                className={classes.toastPosition}
+                open={Boolean(successMessage) || Boolean(errorMessage) || Boolean(infoMessage)}
+                autoHideDuration={5000}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                onClose={() => {
+                  successMessage && setSuccessMessage(null)
+                  errorMessage && setErrorMessage(null)
+                  infoMessage && setInfoMessage(null)
+                }}
+              >
+                <Alert severity={successMessage ? 'success' : infoMessage ? 'info' : 'error'} variant='filled'>
+                  {successMessage ? successMessage : infoMessage ? infoMessage : errorMessage}
+                </Alert>
+              </Snackbar>
+            )}
+          </>
+        )}
+      </VideoChatProvider>
     </div>
   )
 }

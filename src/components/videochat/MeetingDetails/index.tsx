@@ -1,18 +1,18 @@
 import React, { FC } from 'react'
 import { Flex, Heading, useMeetingManager } from 'amazon-chime-sdk-component-library-react'
 
-import { StyledList } from './Styled'
+import { StyledFlex, StyledList } from './Styled'
 import { IMeetingInfo } from 'types'
 
 interface MeetingDetailsProps {
-  meetingInfo: IMeetingInfo
+  isClassroom?: boolean
 }
 
-const MeetingDetails: FC<MeetingDetailsProps> = ({ meetingInfo }) => {
-  const manager = useMeetingManager()
+const MeetingDetails: FC<MeetingDetailsProps> = ({ isClassroom }) => {
+  const meetingManager = useMeetingManager()
 
   return (
-    <Flex container layout='fill-space-centered'>
+    <StyledFlex container layout='fill-space-centered' className={isClassroom ? 'classroom' : ''}>
       <Flex mb='2rem' mr={{ md: '2rem' }} px='1rem'>
         <Heading level={4} tag='h1' mb={2}>
           Meeting information
@@ -20,15 +20,11 @@ const MeetingDetails: FC<MeetingDetailsProps> = ({ meetingInfo }) => {
         <StyledList>
           <div>
             <dt>Meeting ID</dt>
-            <dd>{meetingInfo.MeetingId || ''}</dd>
-          </div>
-          <div>
-            <dt>Hosted region</dt>
-            <dd>{manager.meetingRegion}</dd>
+            <dd>{meetingManager?.meetingId || ''}</dd>
           </div>
         </StyledList>
       </Flex>
-    </Flex>
+    </StyledFlex>
   )
 }
 

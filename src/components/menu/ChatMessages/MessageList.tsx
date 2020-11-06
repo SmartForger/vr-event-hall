@@ -42,6 +42,8 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     appState: { user }
   } = useAppState()
   const { chatState, dispatch } = useChatContext()
+  // TODO: fix this
+  // const { width } = useWindowSize()
 
   const filteredMessages = messages.filter(
     message => message.id !== chatState?.session?.pinnedMessageId && message?.deleted !== 'true'
@@ -53,7 +55,6 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     index => sizeMap.current[index] || setTimeout(() => sizeMap.current[index] || calculateSize(index), 50),
     []
   )
-  const [windowWidth] = useWindowSize()
 
   const calculateSize = index => {
     if (filteredMessages[index] && filteredMessages[index].content.length) {
@@ -150,7 +151,7 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
   }
 
   return (
-    <ChatListContext.Provider value={{ setSize, windowWidth, onPin, onDelete, unPin, isAdmin }}>
+    <ChatListContext.Provider value={{ setSize, windowWidth: window.innerWidth, onPin, onDelete, unPin, isAdmin }}>
       {showDialog ? (
         <DialogCard
           title={dialogInfo[dialogType || ''].title}

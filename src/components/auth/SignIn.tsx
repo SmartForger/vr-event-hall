@@ -1,13 +1,14 @@
 import React, { FC, useEffect, useState } from 'react'
 import { I18n, Auth } from 'aws-amplify'
 import { makeStyles, Theme, Grid, TextField, Link, Typography } from '@material-ui/core'
-// import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import { PillButton } from 'components'
 import { validateEmail } from 'helpers'
 import { AuthFlowSteps } from 'types'
 import { graphQLQuery } from 'graphql/helpers'
 import { userByEmail } from 'graphql/queries'
+import { useAppState } from 'providers'
 
 interface SignInProps {
   setAuthState: (state: AuthFlowSteps) => void
@@ -19,7 +20,8 @@ interface SignInProps {
 export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd, redirectRoute = '/event' }) => {
   const defaultAvatar = 'defaultAvatar.jpg'
   const classes = useStyles()
-  // const history = useHistory()
+  const history = useHistory()
+  const { setUser } = useAppState()
   const [loading, setLoading] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -33,6 +35,7 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
       if (!foundUser.avatar) {
         foundUser.avatar = defaultAvatar
       }
+      setUser(foundUser)
       // TODO: Uncomment after registration
       setAuthState(AuthFlowSteps.ThankYou)
       // history.push(redirectRoute)

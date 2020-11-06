@@ -198,6 +198,58 @@ export const getSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      raisedHands {
+        items {
+          id
+          userId
+          sessionId
+          dismissed
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      questions {
+        items {
+          id
+          userId
+          sessionId
+          answered
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      polls {
+        items {
+          id
+          sessionId
+          active
+          name
+          question
+          optionA
+          optionB
+          optionC
+          optionD
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pollAnswers {
+        items {
+          id
+          sessionId
+          userId
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      qaActive
       createdAt
       updatedAt
     }
@@ -234,6 +286,19 @@ export const listSessions = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
         createdAt
         updatedAt
       }
@@ -302,6 +367,245 @@ export const getEventConfig = /* GraphQL */ `
       environment
       createdAt
       updatedAt
+    }
+  }
+`
+export const getRaisedHand = /* GraphQL */ `
+  query GetRaisedHand($id: ID!) {
+    getRaisedHand(id: $id) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dismissed
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const getSessionQuestion = /* GraphQL */ `
+  query GetSessionQuestion($id: ID!) {
+    getSessionQuestion(id: $id) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answered
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listSessionQuestions = /* GraphQL */ `
+  query ListSessionQuestions($filter: ModelSessionQuestionFilterInput, $limit: Int, $nextToken: String) {
+    listSessionQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        sessionId
+        user {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
+        answered
+        content
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const getSessionPoll = /* GraphQL */ `
+  query GetSessionPoll($id: ID!) {
+    getSessionPoll(id: $id) {
+      id
+      sessionId
+      active
+      name
+      question
+      optionA
+      optionB
+      optionC
+      optionD
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listSessionPolls = /* GraphQL */ `
+  query ListSessionPolls($filter: ModelSessionPollFilterInput, $limit: Int, $nextToken: String) {
+    listSessionPolls(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        sessionId
+        active
+        name
+        question
+        optionA
+        optionB
+        optionC
+        optionD
+        answer
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const getSessionPollAnswer = /* GraphQL */ `
+  query GetSessionPollAnswer($id: ID!) {
+    getSessionPollAnswer(id: $id) {
+      id
+      sessionId
+      userId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listSessionPollAnswers = /* GraphQL */ `
+  query ListSessionPollAnswers($filter: ModelSessionPollAnswerFilterInput, $limit: Int, $nextToken: String) {
+    listSessionPollAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        sessionId
+        userId
+        user {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
+        answer
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `
@@ -393,6 +697,19 @@ export const sessionByConversationId = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
         createdAt
         updatedAt
       }
@@ -536,6 +853,107 @@ export const answersByPoll = /* GraphQL */ `
         pollId
         userId
         answer
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const raisedHandByDate = /* GraphQL */ `
+  query RaisedHandByDate(
+    $sessionId: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelRaisedHandFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    raisedHandByDate(
+      sessionId: $sessionId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        sessionId
+        user {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
+        dismissed
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const questionByDate = /* GraphQL */ `
+  query QuestionByDate(
+    $sessionId: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelSessionQuestionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    questionByDate(
+      sessionId: $sessionId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        sessionId
+        user {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
+        answered
+        content
         createdAt
         updatedAt
       }

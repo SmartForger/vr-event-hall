@@ -1,4 +1,16 @@
 import styled from 'styled-components'
+import { Flex } from 'amazon-chime-sdk-component-library-react'
+
+export const StyledFlex = styled(Flex)`
+  background: black;
+  &.classroom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+`
 
 export const StyledList = styled.dl`
   font-size: 1rem;
