@@ -42,7 +42,7 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     appState: { user }
   } = useAppState()
   const { chatState, dispatch } = useChatContext()
-  const { width } = useWindowSize()
+  // const { width } = useWindowSize()
 
   const filteredMessages = messages.filter(
     message => message.id !== chatState?.session?.pinnedMessageId && message?.deleted !== 'true'
