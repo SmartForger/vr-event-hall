@@ -21,8 +21,9 @@ import { Modal } from '@mvrk-hq/vx360-components'
 import { RadioButtons, CountdownTimer } from 'components'
 
 import { useAppState, usePollContext, useVideoChatContext } from 'providers'
-import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
+import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
 import { getSessionPolls } from 'graphql/customQueries'
+import { createPollAnswer } from 'graphql/mutations'
 import { onUpdateSessionPoll } from 'graphql/subscriptions'
 import { ISubscriptionObject, IAskedPollQuestion } from 'types'
 
@@ -32,25 +33,36 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
   const classes = useStyles()
   const { pollState, dispatch } = usePollContext()
   const { videoChatState } = useVideoChatContext()
+  const {
+    appState: { user }
+  } = useAppState()
   let pollUpdatedSubscription = useRef<ISubscriptionObject | null>(null)
 
   const updateActivePoll = ({ onUpdateSessionPoll }) => {
-    dispatch({ type: 'SET_QUESTION', payload: onUpdateSessionPoll })
+    if (onUpdateSessionPoll.active === 'true') {
+      console.log(onUpdateSessionPoll)
+
+      dispatch({
+        type: 'SET_QUESTION',
+        payload: {
+          question: onUpdateSessionPoll,
+          pollOpen: true
+        }
+      })
+    }
   }
 
   const getInitiallyActiveQuestions = async () => {
-    // const pollQs = await graphQLQuery(getSessionPolls, 'getSession')
-    videoChatState.session?.polls
-    pollQs.some(q => {
+    videoChatState.session?.polls?.items?.some?.(q => {
       if (q.active === 'true') {
         // set the found active questino as the poll provider's active question
-        dispatch({ type: 'SET_QUESTION', payload: q })
+        dispatch({ type: 'SET_QUESTION', payload: { question: q, pollOpen: true } })
         return true
       }
     })
     pollUpdatedSubscription.current = graphQLSubscription(
       onUpdateSessionPoll,
-      { id: videoChatState?.sessionId },
+      { sessionId: videoChatState?.session?.id },
       updateActivePoll
     )
   }
@@ -68,10 +80,29 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
     dispatch({ type: 'SET_ANSWER', payload: event.target.value })
   }
 
+  const closePoll = () => {
+    dispatch({
+      type: 'SET_QUESTION',
+      payload: {
+        question: {},
+        pollOpen: false
+      }
+    })
+  }
+
+  const submitQuestionAnswer = async () => {
+    await graphQLMutation(createPollAnswer, {
+      pollId: pollState.question.id,
+      userId: user?.id,
+      answer: pollState.answerChoice
+    })
+    closePoll()
+  }
+
   return (
     <Drawer
       anchor='bottom'
-      open={pollState?.question !== null}
+      open={pollState?.pollOpen}
       className={classes.pollDrawer}
       ModalProps={{ hideBackdrop: true }}
       classes={{
@@ -80,7 +111,7 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
     >
       <div className={classes.pollHeader}>
         <Typography>{pollState?.question?.question}</Typography>
-        <CountdownTimer totalTime={30} />
+        <CountdownTimer totalTime={10} onCountdownEnd={() => closePoll()} />
       </div>
       <div className={classes.pollContent}>
         <Typography variant='subtitle1'>{pollState?.question?.question}</Typography>
@@ -97,7 +128,7 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
         <Button
           className={classes.pollSubmit}
           disabled={!pollState.answerChoice}
-          onClick={() => dispatch({ type: 'SET_QUESTION', payload: null })}
+          onClick={() => submitQuestionAnswer()}
         >
           Submit
         </Button>

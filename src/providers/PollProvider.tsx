@@ -40,8 +40,7 @@ const reducer = (state, action) => {
     case 'SET_QUESTION':
       return {
         ...state,
-        pollOpen: true,
-        question: action.payload
+        ...action.payload
       }
     case 'SET_LOADING':
       return {

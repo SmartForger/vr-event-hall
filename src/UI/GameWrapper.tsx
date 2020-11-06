@@ -155,7 +155,6 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   }
 
   const onSceneSetup = () => {
-    console.log('ON SCENE SETUP')
     setScene((window as any)['scene'])
   }
 

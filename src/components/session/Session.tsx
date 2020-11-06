@@ -12,6 +12,8 @@ import { ISession } from 'helpers/sessions'
 import { GameFlowStepsConfig } from 'helpers/steps'
 import { GameFlowSteps } from 'types'
 import { useAppState, UserAdminType, useVideoChatContext } from 'providers'
+import { graphQLQuery } from 'graphql/helpers'
+import { getAttendeeInfo } from 'graphql/customQueries'
 
 interface SessionProps {
   session: ISession
@@ -38,7 +40,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
 
   const joinClassRoom = async () => {
     dispatch({ type: 'SET_LOADING', payload: true })
-    if (videoChatState.presenters.includes(user?.id as string)) {
+    if (videoChatState.presenterPins.includes(user?.id as string)) {
       dispatch({ type: 'SET_DETAILS', payload: { adminType: UserAdminType.PRESENTER } })
     } else if (videoChatState.moderators.includes(user?.id as string)) {
       dispatch({ type: 'SET_DETAILS', payload: { adminType: UserAdminType.MODERATOR } })
@@ -50,6 +52,19 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
     const joinData = {
       meetingInfo: meeting.Meeting,
       attendeeInfo: attendee.Attendee
+    }
+
+    meetingManager.getAttendee = async (chimeAttendeeId: string, externalUserId?: string) => {
+      console.log('An attendee joined session')
+      if (externalUserId) {
+        const user = await graphQLQuery(getAttendeeInfo, 'getUser', { id: externalUserId })
+
+        return {
+          name: `${user.firstName} ${user.lastName}`,
+          avatar: user.avatar
+        }
+      }
+      return { name: '', avatar: '' }
     }
 
     await meetingManager.join(joinData)

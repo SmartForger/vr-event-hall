@@ -62,7 +62,38 @@ export const onCreateMessage = /* GraphQL */ `
       id
       content
       authorId
+      author {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -74,7 +105,38 @@ export const onUpdateMessage = /* GraphQL */ `
       id
       content
       authorId
+      author {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -86,7 +148,38 @@ export const onCreateGlobalMessage = /* GraphQL */ `
       id
       content
       authorId
+      author {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -128,6 +221,7 @@ export const onCreateUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -208,7 +302,29 @@ export const onUpdateSession = /* GraphQL */ `
         id
         content
         authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
         conversationId
+        deleted
         createdAt
         updatedAt
       }
@@ -264,6 +380,7 @@ export const onUpdateSession = /* GraphQL */ `
         nextToken
       }
       qaActive
+      presenterPins
       createdAt
       updatedAt
     }

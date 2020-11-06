@@ -1,15 +1,31 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
-import { Avatar, Box, Button, IconButton, List, ListItem, makeStyles, Theme, Typography } from '@material-ui/core'
+import { useRosterState } from 'amazon-chime-sdk-component-library-react'
+import { uniq } from 'lodash'
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  List,
+  ListItem,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Theme,
+  Typography
+} from '@material-ui/core'
 import { MoreHoriz } from '@material-ui/icons'
 
 import { UserAvatarCard } from 'components'
 
-import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
+import { graphQLMutation, graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { getSessionRaisedHands } from 'graphql/customQueries'
 import { onCreateRaisedHand } from 'graphql/subscriptions'
 import { ISubscriptionObject } from 'types'
 
 import { RaiseHandIcon } from 'assets'
+import { updateSession } from 'graphql/mutations'
+import { useAppState, useVideoChatContext } from 'providers'
 
 interface PeoplePanelProps {
   isAdmin?: boolean
@@ -18,7 +34,16 @@ interface PeoplePanelProps {
 
 export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin, sessionId }) => {
   const classes = useStyles()
+  const {
+    appState: { user }
+  } = useAppState()
+  const { videoChatState } = useVideoChatContext()
+  const { roster } = useRosterState()
+  const rosterArray = Object.values(roster)
   const [raisedHands, setRaisedHands] = useState<any>([])
+  const [anchorEl, setAnchorEl] = React.useState(null)
+
+  const isPinned = videoChatState?.session?.presenterPins.some(pin => pin === user?.id)
 
   let subscription = useRef<ISubscriptionObject | null>(null)
 
@@ -38,6 +63,34 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin, sessionId }) => {
       getRaisedHands()
     }
   }, [sessionId])
+
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handlePin = async (userId: string) => {
+    if (userId) {
+      await graphQLMutation(updateSession, {
+        id: videoChatState.sessionId,
+        presenterPins: uniq([...(videoChatState?.session?.presenterPins || []), userId])
+      })
+    }
+    handleClose()
+  }
+
+  const handleUnPin = async (userId: string) => {
+    if (userId) {
+      await graphQLMutation(updateSession, {
+        id: videoChatState.sessionId,
+        presenterPins: videoChatState?.session?.presenterPins.filter(pin => pin !== userId)
+      })
+    }
+    handleClose()
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   return (
     <>
@@ -100,27 +153,6 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin, sessionId }) => {
         </div>
         <div className={classes.user}>
           <Avatar
-            alt={`Bryan Press`}
-            src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
-            className={classes.avatar}
-          />
-          <div className={classes.userInfo}>
-            <div className={classes.userActivityCircle} />
-            <Typography variant='body1' component='p' align='center'>
-              Bryan Press
-              <Typography variant='caption' className={classes.userType}>
-                (Presenter)
-              </Typography>
-            </Typography>
-            <div className={classes.moreButton}>
-              <IconButton onClick={() => console.log('MORE')}>
-                <MoreHoriz />
-              </IconButton>
-            </div>
-          </div>
-        </div>
-        <div className={classes.user}>
-          <Avatar
             alt={`Cheyenne Levin`}
             src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
             className={classes.avatar}
@@ -140,42 +172,40 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin, sessionId }) => {
             </div>
           </div>
         </div>
-        <div className={classes.user}>
-          <Avatar
-            alt={`Ana Stanton`}
-            src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
-            className={classes.avatar}
-          />
-          <div className={classes.userInfo}>
-            <div className={classes.userActivityCircle} />
-            <Typography variant='body1' component='p' align='center'>
-              Ana Stanton
-            </Typography>
-            <div className={classes.moreButton}>
-              <IconButton onClick={() => console.log('MORE')}>
-                <MoreHoriz />
-              </IconButton>
+        {rosterArray.map(user => (
+          <div className={classes.user}>
+            <Avatar
+              alt={user.name}
+              src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
+              className={classes.avatar}
+            />
+            <div className={classes.userInfo}>
+              <div className={classes.userActivityCircle} />
+              <Typography variant='body1' component='p' align='center'>
+                {user.name}
+              </Typography>
+              <div className={classes.moreButton}>
+                <IconButton onClick={handleClick}>
+                  <MoreHoriz />
+                </IconButton>
+                <Menu
+                  id={`${user.externalUserId}-menu`}
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  {!isPinned ? (
+                    <MenuItem onClick={() => handlePin(user.externalUserId || '')}>Pin Video</MenuItem>
+                  ) : (
+                    <MenuItem onClick={() => handleUnPin(user.externalUserId || '')}>Unpin Video</MenuItem>
+                  )}
+                  <MenuItem onClick={handleClose}>Cancel</MenuItem>
+                </Menu>
+              </div>
             </div>
           </div>
-        </div>
-        <div className={classes.user}>
-          <Avatar
-            alt={`Davis Dorwart`}
-            src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
-            className={classes.avatar}
-          />
-          <div className={classes.userInfo}>
-            <div className={classes.userActivityCircle} />
-            <Typography variant='body1' component='p' align='center'>
-              Davis Dorwart
-            </Typography>
-            <div className={classes.moreButton}>
-              <IconButton onClick={() => console.log('MORE')}>
-                <MoreHoriz />
-              </IconButton>
-            </div>
-          </div>
-        </div>
+        ))}
       </section>
     </>
   )
