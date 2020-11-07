@@ -9,6 +9,7 @@ interface DialogCardProps {
   onCancel?: () => void
   onConfirm?: (val?: any) => void
   containerHeight?: number
+  className?: string
 }
 
 export const DialogCard: FC<DialogCardProps> = ({
@@ -17,12 +18,13 @@ export const DialogCard: FC<DialogCardProps> = ({
   messageLine2,
   onCancel,
   onConfirm,
-  containerHeight
+  containerHeight,
+  className
 }) => {
   const classes = useStyles()
 
   return (
-    <Box className={classes.dialogRoot} height={containerHeight || '100%'}>
+    <Box className={`${classes.dialogRoot} ${className || ''}`} height={containerHeight || '100%'}>
       <Backdrop open={true} className={classes.backdrop}>
         <Card className={classes.root}>
           <CardActionArea>
@@ -89,13 +91,15 @@ const useStyles = makeStyles({
     }
   },
   cancel: {
+    color: 'black',
     backgroundColor: 'white',
     boxShadow: 'none',
     border: '1px solid black',
     '&:hover': {
       backgroundColor: 'white',
       boxShadow: 'none',
-      border: '1px solid black'
+      border: '1px solid black',
+      color: 'black'
     }
   },
   confirm: {
