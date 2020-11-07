@@ -12,6 +12,7 @@ import { getSessionQuestionsAndPolls } from 'graphql/customQueries'
 import { ChatMessages } from 'components/menu/ChatMessages'
 import { IPollObject, IQuestionObject, ISubscriptionObject } from 'types'
 import { updateSession, updateSessionPoll } from 'graphql/mutations'
+import { DialogCard } from 'components/shared'
 
 export const ToolsPanel = () => {
   const classes = useStyles()
@@ -19,6 +20,8 @@ export const ToolsPanel = () => {
   const [nestedExpanded, setNestedExpanded] = useState<string | false>('')
   const [questions, setQuestions] = useState<IQuestionObject[]>([])
   const [polls, setPolls] = useState<IPollObject[]>([])
+  const [dialogType, setDialogType] = useState<string>('')
+  const [selectedPoll, setSelectedPoll] = useState<string>('')
 
   const { videoChatState } = useVideoChatContext()
 
@@ -46,6 +49,10 @@ export const ToolsPanel = () => {
     getSessionQuestionsAndPollsInfo()
   }, [])
 
+  const openQA = () => {
+    setDialogType(`${videoChatState?.session?.qaActive ? 'close' : 'open'}QA`)
+  }
+
   const toggleQA = async () => {
     await graphQLMutation(updateSession, {
       id: videoChatState?.session?.id || videoChatState.sessionId,
@@ -53,11 +60,32 @@ export const ToolsPanel = () => {
     })
   }
 
-  const activatePoll = async (id: string) => {
-    await graphQLMutation(updateSessionPoll, {
-      id,
-      active: 'true'
-    })
+  const selectPoll = (id: string) => {
+    setSelectedPoll(id)
+    setDialogType('poll')
+  }
+
+  const activatePoll = async () => {
+    if (selectedPoll) {
+      await graphQLMutation(updateSessionPoll, {
+        id: selectedPoll,
+        active: 'true'
+      })
+    }
+  }
+
+  const onQAConfirm = async () => {
+    await toggleQA()
+    onCancel()
+  }
+
+  const onPollConfirm = async () => {
+    await activatePoll()
+    onCancel()
+  }
+
+  const onCancel = () => {
+    setDialogType('')
   }
 
   return (
@@ -70,7 +98,7 @@ export const ToolsPanel = () => {
           <Button
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
-              toggleQA()
+              openQA()
             }}
             variant='outlined'
             className={`${classes.roundedButton} ${classes.qaButton}`}
@@ -118,7 +146,7 @@ export const ToolsPanel = () => {
                 <Button
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation()
-                    activatePoll(poll?.id || '')
+                    selectPoll(poll?.id || '')
                   }}
                   variant='outlined'
                   className={`${classes.roundedButton} ${classes.pollButton}`}
@@ -147,8 +175,35 @@ export const ToolsPanel = () => {
           </AccordionDetails>
         </Accordion>
       ) : null}
+      {dialogType ? (
+        <DialogCard
+          title={dialogInfo[dialogType || ''].title}
+          message={dialogInfo[dialogType || ''].message}
+          messageLine2={dialogInfo[dialogType || ''].messageLine2}
+          onConfirm={dialogType === 'qa' ? onQAConfirm : onPollConfirm}
+          onCancel={onCancel}
+        />
+      ) : null}
     </>
   )
+}
+
+const dialogInfo = {
+  openQA: {
+    title: 'Open Q&A',
+    message: 'You are about to open question submission for all users in this session.',
+    messageLine2: 'Are you sure?'
+  },
+  closeQA: {
+    title: 'Close Q&A',
+    message: 'You are about to close question submission for all users in this session.',
+    messageLine2: 'Are you sure?'
+  },
+  poll: {
+    title: 'Send Poll',
+    message: 'You are about to send a poll to all users in this session',
+    messageLine2: 'Are you sure?'
+  }
 }
 
 const useStyles = makeStyles(() => ({
