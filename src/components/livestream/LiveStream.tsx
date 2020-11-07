@@ -1,7 +1,7 @@
 import React from 'react'
 import YouTube from 'react-youtube'
 
-import { Modal } from '../modal'
+import { Modal } from 'components/shared'
 import { ConversationList } from '../chat'
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import {

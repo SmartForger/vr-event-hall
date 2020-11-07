@@ -5,8 +5,9 @@ import { makeStyles, Theme, Grid, Typography, FormControl, InputLabel, Select, M
 import { PillButton } from 'components'
 import { AuthFlowSteps } from 'types'
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
-import { createSessionReservation } from 'graphql/mutations'
-import { userByEmail, listSessions } from 'graphql/queries'
+import { createSessionReservation } from 'graphql/customMutations'
+import { listSessionsForReservation } from 'graphql/customQueries'
+import { userByEmail } from 'graphql/queries'
 
 interface IBreakoutSession {
   id: string
@@ -40,7 +41,7 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
   const getBreakoutSessions = async () => {
     setLoading(true)
     try {
-      const foundSessions: IBreakoutSession[] = await graphQLQuery(listSessions, 'listSessions', {})
+      const foundSessions: IBreakoutSession[] = await graphQLQuery(listSessionsForReservation, 'listSessions', {})
       const sessionMap = new Map()
 
       foundSessions.forEach((q: IBreakoutSession) => {

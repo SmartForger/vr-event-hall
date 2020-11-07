@@ -38,6 +38,7 @@ export const createUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -94,6 +95,7 @@ export const updateUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -150,6 +152,7 @@ export const deleteUser = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -182,6 +185,7 @@ export const createConversation = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -214,6 +218,7 @@ export const updateConversation = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -246,6 +251,7 @@ export const deleteConversation = /* GraphQL */ `
           content
           authorId
           conversationId
+          deleted
           createdAt
           updatedAt
         }
@@ -271,6 +277,128 @@ export const createSession = /* GraphQL */ `
     createSession(input: $input, condition: $condition) {
       id
       name
+      description
+      active
+      conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      admins {
+        items {
+          id
+          userId
+          sessionId
+          userType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pinnedMessageId
+      pinnedMessage {
+        id
+        content
+        authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
+        conversationId
+        deleted
+        createdAt
+        updatedAt
+      }
+      raisedHands {
+        items {
+          id
+          userId
+          sessionId
+          dismissed
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      questions {
+        items {
+          id
+          userId
+          sessionId
+          answered
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      polls {
+        items {
+          id
+          sessionId
+          active
+          name
+          question
+          optionA
+          optionB
+          optionC
+          optionD
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pollAnswers {
+        items {
+          id
+          sessionId
+          userId
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      qaActive
+      presenterPins
+      muted
       createdAt
       updatedAt
     }
@@ -281,6 +409,128 @@ export const updateSession = /* GraphQL */ `
     updateSession(input: $input, condition: $condition) {
       id
       name
+      description
+      active
+      conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      admins {
+        items {
+          id
+          userId
+          sessionId
+          userType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pinnedMessageId
+      pinnedMessage {
+        id
+        content
+        authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
+        conversationId
+        deleted
+        createdAt
+        updatedAt
+      }
+      raisedHands {
+        items {
+          id
+          userId
+          sessionId
+          dismissed
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      questions {
+        items {
+          id
+          userId
+          sessionId
+          answered
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      polls {
+        items {
+          id
+          sessionId
+          active
+          name
+          question
+          optionA
+          optionB
+          optionC
+          optionD
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pollAnswers {
+        items {
+          id
+          sessionId
+          userId
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      qaActive
+      presenterPins
+      muted
       createdAt
       updatedAt
     }
@@ -291,6 +541,128 @@ export const deleteSession = /* GraphQL */ `
     deleteSession(input: $input, condition: $condition) {
       id
       name
+      description
+      active
+      conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      admins {
+        items {
+          id
+          userId
+          sessionId
+          userType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pinnedMessageId
+      pinnedMessage {
+        id
+        content
+        authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
+        conversationId
+        deleted
+        createdAt
+        updatedAt
+      }
+      raisedHands {
+        items {
+          id
+          userId
+          sessionId
+          dismissed
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      questions {
+        items {
+          id
+          userId
+          sessionId
+          answered
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      polls {
+        items {
+          id
+          sessionId
+          active
+          name
+          question
+          optionA
+          optionB
+          optionC
+          optionD
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pollAnswers {
+        items {
+          id
+          sessionId
+          userId
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      qaActive
+      presenterPins
+      muted
       createdAt
       updatedAt
     }
@@ -338,6 +710,47 @@ export const createSessionReservation = /* GraphQL */ `
       session {
         id
         name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
         createdAt
         updatedAt
       }
@@ -388,6 +801,47 @@ export const updateSessionReservation = /* GraphQL */ `
       session {
         id
         name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
         createdAt
         updatedAt
       }
@@ -402,7 +856,38 @@ export const createMessage = /* GraphQL */ `
       id
       content
       authorId
+      author {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -414,7 +899,38 @@ export const updateMessage = /* GraphQL */ `
       id
       content
       authorId
+      author {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -426,7 +942,38 @@ export const deleteMessage = /* GraphQL */ `
       id
       content
       authorId
+      author {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       conversationId
+      deleted
       createdAt
       updatedAt
     }
@@ -709,6 +1256,602 @@ export const updateConvoLink = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createAdminLink = /* GraphQL */ `
+  mutation CreateAdminLink($input: CreateAdminUserInput!, $condition: ModelAdminUserConditionInput) {
+    createAdminLink(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      userType
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateAdminLink = /* GraphQL */ `
+  mutation UpdateAdminLink($input: UpdateAdminUserInput!, $condition: ModelAdminUserConditionInput) {
+    updateAdminLink(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      userType
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createPollAnswer = /* GraphQL */ `
+  mutation CreatePollAnswer($input: CreatePollAnswersInput!, $condition: ModelPollAnswersConditionInput) {
+    createPollAnswer(input: $input, condition: $condition) {
+      id
+      pollId
+      userId
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createNotification = /* GraphQL */ `
+  mutation CreateNotification($input: CreateNotificationInput!, $condition: ModelNotificationConditionInput) {
+    createNotification(input: $input, condition: $condition) {
+      id
+      type
+      body
+      button
+      link
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateNotification = /* GraphQL */ `
+  mutation UpdateNotification($input: UpdateNotificationInput!, $condition: ModelNotificationConditionInput) {
+    updateNotification(input: $input, condition: $condition) {
+      id
+      type
+      body
+      button
+      link
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteNotification = /* GraphQL */ `
+  mutation DeleteNotification($input: DeleteNotificationInput!, $condition: ModelNotificationConditionInput) {
+    deleteNotification(input: $input, condition: $condition) {
+      id
+      type
+      body
+      button
+      link
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createEventConfig = /* GraphQL */ `
+  mutation CreateEventConfig($input: CreateEventConfigInput!, $condition: ModelEventConfigConditionInput) {
+    createEventConfig(input: $input, condition: $condition) {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateEventConfig = /* GraphQL */ `
+  mutation UpdateEventConfig($input: UpdateEventConfigInput!, $condition: ModelEventConfigConditionInput) {
+    updateEventConfig(input: $input, condition: $condition) {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteEventConfig = /* GraphQL */ `
+  mutation DeleteEventConfig($input: DeleteEventConfigInput!, $condition: ModelEventConfigConditionInput) {
+    deleteEventConfig(input: $input, condition: $condition) {
+      id
+      name
+      stage
+      streamStartTime
+      useBackupStream
+      environment
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createUserInteraction = /* GraphQL */ `
+  mutation CreateUserInteraction($input: CreateUserInteractionInput!, $condition: ModelUserInteractionConditionInput) {
+    createUserInteraction(input: $input, condition: $condition) {
+      id
+      trigger
+      type
+      name
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createContactRequest = /* GraphQL */ `
+  mutation CreateContactRequest($input: CreateContactRequestInput!, $condition: ModelContactRequestConditionInput) {
+    createContactRequest(input: $input, condition: $condition) {
+      id
+      firstName
+      lastName
+      phoneNumber
+      email
+      message
+      demo
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createRaisedHand = /* GraphQL */ `
+  mutation CreateRaisedHand($input: CreateRaisedHandInput!, $condition: ModelRaisedHandConditionInput) {
+    createRaisedHand(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dismissed
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateRaisedHand = /* GraphQL */ `
+  mutation UpdateRaisedHand($input: UpdateRaisedHandInput!, $condition: ModelRaisedHandConditionInput) {
+    updateRaisedHand(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dismissed
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createSessionQuestion = /* GraphQL */ `
+  mutation CreateSessionQuestion($input: CreateSessionQuestionInput!, $condition: ModelSessionQuestionConditionInput) {
+    createSessionQuestion(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answered
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSessionQuestion = /* GraphQL */ `
+  mutation UpdateSessionQuestion($input: UpdateSessionQuestionInput!, $condition: ModelSessionQuestionConditionInput) {
+    updateSessionQuestion(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answered
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createSessionPoll = /* GraphQL */ `
+  mutation CreateSessionPoll($input: CreateSessionPollInput!, $condition: ModelSessionPollConditionInput) {
+    createSessionPoll(input: $input, condition: $condition) {
+      id
+      sessionId
+      active
+      name
+      question
+      optionA
+      optionB
+      optionC
+      optionD
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSessionPoll = /* GraphQL */ `
+  mutation UpdateSessionPoll($input: UpdateSessionPollInput!, $condition: ModelSessionPollConditionInput) {
+    updateSessionPoll(input: $input, condition: $condition) {
+      id
+      sessionId
+      active
+      name
+      question
+      optionA
+      optionB
+      optionC
+      optionD
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const createSessionPollAnswer = /* GraphQL */ `
+  mutation CreateSessionPollAnswer(
+    $input: CreateSessionPollAnswerInput!
+    $condition: ModelSessionPollAnswerConditionInput
+  ) {
+    createSessionPollAnswer(input: $input, condition: $condition) {
+      id
+      sessionId
+      userId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSessionPollAnswer = /* GraphQL */ `
+  mutation UpdateSessionPollAnswer(
+    $input: UpdateSessionPollAnswerInput!
+    $condition: ModelSessionPollAnswerConditionInput
+  ) {
+    updateSessionPollAnswer(input: $input, condition: $condition) {
+      id
+      sessionId
+      userId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answer
       createdAt
       updatedAt
     }

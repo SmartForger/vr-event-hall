@@ -11,6 +11,7 @@ import { setInitialState } from 'redux/auth'
 import { graphQLQuery } from 'graphql/helpers'
 import { userByEmail } from 'graphql/queries'
 import { IUser } from 'types'
+import { useAppState } from 'providers'
 
 interface UserAuthenticatedRoutesProps {
   user: IUser | undefined
@@ -20,6 +21,7 @@ interface UserAuthenticatedRoutesProps {
 
 export const UserAuthenticatedRoutes: FC<UserAuthenticatedRoutesProps> = ({ user, setUser, children }) => {
   const dispatch = useDispatch()
+  const { dispatch: contextDispatch } = useAppState()
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -34,6 +36,7 @@ export const UserAuthenticatedRoutes: FC<UserAuthenticatedRoutesProps> = ({ user
         if (foundUser && foundUser.id) {
           dispatch(setInitialState('signedIn'))
           setUser(foundUser)
+          contextDispatch({ type: 'SET_USER', payload: foundUser })
         }
       } catch (err) {
         setUser(undefined)
@@ -42,6 +45,12 @@ export const UserAuthenticatedRoutes: FC<UserAuthenticatedRoutesProps> = ({ user
     }
 
     checkUser()
+
+    // Prevent user to navigate back
+    const browserNavigationHandle = () => window.history.pushState(null, '', document.URL)
+    window.history.pushState(null, '', document.URL)
+    window.addEventListener('popstate', browserNavigationHandle)
+    return () => window.removeEventListener('popstate', browserNavigationHandle)
     // eslint-disable-next-line
   }, [])
 

@@ -1,0 +1,31 @@
+
+ASP.NET Static Scene File Module is a static file handler for supported scene files. 
+It supports serving compressed scene files to reduce network bandwith performance for large
+scene files with detailed geometry, large skeletions and lots of animations. 
+
+To install, simply copy 'ToolkitModule.dll' to your ASP.NET (4.5 or Higher) Web Application 'bin' folder.
+
+=======================================================
+Note: You must enable manage pipeline for all request
+=======================================================
+
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appSettings>
+    <add key="TransmitPacketSize" value="32768" />
+    <add key="CompressExtensions" value=".bc, .fx, .js, .jsx, .htm, .css, .map, .wav, .exr, .hdr, .bin, .mem, .glb, .gltf, .glsl, .wasm, .data, .html, .json, .babylon" />
+    <add key="SecureConnectionRequired" value="false" />
+    <add key="SecureConnectionRedirectPort" value="443" />
+  </appSettings>
+  <system.webServer>
+    <modules runAllManagedModulesForAllRequests="true" />
+		<httpProtocol>
+			<customHeaders>
+				<add name="Access-Control-Allow-Origin" value="*" />
+				<add name="Access-Control-Allow-Headers" value="Content-Type" />
+				<add name="Access-Control-Allow-Methods" value="GET,POST,PUT,DELETE,OPTIONS" />
+			  <add name="Access-Control-Allow-Credentials" value="true" />				
+			</customHeaders>
+		</httpProtocol>
+  </system.webServer>
+</configuration>

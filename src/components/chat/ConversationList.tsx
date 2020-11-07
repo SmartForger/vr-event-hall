@@ -18,6 +18,7 @@ import { ReactComponent as Send } from 'assets/send.svg'
 import { ReactComponent as Arrow } from 'assets/rightArrow.svg'
 import { ReactComponent as Channel } from 'assets/channel.svg'
 import { ReactComponent as People } from 'assets/people.svg'
+// import { ReactComponent as Video } from 'assets/video.svg'
 import { IUser, IMessageInput, ISubscriptionObject } from 'types'
 import {
   resetNotification,
@@ -72,8 +73,7 @@ export const ConversationList: FC<ConversationListProps> = ({
   const [previousView, setPreviousView] = useState<string>('')
   const [userLookup, setUserLookup] = useState<object>({})
   const [peopleNotificationCount, setPeopleNotificationCount] = useState<number>(0)
-  // eslint-disable-next-line
-  const [newVideoChatRequest, setNewVideoChatRequest] = useState<string>('')
+  // const [newVideoChatRequest, setNewVideoChatRequest] = useState<string>('')
 
   // Selector
   const notifications = useSelector(getNotifications, shallowEqual)
@@ -201,10 +201,12 @@ export const ConversationList: FC<ConversationListProps> = ({
   }
 
   const addNewMessage = ({ onCreateMessage }) => {
-    if (onCreateMessage.content.includes(videoChatKey) && onCreateMessage.authorId !== user?.id) {
-      const meetingId = onCreateMessage.content.split(':')[1]
-      return setNewVideoChatRequest(meetingId)
-    }
+    /*
+     * if (onCreateMessage.content.includes(videoChatKey) && onCreateMessage.authorId !== user?.id) {
+     *   const meetingId = onCreateMessage.content.split(':')[1]
+     *   return setNewVideoChatRequest(meetingId)
+     * }
+     */
     dispatch(setActiveConversationMessages(onCreateMessage))
     scrollToBottom()
   }
@@ -246,7 +248,7 @@ export const ConversationList: FC<ConversationListProps> = ({
     const message: IMessageInput = {
       id: uuid(),
       createdAt: Date.now(),
-      messageConversationId: activeConversation.id,
+      conversationId: activeConversation.id,
       content: newMessage,
       authorId: user?.id as string
     }
@@ -256,54 +258,58 @@ export const ConversationList: FC<ConversationListProps> = ({
     setNewMessage('')
   }
 
-  // const createVideoChat = async (meetingId?: string) => {
-  //   setVideoChatLoading && setVideoChatLoading(true)
-  //   const {
-  //     data: { meeting, attendee }
-  //   } = await createChimeMeeting({ meetingId })
+  /*
+   * const createVideoChat = async (meetingId?: string) => {
+   *   setVideoChatLoading && setVideoChatLoading(true)
+   *   const {
+   *     data: { meeting, attendee }
+   *   } = await createChimeMeeting({ meetingId })
+   *
+   *   setMeetingInfo && setMeetingInfo(meeting.Meeting)
+   *
+   *   const message: IMessageInput = {
+   *     id: uuid(),
+   *     createdAt: Date.now(),
+   *     messageConversationId: activeConversation.id,
+   *     content: `${videoChatKey}:${meeting.Meeting.MeetingId}`,
+   *     authorId: user?.id as string
+   *   }
+   *
+   *   await graphQLMutation(createMessage, message)
+   *
+   *   const joinData = {
+   *     meetingInfo: meeting.Meeting,
+   *     attendeeInfo: attendee.Attendee
+   *   }
+   *
+   *   await meetingManager.join(joinData)
+   *   await meetingManager.start()
+   *
+   *   setVideoChatVisible && setVideoChatVisible(true)
+   * }
+   */
 
-  //   setMeetingInfo && setMeetingInfo(meeting.Meeting)
-
-  //   const message: IMessageInput = {
-  //     id: uuid(),
-  //     createdAt: Date.now(),
-  //     messageConversationId: activeConversation.id,
-  //     content: `${videoChatKey}:${meeting.Meeting.MeetingId}`,
-  //     authorId: user?.id as string
-  //   }
-
-  //   await graphQLMutation(createMessage, message)
-
-  //   const joinData = {
-  //     meetingInfo: meeting.Meeting,
-  //     attendeeInfo: attendee.Attendee
-  //   }
-
-  //   await meetingManager.join(joinData)
-  //   await meetingManager.start()
-
-  //   setVideoChatVisible && setVideoChatVisible(true)
-  // }
-
-  // const joinVideoChat = async () => {
-  //   setVideoChatLoading && setVideoChatLoading(true)
-  //   const {
-  //     data: { meeting, attendee }
-  //   } = await joinChimeMeeting(newVideoChatRequest)
-
-  //   setMeetingInfo && setMeetingInfo(meeting.Meeting)
-
-  //   const joinData = {
-  //     meetingInfo: meeting.Meeting,
-  //     attendeeInfo: attendee.Attendee
-  //   }
-
-  //   await meetingManager.join(joinData)
-  //   await meetingManager.start()
-
-  //   setVideoChatVisible && setVideoChatVisible(true)
-  //   setNewVideoChatRequest('')
-  // }
+  /*
+   * const joinVideoChat = async () => {
+   *   setVideoChatLoading && setVideoChatLoading(true)
+   *   const {
+   *     data: { meeting, attendee }
+   *   } = await joinChimeMeeting(newVideoChatRequest)
+   *
+   *   setMeetingInfo && setMeetingInfo(meeting.Meeting)
+   *
+   *   const joinData = {
+   *     meetingInfo: meeting.Meeting,
+   *     attendeeInfo: attendee.Attendee
+   *   }
+   *
+   *   await meetingManager.join(joinData)
+   *   await meetingManager.start()
+   *
+   *   setVideoChatVisible && setVideoChatVisible(true)
+   *   setNewVideoChatRequest('')
+   * }
+   */
 
   const sendGroupVideoChatLink = async (person, meetingId: string) => {
     const currentUser = user as IUser
@@ -317,7 +323,7 @@ export const ConversationList: FC<ConversationListProps> = ({
     const message: IMessageInput = {
       id: uuid(),
       createdAt: Date.now(),
-      messageConversationId: conversationId,
+      conversationId: conversationId,
       content: `${videoChatKey}-group:${meetingId}`,
       authorId: currentUser.id
     }
