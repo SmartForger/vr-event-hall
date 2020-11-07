@@ -52,6 +52,10 @@ interface IAdminUserList {
   items: IAdminUser[]
 }
 
+interface IPollObjectList {
+  items: IPollObject[]
+}
+
 export interface ISession {
   id?: string
   name: string
@@ -60,6 +64,7 @@ export interface ISession {
   conversationId: string
   muted?: boolean
   qaActive?: boolean
+  polls?: IPollObjectList
   pinnedMessageId: string
   pinnedMessage: IMessage
   presenterPins: string[]
