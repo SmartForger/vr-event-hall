@@ -128,17 +128,7 @@ export const ConfirmSignUp: FC<ConfirmSignUpProps> = ({ userEmail, userPd, setAu
           onClick={() => confirmEmail()}
           backgroundColor='transparent'
         >
-          <>
-            {I18n.get('continue')}
-            {/* Verizon requested to add this for linkedin metrics */}
-            <img
-              height='1'
-              width='1'
-              style={{ display: 'none' }}
-              alt=''
-              src='https://px.ads.linkedin.com/collect/?pid=1637466&conversionId=3238556&fmt=gif'
-            />
-          </>
+          {I18n.get('continue')}
         </PillButton>
       </Grid>
     </Grid>
