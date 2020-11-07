@@ -13,6 +13,7 @@ import { ChatMessages } from 'components/menu/ChatMessages'
 import { IPollObject, IQuestionObject, ISubscriptionObject } from 'types'
 import { updateSession, updateSessionPoll } from 'graphql/mutations'
 import { DialogCard } from 'components/shared'
+import { onCreateSessionPoll, onCreateSessionQuestion } from 'graphql/subscriptions'
 
 export const ToolsPanel = () => {
   const classes = useStyles()
@@ -25,9 +26,8 @@ export const ToolsPanel = () => {
 
   const { videoChatState } = useVideoChatContext()
 
-  // TODO: Add Subscriptions in Schema
-  // let questionSubscription = useRef<ISubscriptionObject | null>(null)
-  // let pollSubscription = useRef<ISubscriptionObject | null>(null)
+  let questionSubscription = useRef<ISubscriptionObject | null>(null)
+  let pollSubscription = useRef<ISubscriptionObject | null>(null)
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
     setExpanded(newExpanded ? panel : false)
@@ -37,16 +37,40 @@ export const ToolsPanel = () => {
     setNestedExpanded(newExpanded ? panel : false)
   }
 
+  const newQuestion = ({ onCreateSessionQuestion }) => {
+    setQuestions([...questions, onCreateSessionQuestion])
+  }
+
+  const newPoll = ({ onCreateSessionPoll }) => {
+    setPolls([...polls, onCreateSessionPoll])
+  }
+
   const getSessionQuestionsAndPollsInfo = async () => {
     const session = await graphQLQuery(getSessionQuestionsAndPolls, 'getSession', {
       id: videoChatState?.session?.id || videoChatState.sessionId
     })
     setQuestions(session.questions.items)
     setPolls(session.polls.items)
+
+    questionSubscription.current = graphQLSubscription(
+      onCreateSessionQuestion,
+      { sessionId: videoChatState?.session?.id },
+      newQuestion
+    )
+    pollSubscription.current = graphQLSubscription(
+      onCreateSessionPoll,
+      { sessionId: videoChatState?.session?.id },
+      newPoll
+    )
   }
 
   useEffect(() => {
     getSessionQuestionsAndPollsInfo()
+
+    return () => {
+      questionSubscription.current?.unsubscribe()
+      pollSubscription.current?.unsubscribe()
+    }
   }, [])
 
   const openQA = () => {
