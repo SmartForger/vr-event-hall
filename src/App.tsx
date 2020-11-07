@@ -7,7 +7,7 @@ import { ThemeProvider as StyledThemeProvider } from 'styled-components'
 import { I18n } from 'aws-amplify'
 
 // Components
-import { RotateDevice, Notifications } from 'components'
+import { RotateDevice, Notifications, Footer } from 'components'
 
 // Helpers
 import { store } from 'configs'
@@ -97,6 +97,7 @@ const App = () => {
                         useBackupStream={useBackupStream}
                       />
                     </Router>
+                    <Footer />
                   </MeetingProvider>
                 </NotificationProvider>
               </StyledThemeProvider>

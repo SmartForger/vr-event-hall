@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { Switch, Route, useLocation } from 'react-router-dom'
 import ReactGA from 'react-ga'
-import AuthBG from 'assets/welcome-bg.png'
+import AuthBG from 'assets/entrp-welcome-bg.jpg'
 
 import { AuthWrapper } from 'components/auth'
 import { UserAuthenticatedRoutes } from './UserAuthenticatedRoutes'
 import { GameWrapper } from 'UI'
+import { Header } from 'components'
 import { VimeoLiveStream } from 'components/livestream'
 
 export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, useBackupStream }) => {
@@ -23,6 +24,7 @@ export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, u
       </Route>
       <UserAuthenticatedRoutes user={user} setUser={setUser}>
         <Route exact path='/event'>
+          <Header />
           <GameWrapper user={user} eventStage={eventStage} streamStartTime={streamStartTime} />
         </Route>
       </UserAuthenticatedRoutes>
