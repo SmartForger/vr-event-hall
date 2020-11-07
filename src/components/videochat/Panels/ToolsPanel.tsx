@@ -180,8 +180,9 @@ export const ToolsPanel = () => {
           title={dialogInfo[dialogType || ''].title}
           message={dialogInfo[dialogType || ''].message}
           messageLine2={dialogInfo[dialogType || ''].messageLine2}
-          onConfirm={dialogType === 'qa' ? onQAConfirm : onPollConfirm}
+          onConfirm={dialogType === 'poll' ? onPollConfirm : onQAConfirm}
           onCancel={onCancel}
+          className={classes.dialog}
         />
       ) : null}
     </>
@@ -272,6 +273,10 @@ const useStyles = makeStyles(() => ({
   },
   internalChat: {
     height: '500px'
+  },
+  dialog: {
+    position: 'fixed',
+    top: 0
   }
 }))
 
