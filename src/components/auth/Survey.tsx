@@ -49,7 +49,6 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
       foundQuestions.forEach((q: ISurveyQuestion) => {
         if (!questionMap.get(q.name)) {
           questionMap.set(q.name, q)
-          console.log(q)
         }
       })
       setSurveyQuestions(questionMap)
