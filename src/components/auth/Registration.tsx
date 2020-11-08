@@ -161,6 +161,14 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         utm_content: urlParams.get('utm_content') || ''
       }
 
+      // Logic for setting Small Business or Enterprise
+      const campaignURL = '';
+      if(userInfo.companySize == '500+'){
+        campaignURL = 'enterprise1Ent'
+      } else {
+        campaignURL = 'enterprise1Small'
+      }
+
       const response = await axios({
         method: 'post',
         headers: {
@@ -169,7 +177,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         url: 'https://f1chjtarbg.execute-api.us-east-1.amazonaws.com/prod/integrate',
         data: {
           user: { ...userInfo, ...utmCampaignParams, createdAt: new Date().getTime(), status: 'Registered' },
-          event: 'enterprise'
+          event: campaignURL
         }
       })
       // Remove URL params
