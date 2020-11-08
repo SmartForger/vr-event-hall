@@ -49,6 +49,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
       foundQuestions.forEach((q: ISurveyQuestion) => {
         if (!questionMap.get(q.name)) {
           questionMap.set(q.name, q)
+          console.log(q)
         }
       })
       setSurveyQuestions(questionMap)
@@ -115,6 +116,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
                   fullWidth
                   className={classes.input}
                   multiline
+                  rows={qName === 'learningObjectives' ? 4 : 1}
                   id={`survey-answer-${qName}`}
                   variant='outlined'
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => answerSurveyQuestion(question, e.target.value)}
