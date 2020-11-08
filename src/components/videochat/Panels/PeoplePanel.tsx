@@ -248,25 +248,27 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
               <Typography variant='body1' component='p' align='center'>
                 {user.name}
               </Typography>
-              <div className={classes.moreButton}>
-                <IconButton onClick={handleClick}>
-                  <MoreHoriz />
-                </IconButton>
-                <Menu
-                  id={`${user.externalUserId}-menu`}
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  {!isPinned ? (
-                    <MenuItem onClick={() => handlePin(user.externalUserId || '')}>Pin Video</MenuItem>
-                  ) : (
-                    <MenuItem onClick={() => handleUnPin(user.externalUserId || '')}>Unpin Video</MenuItem>
-                  )}
-                  <MenuItem onClick={handleClose}>Cancel</MenuItem>
-                </Menu>
-              </div>
+              {isAdmin ? (
+                <div className={classes.moreButton}>
+                  <IconButton onClick={handleClick}>
+                    <MoreHoriz />
+                  </IconButton>
+                  <Menu
+                    id={`${user.externalUserId}-menu`}
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    {!isPinned ? (
+                      <MenuItem onClick={() => handlePin(user.externalUserId || '')}>Pin Video</MenuItem>
+                    ) : (
+                      <MenuItem onClick={() => handleUnPin(user.externalUserId || '')}>Unpin Video</MenuItem>
+                    )}
+                    <MenuItem onClick={handleClose}>Cancel</MenuItem>
+                  </Menu>
+                </div>
+              ) : null}
             </div>
           </div>
         ))}
