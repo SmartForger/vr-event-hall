@@ -12,13 +12,15 @@ import { QuestionDisabledIcon, QuestionIcon } from 'assets'
 interface MessageInputProps {
   userId: string
   internal?: boolean
+  conversationId: string
 }
 
-export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
+export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversationId }) => {
   const classes = useStyles()
   const { videoChatState } = useVideoChatContext()
   const [newMessage, setNewMessage] = useState<string>('')
   const [questionMode, setQuestionMode] = useState<boolean>(false)
+  const { chatState } = useChatContext()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage(event.target.value)
@@ -44,7 +46,7 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal }) => {
 
     const message: IMessageInput = {
       createdAt: new Date().toISOString(),
-      conversationId: videoChatState?.session?.conversationId || videoChatState?.conversationId,
+      conversationId: conversationId,
       content: newMessage,
       authorId: userId,
       deleted: 'false'

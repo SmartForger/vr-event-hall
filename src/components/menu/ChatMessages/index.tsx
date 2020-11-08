@@ -84,7 +84,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
   return (
     <div className={classes.root}>
       <MessageList listRef={listRef} messages={messages} />
-      <MessageInput userId={user?.id || ''} internal={internal} />
+      <MessageInput userId={user?.id || ''} internal={internal} conversationId={conversationId} />
     </div>
   )
 }
