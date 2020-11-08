@@ -95,7 +95,8 @@ export const HaveAQuestion: FC<HaveAQuestionProps> = ({ userEmail, setAuthState 
           }
           variant='outlined'
           inputProps={{
-            placeholder: 'Enter question'
+            placeholder: 'Enter question',
+            style: { border: 'none' }
           }}
         />
       </Grid>
