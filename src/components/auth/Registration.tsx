@@ -162,12 +162,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
       }
 
       // Logic for setting Small Business or Enterprise
-      const campaignURL = '';
-      if(userInfo.companySize == '500+'){
-        campaignURL = 'enterprise1Ent'
-      } else {
-        campaignURL = 'enterprise1Small'
-      }
+      const campaignURL = userInfo.companySize == '500+' ? 'enterprise1Ent' : 'enterprise1Small';
 
       const response = await axios({
         method: 'post',
