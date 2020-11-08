@@ -118,6 +118,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
                   rows={qName === 'learningObjectives' ? 4 : 1}
                   id={`survey-answer-${qName}`}
                   variant='outlined'
+                  inputProps={{ style: { border: 'none' } }}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => answerSurveyQuestion(question, e.target.value)}
                 />
               </Grid>
