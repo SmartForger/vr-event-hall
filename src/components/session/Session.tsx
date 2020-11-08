@@ -108,6 +108,10 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
                 {session.side.body}
               </Typography>
               <Box display='flex'>
+                <Button onClick={joinClassRoom} variant='outlined'>
+                  Join Session
+                </Button>
+                <Typography className={classes.availableSeatsMessage}>25 Seats Available</Typography>
                 <Button
                   startIcon={<ArrowBackIcon />}
                   onClick={() => {
@@ -115,9 +119,6 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
                   }}
                 >
                   Back
-                </Button>
-                <Button onClick={joinClassRoom} variant='outlined'>
-                  Join Session
                 </Button>
               </Box>
             </Grid>
@@ -141,15 +142,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiGrid-item': {
       padding: '3rem',
       position: 'fixed',
-      right: '32px',
+      right: '70px',
       top: '115px'
     },
     [theme.breakpoints.down('sm')]: {
-      height: 'auto'
+      height: 'auto',
+      '& .MuiGrid-item': {
+        right: '30px',
+        top: '65px'
+      }
     },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 740px)`]: {
       top: '55px'
     }
+  },
+  availableSeatsMessage: {
+    fontSize: '14px',
+    margin: '10px 30px 0 30px'
   },
   preEventVidPlaceholderImg: {
     width: '100%'
