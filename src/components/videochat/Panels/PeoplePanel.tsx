@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
-import { useAudioVideo, useMeetingManager, useRosterState } from 'amazon-chime-sdk-component-library-react'
+import { useAudioVideo, useMeetingManager } from 'amazon-chime-sdk-component-library-react'
 import { uniq } from 'lodash'
 import {
   Avatar,
@@ -26,6 +26,7 @@ import { ISubscriptionObject } from 'types'
 import { RaiseHandIcon } from 'assets'
 import { updateRaisedHand, updateSession } from 'graphql/mutations'
 import { useAppState, useVideoChatContext } from 'providers'
+import { useRosterState } from 'providers/RosterProvider'
 
 interface PeoplePanelProps {
   isAdmin?: boolean

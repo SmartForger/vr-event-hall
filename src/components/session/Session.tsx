@@ -55,16 +55,18 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
     }
 
     meetingManager.getAttendee = async (chimeAttendeeId: string, externalUserId?: string) => {
-      console.log('An attendee joined session')
       if (externalUserId) {
         const user = await graphQLQuery(getAttendeeInfo, 'getUser', { id: externalUserId })
 
         return {
           name: `${user.firstName} ${user.lastName}`,
-          avatar: user.avatar
+          email: user.email,
+          avatar: user.avatar,
+          title: user.title || '',
+          company: user.company || ''
         }
       }
-      return { name: '', avatar: '' }
+      return { name: '', avatar: '', email: '', title: '', company: '' }
     }
 
     await meetingManager.join(joinData)
