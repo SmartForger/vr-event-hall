@@ -125,6 +125,10 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     })
   }
 
+  const handleSubmit = e => {
+    e.preventDefault()
+  }
+
   const createNewUser = async () => {
     const lowerCaseEmail: string = userInfo.email?.toLowerCase() || ''
     try {
@@ -486,7 +490,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
 
   // registration - part 2 - company info
   const companyRegForm = (
-    <>
+    <form name='companyForm' onSubmit={handleSubmit} noValidate={true}>
       <Grid item>
         <Typography variant='h2' className={classes.heading} paragraph>
           <span dangerouslySetInnerHTML={{ __html: I18n.get('joinUs') }}></span>
@@ -631,7 +635,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           {I18n.get('continue')}
         </PillButton>
       </Grid>
-    </>
+    </form>
   )
 
   // this reg form is split into two sections, personal and company
