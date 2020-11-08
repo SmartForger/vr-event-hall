@@ -9,7 +9,8 @@ import {
   VideoGrid,
   VideoTile,
   useLocalVideo,
-  LocalVideo
+  LocalVideo,
+  useAudioVideo
 } from 'amazon-chime-sdk-component-library-react'
 import { Button, Drawer, makeStyles, Tab, Tabs, Toolbar, Typography } from '@material-ui/core'
 import { Modal } from '@mvrk-hq/vx360-components'
@@ -43,6 +44,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   const [userStarted, setUserStarted] = useState<boolean>(false)
 
   // Chime
+  const audioVideo = useAudioVideo()
   const { isVideoEnabled } = useLocalVideo()
   const { tiles, attendeeIdToTileId } = useRemoteVideoTileState()
   const { isLocalUserSharing, sharingAttendeeId } = useContentShareState()
@@ -131,6 +133,15 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
     // eslint-disable-next-line
   }, [roster, tiles])
 
+  useEffect(() => {
+    if (videoChatState?.session?.muted && !isPresenter && !isVideoPresenter) {
+      audioVideo?.realtimeSetCanUnmuteLocalAudio(false)
+      audioVideo?.realtimeMuteLocalAudio()
+    } else {
+      audioVideo?.realtimeSetCanUnmuteLocalAudio(true)
+    }
+  }, [videoChatState?.session?.muted])
+
   const getTileId = id => {
     const presenter = rosterArray.find(r => r.externalUserId === id)
     if (presenter && presenter.chimeAttendeeId) {
@@ -209,7 +220,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                       <ChatMessages />
                     </TabPanel>
                     <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
-                      <PeoplePanel isAdmin={true} sessionId={videoChatState.sessionId} />
+                      <PeoplePanel isAdmin={isPresenter} />
                     </TabPanel>
                     {isPresenter ? (
                       <TabPanel value={tabValue} index={2} className={classes.tabPanel}>

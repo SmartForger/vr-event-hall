@@ -203,7 +203,8 @@ type RaisedHand
     queries: { get: "getRaisedHand" }
     subscriptions: null
   )
-  @key(name: "bySessionByDate", fields: ["sessionId", "createdAt"], queryField: "raisedHandByDate") {
+  @key(name: "bySessionByDate", fields: ["sessionId", "createdAt"], queryField: "raisedHandByDate")
+  @key(name: "bySessionByDismissed", fields: ["sessionId", "dismissed"], queryField: "raisedHandByDismissed") {
   id: ID!
   userId: ID!
   sessionId: ID!
@@ -276,5 +277,6 @@ type Subscription {
   onCreateSessionQuestion(sessionId: ID!): SessionQuestion @aws_subscribe(mutations: ["createSessionQuestion"])
   onUpdateSessionQuestion(sessionId: ID!): SessionQuestion @aws_subscribe(mutations: ["updateSessionQuestion"])
   onCreateRaisedHand(sessionId: ID!): RaisedHand @aws_subscribe(mutations: ["createRaisedHand"])
+  onUpdateRaisedHand(sessionId: ID!): RaisedHand @aws_subscribe(mutations: ["updateRaisedHand"])
   onCreateGlobalRaisedHand: RaisedHand @aws_subscribe(mutations: ["createRaisedHand"])
 }

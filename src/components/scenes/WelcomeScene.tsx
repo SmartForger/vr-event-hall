@@ -87,7 +87,7 @@ export const WelcomeScene: FC<IWelcomeProps> = ({ user, setGameState, activeScen
             color='default'
             aria-label='close'
             onClick={() => {
-              setGameState(GameFlowSteps.Sessions)
+              setGameState(GameFlowSteps.Explore)
               setShowVideo(false)
             }}
           >
@@ -96,7 +96,7 @@ export const WelcomeScene: FC<IWelcomeProps> = ({ user, setGameState, activeScen
           <Video
             videoSrc={'https://d1oc551tl862q5.cloudfront.net/welcome-4.mp4'}
             onEnded={() => {
-              setGameState(GameFlowSteps.Sessions)
+              setGameState(GameFlowSteps.Explore)
               setShowVideo(false)
             }}
             autoPlay={true}

@@ -135,7 +135,7 @@ export const ToolsPanel = () => {
             {questions
               .filter(question => question.answered === 'false')
               .map(question => (
-                <ListItem className={classes.questionListItem}>
+                <ListItem className={classes.questionListItem} key={question.id}>
                   <section className={classes.userInfo}>
                     <Typography variant='subtitle1' className={classes.subtitle}>
                       {question?.user?.firstName} {question?.user?.lastName}
@@ -162,6 +162,7 @@ export const ToolsPanel = () => {
               square
               expanded={nestedExpanded === `poll${idx}`}
               onChange={handleNestedChange(`poll${idx}`)}
+              key={poll.id}
             >
               <NestedAccordionSummary aria-controls={`poll${idx}d-content`} id={`poll${idx}d-header`}>
                 <Typography className={classes.nestedTitle} variant='body1'>
