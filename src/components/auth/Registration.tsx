@@ -1,4 +1,4 @@
-import React, { FC, useState, ChangeEvent, useEffect } from 'react'
+import React, { FC, useState, FormEvent, ChangeEvent, useEffect } from 'react'
 import { I18n, Storage } from 'aws-amplify'
 import {
   TextField,
@@ -125,7 +125,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     })
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = (e: FormEvent<Element>) => {
     e.preventDefault()
   }
 
