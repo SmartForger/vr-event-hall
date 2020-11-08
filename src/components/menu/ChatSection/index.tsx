@@ -11,36 +11,31 @@ import {
   StyledChatSectionHeaderTitle
 } from './Styled'
 
+import { Channel } from './Channel'
+
 import { useChatContext } from 'providers/ChatProvider'
 import { IConversation, ISubscriptionObject, IUser, UserStatus } from 'types'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { listConversations, sessionByConversationId, getConversation } from 'graphql/queries'
 import { onUpdateSession } from 'graphql/subscriptions'
 
+export const sortBy = (list: any[], key: string) => {
+  return list.sort((a, b) => (a[key] > b[key] ? 1 : -1))
+}
+
 interface IChatChannels {
   title: string
   previewCount?: number
   conversationId: string
-}
-interface IChatChannel {
-  data: IConversation
-  openConversation: (id: string) => void
-}
-
-const Channel: FC<IChatChannel> = ({ data, openConversation }) => (
-  <StyledChannel onClick={() => openConversation(data.id)}>
-    <span>{data.name}</span>
-  </StyledChannel>
-)
-
-export const sortBy = (list: any[], key: string) => {
-  return list.sort((a, b) => (a[key] > b[key] ? 1 : -1))
 }
 
 export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversationId }) => {
   const classes = useStyles()
   const [expanded, setExpanded] = useState<boolean>(false)
   const { chatState, dispatch } = useChatContext()
+  const someUnread = Object.keys(chatState?.unreadMessagesByConversation)?.some?.(convoKey => {
+    return chatState?.unreadMessagesByConversation?.[convoKey] > 0
+  })
 
   let updateSessionSubscription = useRef<ISubscriptionObject | null>(null)
 
@@ -79,7 +74,10 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
   return (
     <StyledChatSection>
       <StyledChatSectionHeader>
-        <StyledChatSectionHeaderTitle>{title}</StyledChatSectionHeaderTitle>
+        <StyledChatSectionHeaderTitle>
+          <div className={classes.unreadIndicator}></div>
+          <span>{title}</span>
+        </StyledChatSectionHeaderTitle>
         {Number.isInteger(previewCount) && (
           <IconButton edge='end' size='small' color='inherit' onClick={() => setExpanded(!expanded)}>
             <ExpandMore
@@ -91,18 +89,24 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
         )}
       </StyledChatSectionHeader>
 
-      {chatState.conversations.slice(0, previewCount).map((data, index) => (
-        <StyledChatSectionItem key={`preview-${index}`}>
-          <Channel data={data} openConversation={openConversation} />
-        </StyledChatSectionItem>
-      ))}
+      {chatState.conversations.slice(0, previewCount).map((data, index) => {
+        const unreadInChannel = chatState.unreadMessagesByConversation[data.id] > 0
+        return (
+          <StyledChatSectionItem key={`expanded-${index}`}>
+            <Channel data={data} openConversation={openConversation} isUnread={unreadInChannel} />
+          </StyledChatSectionItem>
+        )
+      })}
 
       {Number.isInteger(previewCount) &&
-        chatState.conversations.slice(previewCount).map((data, index) => (
-          <StyledChatSectionItem key={`expanded-${index}`}>
-            <Channel data={data} openConversation={openConversation} />
-          </StyledChatSectionItem>
-        ))}
+        chatState.conversations.slice(previewCount).map((data, index) => {
+          const unreadInChannel = chatState.unreadMessagesByConversation[data.id] > 0
+          return (
+            <StyledChatSectionItem key={`expanded-${index}`}>
+              <Channel data={data} openConversation={openConversation} isUnread={unreadInChannel} />
+            </StyledChatSectionItem>
+          )
+        })}
     </StyledChatSection>
   )
 }
@@ -114,6 +118,16 @@ const useStyles = makeStyles(() =>
     },
     expanded: {
       transform: 'rotate(180deg)'
+    },
+    unreadIndicator: {
+      position: 'absolute',
+      borderRadius: '50% 50%',
+      marginLeft: '-12px',
+      background: 'red',
+      marginTop: '6px',
+      height: '8px',
+      width: '8px',
+      tranform: '200ms'
     }
   })
 )

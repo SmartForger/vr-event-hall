@@ -1,11 +1,16 @@
-import React, { FC } from 'react'
+import React, { FC, useRef, useEffect } from 'react'
 
 // Components
 import { MenuTooltip } from 'components'
 import { ChatSection } from '../ChatSection'
 import { StyledChat, StyledChatHeader, StyledChatSection } from './Styled'
-
 import { IUser } from 'types'
+
+import { ChatProvider, useChatContext } from 'providers'
+import { IConversation, ISubscriptionObject, UserStatus } from 'types'
+import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
+import { sessionByConversationId } from 'graphql/queries'
+import { onCreateGlobalMessageMin } from 'graphql/customSubscriptions'
 
 // Images
 import liveChatBubbleIcon from 'assets/liveChatBubbleIcon.svg'
@@ -20,6 +25,32 @@ interface ChatProps {
 }
 
 export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer }) => {
+  const { chatState, dispatch } = useChatContext()
+
+  let updateUnreadMessageSubscription = useRef<ISubscriptionObject | null>(null)
+
+  useEffect(() => {
+    setupUnreadSubscription()
+    return () => {
+      updateUnreadMessageSubscription?.current?.unsubscribe()
+    }
+  }, [])
+
+  const updateUnreadConversationMessages = ({ onCreateGlobalMessage }) => {
+    dispatch({
+      type: 'INCREMENT_UNREAD_CONVO_MESSAGE',
+      payload: { conversationId: onCreateGlobalMessage.conversationId }
+    })
+  }
+
+  const setupUnreadSubscription = async () => {
+    updateUnreadMessageSubscription.current = graphQLSubscription(
+      onCreateGlobalMessageMin,
+      {},
+      updateUnreadConversationMessages
+    )
+  }
+
   return (
     <>
       <StyledChat>

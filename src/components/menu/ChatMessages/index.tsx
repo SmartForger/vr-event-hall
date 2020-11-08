@@ -22,7 +22,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
     appState: { user }
   } = useAppState()
   const { videoChatState } = useVideoChatContext()
-  const { chatState } = useChatContext()
+  const { chatState, dispatch } = useChatContext()
 
   let [messages, setMessages] = useState<any>([])
   const listRef = useRef<VariableSizeProps>()
@@ -58,6 +58,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
   useEffect(() => {
     if (conversationId) {
       getConversationDetails()
+      dispatch({ type: 'CLEAR_UNREAD_CONVO_MESSAGE', payload: { conversationId } })
     }
     // eslint-disable-next-line
   }, [conversationId])
