@@ -212,7 +212,10 @@ export const getAttendeeInfo = /* GraphQL */ `
       id
       firstName
       lastName
+      email
       avatar
+      title
+      company
     }
   }
 `

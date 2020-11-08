@@ -154,6 +154,36 @@ declare module PROJECT {
 }
 declare module PROJECT {
     /**
+     * Babylon Script Component
+     * @class DebugInformation
+     */
+    class DebugInformation extends BABYLON.ScriptComponent {
+        private keys;
+        private show;
+        private popup;
+        private views;
+        private xbox;
+        private color;
+        constructor(transform: BABYLON.TransformNode, scene: BABYLON.Scene, properties?: any);
+        protected start(): void;
+        protected destroy(): void;
+    }
+}
+declare module PROJECT {
+    /**
+    * Babylon Script Component
+    * @class TestNavigationAgent
+    */
+    class TestNavigationAgent extends BABYLON.ScriptComponent {
+        protected m_playerAgent: BABYLON.NavigationAgent;
+        constructor(transform: BABYLON.TransformNode, scene: BABYLON.Scene, properties?: any);
+        protected start(): void;
+        protected doPointerCancel(): void;
+        protected doPointerDown(pointerInfo: BABYLON.PointerInfo): void;
+    }
+}
+declare module PROJECT {
+    /**
     * Babylon Script Component
     * @class UniversalPlayerController
     */

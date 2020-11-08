@@ -49,6 +49,7 @@ import { Demos } from '../helpers/demos'
 import { Alert } from '@material-ui/lab'
 import { incrementNotification } from '../redux/chat'
 import { VideoChatProvider } from 'providers'
+import { RosterProvider } from 'providers/RosterProvider'
 
 interface IModalConfig {
   videoSrc?: string
@@ -392,8 +393,9 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
                 user={user}
               />
             )}
-
-            <ClassRoomContainer />
+            <RosterProvider>
+              <ClassRoomContainer />
+            </RosterProvider>
 
             {/* Tutorial - First Step */}
             {!tutorialViewed && tutorialStep === ETutorialStep.welcome && (
