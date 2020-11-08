@@ -222,11 +222,31 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
                 autoPlay={autoPlay}
                 checkVideoTime={checkVideoTime}
               />
+              <Box display='flex' className={classes.contentActionBox}>
+                <Button
+                  startIcon={<ArrowBackIcon />}
+                  onClick={() => {
+                    setScene(GameFlowSteps.BackToExplore)
+                  }}
+                >
+                  Back
+                </Button>
+              </Box>
             </Grid>
           )}
           {displayPoll && demo.poll && (
             <Grid item xs={8} lg={9} className={classes.demoContainer}>
               <Poll poll={demo.poll} user={user} />
+              <Box display='flex' className={classes.contentActionBox}>
+                <Button
+                  startIcon={<ArrowBackIcon />}
+                  onClick={() => {
+                    setScene(GameFlowSteps.BackToExplore)
+                  }}
+                >
+                  Back
+                </Button>
+              </Box>
             </Grid>
           )}
           {activeTimestamp && !videoConcluded && (
@@ -587,6 +607,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiGrid-item': {
       padding: '5px 0'
     }
+  },
+  contentActionBox: {
+    marginTop: 27
   },
   transition: {
     opacity: 1,
