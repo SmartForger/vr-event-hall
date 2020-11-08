@@ -119,9 +119,6 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
                 </Button>
               </Box>
             </Grid>
-            <Grid item xs={7} className={classes.contentContainer}>
-              {session.video && <Video posterSrc={session.image || ''} videoSrc={`${assetUrl}${session.video}`} />}
-            </Grid>
           </Grid>
         </Container>
       )}
@@ -137,11 +134,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: '115px',
     display: 'flex',
     alignItems: 'center',
-    position: 'absolute',
     backgroundColor: 'transparent',
     color: '#000',
     '& .MuiGrid-item': {
-      padding: '3rem'
+      padding: '3rem',
+      position: 'fixed',
+      right: '32px',
+      top: '115px'
     },
     [theme.breakpoints.down('sm')]: {
       height: 'auto'
