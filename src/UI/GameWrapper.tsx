@@ -126,7 +126,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
     const welcomeSteps = [GameFlowSteps.Intro, GameFlowSteps.Welcome, GameFlowSteps.Connect]
     let newLocation = location
 
-    if ([GameFlowSteps.Sessions, GameFlowSteps.Explore].includes(location)) {
+    if ([GameFlowSteps.Sessions, GameFlowSteps.Explore, GameFlowSteps.Session].includes(location)) {
       window.postMessage(`{"command":"location", "param": "${location}"}`, '*')
     } else if (welcomeSteps.includes(prevGameState) && welcomeSteps.includes(location)) {
       setPrevGameState(location)
