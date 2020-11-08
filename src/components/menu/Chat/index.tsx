@@ -5,7 +5,6 @@ import { MenuTooltip } from 'components'
 import { ChatSection } from '../ChatSection'
 import { StyledChat, StyledChatHeader, StyledChatSection } from './Styled'
 
-import { ChatProvider } from 'providers'
 import { IUser } from 'types'
 
 // Images
@@ -22,7 +21,7 @@ interface ChatProps {
 
 export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer }) => {
   return (
-    <ChatProvider>
+    <>
       <StyledChat>
         <StyledChatHeader
           onClick={() => {
@@ -36,10 +35,15 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer }
         </StyledChatHeader>
 
         <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
-          <ChatSection title='Channels' previewCount={6} conversationId={conversationId} />
+          <ChatSection title='Channels' conversationId={conversationId} />
+        </StyledChatSection>
+
+        {/* TODO: This needs to be populated with user DMs */}
+        <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
+          <ChatSection title='Direct Messages' conversationId={conversationId} />
         </StyledChatSection>
       </StyledChat>
       <ChatDrawer />
-    </ChatProvider>
+    </>
   )
 }

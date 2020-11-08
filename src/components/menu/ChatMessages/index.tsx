@@ -6,21 +6,23 @@ import { MessageInput } from './MessageInput'
 import { MessageList } from './MessageList'
 
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
-import { useAppState, useVideoChatContext } from 'providers'
+import { useAppState, useVideoChatContext, useChatContext } from 'providers'
 import { ISubscriptionObject } from 'types'
 import { getConversationFiltered } from 'graphql/customQueries'
 import { onCreateMessageWithAuthor, onUpdateMessageWithAuthor } from 'graphql/customSubscriptions'
 
 interface ChatMessagesProps {
   internal?: boolean
+  videoChat?: boolean
 }
 
-export const ChatMessages: FC<ChatMessagesProps> = ({ internal }) => {
+export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => {
   const classes = useStyles()
   const {
     appState: { user }
   } = useAppState()
   const { videoChatState } = useVideoChatContext()
+  const { chatState } = useChatContext()
 
   let [messages, setMessages] = useState<any>([])
   const listRef = useRef<VariableSizeProps>()
@@ -38,31 +40,27 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal }) => {
     }
   }
 
+  // get the conversation id based on the correct context
+  const conversationId = videoChat
+    ? videoChatState?.session?.conversationId || videoChatState?.conversationId
+    : chatState?.conversationId
   const getConversationDetails = async () => {
     const conversation = await graphQLQuery(getConversationFiltered, 'getConversation', {
-      id: videoChatState?.session?.conversationId || videoChatState.conversationId
+      id: conversationId
     })
     setMessages(conversation.messages.items.filter(message => message.deleted !== 'true'))
 
-    subscription.current = graphQLSubscription(
-      onCreateMessageWithAuthor,
-      { conversationId: videoChatState?.session?.conversationId || videoChatState.conversationId },
-      addNewMessage
-    )
+    subscription.current = graphQLSubscription(onCreateMessageWithAuthor, { conversationId }, addNewMessage)
 
-    updateSubscription.current = graphQLSubscription(
-      onUpdateMessageWithAuthor,
-      { conversationId: videoChatState?.session?.conversationId || videoChatState.conversationId },
-      messageUpdated
-    )
+    updateSubscription.current = graphQLSubscription(onUpdateMessageWithAuthor, { conversationId }, messageUpdated)
   }
 
   useEffect(() => {
-    if (videoChatState?.session?.conversationId || videoChatState.conversationId) {
+    if (conversationId) {
       getConversationDetails()
     }
     // eslint-disable-next-line
-  }, [videoChatState?.session?.conversationId || videoChatState.conversationId])
+  }, [conversationId])
 
   useEffect(() => {
     if (messages.length > 0) {

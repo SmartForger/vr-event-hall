@@ -217,7 +217,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                       </Tabs>
                     </Toolbar>
                     <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
-                      <ChatMessages />
+                      <ChatMessages videoChat={true} />
                     </TabPanel>
                     <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
                       <PeoplePanel isAdmin={isPresenter} />

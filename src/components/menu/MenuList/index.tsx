@@ -20,7 +20,7 @@ import {
 import homeIcon from 'assets/homeIcon.svg'
 import demoTvIcon from 'assets/demoTvIcon.svg'
 import mailIcon from 'assets/mailIcon.svg'
-import sessionIcon from 'assets/sessionIcon.svg'
+import sessionIcon from 'assets/breakout.svg'
 import infoIcon from 'assets/infoIcon.svg'
 import supportIcon from 'assets/supportIcon.svg'
 
@@ -54,14 +54,6 @@ export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState }) 
           </MenuTooltip>
           Welcome
         </StyledMenuListItem>
-        <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Sessions)}>
-          <MenuTooltip drawerOpen={drawerOpen} title='Sessions' placement='left'>
-            <StyledMenuListIcon>
-              <img src={sessionIcon} alt='Session icon' width='19' />
-            </StyledMenuListIcon>
-          </MenuTooltip>
-          Sessions
-        </StyledMenuListItem>
         <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Explore)}>
           <MenuTooltip drawerOpen={drawerOpen} title='Explore' placement='left'>
             <StyledMenuListIcon>
@@ -69,6 +61,14 @@ export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState }) 
             </StyledMenuListIcon>
           </MenuTooltip>
           Explore
+        </StyledMenuListItem>
+        <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Sessions)}>
+          <MenuTooltip drawerOpen={drawerOpen} title='Sessions' placement='left'>
+            <StyledMenuListIcon>
+              <img src={sessionIcon} alt='Session icon' width='19' />
+            </StyledMenuListIcon>
+          </MenuTooltip>
+          Breakout Sessions
         </StyledMenuListItem>
         <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Connect)}>
           <MenuTooltip drawerOpen={drawerOpen} title='Connect' placement='left'>
@@ -85,6 +85,14 @@ export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState }) 
             </StyledMenuListIcon>
           </MenuTooltip>
           About the event
+        </StyledMenuListItem>
+        <StyledMenuListItem onClick={() => window.postMessage('{"command":"support"}', '*')}>
+          <MenuTooltip drawerOpen={drawerOpen} title='Support' placement='left'>
+            <StyledMenuListIcon>
+              <img src={supportIcon} alt='Support icon' width='19' />
+            </StyledMenuListIcon>
+          </MenuTooltip>
+          Support
         </StyledMenuListItem>
       </StyledMenuList>
     </StyledOpenRightDrawer>

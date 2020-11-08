@@ -54,7 +54,7 @@ export const ChatDrawer = () => {
           </Tabs>
         </Toolbar>
         <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
-          <ChatMessages />
+          <ChatMessages videoChat={false} />
         </TabPanel>
         <TabPanel value={tabValue} index={1} className={classes.tabPanel}>
           <DetailsPanel />
