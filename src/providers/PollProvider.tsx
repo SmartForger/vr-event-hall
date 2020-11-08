@@ -1,5 +1,5 @@
 import React, { useReducer, createContext, Dispatch, useContext } from 'react'
-import { IAskedPollQuestion, EPollDisplayMode } from 'types'
+import { IAskedPollQuestion, EPollDisplayMode, IPollAnswerResults } from 'types'
 
 // export enum UserAdminType {
 //   PRESENTER = 'presenter',
@@ -11,21 +11,22 @@ interface IPollContextObject {
   question: Partial<IAskedPollQuestion>
   answerChoice: string
   loading: boolean
-  pollQuestionId: string
-  pollOpen: boolean
+  questionId: string
+  open: boolean
+  results?: IPollAnswerResults
   mode: EPollDisplayMode
-  pollMsRemaining: number
+  msRemaining: number
   // userType: UserAdminType
 }
 
 const initialState: IPollContextObject = {
   loading: false,
-  pollQuestionId: '',
+  questionId: '',
   question: {},
   answerChoice: '',
   mode: EPollDisplayMode.question,
-  pollOpen: false,
-  pollMsRemaining: 30000 // 30 seconds
+  open: false,
+  msRemaining: 30000 // 30 seconds
   // userType: UserAdminType.GUEST,
 }
 
@@ -67,7 +68,7 @@ const reducer = (state, action) => {
     case 'SET_RESULTS':
       return {
         ...state,
-        answerChoice: action.payload
+        results: action.payload
       }
     case 'SET_RESULTS':
       return {
