@@ -4,15 +4,28 @@ import { HighlightOff } from '@material-ui/icons'
 
 import { MuteIcon } from 'assets'
 import { IUser } from 'types'
+import { useAttendeeAudioStatus } from 'amazon-chime-sdk-component-library-react'
 
 interface UserAvatarCardProps {
   user: IUser
   isRaisedHand?: boolean
   onClick?: () => void
+  handleMute?: (muted: boolean) => void
+  handleDismiss?: () => void
+  attendeeId?: string
 }
 
-export const UserAvatarCard: FC<UserAvatarCardProps> = ({ user, isRaisedHand = false, onClick }) => {
+export const UserAvatarCard: FC<UserAvatarCardProps> = ({
+  user,
+  isRaisedHand = false,
+  onClick,
+  handleMute,
+  handleDismiss,
+  attendeeId = ''
+}) => {
   const classes = useStyles()
+  const { muted } = useAttendeeAudioStatus(attendeeId)
+
   return (
     <div className={`${classes.user} ${onClick ? classes.click : ''}`} {...(onClick ? { onClick } : {})}>
       <Avatar
@@ -27,10 +40,13 @@ export const UserAvatarCard: FC<UserAvatarCardProps> = ({ user, isRaisedHand = f
         </Typography>
         {isRaisedHand ? (
           <Box flex={1} display='flex' justifyContent='flex-end' alignItems='center'>
-            <IconButton className={classes.muteIcon}>
-              <MuteIcon />
+            <IconButton
+              className={`${classes.muteIcon} ${muted ? classes.redMute : ''}`}
+              onClick={() => handleMute && handleMute(muted)}
+            >
+              <MuteIcon fill={muted ? '#fff' : '#000'} />
             </IconButton>
-            <IconButton className={classes.dismissIcon}>
+            <IconButton className={classes.dismissIcon} onClick={handleDismiss}>
               <HighlightOff />
             </IconButton>
           </Box>
@@ -76,6 +92,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid black',
     height: 23,
     width: 23
+  },
+  redMute: {
+    backgroundColor: 'red',
+    border: '1px solid white'
   },
   dismissIcon: {
     padding: 6

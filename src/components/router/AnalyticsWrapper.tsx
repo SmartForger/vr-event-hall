@@ -24,7 +24,6 @@ export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, u
       </Route>
       <UserAuthenticatedRoutes user={user} setUser={setUser}>
         <Route exact path='/event'>
-          <Header />
           <GameWrapper user={user} eventStage={eventStage} streamStartTime={streamStartTime} />
         </Route>
       </UserAuthenticatedRoutes>
