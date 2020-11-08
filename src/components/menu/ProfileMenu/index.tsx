@@ -50,7 +50,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({ user, drawerOpen, toggleDraw
         }}
       >
         <>
-          <header className={classes.header}>
+          <header id='profileDrawer' className={classes.header}>
             {drawerOpen ? (
               <img src={verizonLogo} alt='Verizon' width='150' />
             ) : (

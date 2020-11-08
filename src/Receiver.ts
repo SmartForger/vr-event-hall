@@ -201,6 +201,8 @@ export default class Receiver {
             case 'location':
               activeScene = JSONdata!.param
               break
+            case 'tutorial':
+              break
             default:
               return
           }

@@ -23,7 +23,8 @@ import {
   ProfileMenu,
   SceneWrapper,
   Support,
-  Tutorial
+  Tutorial,
+  IntroTutorial
 } from 'components'
 import { ToastAlert, Video } from 'components/shared'
 import { graphQLSubscription } from 'graphql/helpers'
@@ -32,7 +33,7 @@ import { onCreateNotification } from 'graphql/subscriptions'
 import Receiver from '../Receiver'
 
 // Helpers
-import { ISession, Sessions, tutorialSteps } from '../helpers'
+import { ISession, Sessions, tutorialSteps, introTutorialSteps, sessionTutorialSteps } from '../helpers'
 import { GameFlowStepsConfig } from '../helpers/steps'
 import {
   ETouchpoints,
@@ -49,6 +50,8 @@ import { Demos } from '../helpers/demos'
 import { Alert } from '@material-ui/lab'
 import { incrementNotification } from '../redux/chat'
 import { VideoChatProvider } from 'providers'
+import { JoyrideTutorialStyles } from '../components/shared/tutorial/JoyrideTutorialStyles'
+import { useBrowserCache } from '../hooks'
 
 interface IModalConfig {
   videoSrc?: string
@@ -64,12 +67,6 @@ interface GameWrapperProps {
   users?: IUser[]
   eventStage?: EventStages
   streamStartTime?: string
-}
-
-enum ETutorialStep {
-  welcome = 'welcome',
-  menu = 'menu',
-  countdown = 'countdown'
 }
 
 export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStage, streamStartTime }) => {
@@ -88,11 +85,8 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   const [activeNotice, setActiveNotice] = useState<INoticeConfig>({})
   let noticeSubscription = useRef<ISubscriptionObject | null>(null)
 
-  const [tutorialViewed, setTutorialViewed] = useState<boolean>(!!Cache.getItem('event-tutorial-dismissed'))
-  const [tutorialStep, setTutorialStep] = useState<ETutorialStep>(ETutorialStep.welcome)
-  // const [showTutorial, setShowTutorial] = useState<boolean>(
-  //   localStorageTutorialEnabled ? localStorageTutorialEnabled === 'true' : true
-  // )
+  const [tutorialViewed, updateCache] = useBrowserCache('event-tutorial-dismissed')
+  const [showTutorial, setShowTutorial] = useState<boolean>(!tutorialViewed)
   const [stepsEnabled, setStepsEnabled] = useState<boolean>(false)
   const [scene, setScene] = useState<Scene>()
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -118,7 +112,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   const [infoMessage, setInfoMessage] = useState<string | null>(null)
 
   // set the tutorial as viewed for next visit
-  Cache.setItem('event-tutorial-dismissed', true)
+  // Cache.setItem('event-tutorial-dismissed', false)
   const handleToggleDrawer = () => dispatch(toggleDrawer(!drawerOpen))
 
   const goto3Dlocation = location => {
@@ -156,6 +150,8 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
 
   const onSceneSetup = () => {
     setScene((window as any)['scene'])
+    console.log(tutorialViewed)
+    // setTutorialViewed(false)
   }
 
   const toggleTutorial = (bool: boolean) => {
@@ -395,61 +391,12 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
 
             <ClassRoomContainer />
 
-            {/* Tutorial - First Step */}
-            {!tutorialViewed && tutorialStep === ETutorialStep.welcome && (
-              <ToastAlert type='notice' isOpen={!!activeNotice?.type} onClose={() => setActiveNotice({})}>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <Typography variant='h5' paragraph classes={{ root: classes.toastESSTitle }}>
-                      Welcome to 5G: Innovation Sessions, <span>{user?.firstName}</span>.
-                    </Typography>
-                    <Typography component='p' paragraph classes={{ root: classes.toastESSTitle }}>
-                      Get to know how to make the most of your experience with us.
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <PillButton
-                      type='button'
-                      className='button'
-                      variant='outlined'
-                      textColor='white'
-                      backgroundColor='black'
-                      onClick={() => noticeButtonClick()}
-                      classes={{ root: classes.toastESSButton }}
-                    >
-                      Next
-                    </PillButton>
-                  </Grid>
-                </Grid>
-              </ToastAlert>
-            )}
-
-            {/* Tutorial - Second Step */}
-            <ToastAlert type='notice' isOpen={!!activeNotice?.type} onClose={() => setActiveNotice({})}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography variant='h5' paragraph classes={{ root: classes.toastESSTitle }}>
-                    Welcome to 5G: Innovation Sessions, <span>{user?.firstName}</span>.
-                  </Typography>
-                  <Typography component='p' paragraph classes={{ root: classes.toastESSTitle }}>
-                    Get to know how to make the most of your experience with us.
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <PillButton
-                    type='button'
-                    className='button'
-                    variant='outlined'
-                    textColor='white'
-                    backgroundColor='black'
-                    onClick={() => noticeButtonClick()}
-                    classes={{ root: classes.toastESSButton }}
-                  >
-                    {activeNotice?.button}
-                  </PillButton>
-                </Grid>
-              </Grid>
-            </ToastAlert>
+            <IntroTutorial
+              run={showTutorial}
+              steps={introTutorialSteps(user)}
+              onClose={() => updateCache(true)}
+              styles={JoyrideTutorialStyles}
+            />
 
             {/* Toast for Notice */}
             <ToastAlert type='notice' isOpen={!!activeNotice?.type} onClose={() => setActiveNotice({})}>

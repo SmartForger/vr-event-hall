@@ -86,6 +86,14 @@ export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState }) 
           </MenuTooltip>
           About the event
         </StyledMenuListItem>
+        <StyledMenuListItem onClick={() => window.postMessage('{"command":"tutorial"}', '*')}>
+          <MenuTooltip drawerOpen={drawerOpen} title='Tutorial' placement='left'>
+            <StyledMenuListIcon>
+              <img src={infoIcon} alt='Info icon' width='19' />
+            </StyledMenuListIcon>
+          </MenuTooltip>
+          About the event
+        </StyledMenuListItem>
       </StyledMenuList>
     </StyledOpenRightDrawer>
   )
