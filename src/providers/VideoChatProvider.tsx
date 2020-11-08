@@ -4,6 +4,7 @@ import { UserAdminType } from './ChatProvider'
 
 interface IVideoChatContextObject {
   meetingId: string
+  attendeeId: string
   loading: boolean
   error: Error | null
   visible: boolean
@@ -22,6 +23,7 @@ interface IVideoChatContextObject {
 
 const initialState = {
   meetingId: 'bc6d2bb4-4d33-42e2-8fcb-96acb469830e',
+  attendeeId: '',
   loading: false,
   error: null,
   visible: false,

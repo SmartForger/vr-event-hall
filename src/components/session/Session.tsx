@@ -68,7 +68,15 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
     }
 
     await meetingManager.join(joinData)
-    dispatch({ type: 'SET_DETAILS', payload: { visible: true, isClassroom: true } })
+    dispatch({
+      type: 'SET_DETAILS',
+      payload: {
+        visible: true,
+        isClassroom: true,
+        attendeeId: attendee.Attendee.AttendeeId,
+        meetingId: meeting.Meeting.MeetingId
+      }
+    })
   }
 
   return (

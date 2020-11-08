@@ -551,6 +551,48 @@ export const onCreateRaisedHand = /* GraphQL */ `
     }
   }
 `
+export const onUpdateRaisedHand = /* GraphQL */ `
+  subscription OnUpdateRaisedHand($sessionId: ID!) {
+    onUpdateRaisedHand(sessionId: $sessionId) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dismissed
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const onCreateGlobalRaisedHand = /* GraphQL */ `
   subscription OnCreateGlobalRaisedHand {
     onCreateGlobalRaisedHand {

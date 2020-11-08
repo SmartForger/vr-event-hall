@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
-import { useRosterState } from 'amazon-chime-sdk-component-library-react'
+import { useAudioVideo, useMeetingManager, useRosterState } from 'amazon-chime-sdk-component-library-react'
 import { uniq } from 'lodash'
 import {
   Avatar,
@@ -19,50 +19,75 @@ import { MoreHoriz } from '@material-ui/icons'
 import { UserAvatarCard } from 'components'
 
 import { graphQLMutation, graphQLQuery, graphQLSubscription } from 'graphql/helpers'
-import { getSessionRaisedHands } from 'graphql/customQueries'
-import { onCreateRaisedHand } from 'graphql/subscriptions'
+import { getRaisedHandsByDismissed } from 'graphql/customQueries'
+import { onCreateRaisedHand, onUpdateRaisedHand } from 'graphql/subscriptions'
 import { ISubscriptionObject } from 'types'
 
 import { RaiseHandIcon } from 'assets'
-import { updateSession } from 'graphql/mutations'
+import { updateRaisedHand, updateSession } from 'graphql/mutations'
 import { useAppState, useVideoChatContext } from 'providers'
 
 interface PeoplePanelProps {
   isAdmin?: boolean
-  sessionId?: string
 }
 
-export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin, sessionId }) => {
+export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
   const classes = useStyles()
   const {
     appState: { user }
   } = useAppState()
+  const meetingManeger = useMeetingManager()
   const { videoChatState } = useVideoChatContext()
   const { roster } = useRosterState()
+  const audioVideo = useAudioVideo()
   const rosterArray = Object.values(roster)
   const [raisedHands, setRaisedHands] = useState<any>([])
   const [anchorEl, setAnchorEl] = React.useState(null)
 
   const isPinned = videoChatState?.session?.presenterPins.some(pin => pin === user?.id)
 
-  let subscription = useRef<ISubscriptionObject | null>(null)
+  let createSubscription = useRef<ISubscriptionObject | null>(null)
+  let updateSubscription = useRef<ISubscriptionObject | null>(null)
 
-  const updateRaisedHands = ({ onCreateRaisedHand }) => {
+  const raisedHandCreated = ({ onCreateRaisedHand }) => {
     setRaisedHands(prevHands => [...prevHands, onCreateRaisedHand])
   }
 
-  const getRaisedHands = async () => {
-    const currentRaisedHands = await graphQLQuery(getSessionRaisedHands, 'getSession', { id: sessionId })
-    setRaisedHands(currentRaisedHands.raisedHands.items)
+  const raisedHandUpdated = ({ onUpdateRaisedHand }) => {
+    if (onUpdateRaisedHand.dismissed === 'true') {
+      setRaisedHands(prevRaisedHands => prevRaisedHands.filter(r => r.id !== onUpdateRaisedHand.id))
+    }
+  }
 
-    subscription.current = graphQLSubscription(onCreateRaisedHand, { sessionId }, updateRaisedHands)
+  const getRaisedHands = async () => {
+    const currentRaisedHands = await graphQLQuery(getRaisedHandsByDismissed, 'raisedHandByDismissed', {
+      sessionId: videoChatState?.session?.id,
+      dismissed: { eq: 'false' }
+    })
+    setRaisedHands(currentRaisedHands)
+
+    createSubscription.current = graphQLSubscription(
+      onCreateRaisedHand,
+      { sessionId: videoChatState?.session?.id },
+      raisedHandCreated
+    )
+    updateSubscription.current = graphQLSubscription(
+      onUpdateRaisedHand,
+      { sessionId: videoChatState?.session?.id },
+      raisedHandUpdated
+    )
   }
 
   useEffect(() => {
-    if (sessionId) {
+    if (videoChatState?.session?.id) {
       getRaisedHands()
     }
-  }, [sessionId])
+
+    return () => {
+      createSubscription.current?.unsubscribe()
+      updateSubscription.current?.unsubscribe()
+    }
+  }, [videoChatState?.session?.id])
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -71,7 +96,7 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin, sessionId }) => {
   const handlePin = async (userId: string) => {
     if (userId) {
       await graphQLMutation(updateSession, {
-        id: videoChatState.sessionId,
+        id: videoChatState?.session?.id,
         presenterPins: uniq([...(videoChatState?.session?.presenterPins || []), userId])
       })
     }
@@ -81,7 +106,7 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin, sessionId }) => {
   const handleUnPin = async (userId: string) => {
     if (userId) {
       await graphQLMutation(updateSession, {
-        id: videoChatState.sessionId,
+        id: videoChatState?.session?.id,
         presenterPins: videoChatState?.session?.presenterPins.filter(pin => pin !== userId)
       })
     }
@@ -91,6 +116,35 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin, sessionId }) => {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  const toggleUserMute = (userId: string, muted: boolean) => {
+    audioVideo?.realtimeSendDataMessage('TOGGLE_PLAYER_MUTE', {
+      userId: userId as string,
+      muted
+    })
+  }
+
+  const dismissHand = async (handId: string) => {
+    await graphQLMutation(updateRaisedHand, { id: handId, dismissed: 'true' })
+  }
+
+  useEffect(() => {
+    audioVideo?.realtimeSubscribeToReceiveDataMessage('TOGGLE_PLAYER_MUTE', data => {
+      const muteInfo = data.json()
+      if (muteInfo.userId === user?.id) {
+        // initially toggle whether they can control it
+        audioVideo?.realtimeSetCanUnmuteLocalAudio(!muteInfo.muted)
+        if (muteInfo.muted) {
+          // if muted is true then we also toggle the mute to on
+          audioVideo?.realtimeMuteLocalAudio()
+        }
+      }
+    })
+
+    return () => {
+      audioVideo?.realtimeUnsubscribeFromReceiveDataMessage('TOGGLE_PLAYER_MUTE')
+    }
+  }, [audioVideo])
 
   return (
     <>
@@ -111,11 +165,21 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin, sessionId }) => {
           </Box>
           <Box>
             <List className={classes.handsList}>
-              {raisedHands.map(hand => (
-                <ListItem disableGutters>
-                  <UserAvatarCard user={hand.user} isRaisedHand />
-                </ListItem>
-              ))}
+              {raisedHands.map(hand => {
+                const rosterUser = rosterArray.find(r => r.externalUserId === hand.userId)
+                const attendeeId = rosterUser?.chimeAttendeeId
+                return (
+                  <ListItem disableGutters key={hand.user.id}>
+                    <UserAvatarCard
+                      user={hand.user}
+                      isRaisedHand
+                      handleMute={muted => toggleUserMute(hand.userId, muted)}
+                      attendeeId={attendeeId}
+                      handleDismiss={() => dismissHand(hand.id)}
+                    />
+                  </ListItem>
+                )
+              })}
             </List>
             {
               <Box display='flex' justifyContent='center' alignItems='center' marginBottom={2}>
@@ -184,25 +248,27 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin, sessionId }) => {
               <Typography variant='body1' component='p' align='center'>
                 {user.name}
               </Typography>
-              <div className={classes.moreButton}>
-                <IconButton onClick={handleClick}>
-                  <MoreHoriz />
-                </IconButton>
-                <Menu
-                  id={`${user.externalUserId}-menu`}
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  {!isPinned ? (
-                    <MenuItem onClick={() => handlePin(user.externalUserId || '')}>Pin Video</MenuItem>
-                  ) : (
-                    <MenuItem onClick={() => handleUnPin(user.externalUserId || '')}>Unpin Video</MenuItem>
-                  )}
-                  <MenuItem onClick={handleClose}>Cancel</MenuItem>
-                </Menu>
-              </div>
+              {isAdmin ? (
+                <div className={classes.moreButton}>
+                  <IconButton onClick={handleClick}>
+                    <MoreHoriz />
+                  </IconButton>
+                  <Menu
+                    id={`${user.externalUserId}-menu`}
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    {!isPinned ? (
+                      <MenuItem onClick={() => handlePin(user.externalUserId || '')}>Pin Video</MenuItem>
+                    ) : (
+                      <MenuItem onClick={() => handleUnPin(user.externalUserId || '')}>Unpin Video</MenuItem>
+                    )}
+                    <MenuItem onClick={handleClose}>Cancel</MenuItem>
+                  </Menu>
+                </div>
+              ) : null}
             </div>
           </div>
         ))}
