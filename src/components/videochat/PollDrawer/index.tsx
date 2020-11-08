@@ -25,7 +25,7 @@ import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/help
 import { getSessionPolls } from 'graphql/customQueries'
 import { createPollAnswer } from 'graphql/mutations'
 import { onUpdateSessionPoll } from 'graphql/subscriptions'
-import { ISubscriptionObject, IAskedPollQuestion } from 'types'
+import { ISubscriptionObject, IAskedPollQuestion, EPollDisplayMode } from 'types'
 
 interface PollDrawerProps {}
 
@@ -43,7 +43,7 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
       console.log(onUpdateSessionPoll)
 
       dispatch({
-        type: 'SET_QUESTION',
+        type: 'SET_POLL',
         payload: {
           question: onUpdateSessionPoll,
           pollOpen: true
@@ -56,7 +56,7 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
     videoChatState.session?.polls?.items?.some?.(q => {
       if (q.active === 'true') {
         // set the found active questino as the poll provider's active question
-        dispatch({ type: 'SET_QUESTION', payload: { question: q, pollOpen: true } })
+        dispatch({ type: 'SET_POLL', payload: { question: q, pollOpen: true } })
         return true
       }
     })
@@ -82,7 +82,7 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
 
   const closePoll = () => {
     dispatch({
-      type: 'SET_QUESTION',
+      type: 'SET_POLL',
       payload: {
         question: {},
         pollOpen: false
@@ -99,6 +99,44 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
     closePoll()
   }
 
+  const pollQuestionDisplay = (
+    <>
+      <Typography variant='subtitle1'>{pollState?.question?.question}</Typography>
+      <RadioButtons
+        value={pollState.answerChoice}
+        handleChange={handlePollResponse}
+        options={{
+          optionA: pollState?.question?.optionA,
+          optionB: pollState?.question?.optionB,
+          optionC: pollState?.question?.optionC,
+          optionD: pollState?.question?.optionD
+        }}
+      />
+      <Button className={classes.pollSubmit} disabled={!pollState.answerChoice} onClick={() => submitQuestionAnswer()}>
+        Submit
+      </Button>
+    </>
+  )
+
+  const pollResultDisplay = (
+    <>
+      <Typography variant='subtitle1'>{pollState?.question?.question}</Typography>
+      <RadioButtons
+        value={pollState.answerChoice}
+        handleChange={handlePollResponse}
+        options={{
+          optionA: pollState?.question?.optionA,
+          optionB: pollState?.question?.optionB,
+          optionC: pollState?.question?.optionC,
+          optionD: pollState?.question?.optionD
+        }}
+      />
+      <Button className={classes.pollSubmit} disabled={!pollState.answerChoice} onClick={() => submitQuestionAnswer()}>
+        Submit
+      </Button>
+    </>
+  )
+
   return (
     <Drawer
       anchor='bottom'
@@ -114,24 +152,7 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
         <CountdownTimer totalTime={30} onCountdownEnd={() => closePoll()} />
       </div>
       <div className={classes.pollContent}>
-        <Typography variant='subtitle1'>{pollState?.question?.question}</Typography>
-        <RadioButtons
-          value={pollState.answerChoice}
-          handleChange={handlePollResponse}
-          options={{
-            optionA: pollState?.question?.optionA,
-            optionB: pollState?.question?.optionB,
-            optionC: pollState?.question?.optionC,
-            optionD: pollState?.question?.optionD
-          }}
-        />
-        <Button
-          className={classes.pollSubmit}
-          disabled={!pollState.answerChoice}
-          onClick={() => submitQuestionAnswer()}
-        >
-          Submit
-        </Button>
+        {pollState.mode === EPollDisplayMode.question ? pollQuestionDisplay : pollResultDisplay}
       </div>
     </Drawer>
   )
