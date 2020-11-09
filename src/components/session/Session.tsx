@@ -92,6 +92,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
 
   const isSessionAdmin = sessionDetails.admins?.items.some(u => u.userId === user?.id)
   const sessionActive = sessionDetails.active === 'true'
+  const availableSeats = 200 - (sessionDetails.users?.items.length || 0)
 
   return (
     <>
@@ -121,11 +122,11 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
               </Typography>
               <Box display='flex'>
                 {(isSessionAdmin || sessionActive) && (
-                  <Button onClick={joinClassRoom} variant='outlined'>
+                  <Button onClick={joinClassRoom} variant='outlined' disabled={availableSeats < 1}>
                     Join Session
                   </Button>
                 )}
-                <Typography className={classes.availableSeatsMessage}>25 Seats Available</Typography>
+                <Typography className={classes.availableSeatsMessage}>{availableSeats} Seats Available</Typography>
                 <Button
                   startIcon={<ArrowBackIcon />}
                   onClick={() => {
