@@ -53,6 +53,7 @@ import { VideoChatProvider } from 'providers'
 import { JoyrideTutorialStyles } from '../components/shared/tutorial/JoyrideTutorialStyles'
 import { useBrowserCache } from '../hooks'
 import { RosterProvider } from 'providers/RosterProvider'
+import { VideoChatContainer } from 'components/videochat/VideoChatContainer'
 
 interface IModalConfig {
   videoSrc?: string
@@ -392,6 +393,8 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
             <RosterProvider>
               <ClassRoomContainer />
             </RosterProvider>
+
+            <VideoChatContainer />
 
             {!tutorialViewedLoading && (
               <IntroTutorial

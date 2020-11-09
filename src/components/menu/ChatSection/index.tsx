@@ -19,6 +19,9 @@ import { IConversation, ISubscriptionObject, IUser, UserStatus } from 'types'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { listConversations, sessionByConversationId, getConversation } from 'graphql/queries'
 import { onUpdateSession } from 'graphql/subscriptions'
+import { DirectMessage } from './DirectMessage'
+import { useAppState } from 'providers'
+import { getConversationWithAssociated } from 'graphql/customQueries'
 
 export const sortBy = (list: any[], key: string) => {
   return list.sort((a, b) => (a[key] > b[key] ? 1 : -1))
@@ -27,11 +30,15 @@ export const sortBy = (list: any[], key: string) => {
 interface IChatChannels {
   title: string
   previewCount?: number
-  conversationId: string
+  conversationId?: string
+  isDirectMessage?: boolean
 }
 
-export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversationId }) => {
+export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversationId, isDirectMessage }) => {
   const classes = useStyles()
+  const {
+    appState: { user }
+  } = useAppState()
   const [expanded, setExpanded] = useState<boolean>(false)
   const { chatState, dispatch } = useChatContext()
 
@@ -39,7 +46,13 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
 
   const getConversationList = async () => {
     const conversations = await graphQLQuery(listConversations, 'listConversations')
-    dispatch({ type: 'SET_CONVERSATIONS', payload: sortBy(conversations, 'createdAt') })
+    dispatch({
+      type: 'SET_CONVERSATIONS',
+      payload: sortBy(
+        conversations.filter(c => c.members.length === 0),
+        'createdAt'
+      )
+    })
   }
 
   useEffect(() => {
@@ -58,7 +71,7 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
 
   const openConversation = async (conversationId: string) => {
     dispatch({ type: 'SET_DETAILS', payload: { conversationId, conversationOpen: true } })
-    const conversation = await graphQLQuery(getConversation, 'getConversation', { id: conversationId })
+    const conversation = await graphQLQuery(getConversationWithAssociated, 'getConversation', { id: conversationId })
     dispatch({ type: 'SET_DETAILS', payload: { conversation } })
   }
 
@@ -84,25 +97,39 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
           </IconButton>
         )}
       </StyledChatSectionHeader>
+      {!isDirectMessage ? (
+        <>
+          {chatState.conversations.slice(0, previewCount).map((data, index) => {
+            const unreadInChannel = chatState.unreadMessagesByConversation[data.id] > 0
+            return (
+              <StyledChatSectionItem key={`expanded-${index}`}>
+                <Channel data={data} openConversation={openConversation} isUnread={unreadInChannel} />
+              </StyledChatSectionItem>
+            )
+          })}
 
-      {chatState.conversations.slice(0, previewCount).map((data, index) => {
-        const unreadInChannel = chatState.unreadMessagesByConversation[data.id] > 0
-        return (
-          <StyledChatSectionItem key={`expanded-${index}`}>
-            <Channel data={data} openConversation={openConversation} isUnread={unreadInChannel} />
-          </StyledChatSectionItem>
-        )
-      })}
-
-      {Number.isInteger(previewCount) &&
-        chatState.conversations.slice(previewCount).map((data, index) => {
-          const unreadInChannel = chatState.unreadMessagesByConversation[data.id] > 0
-          return (
-            <StyledChatSectionItem key={`expanded-${index}`}>
-              <Channel data={data} openConversation={openConversation} isUnread={unreadInChannel} />
-            </StyledChatSectionItem>
-          )
-        })}
+          {Number.isInteger(previewCount) &&
+            chatState.conversations.slice(previewCount).map((data, index) => {
+              const unreadInChannel = chatState.unreadMessagesByConversation[data.id] > 0
+              return (
+                <StyledChatSectionItem key={`expanded-${index}`}>
+                  <Channel data={data} openConversation={openConversation} isUnread={unreadInChannel} />
+                </StyledChatSectionItem>
+              )
+            })}
+        </>
+      ) : (
+        <>
+          {user?.conversations?.items?.slice(0, previewCount).map((data, index) => {
+            const unreadInChannel = chatState.unreadMessagesByConversation[data.conversationId] > 0
+            return (
+              <StyledChatSectionItem key={`expanded-${index}`}>
+                <DirectMessage data={data} openConversation={openConversation} isUnread={unreadInChannel} />
+              </StyledChatSectionItem>
+            )
+          })}
+        </>
+      )}
     </StyledChatSection>
   )
 }

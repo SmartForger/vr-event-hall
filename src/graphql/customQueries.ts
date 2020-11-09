@@ -190,11 +190,20 @@ export const userByEmailBase = /* GraphQL */ `
         avatar
         title
         company
-        activeState
-        onVideoCall
         conversations {
           items {
+            userId
+            conversationId
             conversation {
+              associated {
+                items {
+                  userId
+                  user {
+                    firstName
+                    lastName
+                  }
+                }
+              }
               members
             }
           }
@@ -253,6 +262,40 @@ export const getRaisedHandsByDismissed = /* GraphQL */ `
         createdAt
         updatedAt
       }
+    }
+  }
+`
+export const getConversationWithAssociated = /* GraphQL */ `
+  query GetConversation($id: ID!) {
+    getConversation(id: $id) {
+      id
+      name
+      members
+      messages {
+        items {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      associated {
+        items {
+          id
+          userId
+          user {
+            firstName
+            lastName
+          }
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
     }
   }
 `

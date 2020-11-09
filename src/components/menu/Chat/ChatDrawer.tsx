@@ -1,24 +1,32 @@
 import React, { useState } from 'react'
 import { Drawer, IconButton, makeStyles, Tab, Tabs, Toolbar, Theme, Typography } from '@material-ui/core'
-import { Close, Phone } from '@material-ui/icons'
+import { Close, VideocamOutlined } from '@material-ui/icons'
 
 import { ChatMessages } from '../ChatMessages'
 import { TabPanel } from './TabPanel'
 
-import { useChatContext } from 'providers'
+import { useAppState, useChatContext } from 'providers'
 import { DetailsPanel } from './DetailsPanel.tsx'
 
 export const ChatDrawer = () => {
   const classes = useStyles()
+  const {
+    appState: { user }
+  } = useAppState()
   const { chatState, dispatch } = useChatContext()
   const [tabValue, setTabValue] = useState<number>(0)
 
   const closeDrawer = () => {
-    dispatch({ type: 'SET_DETAILS', payload: { conversationId: '', conversationOpen: false } })
+    dispatch({ type: 'SET_DETAILS', payload: { conversationId: '', conversationOpen: false, selectedUser: null } })
   }
 
   const handleChange = (_, newValue) => {
     setTabValue(newValue)
+  }
+
+  const getUserTitle = () => {
+    const chatUser = chatState?.conversation?.associated.items.find(a => a.userId !== user?.id)
+    return chatUser?.user?.firstName ? `${chatUser?.user?.firstName} ${chatUser?.user?.lastName}` : ''
   }
 
   return (
@@ -34,13 +42,16 @@ export const ChatDrawer = () => {
       <div className={classes.displayMenu}>
         <div className={classes.conversationName}>
           <Typography variant='h5'>
-            {chatState?.conversations.find(c => c.id === chatState.conversationId)?.name}
+            {chatState?.conversations.find(c => c.id === chatState.conversationId)?.name || getUserTitle()}
           </Typography>
           <IconButton onClick={closeDrawer}>
             <Close />
           </IconButton>
         </div>
         <Toolbar className={classes.toolbar}>
+          <IconButton className={classes.cameraButton}>
+            <VideocamOutlined />
+          </IconButton>
           <Tabs
             value={tabValue}
             onChange={handleChange}
@@ -115,5 +126,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& h5': {
       fontWeight: 'bold'
     }
+  },
+  cameraButton: {
+    borderRadius: 0,
+    borderRight: '1px solid #D8DADA'
   }
 }))

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 
 // Plugins
 import classnames from 'classnames'
@@ -18,6 +18,9 @@ import verizonLogo from 'assets/verizon-logo.svg'
 import verizonLogoV from 'assets/verizonLogoV.svg'
 import arrowLeftIcon from 'assets/arrowLeftIcon.svg'
 import arrowRightIcon from 'assets/arrowRightIcon.svg'
+import { Close } from '@material-ui/icons'
+import { TabPanel } from 'components/shared'
+import { ChatUsers } from '../ChatUsers'
 
 interface ProfileMenuProps {
   user?: IUser
@@ -44,10 +47,15 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
   setConversationId
 }) => {
   const classes = useStyles()
+  const [showUserList, setShowUserList] = useState<boolean>(false)
 
   const closeChat = () => {
     toggleDrawer()
     setConversationId('')
+  }
+
+  const toggleUserList = () => {
+    setShowUserList(prev => !prev)
   }
 
   return (
@@ -91,6 +99,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
               user={user}
               users={users}
               conversationId={conversationId}
+              showUserList={() => setShowUserList(true)}
             />
             <footer className={classes.footer}>
               <IconButton onClick={closeChat}>
@@ -102,6 +111,26 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
               </IconButton>
             </footer>
           </>
+        </Drawer>
+        <Drawer
+          anchor={'right'}
+          open={showUserList}
+          onClose={() => setShowUserList(false)}
+          ModalProps={{ hideBackdrop: true }}
+          classes={{
+            paper: classes.messagePaper
+          }}
+        >
+          <div className={classes.displayMenu}>
+            <div className={classes.userCloseContainer}>
+              <IconButton onClick={() => setShowUserList(false)} disableRipple>
+                <Close />
+              </IconButton>
+            </div>
+            <TabPanel value={0} index={0} className={classes.tabPanel}>
+              <ChatUsers toggleDrawer={toggleUserList} />
+            </TabPanel>
+          </div>
         </Drawer>
       </div>
     </ChatProvider>
@@ -214,6 +243,31 @@ const useStyles = makeStyles((theme: Theme) =>
     arrowIcon: {
       [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
         width: '10px'
+      }
+    },
+    messagePaper: {
+      '&.MuiPaper-root': {
+        backgroundColor: 'white !important',
+        marginTop: '60px'
+      }
+    },
+    displayMenu: {
+      width: '334px',
+      color: 'white',
+      height: 'calc(100% - 60px)',
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    tabPanel: { flex: 1 },
+    userCloseContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      '& .MuiIconButton-root': {
+        padding: '4px 12px',
+        '&:hover': {
+          backgroundColor: 'transparent'
+        }
       }
     }
   })

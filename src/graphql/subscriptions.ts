@@ -35,6 +35,7 @@ export const onCreateConvoLink = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -89,6 +90,7 @@ export const onCreateMessage = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -132,6 +134,7 @@ export const onUpdateMessage = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -175,6 +178,7 @@ export const onCreateGlobalMessage = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -237,6 +241,7 @@ export const onCreateUser = /* GraphQL */ `
         }
         nextToken
       }
+      onVideoCall
       createdAt
       updatedAt
     }
@@ -320,6 +325,7 @@ export const onUpdateSession = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -456,6 +462,7 @@ export const onCreateSessionQuestion = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -499,6 +506,7 @@ export const onUpdateSessionQuestion = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -542,6 +550,7 @@ export const onCreateRaisedHand = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -584,6 +593,7 @@ export const onUpdateRaisedHand = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -626,6 +636,7 @@ export const onCreateGlobalRaisedHand = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -644,6 +655,7 @@ export const onCreateEventConfig = /* GraphQL */ `
       streamStartTime
       useBackupStream
       environment
+      vcOff
       createdAt
       updatedAt
     }
@@ -658,6 +670,7 @@ export const onUpdateEventConfig = /* GraphQL */ `
       streamStartTime
       useBackupStream
       environment
+      vcOff
       createdAt
       updatedAt
     }
@@ -672,6 +685,7 @@ export const onDeleteEventConfig = /* GraphQL */ `
       streamStartTime
       useBackupStream
       environment
+      vcOff
       createdAt
       updatedAt
     }
@@ -710,6 +724,7 @@ export const onCreateSessionPollAnswer = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -752,6 +767,7 @@ export const onUpdateSessionPollAnswer = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }

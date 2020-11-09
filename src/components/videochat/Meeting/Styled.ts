@@ -3,32 +3,39 @@ import styled from 'styled-components'
 interface StyledLayoutProps {
   showNav: boolean
   showRoster: boolean
+  drawerWidth: number
 }
 
 export const StyledLayout = styled.main<StyledLayoutProps>`
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: grid;
+  transition: all 0.15s ease-in;
+  ${({ drawerWidth }) => `
+    width: calc(100% - ${drawerWidth}px);
+    margin-right: ${drawerWidth}px;
+  `}
+
   .video-content {
     grid-area: content;
   }
   ${({ showNav, showRoster }) => {
     if (showNav && showRoster) {
       return `
-        grid-template-columns: auto auto 1fr;
-        grid-template-areas: 'nav roster content';
+        grid-template-columns: 1fr 0.25fr 0.1fr;
+        grid-template-areas: 'content roster nav';
       `
     }
     if (showNav) {
       return `
-        grid-template-columns: auto 1fr;
-        grid-template-areas: 'nav content';
+      grid-template-columns: 1fr 0.1fr;
+      grid-template-areas: 'content nav';
       `
     }
     if (showRoster) {
       return `
-        grid-template-columns: auto 1fr;
-        grid-template-areas: 'roster content';
+      grid-template-columns: 1fr 0.25fr;
+      grid-template-areas: 'content roster';
       `
     }
     return `
@@ -42,6 +49,7 @@ export const StyledLayout = styled.main<StyledLayoutProps>`
   .roster {
     grid-area: roster;
     z-index: 2;
+    position: relative;
   }
   @media screen and (min-width: 769px) {
     .mobile-toggle {
@@ -84,9 +92,10 @@ export const StyledContent = styled.div`
   .controls {
     position: absolute;
     bottom: 20px;
-    left: 50%;
+    left: 0;
     opacity: 1;
-    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
   }
   @media screen and (max-width: 768px) {
     .controls {

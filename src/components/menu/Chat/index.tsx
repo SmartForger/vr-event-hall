@@ -15,6 +15,8 @@ import { onCreateGlobalMessageMin } from 'graphql/customSubscriptions'
 // Images
 import liveChatBubbleIcon from 'assets/liveChatBubbleIcon.svg'
 import { ChatDrawer } from './ChatDrawer'
+import { IconButton } from '@material-ui/core'
+import { Add } from '@material-ui/icons'
 
 interface ChatProps {
   user?: IUser
@@ -22,9 +24,10 @@ interface ChatProps {
   drawerOpen: boolean
   conversationId: string
   toggleDrawer: () => void
+  showUserList: () => void
 }
 
-export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer }) => {
+export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, showUserList }) => {
   const { chatState, dispatch } = useChatContext()
 
   const totalUnread = Object.keys(chatState?.unreadMessagesByConversation)?.reduce?.(
@@ -74,6 +77,9 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer }
           </MenuTooltip>
           <AttentionDot showing={totalUnread > 0} number={totalUnread} />
           <h2 className='header-title'>Live Chat</h2>
+          <IconButton size='medium' onClick={showUserList} edge='end'>
+            <Add style={{ color: 'white' }} />
+          </IconButton>
         </StyledChatHeader>
 
         <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
@@ -82,7 +88,7 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer }
 
         {/* TODO: This needs to be populated with user DMs */}
         <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
-          <ChatSection title='Direct Messages' conversationId={conversationId} />
+          <ChatSection title='Direct Messages' conversationId={conversationId} isDirectMessage />
         </StyledChatSection>
       </StyledChat>
       <ChatDrawer />

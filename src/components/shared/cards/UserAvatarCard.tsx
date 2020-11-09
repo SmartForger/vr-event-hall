@@ -34,7 +34,7 @@ export const UserAvatarCard: FC<UserAvatarCardProps> = ({
         className={classes.avatar}
       />
       <div className={classes.userInfo}>
-        <div className={classes.userActivityCircle} />
+        {/* <div className={classes.userActivityCircle} /> */}
         <Typography variant='body1' component='p' align='center'>
           {user.firstName} {user.lastName}
         </Typography>

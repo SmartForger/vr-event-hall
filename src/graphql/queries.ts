@@ -54,6 +54,7 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
+      onVideoCall
       createdAt
       updatedAt
     }
@@ -89,6 +90,7 @@ export const listUsers = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -214,6 +216,7 @@ export const getSession = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -394,6 +397,7 @@ export const getEventConfig = /* GraphQL */ `
       streamStartTime
       useBackupStream
       environment
+      vcOff
       createdAt
       updatedAt
     }
@@ -432,6 +436,7 @@ export const getRaisedHand = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -474,6 +479,7 @@ export const getSessionQuestion = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -509,6 +515,7 @@ export const listSessionQuestions = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -593,6 +600,7 @@ export const getSessionPollAnswer = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -627,6 +635,7 @@ export const listSessionPollAnswers = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -674,6 +683,7 @@ export const userByEmail = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -788,6 +798,7 @@ export const messageByAuthor = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -839,6 +850,7 @@ export const messageByAuthorByDate = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -890,6 +902,7 @@ export const messageByConversation = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -941,6 +954,7 @@ export const messageByConversationDate = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -1019,6 +1033,7 @@ export const raisedHandByDate = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -1069,6 +1084,7 @@ export const raisedHandByDismissed = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -1119,6 +1135,7 @@ export const questionByDate = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }

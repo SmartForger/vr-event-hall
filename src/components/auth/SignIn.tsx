@@ -7,7 +7,7 @@ import { PillButton } from 'components'
 import { validateEmail } from 'helpers'
 import { AuthFlowSteps } from 'types'
 import { graphQLQuery } from 'graphql/helpers'
-import { userByEmail } from 'graphql/queries'
+import { userByEmailBase } from 'graphql/customQueries'
 import { useAppState } from 'providers'
 
 interface SignInProps {
@@ -30,7 +30,7 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
   const [passwordError, setPasswordError] = useState<string>('')
 
   const getCurrentUser = async (email: string) => {
-    const foundUser = await graphQLQuery(userByEmail, 'userByEmail', { email })
+    const foundUser = await graphQLQuery(userByEmailBase, 'userByEmail', { email })
     if (foundUser) {
       if (!foundUser.avatar) {
         foundUser.avatar = defaultAvatar
