@@ -83,10 +83,9 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
           </IconButton>
         </StyledChatHeader>
 
-        {/* Was requested to remove Channel Chat DAY OF DEADLINE -- who know if this is permanent, so commenting out for now */}
-        {/* <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
+        <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
           <ChatSection title='Channels' conversationId={conversationId} />
-        </StyledChatSection> */}
+        </StyledChatSection>
 
         <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
           <ChatSection title='Direct Messages' conversationId={conversationId} isDirectMessage />
