@@ -19,7 +19,7 @@ type User @model(subscriptions: null) @key(name: "ByEmail", fields: ["email"], q
   conversations: [ConvoLink] @connection(keyName: "byConvoUser", fields: ["id"])
   messages: [Message] @connection(keyName: "byAuthor", fields: ["id"])
   sessions: [UserSessionReservation] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
-  onVideoCall: Boolean
+  onVideoCall: String
 }
 
 type Conversation @model(subscriptions: null) {

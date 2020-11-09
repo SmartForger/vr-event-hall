@@ -9,9 +9,9 @@ import { Loader } from 'components/shared'
 // Helpers
 import { setInitialState } from 'redux/auth'
 import { graphQLQuery } from 'graphql/helpers'
-import { userByEmail } from 'graphql/queries'
 import { IUser } from 'types'
 import { useAppState } from 'providers'
+import { userByEmailBase } from 'graphql/customQueries'
 
 interface UserAuthenticatedRoutesProps {
   user: IUser | undefined
@@ -30,7 +30,7 @@ export const UserAuthenticatedRoutes: FC<UserAuthenticatedRoutesProps> = ({ user
         const {
           attributes: { email }
         } = await Auth.currentAuthenticatedUser()
-        const foundUser = await graphQLQuery(userByEmail, 'userByEmail', {
+        const foundUser = await graphQLQuery(userByEmailBase, 'userByEmail', {
           email
         })
         if (foundUser && foundUser.id) {

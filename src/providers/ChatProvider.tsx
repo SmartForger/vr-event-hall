@@ -1,5 +1,5 @@
 import React, { useReducer, createContext, Dispatch, useContext } from 'react'
-import { IConversation, IDemoSession } from 'types'
+import { IConversation, IDemoSession, IUser } from 'types'
 
 const baseConversations = {
   1: 'e23af63b-2c83-44e2-87cb-43207209feed',
@@ -30,10 +30,12 @@ interface IChatContextObject {
   loading: boolean
   conversationId: string
   conversationOpen: boolean
+  conversation: IConversation | null
   userType: UserAdminType
   pinnedMessageId: string
   session: IDemoSession | null
   unreadMessagesByConversation: IUnreadMessageCount
+  selectedUser: IUser | null
 }
 
 const initialState = {
@@ -41,10 +43,12 @@ const initialState = {
   loading: false,
   conversationId: '',
   conversationOpen: false,
+  conversation: null,
   userType: UserAdminType.GUEST,
   pinnedMessageId: '',
   unreadMessagesByConversation: {},
-  session: null
+  session: null,
+  selectedUser: null
 }
 
 export const ChatContext = createContext<{

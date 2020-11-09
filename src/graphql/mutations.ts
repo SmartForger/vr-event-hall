@@ -54,6 +54,7 @@ export const createUser = /* GraphQL */ `
         }
         nextToken
       }
+      onVideoCall
       createdAt
       updatedAt
     }
@@ -111,6 +112,7 @@ export const updateUser = /* GraphQL */ `
         }
         nextToken
       }
+      onVideoCall
       createdAt
       updatedAt
     }
@@ -168,6 +170,7 @@ export const deleteUser = /* GraphQL */ `
         }
         nextToken
       }
+      onVideoCall
       createdAt
       updatedAt
     }
@@ -337,6 +340,7 @@ export const createSession = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -469,6 +473,7 @@ export const updateSession = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -601,6 +606,7 @@ export const deleteSession = /* GraphQL */ `
           state
           postalCode
           title
+          onVideoCall
           createdAt
           updatedAt
         }
@@ -704,6 +710,7 @@ export const createSessionReservation = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -795,6 +802,7 @@ export const updateSessionReservation = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -883,6 +891,7 @@ export const createMessage = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -926,6 +935,7 @@ export const updateMessage = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -969,6 +979,7 @@ export const deleteMessage = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1043,6 +1054,7 @@ export const createSurveyAnswer = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1091,6 +1103,7 @@ export const updateSurveyAnswer = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1139,6 +1152,7 @@ export const deleteSurveyAnswer = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1186,6 +1200,7 @@ export const createConvoLink = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1240,6 +1255,7 @@ export const updateConvoLink = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1295,6 +1311,7 @@ export const createAdminLink = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1384,6 +1401,7 @@ export const updateAdminLink = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1499,6 +1517,7 @@ export const createEventConfig = /* GraphQL */ `
       streamStartTime
       useBackupStream
       environment
+      vcOff
       createdAt
       updatedAt
     }
@@ -1513,6 +1532,7 @@ export const updateEventConfig = /* GraphQL */ `
       streamStartTime
       useBackupStream
       environment
+      vcOff
       createdAt
       updatedAt
     }
@@ -1527,6 +1547,7 @@ export const deleteEventConfig = /* GraphQL */ `
       streamStartTime
       useBackupStream
       environment
+      vcOff
       createdAt
       updatedAt
     }
@@ -1594,6 +1615,7 @@ export const createRaisedHand = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1636,6 +1658,7 @@ export const updateRaisedHand = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1678,6 +1701,7 @@ export const createSessionQuestion = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1721,6 +1745,7 @@ export const updateSessionQuestion = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1803,6 +1828,7 @@ export const createSessionPollAnswer = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }
@@ -1848,6 +1874,7 @@ export const updateSessionPollAnswer = /* GraphQL */ `
         sessions {
           nextToken
         }
+        onVideoCall
         createdAt
         updatedAt
       }

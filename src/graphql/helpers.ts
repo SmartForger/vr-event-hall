@@ -52,7 +52,7 @@ export const createNewConversation = async (primaryUser: IUser, secondaryUser: I
       // Typescript types issue here that is a known issue on amplify
       // @ts-ignore
       data: {
-        createConversation: { id: convoLinkConversationId }
+        createConversation: { id: conversationId }
       }
     } = await graphQLMutation(createConversation, {
       name,
@@ -61,18 +61,16 @@ export const createNewConversation = async (primaryUser: IUser, secondaryUser: I
 
     await Promise.all([
       graphQLMutation(createConvoLink, {
-        convoLinkUserId: primaryUser.id,
-        convoLinkUsername: primaryUser.email,
-        convoLinkConversationId
+        userId: primaryUser.id,
+        conversationId
       }),
       graphQLMutation(createConvoLink, {
-        convoLinkUserId: secondaryUser.id,
-        convoLinkUsername: secondaryUser.email,
-        convoLinkConversationId
+        userId: secondaryUser.id,
+        conversationId
       })
     ])
 
-    return convoLinkConversationId
+    return conversationId
   } catch (err) {
     return err
   }

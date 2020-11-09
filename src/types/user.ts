@@ -1,3 +1,5 @@
+import { IConvoLink } from './chat'
+
 export interface IUser {
   id?: string
   firstName?: string
@@ -8,7 +10,7 @@ export interface IUser {
   title?: string
   company?: string
   avatar?: string
-  conversations?: object[]
+  conversations?: UserConversationList
   messages?: object[]
   status?: string
   address1?: string
@@ -23,6 +25,10 @@ export interface IUser {
   companyCountry?: string
   createdAt?: string
   updatedAt?: string
+}
+
+interface UserConversationList {
+  items: IConvoLink[]
 }
 
 export enum UserStatus {

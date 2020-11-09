@@ -25,10 +25,15 @@ export interface IMessageInput {
   deleted?: string
 }
 
+interface IAssociatedList {
+  items: IConvoLink[]
+}
+
 export interface IConversation {
   id: string
   name: string
   members: Array<string>
+  associated: IAssociatedList
 }
 
 export interface IActiveConversation {
@@ -84,4 +89,11 @@ export interface IDemoSession {
   users: IUserItems
   pinnedMessageId: string
   pinnedMessage: IMessage
+}
+
+export interface IConvoLink {
+  conversationId: string
+  userId: string
+  user: IUser
+  conversation: IConversation
 }
