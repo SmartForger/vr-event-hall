@@ -29,23 +29,41 @@ interface MenuListProps {
   user?: IUser
   anchor: AnchorType
   drawerOpen: boolean
+  toggleMenuDrawer: () => void
   toggleTutorial: () => void
+  toggleProfileDrawer: () => void
   toggleIntroTutorial: () => void
   setGameState: (state: GameFlowSteps) => void
 }
 
-export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState, toggleIntroTutorial }) => {
+export const MenuList: FC<MenuListProps> = ({
+  drawerOpen,
+  toggleMenuDrawer,
+  user,
+  setGameState,
+  toggleIntroTutorial,
+  toggleProfileDrawer
+}) => {
+  const openProfileDrawer = () => {
+    if (!drawerOpen) {
+      toggleMenuDrawer()
+    }
+    toggleProfileDrawer()
+  }
+
   return (
     <StyledOpenRightDrawer>
-      <StyledMenuListHeader>
-        <Avatar className='header-avatar' src={user?.avatar} alt={user?.firstName}>
-          {user?.firstName?.substring(0, 1)}
-        </Avatar>
-        <aside>
-          <span className='header-title'>Welcome, {user?.firstName}</span>
-          <small className='header-subtitle'>{user?.company}</small>
-        </aside>
-      </StyledMenuListHeader>
+      <div onClick={() => openProfileDrawer()}>
+        <StyledMenuListHeader>
+          <Avatar className='header-avatar' src={user?.avatar} alt={user?.firstName}>
+            {user?.firstName?.substring(0, 1)}
+          </Avatar>
+          <aside>
+            <span className='header-title'>Welcome, {user?.firstName}</span>
+            <small className='header-subtitle'>{user?.company}</small>
+          </aside>
+        </StyledMenuListHeader>
+      </div>
 
       <StyledMenuList className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
         <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Welcome)}>
