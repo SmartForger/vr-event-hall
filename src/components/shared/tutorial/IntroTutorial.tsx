@@ -21,6 +21,7 @@ export const IntroTutorial: FC<IntroTutorialProps> = ({ run, steps, onClose, sty
       run={run}
       steps={steps}
       styles={styles}
+      disableOverlay={true}
       callback={handleJoyrideCallback}
       continuous={true}
       floaterProps={{ disableAnimation: true }}

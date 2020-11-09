@@ -42,7 +42,6 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
   setGameState,
   conversationId,
   setConversationId
-
 }) => {
   const classes = useStyles()
 
@@ -61,7 +60,6 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
           className={classnames(classes.drawer, {
             [classes.drawerOpen]: drawerOpen,
             [classes.drawerClose]: !drawerOpen
-
           })}
           classes={{
             paper: classnames({
@@ -71,7 +69,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
           }}
         >
           <>
-            <header id='profileDrawer' className={classes.header}>
+            <header className={classes.header}>
               {drawerOpen ? (
                 <img src={verizonLogo} alt='Verizon' width='150' />
               ) : (
@@ -86,6 +84,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
               toggleTutorial={toggleTutorial}
               toggleIntroTutorial={toggleIntroTutorial}
             />
+            <div id='profileDrawer' />
             <Chat
               toggleDrawer={toggleDrawer}
               drawerOpen={drawerOpen}
