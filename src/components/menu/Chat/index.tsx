@@ -41,7 +41,7 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer }
 
   const updateUnreadConversationMessages = ({ onCreateGlobalMessage }) => {
     // increment the unread messages unless you're on the chat where the new message came in
-    if (onCreateGlobalMessage.conversationId != chatState.conversationId) {
+    if (onCreateGlobalMessage.conversationId !== chatState.conversationId) {
       dispatch({
         type: 'INCREMENT_UNREAD_CONVO_MESSAGE',
         payload: { conversationId: onCreateGlobalMessage.conversationId }
