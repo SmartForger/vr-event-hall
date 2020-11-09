@@ -73,7 +73,6 @@ const reducer = (state, action) => {
         ...action.payload
       }
     case 'INCREMENT_UNREAD_CONVO_MESSAGE':
-      console.log('incremeenting unread for: ' + action.payload.conversationId)
       return {
         ...state,
         unreadMessagesByConversation: {
@@ -82,7 +81,6 @@ const reducer = (state, action) => {
         }
       }
     case 'CLEAR_UNREAD_CONVO_MESSAGE':
-      console.log('clearing unread for ' + action.payload.conversationId)
       return {
         ...state,
         unreadMessagesByConversation: {

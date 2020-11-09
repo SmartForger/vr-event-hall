@@ -11,6 +11,7 @@ import {
   StyledChatSectionHeaderTitle
 } from './Styled'
 
+import { AttentionDot } from 'components'
 import { Channel } from './Channel'
 
 import { useChatContext } from 'providers/ChatProvider'
@@ -33,9 +34,6 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
   const classes = useStyles()
   const [expanded, setExpanded] = useState<boolean>(false)
   const { chatState, dispatch } = useChatContext()
-  const someUnread = Object.keys(chatState?.unreadMessagesByConversation)?.some?.(convoKey => {
-    return chatState?.unreadMessagesByConversation?.[convoKey] > 0
-  })
 
   let updateSessionSubscription = useRef<ISubscriptionObject | null>(null)
 
@@ -62,7 +60,6 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
     dispatch({ type: 'SET_DETAILS', payload: { conversationId, conversationOpen: true } })
     const conversation = await graphQLQuery(getConversation, 'getConversation', { id: conversationId })
     dispatch({ type: 'SET_DETAILS', payload: { conversation } })
-    // updateSessionSubscription.current = graphQLSubscription(onUpdateSession, { id: session.id }, updateSessionInfo)
   }
 
   useEffect(() => {
@@ -75,7 +72,6 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
     <StyledChatSection>
       <StyledChatSectionHeader>
         <StyledChatSectionHeaderTitle>
-          <div className={classes.unreadIndicator}></div>
           <span>{title}</span>
         </StyledChatSectionHeaderTitle>
         {Number.isInteger(previewCount) && (
@@ -118,16 +114,6 @@ const useStyles = makeStyles(() =>
     },
     expanded: {
       transform: 'rotate(180deg)'
-    },
-    unreadIndicator: {
-      position: 'absolute',
-      borderRadius: '50% 50%',
-      marginLeft: '-12px',
-      background: 'red',
-      marginTop: '6px',
-      height: '8px',
-      width: '8px',
-      tranform: '200ms'
     }
   })
 )

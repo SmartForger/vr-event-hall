@@ -4,7 +4,6 @@ import { VariableSizeList, VariableSizeProps } from 'react-window'
 import { makeStyles } from '@material-ui/core'
 
 import { ChatRow } from './ChatRow'
-// import { DialogCard } from 'components'
 
 import { ChatListContext, useAppState, useChatContext } from 'providers'
 import { useWindowSize } from 'hooks/useWindowSize'

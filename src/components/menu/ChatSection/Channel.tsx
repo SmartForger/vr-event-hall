@@ -3,6 +3,7 @@ import { IconButton, Collapse, createStyles, makeStyles } from '@material-ui/cor
 import { ExpandMore } from '@material-ui/icons'
 import classnames from 'classnames'
 
+import { AttentionDot } from 'components'
 import { IConversation } from 'types'
 import {
   StyledChannel,
@@ -22,7 +23,7 @@ export const Channel: FC<IChatChannel> = ({ data, openConversation, isUnread }) 
   const classes = useStyles()
   return (
     <StyledChannel onClick={() => openConversation(data.id)}>
-      <div className={isUnread ? classes.unreadIndicator : ''}></div>
+      <AttentionDot showing={isUnread} />
       <span>{data.name}</span>
     </StyledChannel>
   )
