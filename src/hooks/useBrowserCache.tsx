@@ -2,15 +2,23 @@
 import { useEffect, useState } from 'react'
 import { Auth, Cache } from 'aws-amplify'
 
-export const useBrowserCache: (cacheKey: string) => [any, (newVal) => void] = cacheKey => {
-  const [cachedVar, setCachedVar] = useState(null)
+export const useBrowserCache: (cacheKey) => [boolean, any, (newVal) => void] = cacheKey => {
+  const [cachedVar, setCachedVar] = useState<any>(null)
+  const [loading, setLoading] = useState<boolean>(true)
 
-  Cache.getItem(cacheKey, { callback: setCachedVar })
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await Cache.getItem(cacheKey)
+      setCachedVar(response)
+    }
+    fetchData()
+    setLoading(false)
+  }, [cacheKey, cachedVar, loading])
 
   const updateCache = newVal => {
     Cache.setItem(cacheKey, newVal)
     setCachedVar(newVal)
   }
 
-  return [cachedVar, updateCache]
+  return [loading, cachedVar, updateCache]
 }

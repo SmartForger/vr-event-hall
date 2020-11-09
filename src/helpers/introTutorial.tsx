@@ -25,13 +25,13 @@ export const introTutorialSteps: (user: IUser | undefined) => Step[] = user => {
       placement: 'left'
     },
     {
-      target: 'body',
+      target: '#topNavContainer',
       title: 'Countdown',
       content:
         'We’ll be tuning in live to hear the latest from our key leaders in 5G and subject matter experts.' +
         ' When the timer expires it will be replaced with a link to join us for our live programming.',
       disableBeacon: true,
-      placement: 'center'
+      placement: 'bottom'
     }
   ]
   return steps

@@ -22,10 +22,18 @@ interface ProfileMenuProps {
   mapLocation?: object
   toggleDrawer: () => void
   toggleTutorial: () => void
+  toggleIntroTutorial: () => void
   setGameState: (state: GameFlowSteps) => void
 }
 
-export const ProfileMenu: FC<ProfileMenuProps> = ({ user, drawerOpen, toggleDrawer, toggleTutorial, setGameState }) => {
+export const ProfileMenu: FC<ProfileMenuProps> = ({
+  user,
+  drawerOpen,
+  toggleDrawer,
+  toggleTutorial,
+  toggleIntroTutorial,
+  setGameState
+}) => {
   const classes = useStyles()
 
   const closeChat = () => {
@@ -62,6 +70,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({ user, drawerOpen, toggleDraw
             anchor='right'
             drawerOpen={drawerOpen}
             toggleTutorial={toggleTutorial}
+            toggleIntroTutorial={toggleIntroTutorial}
             setGameState={setGameState}
           />
           <footer className={classes.footer}>

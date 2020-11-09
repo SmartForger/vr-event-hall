@@ -32,7 +32,7 @@ export const Navigation: FC<NavigationProps> = ({ activeTab, setActiveTab }) => 
 
   return (
     <>
-      <div className={classes.topNavContainer}>
+      <div id='topNavContainer' className={classes.topNavContainer}>
         <Grid item classes={{ root: classes.navigationSectionOfHeader }}>
           <Typography
             component='span'

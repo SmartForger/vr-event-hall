@@ -85,8 +85,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   const [activeNotice, setActiveNotice] = useState<INoticeConfig>({})
   let noticeSubscription = useRef<ISubscriptionObject | null>(null)
 
-  const [tutorialViewed, updateCache] = useBrowserCache('event-tutorial-dismissed')
-  const [showTutorial, setShowTutorial] = useState<boolean>(!tutorialViewed)
+  const [tutorialViewedLoading, tutorialViewed, setTutorialViewed] = useBrowserCache('event-tutorial-dismissed')
   const [stepsEnabled, setStepsEnabled] = useState<boolean>(false)
   const [scene, setScene] = useState<Scene>()
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -112,7 +111,6 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   const [infoMessage, setInfoMessage] = useState<string | null>(null)
 
   // set the tutorial as viewed for next visit
-  // Cache.setItem('event-tutorial-dismissed', false)
   const handleToggleDrawer = () => dispatch(toggleDrawer(!drawerOpen))
 
   const goto3Dlocation = location => {
@@ -150,8 +148,6 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
 
   const onSceneSetup = () => {
     setScene((window as any)['scene'])
-    console.log(tutorialViewed)
-    // setTutorialViewed(false)
   }
 
   const toggleTutorial = (bool: boolean) => {
@@ -349,6 +345,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
             />
             <ProfileMenu
               toggleTutorial={() => toggleTutorial(true)}
+              toggleIntroTutorial={() => setTutorialViewed(false)}
               toggleDrawer={handleToggleDrawer}
               setGameState={setGameState}
               mapLocation={mapLocation}
@@ -391,12 +388,14 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
 
             <ClassRoomContainer />
 
-            <IntroTutorial
-              run={showTutorial}
-              steps={introTutorialSteps(user)}
-              onClose={() => updateCache(true)}
-              styles={JoyrideTutorialStyles}
-            />
+            {!tutorialViewedLoading && (
+              <IntroTutorial
+                run={!tutorialViewed}
+                steps={introTutorialSteps(user)}
+                onClose={() => setTutorialViewed(true)}
+                styles={JoyrideTutorialStyles}
+              />
+            )}
 
             {/* Toast for Notice */}
             <ToastAlert type='notice' isOpen={!!activeNotice?.type} onClose={() => setActiveNotice({})}>

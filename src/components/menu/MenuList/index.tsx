@@ -29,10 +29,11 @@ interface MenuListProps {
   anchor: AnchorType
   drawerOpen: boolean
   toggleTutorial: () => void
+  toggleIntroTutorial: () => void
   setGameState: (state: GameFlowSteps) => void
 }
 
-export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState }) => {
+export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState, toggleIntroTutorial }) => {
   return (
     <StyledOpenRightDrawer>
       <StyledMenuListHeader>
@@ -86,7 +87,7 @@ export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState }) 
           </MenuTooltip>
           About the event
         </StyledMenuListItem>
-        <StyledMenuListItem onClick={() => window.postMessage('{"command":"tutorial"}', '*')}>
+        <StyledMenuListItem onClick={() => toggleIntroTutorial()}>
           <MenuTooltip drawerOpen={drawerOpen} title='Tutorial' placement='left'>
             <StyledMenuListIcon>
               <img src={infoIcon} alt='Info icon' width='19' />
