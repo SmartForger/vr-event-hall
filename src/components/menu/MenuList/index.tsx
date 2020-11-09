@@ -29,6 +29,7 @@ interface MenuListProps {
   user?: IUser
   anchor: AnchorType
   drawerOpen: boolean
+  toggleMenuDrawer: () => void
   toggleTutorial: () => void
   toggleProfileDrawer: () => void
   toggleIntroTutorial: () => void
@@ -37,15 +38,23 @@ interface MenuListProps {
 
 export const MenuList: FC<MenuListProps> = ({
   drawerOpen,
+  toggleMenuDrawer,
   user,
   setGameState,
   toggleIntroTutorial,
   toggleProfileDrawer
 }) => {
+  const openProfileDrawer = () => {
+    if (!drawerOpen) {
+      toggleMenuDrawer()
+    }
+    toggleProfileDrawer()
+  }
+
   return (
     <StyledOpenRightDrawer>
-      <StyledMenuListHeader>
-        <div onClick={() => toggleProfileDrawer()}>
+      <div onClick={() => openProfileDrawer()}>
+        <StyledMenuListHeader>
           <Avatar className='header-avatar' src={user?.avatar} alt={user?.firstName}>
             {user?.firstName?.substring(0, 1)}
           </Avatar>
@@ -53,8 +62,8 @@ export const MenuList: FC<MenuListProps> = ({
             <span className='header-title'>Welcome, {user?.firstName}</span>
             <small className='header-subtitle'>{user?.company}</small>
           </aside>
-        </div>
-      </StyledMenuListHeader>
+        </StyledMenuListHeader>
+      </div>
 
       <StyledMenuList className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
         <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Welcome)}>

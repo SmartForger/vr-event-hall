@@ -97,6 +97,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
               drawerOpen={drawerOpen}
               setGameState={setGameState}
               toggleTutorial={toggleTutorial}
+              toggleMenuDrawer={toggleDrawer}
               toggleIntroTutorial={toggleIntroTutorial}
               toggleProfileDrawer={toggleProfileDrawer}
             />
@@ -153,7 +154,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
           }}
         >
           <div className={classes.displayMenu}>
-            <div className={classes.userCloseContainer}>
+            <div className={classes.profileCloseContainer}>
               <IconButton onClick={() => setShowProfileDrawer(false)} disableRipple>
                 <Close />
               </IconButton>
@@ -294,6 +295,18 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'flex-end',
+      '& .MuiIconButton-root': {
+        padding: '4px 12px',
+        '&:hover': {
+          backgroundColor: 'transparent'
+        }
+      }
+    },
+    profileCloseContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      zIndex: 100,
       '& .MuiIconButton-root': {
         padding: '4px 12px',
         '&:hover': {

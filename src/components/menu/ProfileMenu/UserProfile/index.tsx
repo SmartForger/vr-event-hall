@@ -1,8 +1,10 @@
 import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
 import { I18n, Storage } from 'aws-amplify'
 import { VariableSizeProps } from 'react-window'
-import { Avatar, Theme, Typography, makeStyles, TextField, Button } from '@material-ui/core'
+import { Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
 import CreateIcon from '@material-ui/icons/Create'
+import arrowLeftIcon from 'assets/arrowLeftIcon.svg'
+import arrowRightIcon from 'assets/arrowRightIcon.svg'
 
 import { PillButton } from 'components'
 
@@ -28,7 +30,7 @@ const initialProfileErrors: IProfileErrors = {
 
 interface IUserProfileProps {
   internal?: boolean
-  toggleDrawer?: ToggleDrawer
+  toggleDrawer: () => void
   user?: IUser
 }
 
@@ -93,7 +95,13 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
       //   await graphQLMutation(createUser, { ...userInfo, email: lowerCaseEmail })
       // }
 
-      await graphQLMutation(updateUser, { ...profileInfo })
+      await graphQLMutation(updateUser, {
+        id: profileInfo?.id,
+        firstName: profileInfo?.firstName,
+        lastName: profileInfo?.lastName,
+        title: profileInfo?.title
+      })
+      setEditModeState(false)
     } catch (e) {
       console.log(e)
       return
@@ -147,13 +155,14 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
         <span className={classes.dotSeperator} />
         <span>{profileInfo?.title}</span>
       </div>
-
-      <Button startIcon={<CreateIcon />} onClick={() => setEditModeState(true)}>
-        Edit Profile
-      </Button>
+      <div className={classes.centeredButtonContainer}>
+        <Button startIcon={<CreateIcon />} onClick={() => setEditModeState(true)}>
+          Edit Profile
+        </Button>
+      </div>
 
       <PillButton className={classes.logoutButton} loading={loading} type='submit' onClick={() => logout()} solid>
-        {I18n.get('logout')}
+        Logout
       </PillButton>
     </>
   )
@@ -214,7 +223,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
         type='submit'
         onClick={() => setEditModeState(false)}
       >
-        {I18n.get('close')}
+        Close
       </PillButton>
 
       <PillButton
@@ -224,12 +233,12 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
         onClick={() => updateUserData()}
         solid
       >
-        {I18n.get('save')}
+        Save
       </PillButton>
     </>
   )
   return (
-    <>
+    <div className={classes.root}>
       <img src={profileBg} alt='profile background' />
       <Avatar
         alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
@@ -240,12 +249,13 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
         {!editModeState && profileDisplay}
         {editModeState && editModeDispaly}
       </section>
-    </>
+    </div>
   )
 }
 
 const useStyles = makeStyles(theme => ({
   root: {
+    marginTop: '-38px',
     width: '100%',
     height: '100%',
     maxWidth: 350,
@@ -259,31 +269,49 @@ const useStyles = makeStyles(theme => ({
     height: '80px'
   },
   name: {
+    margin: '4px',
     fontSize: '26px',
     textAlign: 'center'
   },
-  logoutButton: {
-    position: 'relative',
-    bottom: '30px'
-  },
   title: {
+    margin: '4px',
     fontSize: '16px',
     textAlign: 'center'
+  },
+  logoutButton: {
+    position: 'absolute',
+    bottom: '0px',
+    marginBottom: '10px'
+  },
+  closeDrawer: {
+    position: 'absolute',
+    bottom: '30px',
+    marginBottom: '50px'
+  },
+  centeredButtonContainer: {
+    marginTop: '40px',
+    textAlign: 'center',
+    justifyContent: 'center',
+    width: '100%'
   },
   dotSeperator: {
     position: 'relative',
     display: 'inline-block',
+    top: '-4px',
     height: '4px',
     width: '4px',
+    margin: '0px 12px',
     borderRadius: '50% 50%',
-    backgroundColor: 'black',
-    margin: '10px 12px 0px 12px'
+    backgroundColor: 'black'
   },
   profileMain: {
-    color: 'black'
+    color: 'black',
+    height: 'calc(100% - 150px - 60px)',
+    padding: '16px'
   },
   input: {
     color: '#000',
+    margin: '20px 0px',
     borderRadius: 0,
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
@@ -298,9 +326,23 @@ const useStyles = makeStyles(theme => ({
     }
   },
   inlineButton: {
-    color: '#000',
     margin: '0 .5rem',
     fontFamily: 'Verizon-Regular',
-    textDecoration: 'underline'
+    height: '26px',
+    padding: '16px 24px'
+  },
+  footer: {
+    bottom: 0,
+    padding: '8px',
+    width: '100%',
+    display: 'flex',
+    position: 'fixed',
+    backgroundColor: '#000000',
+    justifyContent: 'flex-start'
+  },
+  arrowIcon: {
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      width: '10px'
+    }
   }
 }))
