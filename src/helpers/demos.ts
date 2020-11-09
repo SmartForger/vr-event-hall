@@ -10,6 +10,8 @@ import FivestatesofreadyImg from 'assets/demo/5statesofready.png'
 import aveshaImg from 'assets/demo/avesha.png'
 import crowdvisionImg from 'assets/demo/crowdvision.png'
 import sotImg from 'assets/demo/sot.png'
+import iceImg from 'assets/demo/icePoster.png'
+import zixiImg from 'assets/demo/zixiPoster.png'
 
 export const Demos: IDemoCollection = {
   '5GCoverage': fiveGCoverage,
@@ -71,10 +73,34 @@ export const Demos: IDemoCollection = {
       body:
         "Each generation of wireless technology brings us closer together.  Now, at the dawn of 5G, visionaries are evolving the mission of connectivity to tackle some of society's biggest challenges. From robotic devices that could allow doctors to perform surgeries thousands of miles away to a smart city that aims to eliminate pedestrian deaths, innovators are using 5G to change the world as we know it.\n" +
         '<br/><br/>' +
-        'Visit <a href="https://speedofthoughtfilm.com">speedofthoughtfilm.com</a> for viewing options '
+        'Visit <a target="_blank" href="https://speedofthoughtfilm.com">speedofthoughtfilm.com</a> for viewing options '
     }
   },
   shotTracker,
   tata,
-  ybvr
+  ybvr,
+  zixi: {
+    type: 'zixi',
+    video: 'Zixi.mp4',
+    poster: zixiImg,
+    side: {
+      header: 'Zixi',
+      body:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.\n' +
+        '<br/><br/>' +
+        'Visit <a target="_blank" href="https://zixi.com">zixi.com</a> for viewing options '
+    }
+  },
+  iceMobility: {
+    type: 'iceMobility',
+    video: 'IceMobility.mp4',
+    poster: iceImg,
+    side: {
+      header: 'Ice Mobility',
+      body:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.\n' +
+        '<br/><br/>' +
+        'Visit <a target="_blank" href="https://icemobility.com">icemobility.com</a> for viewing options '
+    }
+  }
 }

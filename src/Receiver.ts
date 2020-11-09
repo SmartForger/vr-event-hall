@@ -114,10 +114,10 @@ export default class Receiver {
                   newDemo = Demos.sot
                   break
                 case E3DDemoNameVals.iceMobility:
+                  newDemo = Demos.iceMobility
+                  break
                 case E3DDemoNameVals.zixi:
-                  // TODO: Setu demos for two above
-                  // defaulting to sot
-                  newDemo = Demos.sot
+                  newDemo = Demos.zixi
                   break
               }
               if (newDemo) {
