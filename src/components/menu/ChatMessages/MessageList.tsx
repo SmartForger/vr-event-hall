@@ -43,10 +43,6 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
   const { chatState, dispatch } = useChatContext()
   const { width: windowWidth } = useWindowSize()
 
-  const filteredMessages = messages.filter(
-    message => message.id !== chatState?.session?.pinnedMessageId && message?.deleted !== 'true'
-  )
-
   const sizeMap = useRef({})
   const setSize = useCallback((index, size) => (sizeMap.current = { ...sizeMap.current, [index]: size }), [])
   const getSize = useCallback(
@@ -54,12 +50,22 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     []
   )
 
+  const filteredMessages = messages
+    .filter(message => message.id !== chatState?.session?.pinnedMessageId && message?.deleted !== 'true')
+    .map((message, idx) => {
+      setSize(idx, message.content.length * 2.25)
+      return message
+    })
+
   const calculateSize = index => {
+    console.log(sizeMap.current[index])
     if (filteredMessages[index] && filteredMessages[index].content.length) {
       return filteredMessages[index].content.length * 2.25
     }
     return 100
   }
+
+  useEffect(() => {}, [messages])
 
   useEffect(() => {
     const verizonList = [
@@ -91,6 +97,10 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
       setAdmin(true)
     }
   }, [])
+
+  useEffect(() => {
+    getSize(filteredMessages.length - 1)
+  }, [filteredMessages.length])
 
   const openDialog = (index: number, type: 'pin' | 'delete') => {
     setSelectedIndex(index)

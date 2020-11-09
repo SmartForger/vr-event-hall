@@ -1,30 +1,18 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { FC } from 'react'
 import { useAudioVideo, useMeetingManager } from 'amazon-chime-sdk-component-library-react'
 import { uniq } from 'lodash'
-import {
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  List,
-  ListItem,
-  makeStyles,
-  Menu,
-  MenuItem,
-  Theme,
-  Typography
-} from '@material-ui/core'
+import { Avatar, IconButton, makeStyles, Menu, MenuItem, Theme, Typography } from '@material-ui/core'
 import { MoreHoriz } from '@material-ui/icons'
 
-import { UserAvatarCard } from 'components'
+// import { UserAvatarCard } from 'components'
 
-import { graphQLMutation, graphQLQuery, graphQLSubscription } from 'graphql/helpers'
-import { getRaisedHandsByDismissed } from 'graphql/customQueries'
-import { onCreateRaisedHand, onUpdateRaisedHand } from 'graphql/subscriptions'
-import { ISubscriptionObject } from 'types'
+import { graphQLMutation } from 'graphql/helpers'
+// import { getRaisedHandsByDismissed } from 'graphql/customQueries'
+// import { onCreateRaisedHand, onUpdateRaisedHand } from 'graphql/subscriptions'
+// import { ISubscriptionObject } from 'types'
 
-import { RaiseHandIcon } from 'assets'
-import { updateRaisedHand, updateSession } from 'graphql/mutations'
+// import { RaiseHandIcon } from 'assets'
+import { updateSession } from 'graphql/mutations'
 import { useAppState, useVideoChatContext } from 'providers'
 import { useRosterState } from 'providers/RosterProvider'
 
@@ -42,53 +30,53 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
   const { roster } = useRosterState()
   const audioVideo = useAudioVideo()
   const rosterArray = Object.values(roster)
-  const [raisedHands, setRaisedHands] = useState<any>([])
+  // const [raisedHands, setRaisedHands] = useState<any>([])
   const [anchorEl, setAnchorEl] = React.useState(null)
 
   const isPinned = videoChatState?.session?.presenterPins.some(pin => pin === user?.id)
 
-  let createSubscription = useRef<ISubscriptionObject | null>(null)
-  let updateSubscription = useRef<ISubscriptionObject | null>(null)
+  // let createSubscription = useRef<ISubscriptionObject | null>(null)
+  // let updateSubscription = useRef<ISubscriptionObject | null>(null)
 
-  const raisedHandCreated = ({ onCreateRaisedHand }) => {
-    setRaisedHands(prevHands => [...prevHands, onCreateRaisedHand])
-  }
+  // const raisedHandCreated = ({ onCreateRaisedHand }) => {
+  //   setRaisedHands(prevHands => [...prevHands, onCreateRaisedHand])
+  // }
 
-  const raisedHandUpdated = ({ onUpdateRaisedHand }) => {
-    if (onUpdateRaisedHand.dismissed === 'true') {
-      setRaisedHands(prevRaisedHands => prevRaisedHands.filter(r => r.id !== onUpdateRaisedHand.id))
-    }
-  }
+  // const raisedHandUpdated = ({ onUpdateRaisedHand }) => {
+  //   if (onUpdateRaisedHand.dismissed === 'true') {
+  //     setRaisedHands(prevRaisedHands => prevRaisedHands.filter(r => r.id !== onUpdateRaisedHand.id))
+  //   }
+  // }
 
-  const getRaisedHands = async () => {
-    const currentRaisedHands = await graphQLQuery(getRaisedHandsByDismissed, 'raisedHandByDismissed', {
-      sessionId: videoChatState?.session?.id,
-      dismissed: { eq: 'false' }
-    })
-    setRaisedHands(currentRaisedHands)
+  // const getRaisedHands = async () => {
+  //   const currentRaisedHands = await graphQLQuery(getRaisedHandsByDismissed, 'raisedHandByDismissed', {
+  //     sessionId: videoChatState?.session?.id,
+  //     dismissed: { eq: 'false' }
+  //   })
+  //   setRaisedHands(currentRaisedHands)
 
-    createSubscription.current = graphQLSubscription(
-      onCreateRaisedHand,
-      { sessionId: videoChatState?.session?.id },
-      raisedHandCreated
-    )
-    updateSubscription.current = graphQLSubscription(
-      onUpdateRaisedHand,
-      { sessionId: videoChatState?.session?.id },
-      raisedHandUpdated
-    )
-  }
+  //   createSubscription.current = graphQLSubscription(
+  //     onCreateRaisedHand,
+  //     { sessionId: videoChatState?.session?.id },
+  //     raisedHandCreated
+  //   )
+  //   updateSubscription.current = graphQLSubscription(
+  //     onUpdateRaisedHand,
+  //     { sessionId: videoChatState?.session?.id },
+  //     raisedHandUpdated
+  //   )
+  // }
 
-  useEffect(() => {
-    if (videoChatState?.session?.id) {
-      getRaisedHands()
-    }
+  // useEffect(() => {
+  //   if (videoChatState?.session?.id) {
+  //     getRaisedHands()
+  //   }
 
-    return () => {
-      createSubscription.current?.unsubscribe()
-      updateSubscription.current?.unsubscribe()
-    }
-  }, [videoChatState?.session?.id])
+  //   return () => {
+  //     createSubscription.current?.unsubscribe()
+  //     updateSubscription.current?.unsubscribe()
+  //   }
+  // }, [videoChatState?.session?.id])
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -118,38 +106,38 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
     setAnchorEl(null)
   }
 
-  const toggleUserMute = (userId: string, muted: boolean) => {
-    audioVideo?.realtimeSendDataMessage('TOGGLE_PLAYER_MUTE', {
-      userId: userId as string,
-      muted
-    })
-  }
+  // const toggleUserMute = (userId: string, muted: boolean) => {
+  //   audioVideo?.realtimeSendDataMessage('TOGGLE_PLAYER_MUTE', {
+  //     userId: userId as string,
+  //     muted
+  //   })
+  // }
 
-  const dismissHand = async (handId: string) => {
-    await graphQLMutation(updateRaisedHand, { id: handId, dismissed: 'true' })
-  }
+  // const dismissHand = async (handId: string) => {
+  //   await graphQLMutation(updateRaisedHand, { id: handId, dismissed: 'true' })
+  // }
 
-  useEffect(() => {
-    audioVideo?.realtimeSubscribeToReceiveDataMessage('TOGGLE_PLAYER_MUTE', data => {
-      const muteInfo = data.json()
-      if (muteInfo.userId === user?.id) {
-        // initially toggle whether they can control it
-        audioVideo?.realtimeSetCanUnmuteLocalAudio(!muteInfo.muted)
-        if (muteInfo.muted) {
-          // if muted is true then we also toggle the mute to on
-          audioVideo?.realtimeMuteLocalAudio()
-        }
-      }
-    })
+  // useEffect(() => {
+  //   audioVideo?.realtimeSubscribeToReceiveDataMessage('TOGGLE_PLAYER_MUTE', data => {
+  //     const muteInfo = data.json()
+  //     if (muteInfo.userId === user?.id) {
+  //       // initially toggle whether they can control it
+  //       audioVideo?.realtimeSetCanUnmuteLocalAudio(!muteInfo.muted)
+  //       if (muteInfo.muted) {
+  //         // if muted is true then we also toggle the mute to on
+  //         audioVideo?.realtimeMuteLocalAudio()
+  //       }
+  //     }
+  //   })
 
-    return () => {
-      audioVideo?.realtimeUnsubscribeFromReceiveDataMessage('TOGGLE_PLAYER_MUTE')
-    }
-  }, [audioVideo])
+  //   return () => {
+  //     audioVideo?.realtimeUnsubscribeFromReceiveDataMessage('TOGGLE_PLAYER_MUTE')
+  //   }
+  // }, [audioVideo])
 
   return (
     <>
-      {isAdmin ? (
+      {/* {isAdmin ? (
         <div className={classes.details}>
           <Box
             bgcolor='#2188CE'
@@ -193,7 +181,7 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
             }
           </Box>
         </div>
-      ) : null}
+      ) : null} */}
       <section className={!isAdmin ? classes.listContainer : ''}>
         <div className={classes.user}>
           <Avatar
