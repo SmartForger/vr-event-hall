@@ -65,8 +65,6 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     return 100
   }
 
-  useEffect(() => {}, [messages])
-
   useEffect(() => {
     const verizonList = [
       'amelia.powell@verizonwireless.com',
