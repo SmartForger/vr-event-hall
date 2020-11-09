@@ -103,14 +103,14 @@ export const Chat: FC<ChatProps> = ({ user, users }) => {
         </>
       )}
       {videoChatLoading ? <Loader /> : null}
-      {videoChatIsVisible && (
+      {/* {videoChatIsVisible && (
         <VideoChatModal
           visible={videoChatIsVisible}
           setVisible={setVideoChatVisible}
           meetingInfo={meetingInfo as IMeetingInfo}
           setLoading={setVideoChatLoading}
         />
-      )}
+      )} */}
     </>
   )
 }

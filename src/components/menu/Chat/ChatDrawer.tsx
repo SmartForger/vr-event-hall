@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Drawer, IconButton, makeStyles, Tab, Tabs, Toolbar, Theme, Typography } from '@material-ui/core'
-import { Close, Phone, Videocam } from '@material-ui/icons'
+import { Close, VideocamOutlined } from '@material-ui/icons'
 
 import { ChatMessages } from '../ChatMessages'
 import { TabPanel } from './TabPanel'
@@ -50,7 +50,7 @@ export const ChatDrawer = () => {
         </div>
         <Toolbar className={classes.toolbar}>
           <IconButton className={classes.cameraButton}>
-            <Videocam />
+            <VideocamOutlined />
           </IconButton>
           <Tabs
             value={tabValue}
