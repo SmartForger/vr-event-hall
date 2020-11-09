@@ -12,7 +12,7 @@ import {
   LocalVideo,
   useAudioVideo
 } from 'amazon-chime-sdk-component-library-react'
-import { Button, Drawer, makeStyles, Tab, Tabs, Toolbar, Typography } from '@material-ui/core'
+import { Drawer, makeStyles, Tab, Tabs, Toolbar } from '@material-ui/core'
 import { Modal } from '@mvrk-hq/vx360-components'
 
 import MeetingControls from '../MeetingControls'

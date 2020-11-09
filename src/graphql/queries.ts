@@ -647,6 +647,86 @@ export const listSessionPollAnswers = /* GraphQL */ `
     }
   }
 `
+export const getVideoChatInvite = /* GraphQL */ `
+  query GetVideoChatInvite($id: ID!) {
+    getVideoChatInvite(id: $id) {
+      id
+      conversationId
+      userId
+      invitingUserId
+      invitingUser {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listVideoChatInvites = /* GraphQL */ `
+  query ListVideoChatInvites($filter: ModelVideoChatInviteFilterInput, $limit: Int, $nextToken: String) {
+    listVideoChatInvites(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        conversationId
+        userId
+        invitingUserId
+        invitingUser {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          onVideoCall
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
 export const userByEmail = /* GraphQL */ `
   query UserByEmail(
     $email: String

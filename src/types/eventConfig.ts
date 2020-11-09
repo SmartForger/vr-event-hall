@@ -16,24 +16,28 @@ export enum Environments {
 
 export const defaultEventConfigs: { [key: string]: EventConfig } = {
   prod: {
-    id: '1',
+    id: 'fcff0141-4a49-4322-9b64-4618e4081249',
     name: Environments.PROD,
-    useBackupStream: false
+    useBackupStream: false,
+    vcOff: false
   },
   dev: {
-    id: '2',
+    id: 'fcff0141-4a49-4322-9b64-4618e4081249',
     name: Environments.DEV,
-    useBackupStream: false
+    useBackupStream: false,
+    vcOff: false
   },
   staging: {
-    id: '3',
+    id: 'fcff0141-4a49-4322-9b64-4618e4081249',
     name: Environments.STAGING,
-    useBackupStream: false
+    useBackupStream: false,
+    vcOff: false
   },
   local: {
-    id: '4',
+    id: 'fcff0141-4a49-4322-9b64-4618e4081249',
     name: Environments.LOCAL,
-    useBackupStream: false
+    useBackupStream: false,
+    vcOff: false
   }
 }
 
@@ -43,4 +47,5 @@ export interface EventConfig {
   stage?: EventStages
   useBackupStream?: boolean
   streamStartTime?: string
+  vcOff: boolean
 }

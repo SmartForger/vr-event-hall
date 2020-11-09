@@ -69,9 +69,10 @@ interface GameWrapperProps {
   users?: IUser[]
   eventStage?: EventStages
   streamStartTime?: string
+  vcOff?: boolean
 }
 
-export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStage, streamStartTime }) => {
+export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStage, streamStartTime, vcOff }) => {
   const dispatch = useDispatch()
 
   // Selectors
@@ -356,6 +357,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
               users={users}
               conversationId={conversationId}
               setConversationId={setConversationId}
+              vcOff={vcOff}
             />
           </>
         )}
@@ -394,7 +396,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
               <ClassRoomContainer />
             </RosterProvider>
 
-            <VideoChatContainer />
+            {vcOff ? null : <VideoChatContainer />}
 
             {!tutorialViewedLoading && (
               <IntroTutorial

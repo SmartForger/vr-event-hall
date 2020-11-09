@@ -266,6 +266,14 @@ type SessionPollAnswer
   answer: AnswerOption!
 }
 
+type VideoChatInvite @model(subscriptions: null) {
+  id: ID!
+  conversationId: ID!
+  userId: ID!
+  invitingUserId: ID!
+  invitingUser: User! @connection(fields: ["invitingUserId"])
+}
+
 type Subscription {
   onCreateConvoLink(convoLinkUserId: ID!): ConvoLink @aws_subscribe(mutations: ["createConvoLink"])
   onCreateMessage(conversationId: ID!): Message @aws_subscribe(mutations: ["createMessage"])
@@ -281,4 +289,5 @@ type Subscription {
   onCreateRaisedHand(sessionId: ID!): RaisedHand @aws_subscribe(mutations: ["createRaisedHand"])
   onUpdateRaisedHand(sessionId: ID!): RaisedHand @aws_subscribe(mutations: ["updateRaisedHand"])
   onCreateGlobalRaisedHand: RaisedHand @aws_subscribe(mutations: ["createRaisedHand"])
+  onCreateVideoChatInvite(userId: ID!): VideoChatInvite @aws_subscribe(mutations: ["createVideoChatInvite"])
 }

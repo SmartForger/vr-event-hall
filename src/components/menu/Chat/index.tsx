@@ -25,9 +25,10 @@ interface ChatProps {
   conversationId: string
   toggleDrawer: () => void
   showUserList: () => void
+  vcOff?: boolean
 }
 
-export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, showUserList }) => {
+export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, showUserList, vcOff }) => {
   const { chatState, dispatch } = useChatContext()
 
   const totalUnread = Object.keys(chatState?.unreadMessagesByConversation)?.reduce?.(
@@ -91,7 +92,7 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
           <ChatSection title='Direct Messages' conversationId={conversationId} isDirectMessage />
         </StyledChatSection>
       </StyledChat>
-      <ChatDrawer />
+      <ChatDrawer vcOff={vcOff} />
     </>
   )
 }

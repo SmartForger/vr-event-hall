@@ -9,7 +9,7 @@ import { GameWrapper } from 'UI'
 import { Header } from 'components'
 import { VimeoLiveStream } from 'components/livestream'
 
-export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, useBackupStream }) => {
+export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, useBackupStream, vcOff }) => {
   const location = useLocation()
   useEffect(() => {
     ReactGA.initialize('UA-178694733-3')
@@ -24,7 +24,7 @@ export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, u
       </Route>
       <UserAuthenticatedRoutes user={user} setUser={setUser}>
         <Route exact path='/event'>
-          <GameWrapper user={user} eventStage={eventStage} streamStartTime={streamStartTime} />
+          <GameWrapper user={user} eventStage={eventStage} streamStartTime={streamStartTime} vcOff={vcOff} />
         </Route>
       </UserAuthenticatedRoutes>
     </Switch>

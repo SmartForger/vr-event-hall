@@ -10,6 +10,8 @@ interface DialogCardProps {
   onConfirm?: (val?: any) => void
   containerHeight?: number
   className?: string
+  confirmText?: string
+  cancelText?: string
 }
 
 export const DialogCard: FC<DialogCardProps> = ({
@@ -19,7 +21,9 @@ export const DialogCard: FC<DialogCardProps> = ({
   onCancel,
   onConfirm,
   containerHeight,
-  className
+  className,
+  confirmText,
+  cancelText
 }) => {
   const classes = useStyles()
 
@@ -47,12 +51,12 @@ export const DialogCard: FC<DialogCardProps> = ({
             <CardActions className={classes.actions}>
               {onCancel && (
                 <Button size='small' variant='contained' className={classes.cancel} onClick={onCancel}>
-                  Cancel
+                  {cancelText || 'Cancel'}
                 </Button>
               )}
               {onConfirm && (
                 <Button size='small' variant='outlined' className={classes.confirm} onClick={onConfirm}>
-                  Yes
+                  {confirmText || 'Yes'}
                 </Button>
               )}
             </CardActions>
