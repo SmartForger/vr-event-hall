@@ -26,7 +26,7 @@ I18n.putVocabularies(dict)
 const App = () => {
   const [user, setUser] = useState<IUser>()
   const [eventConfig, setEventConfig] = useState<any>(defaultEventConfigs[getEnvironment()])
-  const [eventStage, setEventStage] = useState<EventStages>(EventStages.REGISTRATION)
+  const [eventStage, setEventStage] = useState<EventStages>(EventStages.COUNTDOWN)
   const [useBackupStream, setUseBackupStream] = useState<boolean>(false)
   const [streamStartTime, setStreamStartTime] = useState<string | undefined>()
   const [vcOff, setVCOff] = useState<boolean>(false)
