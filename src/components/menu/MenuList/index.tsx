@@ -22,6 +22,7 @@ import demoTvIcon from 'assets/demoTvIcon.svg'
 import mailIcon from 'assets/mailIcon.svg'
 import sessionIcon from 'assets/breakout.svg'
 import infoIcon from 'assets/infoIcon.svg'
+import gradCapIcon from 'assets/gradCapIcon.svg'
 import supportIcon from 'assets/supportIcon.svg'
 
 interface MenuListProps {
@@ -29,10 +30,11 @@ interface MenuListProps {
   anchor: AnchorType
   drawerOpen: boolean
   toggleTutorial: () => void
+  toggleIntroTutorial: () => void
   setGameState: (state: GameFlowSteps) => void
 }
 
-export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState }) => {
+export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState, toggleIntroTutorial }) => {
   return (
     <StyledOpenRightDrawer>
       <StyledMenuListHeader>
@@ -85,6 +87,14 @@ export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState }) 
             </StyledMenuListIcon>
           </MenuTooltip>
           About the event
+        </StyledMenuListItem>
+        <StyledMenuListItem onClick={() => toggleIntroTutorial()}>
+          <MenuTooltip drawerOpen={drawerOpen} title='Tutorial' placement='left'>
+            <StyledMenuListIcon>
+              <img src={gradCapIcon} alt='Grad cap icon' width='19' />
+            </StyledMenuListIcon>
+          </MenuTooltip>
+          Tutorial
         </StyledMenuListItem>
         <StyledMenuListItem onClick={() => window.postMessage('{"command":"support"}', '*')}>
           <MenuTooltip drawerOpen={drawerOpen} title='Support' placement='left'>
