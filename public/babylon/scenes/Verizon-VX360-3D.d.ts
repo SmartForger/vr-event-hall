@@ -164,7 +164,7 @@ declare module PROJECT {
         private views;
         private xbox;
         private color;
-        protected awake(): void;
+        constructor(transform: BABYLON.TransformNode, scene: BABYLON.Scene, properties?: any);
         protected start(): void;
         protected destroy(): void;
     }
@@ -176,6 +176,7 @@ declare module PROJECT {
     */
     class TestNavigationAgent extends BABYLON.ScriptComponent {
         protected m_playerAgent: BABYLON.NavigationAgent;
+        constructor(transform: BABYLON.TransformNode, scene: BABYLON.Scene, properties?: any);
         protected start(): void;
         protected doPointerCancel(): void;
         protected doPointerDown(pointerInfo: BABYLON.PointerInfo): void;

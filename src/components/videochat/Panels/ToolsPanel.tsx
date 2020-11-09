@@ -12,6 +12,8 @@ import { getSessionQuestionsAndPolls } from 'graphql/customQueries'
 import { ChatMessages } from 'components/menu/ChatMessages'
 import { IPollObject, IQuestionObject, ISubscriptionObject } from 'types'
 import { updateSession, updateSessionPoll } from 'graphql/mutations'
+import { DialogCard } from 'components/shared'
+import { onCreateSessionPoll, onCreateSessionQuestion } from 'graphql/subscriptions'
 
 export const ToolsPanel = () => {
   const classes = useStyles()
@@ -19,12 +21,13 @@ export const ToolsPanel = () => {
   const [nestedExpanded, setNestedExpanded] = useState<string | false>('')
   const [questions, setQuestions] = useState<IQuestionObject[]>([])
   const [polls, setPolls] = useState<IPollObject[]>([])
+  const [dialogType, setDialogType] = useState<string>('')
+  const [selectedPoll, setSelectedPoll] = useState<string>('')
 
   const { videoChatState } = useVideoChatContext()
 
-  // TODO: Add Subscriptions in Schema
-  // let questionSubscription = useRef<ISubscriptionObject | null>(null)
-  // let pollSubscription = useRef<ISubscriptionObject | null>(null)
+  let questionSubscription = useRef<ISubscriptionObject | null>(null)
+  let pollSubscription = useRef<ISubscriptionObject | null>(null)
 
   const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
     setExpanded(newExpanded ? panel : false)
@@ -34,17 +37,45 @@ export const ToolsPanel = () => {
     setNestedExpanded(newExpanded ? panel : false)
   }
 
+  const newQuestion = ({ onCreateSessionQuestion }) => {
+    setQuestions([...questions, onCreateSessionQuestion])
+  }
+
+  const newPoll = ({ onCreateSessionPoll }) => {
+    setPolls([...polls, onCreateSessionPoll])
+  }
+
   const getSessionQuestionsAndPollsInfo = async () => {
     const session = await graphQLQuery(getSessionQuestionsAndPolls, 'getSession', {
       id: videoChatState?.session?.id || videoChatState.sessionId
     })
     setQuestions(session.questions.items)
     setPolls(session.polls.items)
+
+    questionSubscription.current = graphQLSubscription(
+      onCreateSessionQuestion,
+      { sessionId: videoChatState?.session?.id },
+      newQuestion
+    )
+    pollSubscription.current = graphQLSubscription(
+      onCreateSessionPoll,
+      { sessionId: videoChatState?.session?.id },
+      newPoll
+    )
   }
 
   useEffect(() => {
     getSessionQuestionsAndPollsInfo()
+
+    return () => {
+      questionSubscription.current?.unsubscribe()
+      pollSubscription.current?.unsubscribe()
+    }
   }, [])
+
+  const openQA = () => {
+    setDialogType(`${videoChatState?.session?.qaActive ? 'close' : 'open'}QA`)
+  }
 
   const toggleQA = async () => {
     await graphQLMutation(updateSession, {
@@ -53,11 +84,32 @@ export const ToolsPanel = () => {
     })
   }
 
-  const activatePoll = async (id: string) => {
-    await graphQLMutation(updateSessionPoll, {
-      id,
-      active: 'true'
-    })
+  const selectPoll = (id: string) => {
+    setSelectedPoll(id)
+    setDialogType('poll')
+  }
+
+  const activatePoll = async () => {
+    if (selectedPoll) {
+      await graphQLMutation(updateSessionPoll, {
+        id: selectedPoll,
+        active: 'true'
+      })
+    }
+  }
+
+  const onQAConfirm = async () => {
+    await toggleQA()
+    onCancel()
+  }
+
+  const onPollConfirm = async () => {
+    await activatePoll()
+    onCancel()
+  }
+
+  const onCancel = () => {
+    setDialogType('')
   }
 
   return (
@@ -70,7 +122,7 @@ export const ToolsPanel = () => {
           <Button
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
-              toggleQA()
+              openQA()
             }}
             variant='outlined'
             className={`${classes.roundedButton} ${classes.qaButton}`}
@@ -83,7 +135,7 @@ export const ToolsPanel = () => {
             {questions
               .filter(question => question.answered === 'false')
               .map(question => (
-                <ListItem className={classes.questionListItem}>
+                <ListItem className={classes.questionListItem} key={question.id}>
                   <section className={classes.userInfo}>
                     <Typography variant='subtitle1' className={classes.subtitle}>
                       {question?.user?.firstName} {question?.user?.lastName}
@@ -110,6 +162,7 @@ export const ToolsPanel = () => {
               square
               expanded={nestedExpanded === `poll${idx}`}
               onChange={handleNestedChange(`poll${idx}`)}
+              key={poll.id}
             >
               <NestedAccordionSummary aria-controls={`poll${idx}d-content`} id={`poll${idx}d-header`}>
                 <Typography className={classes.nestedTitle} variant='body1'>
@@ -118,7 +171,7 @@ export const ToolsPanel = () => {
                 <Button
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation()
-                    activatePoll(poll?.id || '')
+                    selectPoll(poll?.id || '')
                   }}
                   variant='outlined'
                   className={`${classes.roundedButton} ${classes.pollButton}`}
@@ -143,12 +196,40 @@ export const ToolsPanel = () => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails className={classes.internalChat}>
-            <ChatMessages internal />
+            <ChatMessages internal videoChat={true} />
           </AccordionDetails>
         </Accordion>
       ) : null}
+      {dialogType ? (
+        <DialogCard
+          title={dialogInfo[dialogType || ''].title}
+          message={dialogInfo[dialogType || ''].message}
+          messageLine2={dialogInfo[dialogType || ''].messageLine2}
+          onConfirm={dialogType === 'poll' ? onPollConfirm : onQAConfirm}
+          onCancel={onCancel}
+          className={classes.dialog}
+        />
+      ) : null}
     </>
   )
+}
+
+const dialogInfo = {
+  openQA: {
+    title: 'Open Q&A',
+    message: 'You are about to open question submission for all users in this session.',
+    messageLine2: 'Are you sure?'
+  },
+  closeQA: {
+    title: 'Close Q&A',
+    message: 'You are about to close question submission for all users in this session.',
+    messageLine2: 'Are you sure?'
+  },
+  poll: {
+    title: 'Send Poll',
+    message: 'You are about to send a poll to all users in this session',
+    messageLine2: 'Are you sure?'
+  }
 }
 
 const useStyles = makeStyles(() => ({
@@ -217,6 +298,10 @@ const useStyles = makeStyles(() => ({
   },
   internalChat: {
     height: '500px'
+  },
+  dialog: {
+    position: 'fixed',
+    top: 0
   }
 }))
 

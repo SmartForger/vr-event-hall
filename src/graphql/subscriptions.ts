@@ -263,6 +263,19 @@ export const onUpdateSession = /* GraphQL */ `
       description
       active
       conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       admins {
         items {
           id
@@ -272,6 +285,7 @@ export const onUpdateSession = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        nextToken
       }
       users {
         items {
@@ -294,6 +308,18 @@ export const onUpdateSession = /* GraphQL */ `
           lastName
           email
           avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
           createdAt
           updatedAt
         }
@@ -342,9 +368,38 @@ export const onUpdateSession = /* GraphQL */ `
         }
         nextToken
       }
+      pollAnswers {
+        items {
+          id
+          sessionId
+          userId
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       qaActive
       presenterPins
       muted
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onCreateSessionPoll = /* GraphQL */ `
+  subscription OnCreateSessionPoll($sessionId: ID!) {
+    onCreateSessionPoll(sessionId: $sessionId) {
+      id
+      sessionId
+      active
+      name
+      question
+      optionA
+      optionB
+      optionC
+      optionD
+      answer
       createdAt
       updatedAt
     }
@@ -363,6 +418,49 @@ export const onUpdateSessionPoll = /* GraphQL */ `
       optionC
       optionD
       answer
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onCreateSessionQuestion = /* GraphQL */ `
+  subscription OnCreateSessionQuestion($sessionId: ID!) {
+    onCreateSessionQuestion(sessionId: $sessionId) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answered
+      content
       createdAt
       updatedAt
     }
@@ -414,6 +512,48 @@ export const onUpdateSessionQuestion = /* GraphQL */ `
 export const onCreateRaisedHand = /* GraphQL */ `
   subscription OnCreateRaisedHand($sessionId: ID!) {
     onCreateRaisedHand(sessionId: $sessionId) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      dismissed
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateRaisedHand = /* GraphQL */ `
+  subscription OnUpdateRaisedHand($sessionId: ID!) {
+    onUpdateRaisedHand(sessionId: $sessionId) {
       id
       userId
       sessionId

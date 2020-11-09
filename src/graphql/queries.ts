@@ -1030,6 +1030,56 @@ export const raisedHandByDate = /* GraphQL */ `
     }
   }
 `
+export const raisedHandByDismissed = /* GraphQL */ `
+  query RaisedHandByDismissed(
+    $sessionId: ID
+    $dismissed: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelRaisedHandFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    raisedHandByDismissed(
+      sessionId: $sessionId
+      dismissed: $dismissed
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        sessionId
+        user {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          createdAt
+          updatedAt
+        }
+        dismissed
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
 export const questionByDate = /* GraphQL */ `
   query QuestionByDate(
     $sessionId: ID

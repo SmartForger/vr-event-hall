@@ -212,7 +212,47 @@ export const getAttendeeInfo = /* GraphQL */ `
       id
       firstName
       lastName
+      email
       avatar
+      title
+      company
+    }
+  }
+`
+export const getRaisedHandsByDismissed = /* GraphQL */ `
+  query RaisedHandByDismissed(
+    $sessionId: ID
+    $dismissed: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelRaisedHandFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    raisedHandByDismissed(
+      sessionId: $sessionId
+      dismissed: $dismissed
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        sessionId
+        user {
+          id
+          firstName
+          lastName
+          email
+          title
+          createdAt
+          updatedAt
+        }
+        dismissed
+        createdAt
+        updatedAt
+      }
     }
   }
 `

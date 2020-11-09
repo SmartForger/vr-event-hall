@@ -53,7 +53,7 @@ const MeetingControls: FC<MeetingControlProps> = ({
           onClick={() => toggleDrawer && toggleDrawer(null, 'rightPersistent', true)}
           label='Chat'
         />
-        {isClassroom && !isPresenter ? <CustomRaiseHandControl sessionId={videoChatState.sessionId} /> : null}
+        {isClassroom && !isPresenter ? <CustomRaiseHandControl sessionId={videoChatState?.session?.id || ''} /> : null}
         {isClassroom && isVideoPresenter && tiles.length < 4 ? <CustomVideoInputControl /> : null}
         {!isClassroom ? <CustomVideoInputControl /> : null}
         <EndMeetingControl setVisible={setVisible} isPresenter={isPresenter} />

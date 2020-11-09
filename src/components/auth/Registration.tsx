@@ -1,4 +1,4 @@
-import React, { FC, useState, ChangeEvent, useEffect } from 'react'
+import React, { FC, useState, FormEvent, ChangeEvent, useEffect } from 'react'
 import { I18n, Storage } from 'aws-amplify'
 import {
   TextField,
@@ -125,6 +125,10 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     })
   }
 
+  const handleSubmit = (e: FormEvent<Element>) => {
+    e.preventDefault()
+  }
+
   const createNewUser = async () => {
     const lowerCaseEmail: string = userInfo.email?.toLowerCase() || ''
     try {
@@ -161,6 +165,9 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         utm_content: urlParams.get('utm_content') || ''
       }
 
+      // Logic for setting Small Business or Enterprise
+      const campaignURL = userInfo.companySize == '500+' ? 'enterprise1Ent' : 'enterprise1Small';
+
       const response = await axios({
         method: 'post',
         headers: {
@@ -169,7 +176,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         url: 'https://f1chjtarbg.execute-api.us-east-1.amazonaws.com/prod/integrate',
         data: {
           user: { ...userInfo, ...utmCampaignParams, createdAt: new Date().getTime(), status: 'Registered' },
-          event: 'enterprise'
+          event: campaignURL
         }
       })
       // Remove URL params
@@ -486,7 +493,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
 
   // registration - part 2 - company info
   const companyRegForm = (
-    <>
+    <form name='companyForm' onSubmit={handleSubmit} noValidate={true}>
       <Grid item>
         <Typography variant='h2' className={classes.heading} paragraph>
           <span dangerouslySetInnerHTML={{ __html: I18n.get('joinUs') }}></span>
@@ -631,7 +638,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           {I18n.get('continue')}
         </PillButton>
       </Grid>
-    </>
+    </form>
   )
 
   // this reg form is split into two sections, personal and company

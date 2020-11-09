@@ -1,5 +1,5 @@
 import React, { useReducer, createContext, Dispatch, useContext } from 'react'
-import { IAskedPollQuestion } from 'types'
+import { IAskedPollQuestion, EPollDisplayMode, IPollAnswerResults } from 'types'
 
 // export enum UserAdminType {
 //   PRESENTER = 'presenter',
@@ -11,19 +11,22 @@ interface IPollContextObject {
   question: Partial<IAskedPollQuestion>
   answerChoice: string
   loading: boolean
-  pollQuestionId: string
-  pollOpen: boolean
-  pollMsRemaining: number
+  questionId: string
+  open: boolean
+  results?: IPollAnswerResults
+  mode: EPollDisplayMode
+  msRemaining: number
   // userType: UserAdminType
 }
 
 const initialState: IPollContextObject = {
   loading: false,
-  pollQuestionId: '',
+  questionId: '',
   question: {},
   answerChoice: '',
-  pollOpen: false,
-  pollMsRemaining: 30000 // 30 seconds
+  mode: EPollDisplayMode.question,
+  open: false,
+  msRemaining: 30000 // 30 seconds
   // userType: UserAdminType.GUEST,
 }
 
@@ -37,7 +40,7 @@ export const PollContext = createContext<{
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'SET_QUESTION':
+    case 'SET_POLL':
       return {
         ...state,
         ...action.payload
@@ -52,10 +55,25 @@ const reducer = (state, action) => {
         ...state,
         pollOpen: action.payload
       }
+    case 'SET_MODE':
+      return {
+        ...state,
+        mode: action.payload
+      }
     case 'SET_ANSWER':
       return {
         ...state,
         answerChoice: action.payload
+      }
+    case 'SET_RESULTS':
+      return {
+        ...state,
+        results: action.payload
+      }
+    case 'SET_RESULTS':
+      return {
+        ...state,
+        results: action.payload
       }
     default:
       return state

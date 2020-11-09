@@ -11,30 +11,23 @@ import {
   StyledChatSectionHeaderTitle
 } from './Styled'
 
+import { AttentionDot } from 'components'
+import { Channel } from './Channel'
+
 import { useChatContext } from 'providers/ChatProvider'
 import { IConversation, ISubscriptionObject, IUser, UserStatus } from 'types'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
-import { listConversations, sessionByConversationId } from 'graphql/queries'
+import { listConversations, sessionByConversationId, getConversation } from 'graphql/queries'
 import { onUpdateSession } from 'graphql/subscriptions'
-
-interface IChatChannels {
-  title: string
-  previewCount: number
-  conversationId: string
-}
-interface IChatChannel {
-  data: IConversation
-  openConversation: (id: string) => void
-}
-
-const Channel: FC<IChatChannel> = ({ data, openConversation }) => (
-  <StyledChannel onClick={() => openConversation(data.id)}>
-    <span>{data.name}</span>
-  </StyledChannel>
-)
 
 export const sortBy = (list: any[], key: string) => {
   return list.sort((a, b) => (a[key] > b[key] ? 1 : -1))
+}
+
+interface IChatChannels {
+  title: string
+  previewCount?: number
+  conversationId: string
 }
 
 export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversationId }) => {
@@ -65,10 +58,8 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
 
   const openConversation = async (conversationId: string) => {
     dispatch({ type: 'SET_DETAILS', payload: { conversationId, conversationOpen: true } })
-    const session = await graphQLQuery(sessionByConversationId, 'sessionByConversationId', { conversationId })
-    dispatch({ type: 'SET_DETAILS', payload: { session } })
-
-    updateSessionSubscription.current = graphQLSubscription(onUpdateSession, { id: session.id }, updateSessionInfo)
+    const conversation = await graphQLQuery(getConversation, 'getConversation', { id: conversationId })
+    dispatch({ type: 'SET_DETAILS', payload: { conversation } })
   }
 
   useEffect(() => {
@@ -80,29 +71,38 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
   return (
     <StyledChatSection>
       <StyledChatSectionHeader>
-        <StyledChatSectionHeaderTitle>{title}</StyledChatSectionHeaderTitle>
-        <IconButton edge='end' size='small' color='inherit' onClick={() => setExpanded(!expanded)}>
-          <ExpandMore
-            className={classnames(classes.expandMore, {
-              [classes.expanded]: expanded
-            })}
-          />
-        </IconButton>
+        <StyledChatSectionHeaderTitle>
+          <span>{title}</span>
+        </StyledChatSectionHeaderTitle>
+        {Number.isInteger(previewCount) && (
+          <IconButton edge='end' size='small' color='inherit' onClick={() => setExpanded(!expanded)}>
+            <ExpandMore
+              className={classnames(classes.expandMore, {
+                [classes.expanded]: expanded
+              })}
+            />
+          </IconButton>
+        )}
       </StyledChatSectionHeader>
 
-      {chatState.conversations.slice(0, previewCount).map((data, index) => (
-        <StyledChatSectionItem key={`preview-${index}`}>
-          <Channel data={data} openConversation={openConversation} />
-        </StyledChatSectionItem>
-      ))}
-
-      <Collapse in={expanded}>
-        {chatState.conversations.slice(previewCount).map((data, index) => (
+      {chatState.conversations.slice(0, previewCount).map((data, index) => {
+        const unreadInChannel = chatState.unreadMessagesByConversation[data.id] > 0
+        return (
           <StyledChatSectionItem key={`expanded-${index}`}>
-            <Channel data={data} openConversation={openConversation} />
+            <Channel data={data} openConversation={openConversation} isUnread={unreadInChannel} />
           </StyledChatSectionItem>
-        ))}
-      </Collapse>
+        )
+      })}
+
+      {Number.isInteger(previewCount) &&
+        chatState.conversations.slice(previewCount).map((data, index) => {
+          const unreadInChannel = chatState.unreadMessagesByConversation[data.id] > 0
+          return (
+            <StyledChatSectionItem key={`expanded-${index}`}>
+              <Channel data={data} openConversation={openConversation} isUnread={unreadInChannel} />
+            </StyledChatSectionItem>
+          )
+        })}
     </StyledChatSection>
   )
 }

@@ -52,6 +52,7 @@ import { incrementNotification } from '../redux/chat'
 import { VideoChatProvider } from 'providers'
 import { JoyrideTutorialStyles } from '../components/shared/tutorial/JoyrideTutorialStyles'
 import { useBrowserCache } from '../hooks'
+import { RosterProvider } from 'providers/RosterProvider'
 
 interface IModalConfig {
   videoSrc?: string
@@ -118,7 +119,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
     const welcomeSteps = [GameFlowSteps.Intro, GameFlowSteps.Welcome, GameFlowSteps.Connect]
     let newLocation = location
 
-    if ([GameFlowSteps.Sessions, GameFlowSteps.Explore].includes(location)) {
+    if ([GameFlowSteps.Sessions, GameFlowSteps.Explore, GameFlowSteps.Session].includes(location)) {
       window.postMessage(`{"command":"location", "param": "${location}"}`, '*')
     } else if (welcomeSteps.includes(prevGameState) && welcomeSteps.includes(location)) {
       setPrevGameState(location)
@@ -351,6 +352,9 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
               mapLocation={mapLocation}
               drawerOpen={drawerOpen}
               user={user}
+              users={users}
+              conversationId={conversationId}
+              setConversationId={setConversationId}
             />
           </>
         )}
@@ -385,8 +389,9 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
                 user={user}
               />
             )}
-
-            <ClassRoomContainer />
+            <RosterProvider>
+              <ClassRoomContainer />
+            </RosterProvider>
 
             {!tutorialViewedLoading && (
               <IntroTutorial

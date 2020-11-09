@@ -11,11 +11,13 @@ import { Theme, Toolbar, IconButton, makeStyles, AppBar, Grid } from '@material-
 // Images
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
 
-interface HeaderProps {}
+interface HeaderProps {
+  preventFade?: boolean
+}
 
-export const Header: FC<HeaderProps> = ({ children }) => {
+export const Header: FC<HeaderProps> = ({ children, preventFade }) => {
   const dispatch = useDispatch()
-  const classes = useStyles()
+  const classes = useStyles(!!preventFade)
 
   // Selectors
   const drawerOpen = useSelector(menuDrawerOpen)
@@ -39,8 +41,14 @@ export const Header: FC<HeaderProps> = ({ children }) => {
   )
 }
 
+const fadeInAnimationConfig = {
+  animationName: '$fadeInOpacity',
+  animationIterationCount: 1,
+  animationTimingFunction: 'ease-in',
+  animationDuration: '0.75s'
+}
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  root: (preventFade: boolean) => ({
     position: 'absolute',
     top: '30px',
     left: '0',
@@ -50,18 +58,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: 'unset',
     'z-index': '1200',
     minHeight: '74px',
-
     opacity: 1,
-    animationName: '$fadeInOpacity',
-    animationIterationCount: 1,
-    animationTimingFunction: 'ease-in',
-    animationDuration: '0.75s',
+    ...(preventFade ? {} : fadeInAnimationConfig),
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       top: 0,
       'z-index': '1300'
     }
-  },
+  }),
   '@keyframes fadeInOpacity': {
     '0%': {
       opacity: 0

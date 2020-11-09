@@ -22,6 +22,9 @@ export enum UserAdminType {
   GUEST = ''
 }
 
+interface IUnreadMessageCount {
+  [key: string]: number
+}
 interface IChatContextObject {
   conversations: IConversation[]
   loading: boolean
@@ -30,6 +33,7 @@ interface IChatContextObject {
   userType: UserAdminType
   pinnedMessageId: string
   session: IDemoSession | null
+  unreadMessagesByConversation: IUnreadMessageCount
 }
 
 const initialState = {
@@ -39,6 +43,7 @@ const initialState = {
   conversationOpen: false,
   userType: UserAdminType.GUEST,
   pinnedMessageId: '',
+  unreadMessagesByConversation: {},
   session: null
 }
 
@@ -66,6 +71,22 @@ const reducer = (state, action) => {
       return {
         ...state,
         ...action.payload
+      }
+    case 'INCREMENT_UNREAD_CONVO_MESSAGE':
+      return {
+        ...state,
+        unreadMessagesByConversation: {
+          ...state.unreadMessagesByConversation,
+          [action.payload.conversationId]: (state.unreadMessagesByConversation[action.payload.conversationId] || 0) + 1
+        }
+      }
+    case 'CLEAR_UNREAD_CONVO_MESSAGE':
+      return {
+        ...state,
+        unreadMessagesByConversation: {
+          ...state.unreadMessagesByConversation,
+          [action.payload.conversationId]: 0
+        }
       }
     default:
       return state
