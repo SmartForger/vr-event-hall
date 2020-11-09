@@ -13,7 +13,7 @@ import { GameFlowStepsConfig } from 'helpers/steps'
 import { GameFlowSteps } from 'types'
 import { useAppState, UserAdminType, useVideoChatContext } from 'providers'
 import { graphQLQuery } from 'graphql/helpers'
-import { getAttendeeInfo } from 'graphql/customQueries'
+import { getAttendeeInfo, getSessionOverviewById } from 'graphql/customQueries'
 
 interface SessionProps {
   session: ISession

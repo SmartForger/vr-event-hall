@@ -299,3 +299,35 @@ export const getConversationWithAssociated = /* GraphQL */ `
     }
   }
 `
+
+export const getSessionOverviewById = /* GraphQL */ `
+  query GetSessionOverviewById($id: ID!) {
+    getSession(id: $id) {
+      id
+      name
+      description
+      active
+      admins {
+        items {
+          id
+          userId
+          sessionId
+          userType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+    }
+  }
+`
