@@ -94,6 +94,7 @@ export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState, to
             </StyledMenuListIcon>
           </MenuTooltip>
           About the event
+        </StyledMenuListItem>
         <StyledMenuListItem onClick={() => window.postMessage('{"command":"support"}', '*')}>
           <MenuTooltip drawerOpen={drawerOpen} title='Support' placement='left'>
             <StyledMenuListIcon>
