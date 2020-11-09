@@ -7,7 +7,7 @@ import { CustomControlBarButton, StyledControls } from './Styled'
 import { CustomAudioInputControl } from './CustomAudioInputControl'
 import { CustomVideoInputControl } from './CustomVideoInputControl'
 import { CustomContentShareControl } from './CustomContentShareControl'
-import { CustomRaiseHandControl } from './CustomRaiseHandControl'
+// import { CustomRaiseHandControl } from './CustomRaiseHandControl'
 
 import { useVideoChatContext } from 'providers'
 import { graphQLMutation } from 'graphql/helpers'
@@ -53,7 +53,7 @@ const MeetingControls: FC<MeetingControlProps> = ({
           onClick={() => toggleDrawer && toggleDrawer(null, 'rightPersistent', true)}
           label='Chat'
         />
-        {isClassroom && !isPresenter ? <CustomRaiseHandControl sessionId={videoChatState?.session?.id || ''} /> : null}
+        {/* {isClassroom && !isPresenter ? <CustomRaiseHandControl sessionId={videoChatState?.session?.id || ''} /> : null} */}
         {isClassroom && isVideoPresenter && tiles.length < 4 ? <CustomVideoInputControl /> : null}
         {!isClassroom ? <CustomVideoInputControl /> : null}
         <EndMeetingControl setVisible={setVisible} isPresenter={isPresenter} />

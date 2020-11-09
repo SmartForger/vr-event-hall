@@ -71,6 +71,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
   }, [messages])
 
   useEffect(() => {
+    listRef?.current?.resetAfterIndex(0)
     return () => {
       subscription?.current?.unsubscribe()
       updateSubscription?.current?.unsubscribe()
