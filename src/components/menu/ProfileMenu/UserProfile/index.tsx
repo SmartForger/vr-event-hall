@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
-import { I18n, Storage } from 'aws-amplify'
+import { I18n, Storage, Auth } from 'aws-amplify'
 import { VariableSizeProps } from 'react-window'
+import { useHistory } from 'react-router-dom'
 import { Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
 import CreateIcon from '@material-ui/icons/Create'
 import arrowLeftIcon from 'assets/arrowLeftIcon.svg'
@@ -36,11 +37,11 @@ interface IUserProfileProps {
 
 export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
   const classes = useStyles()
+  const history = useHistory()
   const [loading, setLoading] = useState<boolean>(false)
   const [editModeState, setEditModeState] = useState<boolean>(false)
   const [profileInfo, setProfileInfo] = useState<IUser | undefined>(user)
   const [profileErrors, setProfileErrors] = useState<IProfileErrors>(initialProfileErrors)
-
   const { appState } = useAppState()
   const authedUser = appState.user
 
@@ -140,8 +141,8 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
   }
 
   const logout = () => {
-    // TODO: add logout
-    console.log('logging out')
+    Auth.signOut()
+    history.push('/')
   }
 
   const profileDisplay = (
