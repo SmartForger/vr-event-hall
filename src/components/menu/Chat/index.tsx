@@ -27,9 +27,13 @@ interface ChatProps {
 export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer }) => {
   const { chatState, dispatch } = useChatContext()
 
-  const someUnread = Object.keys(chatState?.unreadMessagesByConversation)?.some?.(convoKey => {
-    return chatState?.unreadMessagesByConversation?.[convoKey] > 0
-  })
+  const totalUnread = Object.keys(chatState?.unreadMessagesByConversation)?.reduce?.(
+    (totalUnread: number, convoKey) => {
+      totalUnread += chatState?.unreadMessagesByConversation?.[convoKey] || 0
+      return totalUnread
+    },
+    0
+  )
   let updateUnreadMessageSubscription = useRef<ISubscriptionObject | null>(null)
 
   useEffect(() => {
@@ -68,7 +72,7 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer }
           <MenuTooltip drawerOpen={drawerOpen} title='Live Chat' placement='left'>
             <img className='header-icon' src={liveChatBubbleIcon} alt='Livechat icon' width='24' />
           </MenuTooltip>
-          <AttentionDot showing={someUnread} />
+          <AttentionDot showing={totalUnread > 0} number={totalUnread} />
           <h2 className='header-title'>Live Chat</h2>
         </StyledChatHeader>
 

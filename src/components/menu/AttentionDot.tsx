@@ -4,24 +4,33 @@ import classnames from 'classnames'
 
 interface IAttentionDotProps {
   showing?: boolean
+  number?: number
+  maxNumber?: number
 }
 
-export const AttentionDot: FC<IAttentionDotProps> = ({ showing }) => {
-  const classes = useStyles()
-  return <div className={showing ? classes.unreadIndicator : ''}></div>
+export const AttentionDot: FC<IAttentionDotProps> = ({ showing, number = 0, maxNumber = 9 }) => {
+  const classes = useStyles({ showing, number })
+  return (
+    <div className={classes.unreadIndicator}>
+      {showing && number ? (number > maxNumber ? `${maxNumber}+` : number) : ''}
+    </div>
+  )
 }
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    unreadIndicator: {
-      position: 'absolute',
-      borderRadius: '50% 50%',
-      marginLeft: '-12px',
-      background: 'red',
-      marginTop: '6px',
-      height: '8px',
-      width: '8px',
-      tranform: '200ms'
-    }
+const useStyles = makeStyles({
+  unreadIndicator: (props: IAttentionDotProps) => ({
+    position: 'absolute',
+    height: props.showing ? (props.number ? '16px' : '8px') : '0px',
+    width: props.showing ? (props.number ? '16px' : '8px') : '0px',
+    marginTop: props.number ? '-10px' : '6px',
+    marginLeft: '-12px',
+    borderRadius: '50% 50%',
+    fontSize: '10px',
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+    textAlign: 'center',
+    verticalAlign: 'middle',
+    background: 'red',
+    tranform: '200ms'
   })
-)
+})
