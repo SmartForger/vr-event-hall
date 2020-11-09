@@ -1884,3 +1884,132 @@ export const updateSessionPollAnswer = /* GraphQL */ `
     }
   }
 `
+export const createVideoChatInvite = /* GraphQL */ `
+  mutation CreateVideoChatInvite($input: CreateVideoChatInviteInput!, $condition: ModelVideoChatInviteConditionInput) {
+    createVideoChatInvite(input: $input, condition: $condition) {
+      id
+      conversationId
+      userId
+      invitingUserId
+      invitingUser {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateVideoChatInvite = /* GraphQL */ `
+  mutation UpdateVideoChatInvite($input: UpdateVideoChatInviteInput!, $condition: ModelVideoChatInviteConditionInput) {
+    updateVideoChatInvite(input: $input, condition: $condition) {
+      id
+      conversationId
+      userId
+      invitingUserId
+      invitingUser {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteVideoChatInvite = /* GraphQL */ `
+  mutation DeleteVideoChatInvite($input: DeleteVideoChatInviteInput!, $condition: ModelVideoChatInviteConditionInput) {
+    deleteVideoChatInvite(input: $input, condition: $condition) {
+      id
+      conversationId
+      userId
+      invitingUserId
+      invitingUser {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`

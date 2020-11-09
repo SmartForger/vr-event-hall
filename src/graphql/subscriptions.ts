@@ -646,6 +646,49 @@ export const onCreateGlobalRaisedHand = /* GraphQL */ `
     }
   }
 `
+export const onCreateVideoChatInvite = /* GraphQL */ `
+  subscription OnCreateVideoChatInvite($userId: ID!) {
+    onCreateVideoChatInvite(userId: $userId) {
+      id
+      conversationId
+      userId
+      invitingUserId
+      invitingUser {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const onCreateEventConfig = /* GraphQL */ `
   subscription OnCreateEventConfig {
     onCreateEventConfig {

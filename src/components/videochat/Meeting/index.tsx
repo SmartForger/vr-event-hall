@@ -6,11 +6,11 @@ import { Modal } from '@mvrk-hq/vx360-components'
 import { StyledLayout, StyledContent } from './Styled'
 import MeetingControls from '../MeetingControls'
 import MeetingDetails from '../MeetingDetails'
-import { ConversationList, ChatMessages, TabPanel } from 'components'
+import { DeviceSetup } from '../DeviceSetup'
+import { ChatMessages, TabPanel } from 'components'
 import { DetailsPanel, PeoplePanel, ToolsPanel } from '../Panels'
 
 import { useVideoChatContext } from 'providers'
-import { IMeetingInfo, IUser } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
 
@@ -19,6 +19,7 @@ interface VideoChatModalProps {}
 export const VideoChatModal: FC<VideoChatModalProps> = () => {
   const classes = useStyles()
   const { videoChatState, dispatch } = useVideoChatContext()
+  const [userStarted, setUserStarted] = useState<boolean>(false)
   const [tabValue, setTabValue] = useState<number>(0)
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false)
   const setVisible = useCallback(
@@ -50,59 +51,49 @@ export const VideoChatModal: FC<VideoChatModalProps> = () => {
   return (
     <UserActivityProvider>
       <Modal open fullscreen onClose={() => setVisible(false)}>
-        <>
-          <StyledLayout showNav={false} showRoster={false} drawerWidth={drawerOpen ? 350 : 0}>
-            <StyledContent>
-              <VideoTileGrid className='videos' noRemoteVideoView={<MeetingDetails />} />
-              <MeetingControls setVisible={setVisible} toggleDrawer={toggleDrawer} />
-            </StyledContent>
-          </StyledLayout>
-          <Drawer
-            anchor={'right'}
-            open={drawerOpen}
-            onClose={(e: React.KeyboardEvent | React.MouseEvent) => setDrawerOpen(false)}
-            ModalProps={{ hideBackdrop: true }}
-            variant='persistent'
-            classes={{
-              paper: classes.messagePaper
-            }}
-          >
-            <div className={classes.logo}>
-              <Logo />
-            </div>
-            <div className={classes.displayMenu}>
-              <Toolbar className={classes.toolbar}>
-                <Tabs
-                  value={tabValue}
-                  onChange={handleChange}
-                  className={classes.tabs}
-                  TabIndicatorProps={{
-                    style: { top: 0, backgroundColor: '#D52B1E', height: '4px' }
-                  }}
-                >
-                  <Tab label='Chat' className={classes.tab} />
-                  <Tab label='People' className={classes.tab} />
-                  <Tab label={videoChatState.adminType ? 'Tools' : 'Details'} className={classes.tab} />
-                </Tabs>
-              </Toolbar>
-              <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
-                <ChatMessages />
-              </TabPanel>
-              <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
-                <PeoplePanel />
-              </TabPanel>
-              {videoChatState.adminType ? (
-                <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
-                  <ToolsPanel />
+        {userStarted ? (
+          <>
+            <StyledLayout showNav={false} showRoster={false} drawerWidth={drawerOpen ? 350 : 0}>
+              <StyledContent>
+                <VideoTileGrid className='videos' noRemoteVideoView={<MeetingDetails />} />
+                <MeetingControls setVisible={setVisible} toggleDrawer={toggleDrawer} />
+              </StyledContent>
+            </StyledLayout>
+            <Drawer
+              anchor={'right'}
+              open={drawerOpen}
+              onClose={(e: React.KeyboardEvent | React.MouseEvent) => setDrawerOpen(false)}
+              ModalProps={{ hideBackdrop: true }}
+              variant='persistent'
+              classes={{
+                paper: classes.messagePaper
+              }}
+            >
+              <div className={classes.logo}>
+                <Logo />
+              </div>
+              <div className={classes.displayMenu}>
+                <Toolbar className={classes.toolbar}>
+                  <Tabs
+                    value={tabValue}
+                    onChange={handleChange}
+                    className={classes.tabs}
+                    TabIndicatorProps={{
+                      style: { top: 0, backgroundColor: '#D52B1E', height: '4px' }
+                    }}
+                  >
+                    <Tab label='Chat' className={classes.tab} />
+                  </Tabs>
+                </Toolbar>
+                <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
+                  <ChatMessages />
                 </TabPanel>
-              ) : (
-                <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
-                  <DetailsPanel />
-                </TabPanel>
-              )}
-            </div>
-          </Drawer>
-        </>
+              </div>
+            </Drawer>
+          </>
+        ) : (
+          <DeviceSetup confirmStart={setUserStarted} />
+        )}
       </Modal>
     </UserActivityProvider>
   )

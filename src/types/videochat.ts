@@ -70,3 +70,11 @@ export interface ISession {
   presenterPins: string[]
   admins: IAdminUserList
 }
+
+export interface IVideoChatInvite {
+  id: string
+  userId: string
+  invitingUserId: string
+  conversationId: string
+  invitingUser: IUser
+}
