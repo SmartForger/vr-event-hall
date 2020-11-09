@@ -96,10 +96,6 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     }
   }, [])
 
-  useEffect(() => {
-    getSize(filteredMessages.length - 1)
-  }, [filteredMessages.length])
-
   const openDialog = (index: number, type: 'pin' | 'delete') => {
     setSelectedIndex(index)
     setDialogType(type)
