@@ -359,6 +359,9 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
               mapLocation={mapLocation}
               drawerOpen={drawerOpen}
               user={user}
+              users={users}
+              conversationId={conversationId}
+              setConversationId={setConversationId}
             />
           </>
         )}

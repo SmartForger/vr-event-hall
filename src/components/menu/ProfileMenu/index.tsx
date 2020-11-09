@@ -4,7 +4,10 @@ import React, { FC } from 'react'
 import classnames from 'classnames'
 import { makeStyles, createStyles, Theme, Backdrop, Drawer, IconButton } from '@material-ui/core'
 
+import { ChatProvider } from 'providers'
+
 // Components
+import { Chat } from '../Chat'
 import { MenuList } from '../MenuList'
 
 // Types
@@ -18,64 +21,86 @@ import arrowRightIcon from 'assets/arrowRightIcon.svg'
 
 interface ProfileMenuProps {
   user?: IUser
+  users?: IUser[]
   drawerOpen: boolean
   mapLocation?: object
+  conversationId: string
   toggleDrawer: () => void
   toggleTutorial: () => void
   setGameState: (state: GameFlowSteps) => void
+  setConversationId: (conversationId: string) => void
 }
 
-export const ProfileMenu: FC<ProfileMenuProps> = ({ user, drawerOpen, toggleDrawer, toggleTutorial, setGameState }) => {
+export const ProfileMenu: FC<ProfileMenuProps> = ({
+  user,
+  users,
+  drawerOpen,
+  toggleDrawer,
+  toggleTutorial,
+  setGameState,
+  conversationId,
+  setConversationId
+}) => {
   const classes = useStyles()
 
   const closeChat = () => {
     toggleDrawer()
+    setConversationId('')
   }
 
   return (
-    <div className={classes.root}>
-      <Backdrop className={classes.backdrop} open={drawerOpen} onClick={toggleDrawer} />
-      <Drawer
-        anchor='right'
-        variant='permanent'
-        className={classnames(classes.drawer, {
-          [classes.drawerOpen]: drawerOpen,
-          [classes.drawerClose]: !drawerOpen
-        })}
-        classes={{
-          paper: classnames({
+    <ChatProvider>
+      <div className={classes.root}>
+        <Backdrop className={classes.backdrop} open={drawerOpen} onClick={toggleDrawer} />
+        <Drawer
+          anchor='right'
+          variant='permanent'
+          className={classnames(classes.drawer, {
             [classes.drawerOpen]: drawerOpen,
             [classes.drawerClose]: !drawerOpen
-          })
-        }}
-      >
-        <>
-          <header className={classes.header}>
-            {drawerOpen ? (
-              <img src={verizonLogo} alt='Verizon' width='150' />
-            ) : (
-              <img className={classes.smallLogo} src={verizonLogoV} alt='Verizon' width='20' height='24' />
-            )}
-          </header>
-          <MenuList
-            user={user}
-            anchor='right'
-            drawerOpen={drawerOpen}
-            toggleTutorial={toggleTutorial}
-            setGameState={setGameState}
-          />
-          <footer className={classes.footer}>
-            <IconButton onClick={closeChat}>
+          })}
+          classes={{
+            paper: classnames({
+              [classes.drawerOpen]: drawerOpen,
+              [classes.drawerClose]: !drawerOpen
+            })
+          }}
+        >
+          <>
+            <header className={classes.header}>
               {drawerOpen ? (
-                <img className={classes.arrowIcon} src={arrowRightIcon} alt='Arrow right' />
+                <img src={verizonLogo} alt='Verizon' width='150' />
               ) : (
-                <img className={classes.arrowIcon} src={arrowLeftIcon} alt='Arrow left' />
+                <img className={classes.smallLogo} src={verizonLogoV} alt='Verizon' width='20' height='24' />
               )}
-            </IconButton>
-          </footer>
-        </>
-      </Drawer>
-    </div>
+            </header>
+            <MenuList
+              user={user}
+              anchor='right'
+              drawerOpen={drawerOpen}
+              toggleTutorial={toggleTutorial}
+              setGameState={setGameState}
+            />
+            <Chat
+              toggleDrawer={toggleDrawer}
+              drawerOpen={drawerOpen}
+              user={user}
+              users={users}
+              conversationId={conversationId}
+            />
+            <footer className={classes.footer}>
+              <IconButton onClick={closeChat}>
+                {drawerOpen ? (
+                  <img className={classes.arrowIcon} src={arrowRightIcon} alt='Arrow right' />
+                ) : (
+                  <img className={classes.arrowIcon} src={arrowLeftIcon} alt='Arrow left' />
+                )}
+              </IconButton>
+            </footer>
+          </>
+        </Drawer>
+      </div>
+    </ChatProvider>
   )
 }
 

@@ -196,7 +196,7 @@ export const ToolsPanel = () => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails className={classes.internalChat}>
-            <ChatMessages internal />
+            <ChatMessages internal videoChat={true} />
           </AccordionDetails>
         </Accordion>
       ) : null}

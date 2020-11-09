@@ -39,3 +39,15 @@ export const onUpdateMessageWithAuthor = /* GraphQL */ `
     }
   }
 `
+
+export const onCreateGlobalMessageMin = /* GraphQL */ `
+  subscription OnCreateGlobalMessageMin {
+    onCreateGlobalMessage {
+      id
+      conversationId
+      deleted
+      createdAt
+      updatedAt
+    }
+  }
+`
