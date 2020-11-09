@@ -30,6 +30,7 @@ interface ProfileMenuProps {
   conversationId: string
   toggleDrawer: () => void
   toggleTutorial: () => void
+  toggleIntroTutorial: () => void
   setGameState: (state: GameFlowSteps) => void
   setConversationId: (conversationId: string) => void
 }
@@ -40,6 +41,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
   drawerOpen,
   toggleDrawer,
   toggleTutorial,
+  toggleIntroTutorial,
   setGameState,
   conversationId,
   setConversationId
@@ -86,9 +88,11 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
               user={user}
               anchor='right'
               drawerOpen={drawerOpen}
-              toggleTutorial={toggleTutorial}
               setGameState={setGameState}
+              toggleTutorial={toggleTutorial}
+              toggleIntroTutorial={toggleIntroTutorial}
             />
+            <div id='profileDrawer' />
             <Chat
               toggleDrawer={toggleDrawer}
               drawerOpen={drawerOpen}
