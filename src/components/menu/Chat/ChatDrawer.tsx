@@ -12,7 +12,11 @@ import { createChimeMeeting } from 'helpers'
 import { graphQLQuery } from 'graphql/helpers'
 import { getAttendeeInfo } from 'graphql/customQueries'
 
-export const ChatDrawer = () => {
+interface ChatDrawerProps {
+  vcOff?: boolean
+}
+
+export const ChatDrawer = ({ vcOff }) => {
   const classes = useStyles()
   const {
     appState: { user }
@@ -93,9 +97,11 @@ export const ChatDrawer = () => {
           </IconButton>
         </div>
         <Toolbar className={classes.toolbar}>
-          <IconButton className={classes.cameraButton} onClick={joinVideoCall}>
-            <VideocamOutlined />
-          </IconButton>
+          {vcOff ? (
+            <IconButton className={classes.cameraButton} onClick={joinVideoCall}>
+              <VideocamOutlined />
+            </IconButton>
+          ) : null}
           <Tabs
             value={tabValue}
             onChange={handleChange}

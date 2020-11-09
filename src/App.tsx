@@ -29,6 +29,7 @@ const App = () => {
   const [eventStage, setEventStage] = useState<EventStages>(EventStages.REGISTRATION)
   const [useBackupStream, setUseBackupStream] = useState<boolean>(false)
   const [streamStartTime, setStreamStartTime] = useState<string | undefined>()
+  const [vcOff, setVCOff] = useState<boolean>(false)
   let subscription
 
   function getEnvironment() {
@@ -55,6 +56,7 @@ const App = () => {
         setStreamStartTime(eventConfigData.streamStartTime)
         setEventStage(eventConfigData.stage)
         setUseBackupStream(eventConfigData.useBackupStream)
+        setVCOff(eventConfigData.useBackupStream)
       } catch (err) {
         console.error('Error getting event config', err)
       }
@@ -72,8 +74,12 @@ const App = () => {
 
   useEffect(() => {
     I18n.setLanguage('en')
-    // getEventConfiguration()
-    // setupEventConfigSub()
+    getEventConfiguration()
+    setupEventConfigSub()
+
+    return () => {
+      subscription.current?.unsubscribe()
+    }
   }, [])
 
   return (
@@ -95,6 +101,7 @@ const App = () => {
                         eventStage={eventStage}
                         streamStartTime={streamStartTime}
                         useBackupStream={useBackupStream}
+                        vcOff={vcOff}
                       />
                     </Router>
                     <Footer />

@@ -33,6 +33,7 @@ interface ProfileMenuProps {
   toggleIntroTutorial: () => void
   setGameState: (state: GameFlowSteps) => void
   setConversationId: (conversationId: string) => void
+  vcOff?: boolean
 }
 
 export const ProfileMenu: FC<ProfileMenuProps> = ({
@@ -44,7 +45,8 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
   toggleIntroTutorial,
   setGameState,
   conversationId,
-  setConversationId
+  setConversationId,
+  vcOff
 }) => {
   const classes = useStyles()
   const [showUserList, setShowUserList] = useState<boolean>(false)
@@ -100,6 +102,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
               users={users}
               conversationId={conversationId}
               showUserList={() => setShowUserList(true)}
+              vcOff={vcOff}
             />
             <footer className={classes.footer}>
               <IconButton onClick={closeChat}>
@@ -219,6 +222,7 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: '#fff',
+      zIndex: 2,
       '& img': {
         transition: `width 0.2s ${theme.transitions.easing.sharp}`
       },
