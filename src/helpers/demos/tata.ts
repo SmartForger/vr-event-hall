@@ -8,7 +8,7 @@ import roboBackImageFallback from 'assets/touchpoints/thumbnail-robotBack.png'
 
 export const tata: IDemo = {
   type: 'tata',
-  intro: 'tata-intro.mp4',
+  intro: 'TCS-intro_720.mp4',
   video: 'tata720.mp4',
   conversationId: '5faff25c-bbd7-4503-8747-a29e2e971014',
   timestamps: {

@@ -2,7 +2,7 @@ import { IDemo, E3DDemoNameVals } from '../../types'
 
 export const mecExplainer: IDemo = {
   type: 'mecExplainer',
-  intro: 'mec-explainer-intro.mp4',
+  intro: 'MECExplainerWillPower-intro_720.mp4',
   conversationId: 'e23af63b-2c83-44e2-87cb-43207209feed',
   video: 'mec720.mp4',
   end: {

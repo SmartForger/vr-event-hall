@@ -2,7 +2,7 @@ import { IDemo, E3DDemoNameVals } from '../../types'
 
 export const ybvr: IDemo = {
   type: 'ybvr',
-  intro: 'YBVR-intro.mp4',
+  intro: 'YBVR-intro_720.mp4',
   video: 'YBVR720.mp4',
   conversationId: 'd1a80a79-6524-4ece-9860-85d48338b520',
   end: {
