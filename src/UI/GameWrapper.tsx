@@ -80,6 +80,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   const classes = useStyles()
 
   const localStorage = window.localStorage
+  const [eventStartingSoon, setEventStartingSoonState] = useState<boolean>(false)
   const [eSSClosed, setESSClosed] = useState<boolean>(false)
 
   // notice configs
@@ -99,6 +100,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   const [gameLoading, setGameLoading] = useState<boolean>(true)
   const [hideExploreText, setHideExploreText] = useState<boolean>(false)
   const [hideSessionsText, setHideSessionsText] = useState<boolean>(false)
+  const [showLivestream, setShowLivestream] = useState<boolean>(false)
   const [showGUI, setShowGUI] = useState<boolean>(false)
   const [loaderOptions, setLoaderOptions] = useState<any>({})
   const [gameState, setGameState] = useState<GameFlowSteps>(GameFlowSteps.Intro)
@@ -293,6 +295,17 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   }, [gameState])
 
   useEffect(() => {
+    if (
+      eventStage === EventStages.LIVESTREAM ||
+      (eventStage === EventStages.COUNTDOWN && streamStartTime && Number(streamStartTime) < new Date().getTime())
+    ) {
+      setShowLivestream(true)
+    } else {
+      setShowLivestream(false)
+    }
+  }, [eventStage, streamStartTime])
+
+  useEffect(() => {
     if (!drawerOpen && conversationId) {
       handleToggleDrawer()
     }
@@ -327,7 +340,15 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
         {!gameLoading && showGUI && (
           <>
             <Header>
-              <Navigation activeTab={gameState} setActiveTab={setGameState} />
+              <Navigation
+                activeTab={gameState}
+                setActiveTab={setGameState}
+                streamStartTime={streamStartTime}
+                eventStage={eventStage}
+                setShowLivestream={setShowLivestream}
+                showLivestream={showLivestream}
+                notifyESS={() => setEventStartingSoonState(true)}
+              />
             </Header>
             <SceneWrapper
               changeActiveTouchpoint={setActiveTouchpoint}
@@ -401,6 +422,31 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
                 styles={JoyrideTutorialStyles}
               />
             )}
+
+            {eventStartingSoon ? (
+              <ToastAlert type='notice' isOpen={eventStartingSoon && !eSSClosed} onClose={() => setESSClosed(true)}>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Typography variant='h5' paragraph classes={{ root: classes.toastESSTitle }}>
+                      {I18n.get('startingSoon')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <PillButton
+                      type='button'
+                      className='button'
+                      variant='outlined'
+                      textColor='white'
+                      backgroundColor='black'
+                      onClick={() => history.push('/stream')}
+                      classes={{ root: classes.toastESSButton }}
+                    >
+                      {I18n.get('goToLiveStream')}
+                    </PillButton>
+                  </Grid>
+                </Grid>
+              </ToastAlert>
+            ) : null}
 
             {/* Toast for Notice */}
             <ToastAlert type='notice' isOpen={!!activeNotice?.type} onClose={() => setActiveNotice({})}>
