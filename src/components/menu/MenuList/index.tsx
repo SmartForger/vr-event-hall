@@ -22,6 +22,7 @@ import demoTvIcon from 'assets/demoTvIcon.svg'
 import mailIcon from 'assets/mailIcon.svg'
 import sessionIcon from 'assets/breakout.svg'
 import infoIcon from 'assets/infoIcon.svg'
+import gradCapIcon from 'assets/gradCapIcon.svg'
 import supportIcon from 'assets/supportIcon.svg'
 
 interface MenuListProps {
@@ -90,10 +91,10 @@ export const MenuList: FC<MenuListProps> = ({ drawerOpen, user, setGameState, to
         <StyledMenuListItem onClick={() => toggleIntroTutorial()}>
           <MenuTooltip drawerOpen={drawerOpen} title='Tutorial' placement='left'>
             <StyledMenuListIcon>
-              <img src={infoIcon} alt='Info icon' width='19' />
+              <img src={gradCapIcon} alt='Grad cap icon' width='19' />
             </StyledMenuListIcon>
           </MenuTooltip>
-          About the event
+          Tutorial
         </StyledMenuListItem>
         <StyledMenuListItem onClick={() => window.postMessage('{"command":"support"}', '*')}>
           <MenuTooltip drawerOpen={drawerOpen} title='Support' placement='left'>
