@@ -7,6 +7,7 @@ import { makeStyles, createStyles, Theme, Backdrop, Drawer, IconButton } from '@
 import { ChatProvider } from 'providers'
 
 // Components
+import { UserProfile } from './UserProfile'
 import { Chat } from '../Chat'
 import { MenuList } from '../MenuList'
 
@@ -48,10 +49,16 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
 }) => {
   const classes = useStyles()
   const [showUserList, setShowUserList] = useState<boolean>(false)
+  const [showProfileDrawer, setShowProfileDrawer] = useState<boolean>(false)
 
   const closeChat = () => {
     toggleDrawer()
     setConversationId('')
+  }
+
+  const toggleProfileDrawer = () => {
+    console.log('toggling profile drawer')
+    setShowProfileDrawer(!showProfileDrawer)
   }
 
   const toggleUserList = () => {
@@ -91,6 +98,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
               setGameState={setGameState}
               toggleTutorial={toggleTutorial}
               toggleIntroTutorial={toggleIntroTutorial}
+              toggleProfileDrawer={toggleProfileDrawer}
             />
             <div id='profileDrawer' />
             <Chat
@@ -112,6 +120,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
             </footer>
           </>
         </Drawer>
+        {/* Chat */}
         <Drawer
           anchor={'right'}
           open={showUserList}
@@ -129,6 +138,28 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
             </div>
             <TabPanel value={0} index={0} className={classes.tabPanel}>
               <ChatUsers toggleDrawer={toggleUserList} />
+            </TabPanel>
+          </div>
+        </Drawer>
+
+        {/* Profile */}
+        <Drawer
+          anchor={'right'}
+          open={showProfileDrawer}
+          onClose={() => setShowProfileDrawer(false)}
+          ModalProps={{ hideBackdrop: true }}
+          classes={{
+            paper: classes.messagePaper
+          }}
+        >
+          <div className={classes.displayMenu}>
+            <div className={classes.userCloseContainer}>
+              <IconButton onClick={() => setShowProfileDrawer(false)} disableRipple>
+                <Close />
+              </IconButton>
+            </div>
+            <TabPanel value={0} index={0} className={classes.tabPanel}>
+              <UserProfile toggleDrawer={toggleProfileDrawer} user={user} />
             </TabPanel>
           </div>
         </Drawer>
