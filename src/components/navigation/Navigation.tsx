@@ -1,17 +1,34 @@
 import React, { FC, useState } from 'react'
 import { I18n } from 'aws-amplify'
 import { Grid, makeStyles, Theme, Typography } from '@material-ui/core'
-import { GameFlowSteps } from 'types'
+import { GameFlowSteps, EventStages } from 'types'
+import { Countdown, RouteTransition } from 'components'
 import { GameFlowStepsConfig } from '../../helpers/steps'
+import { useHistory } from 'react-router-dom'
 
 interface NavigationProps {
   activeTab: GameFlowSteps
   setActiveTab: (state: GameFlowSteps) => void
+  setShowLivestream: (boolean) => void
+  notifyESS: () => void // EventStartingSoon
+  streamStartTime?: string
+  eventStage?: EventStages
+  showLivestream: boolean
 }
 
-export const Navigation: FC<NavigationProps> = ({ activeTab, setActiveTab }) => {
+export const Navigation: FC<NavigationProps> = ({
+  activeTab,
+  setActiveTab,
+  notifyESS,
+  streamStartTime,
+  eventStage,
+  setShowLivestream,
+  showLivestream
+}) => {
+  const history = useHistory()
   const [changingState, setChangingState] = useState<boolean>(false)
   const [previousState, setPreviousState] = useState<GameFlowSteps>(activeTab)
+  const [redirectTrigger, setRedirectTrigger] = useState<boolean>(false)
 
   const classes = useStyles()
   const onClick = state => {
@@ -70,8 +87,29 @@ export const Navigation: FC<NavigationProps> = ({ activeTab, setActiveTab }) => 
           >
             {I18n.get('connect')}
           </Typography>
+          {showLivestream && (
+            <Typography
+              component='span'
+              variant='h5'
+              className={activeTab === GameFlowSteps.LiveStream ? classes.navItemActive : classes.navItem}
+              onClick={() => onClick(history.push('/stream'))}
+            >
+              {I18n.get('liveStream')}
+            </Typography>
+          )}
+
+          {streamStartTime && eventStage === EventStages.COUNTDOWN && (
+            <div className={classes.countdownContainer}>
+              <Countdown
+                setShowLivestream={setShowLivestream}
+                streamStartTime={streamStartTime}
+                notifyESS={notifyESS}
+              />
+            </div>
+          )}
         </Grid>
       </div>
+      <RouteTransition route='/stream' animationTrigger={redirectTrigger} timeout={300} />
     </>
   )
 }
@@ -133,5 +171,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   lineBreak: {
     border: '2px solid #D52B1E'
+  },
+  countdownContainer: {
+    position: 'relative',
+    display: 'inline-flex',
+    transition: '200ms width ease',
+
+    [theme.breakpoints.down('md')]: {
+      position: 'absolute',
+      right: 0,
+      marginTop: '-26px',
+      marginRight: '32px',
+      width: '305px',
+      display: 'block',
+      fontSize: '0.9rem'
+    },
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      whiteSpace: 'nowrap',
+      marginTop: 'unset'
+    }
   }
 }))

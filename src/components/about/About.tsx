@@ -22,7 +22,7 @@ interface AboutProps {
 export const About: FC<AboutProps> = ({
   setShowModal,
   showModal,
-  eventDate = 'November 12 at 2PM EST',
+  eventDate = 'November 18 at 2PM EST',
   eventDescription = `During this hour-long event, we’ll show how Verizon 5G Ultra Wideband can unleash new applications, use cases and immersive customer experiences.<br /><br />With thought provoking discussions, cutting edge demos, and breakout sessions customized to the way you work, you'll learn how to take advantage of the exciting and transformative benefits of Verizon 5G.<br /><br />This is the 5G businesses have been waiting for. This is 5G built right.`
 }) => {
   const classes = useStyles()
