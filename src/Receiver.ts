@@ -163,29 +163,20 @@ export default class Receiver {
               let newSession
               switch (JSONdata!.param) {
                 case '1':
-                  newSession = Sessions.publicAndPrivateMEC
+                  newSession = Sessions['healthcareInsurance']
                   break
                 case '2':
-                  newSession = Sessions['5GBusiness']
+                  newSession = Sessions['retailTravelDistribution']
                   break
                 case '3':
-                  newSession = Sessions.IOT
+                  newSession = Sessions.financialServices
                   break
                 case '4':
-                  newSession = Sessions['5GSmallBusiness']
+                  newSession = Sessions.manufacturingEnergyUtilities
                   break
                 case '5':
-                  newSession = Sessions.ctia
+                  newSession = Sessions.mediaEntertainmentTech
                   break
-                case '6':
-                  newSession = Sessions.venues
-                  break
-                // case '7':
-                //   newSession = Sessions.nyt
-                //   break
-                // case '8':
-                //   newSession = Sessions.crowdVision
-                //   break
               }
               if (newSession) {
                 graphQLMutation(createUserInteraction, {

@@ -6,6 +6,7 @@ import wallsImage from 'assets/sessions/tunnel-walls.png'
 import fiveGImage from 'assets/sessions/5g-bg.png'
 
 export interface ISession {
+  id: string // Horan - this is a horrible way to do this, but under tight deadline
   image: string
   video?: string
   poster?: string
@@ -19,7 +20,8 @@ export interface ISession {
 }
 
 export const Sessions: { [key: string]: ISession } = {
-  '5GBusiness': {
+  healthcareInsurance: {
+    id: '4ab7c286-2a47-428c-8ca0-4cc765e153dd',
     image: fiveGImage,
     video: 'sessions/keynote.mp4',
     poster: 'sessions/keynote.png',
@@ -32,7 +34,8 @@ export const Sessions: { [key: string]: ISession } = {
         "At Verizon we are building the 5G service that will be the 21st century infrastructure to shape the future. Join Verizon CTO Kyle Malady and special guests as they discuss Verizon's unique approach to 5G architecture and the impact it will have on the way we live, work, and play."
     }
   },
-  '5GSmallBusiness': {
+  retailTravelDistribution: {
+    id: 'dc10cd28-efab-43c3-8cb7-b40402c0e78b',
     image: smallBusiness,
     video: 'sessions/smallbusiness.mp4',
     poster: 'sessions/smallbusiness.png',
@@ -48,7 +51,8 @@ export const Sessions: { [key: string]: ISession } = {
         'A discussion about the challenges facing small businesses today, stories of adaptation and how Verizon is supporting transitioning to a 5G era.'
     }
   },
-  ctia: {
+  financialServices: {
+    id: '58a60c43-041f-4a6e-b1c9-d207ffd06c62',
     image: wallsImage,
     video: 'sessions/ctia.mp4',
     poster: 'sessions/ctia.png',
@@ -61,7 +65,8 @@ export const Sessions: { [key: string]: ISession } = {
         'Verizon Consumer Group CEO Ronan Dunne’s powerful overview of what it means for Verizon to work at the Speed of Thought.'
     }
   },
-  IOT: {
+  manufacturingEnergyUtilities: {
+    id: 'aa4195e4-e9cd-483c-b6be-ad205d176227',
     image: factoryImage,
     video: 'sessions/iot.mp4',
     poster: 'sessions/iot.png',
@@ -73,38 +78,17 @@ export const Sessions: { [key: string]: ISession } = {
       body: "Insights into the powerful ecosystem possibilities with Verizon's 5G Nationwide and 5G Ultra Wideband."
     }
   },
-  publicAndPrivateMEC: {
-    image: tabletImage,
-    video: 'sessions/publicprivatemec2.mp4',
-    poster: 'sessions/publicprivatemec.png',
+  mediaEntertainmentTech: {
+    id: '4a9b328b-85b5-4393-a232-550ac67962f9',
+    image: factoryImage,
+    video: 'sessions/iot.mp4',
+    poster: 'sessions/iot.png',
     side: {
       category: 'Session',
-      header: 'The Power of 5G Edge: Public and Private MEC',
-      schedule: 'Tuesday, October 27 • 3–3:30 PM EST',
-      speakers: [
-        'Thierry Sender, Director, Edge Compute and Managed Solutions Product Management, Verizon Business Group',
-        'Bill Lambertson, Director, Global Cloud Solutions, IBM',
-        'Marc Geall, SVP, Global Head of Platform & Technologies Ecosystem, GCO, SAP'
-      ],
-      body:
-        "An overview of Verizon's strategy and vision for public and private multi-access edge computing (MEC), key partnerships and impactful use cases."
-    }
-  },
-  venues: {
-    image: walkersImage,
-    video: 'sessions/venues.mp4',
-    poster: 'sessions/venues.png',
-    side: {
-      category: 'Session',
-      header: 'The Digital Transformation of Venues',
-      speakers: [
-        'David Aspinall, 5G MEC Strategy and IoT Business Development, Verizon Business Group',
-        'Ray Gibson, VP of Engineering, CrowdVision Inc.',
-        'Ken Martin, Executive Director of Sales, Cisco Sports and Entertainment'
-      ],
-      schedule: 'Thursday, October 29 • 2:30–3 PM EST',
-      body:
-        'A look into how Verizon, Cisco and CrowdVision Inc. are collaborating to address fan safety and security concerns as venues contend with new challenges in this uncertain climate.'
+      header: 'Everything Connects: IoT and the Evolution of 5G',
+      schedule: 'Wednesday, October 28 • 2:30-3PM EST',
+      speakers: ['Steve Szabo, VP and Managing Partner, Wireless/IoT/Partnerships, Verizon Business Group'],
+      body: "Insights into the powerful ecosystem possibilities with Verizon's 5G Nationwide and 5G Ultra Wideband."
     }
   }
 }

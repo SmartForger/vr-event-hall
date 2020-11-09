@@ -106,7 +106,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   const [gameState, setGameState] = useState<GameFlowSteps>(GameFlowSteps.Intro)
   const [prevGameState, setPrevGameState] = useState<GameFlowSteps>(GameFlowSteps.Intro)
   const [activeDemo, setActiveDemo] = useState<IDemo>(Demos.mecExplainer)
-  const [activeSession, setActiveSession] = useState<ISession>(Sessions['5GBusiness'])
+  const [activeSession, setActiveSession] = useState<ISession>(Sessions['financialServices'])
   const [activeTouchpoint, setActiveTouchpoint] = useState<ETouchpoints>(ETouchpoints.None)
   const [conversationId, setConversationId] = useState<string>('')
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -309,7 +309,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
       case 'session':
         // go to a specific session
         setGameState(GameFlowSteps.Session)
-        setActiveSession(Sessions[activeNotice?.link || '5GBusiness'])
+        setActiveSession(Sessions[activeNotice?.link || 'financialServices'])
         break
       case 'external':
         // open an external link in a new tab
