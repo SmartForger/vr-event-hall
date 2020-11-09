@@ -190,10 +190,16 @@ export const userByEmailBase = /* GraphQL */ `
         avatar
         title
         company
-        activeState
         onVideoCall
         conversations {
           items {
+            userId
+            conversationId
+            user {
+              id
+              firstName
+              lastName
+            }
             conversation {
               members
             }
