@@ -2,7 +2,7 @@ import { IDemo, E3DDemoNameVals } from '../../types'
 
 export const shotTracker: IDemo = {
   type: 'shottracker',
-  intro: 'shottracker-intro.mp4',
+  intro: 'ShotTracker-intro_720.mp4',
   video: 'shottracker720.mp4',
   conversationId: '9218554c-0bc0-4e61-b6f8-0fef42d984a1',
   end: {
