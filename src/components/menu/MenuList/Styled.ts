@@ -20,6 +20,11 @@ export const StyledMenuListHeader = styled.div`
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 34px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.9;
+  }
 
   .header-avatar {
     width: 24px;
