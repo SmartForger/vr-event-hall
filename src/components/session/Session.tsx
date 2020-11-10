@@ -51,7 +51,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
     }
     const {
       data: { meeting, attendee }
-    } = await createChimeMeeting({ meetingId: videoChatState.sessionId, userId: user?.id })
+    } = await createChimeMeeting({ meetingId: session.id, userId: user?.id })
 
     const joinData = {
       meetingInfo: meeting.Meeting,
@@ -83,6 +83,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
     dispatch({
       type: 'SET_DETAILS',
       payload: {
+        sessionId: session.id,
         visible: true,
         isClassroom: true,
         attendeeId: attendee.Attendee.AttendeeId,
