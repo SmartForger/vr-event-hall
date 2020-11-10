@@ -159,7 +159,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '3rem',
       position: 'fixed',
       right: '70px',
-      top: '115px'
+      top: '220px'
     },
     [theme.breakpoints.down('sm')]: {
       height: 'auto',
