@@ -30,30 +30,32 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
     if (e.key && e.key !== 'Enter') {
       return
     }
-    if (newMessage === '') return
+    const trimmedMessage = newMessage.trim()
+    setNewMessage('')
+    // if only white space in message return.
+    if (trimmedMessage === '') return
 
     if (questionMode) {
       const question = {
         sessionId: videoChatState?.session?.id || videoChatState?.sessionId,
         answered: 'false',
-        content: newMessage,
+        content: trimmedMessage,
         userId: userId
       }
 
       await graphQLMutation(createSessionQuestion, question)
-      return setNewMessage('')
+      return
     }
 
     const message: IMessageInput = {
       createdAt: new Date().toISOString(),
       conversationId: conversationId,
-      content: newMessage,
+      content: trimmedMessage,
       authorId: userId,
       deleted: 'false'
     }
 
     await graphQLMutation(createMessage, message)
-    setNewMessage('')
   }
 
   const toggleQuestionMode = () => {
