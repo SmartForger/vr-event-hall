@@ -19,6 +19,7 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
   const classes = useStyles()
   const { videoChatState } = useVideoChatContext()
   const [newMessage, setNewMessage] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
   const [questionMode, setQuestionMode] = useState<boolean>(false)
   const { chatState } = useChatContext()
 
@@ -30,6 +31,7 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
     if (e.key && e.key !== 'Enter') {
       return
     }
+    setLoading(true)
     const trimmedMessage = newMessage.trim()
     setNewMessage('')
     // if only white space in message return.
@@ -60,6 +62,8 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
     } catch (e) {
       // restore the unsent message if it didnt go through
       setNewMessage(trimmedMessage)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -87,6 +91,7 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
             className={`${classes.iconButton} ${classes.submitButton}`}
             aria-label='send'
             onClick={sendMessage}
+            disabled={loading}
           >
             <Send />
           </IconButton>
@@ -141,6 +146,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
+      color: 'white'
+    },
+    '&:disabled': {
+      backgroundColor: '#999ebd',
       color: 'white'
     }
   }
