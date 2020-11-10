@@ -47,6 +47,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   const [currentSession, setCurrentSession] = useState<ISession | null>(null)
   const [userStarted, setUserStarted] = useState<boolean>(false)
   const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
+  const [currentPresenterTotal, setCurrentPresenterTotal] = useState<number>(0)
 
   // Chime
   const audioVideo = useAudioVideo()
@@ -120,7 +121,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
     }
     // eslint-disable-next-line
     if (videoChatState.presenterPins.includes(user?.id as string)) {
-      const tileId = getTileId(videoChatState.presenterPins[0])
+      const { tileId } = getTileId(videoChatState.presenterPins[0])
       setPresenterTileId(tileId)
     }
 
@@ -131,7 +132,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
 
   useEffect(() => {
     if (!presenterTileId && !videoChatState.presenterPins.includes(user?.id as string)) {
-      const tileId = getTileId(videoChatState.presenterPins[0])
+      const { tileId } = getTileId(videoChatState.presenterPins[0])
       if (tileId) {
         setPresenterTileId(tileId)
       }
@@ -151,9 +152,15 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   const getTileId = id => {
     const presenter = rosterArray.find(r => r.externalUserId === id)
     if (presenter && presenter.chimeAttendeeId) {
-      return attendeeIdToTileId[presenter.chimeAttendeeId]
+      return {
+        tileId: attendeeIdToTileId[presenter.chimeAttendeeId],
+        name: presenter?.name || ''
+      }
     }
-    return 0
+    return {
+      tileId: 0,
+      name: presenter?.name || ''
+    }
   }
 
   const handleChange = (_, newValue) => {
@@ -179,6 +186,19 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
     }
   }, [videoChatState?.session?.qaActive])
 
+  useEffect(() => {
+    const rosterList = Object.values(roster)
+    const presenterList = rosterList.filter(r =>
+      videoChatState.session?.presenterPins.includes(r?.externalUserId || '')
+    )
+
+    if (presenterList.length > 4) {
+      return setCurrentPresenterTotal(4)
+    } else if (presenterList.length !== currentPresenterTotal) {
+      setCurrentPresenterTotal(presenterList.length)
+    }
+  }, [roster, videoChatState?.session?.presenterPins])
+
   return (
     <UserActivityProvider>
       <PollProvider>
@@ -189,10 +209,12 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                 <div className='presenter'>
                   <MeetingDetails
                     isClassroom={true}
-                    isActive={Boolean(tiles.length > 0 || isLocalUserSharing || sharingAttendeeId || isVideoEnabled)}
+                    isActive={Boolean(
+                      currentPresenterTotal > 0 || isLocalUserSharing || sharingAttendeeId || isVideoEnabled
+                    )}
                   />
                   <StyledGrid
-                    tileCount={isVideoEnabled ? tiles.length + 1 : tiles.length}
+                    tileCount={currentPresenterTotal}
                     isContentSharing={isLocalUserSharing || sharingAttendeeId}
                     style={isVideoEnabled || tiles.length > 0 ? {} : { backgroundColor: 'transparent' }}
                   >
@@ -204,19 +226,47 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                       <>
                         {isVideoEnabled ? (
                           <LocalVideo nameplate={`${user?.firstName} ${user?.lastName}`} className='user-video' />
-                        ) : null}
-                        {tiles.map(tileId => {
-                          const attendeeId = tileIdToAttendeeId[tileId]
-                          return (
-                            <RemoteVideo
-                              className='user-video'
-                              tileId={tileId}
-                              name={roster[attendeeId] && roster[attendeeId].name ? roster[attendeeId].name : ''}
-                              style={{ border: '1px solid grey', gridArea: '' }}
-                              key={tileId}
+                        ) : isPresenter || isVideoPresenter ? (
+                          <div className={classes.avatarContainer}>
+                            <div className={classes.avatarCircle}>
+                              <div className={classes.avatarLetter}>{user?.firstName?.[0] || ''}</div>
+                            </div>
+                            <VideoTile
+                              nameplate={`${user?.firstName} ${user?.lastName}`}
+                              className={classes.emptyTile}
+                              style={{ position: 'absolute' }}
                             />
-                          )
-                        })}
+                          </div>
+                        ) : null}
+                        {videoChatState?.session?.presenterPins
+                          .filter(pinId => pinId !== user?.id)
+                          .map(pinId => {
+                            if (!rosterArray.some(r => r.externalUserId === pinId)) {
+                              return null
+                            }
+
+                            const { tileId, name } = getTileId(pinId)
+                            return tileId > 0 ? (
+                              <RemoteVideo
+                                className='user-video'
+                                tileId={tileId}
+                                name={name}
+                                style={{ border: '1px solid grey', gridArea: '' }}
+                                key={pinId}
+                              />
+                            ) : (
+                              <div className={classes.avatarContainer} key={pinId}>
+                                <div className={classes.avatarCircle}>
+                                  <div className={classes.avatarLetter}>{name?.[0] || ''}</div>
+                                </div>
+                                <VideoTile
+                                  nameplate={name}
+                                  className={classes.emptyTile}
+                                  style={{ position: 'absolute' }}
+                                />
+                              </div>
+                            )
+                          })}
                       </>
                     </ConditionalWrapper>
                   </StyledGrid>
@@ -358,5 +408,29 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     top: 0,
     width: '100%'
+  },
+  avatarContainer: {
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    color: 'white',
+    alignItems: 'center'
+  },
+  avatarCircle: {
+    width: '100px',
+    height: '100px',
+    background: 'blue',
+    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9
+  },
+  avatarLetter: {
+    fontSize: '3rem'
+  },
+  emptyTile: {
+    top: 0,
+    left: 0
   }
 }))
