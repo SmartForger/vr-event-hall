@@ -213,6 +213,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                               tileId={tileId}
                               name={roster[attendeeId] && roster[attendeeId].name ? roster[attendeeId].name : ''}
                               style={{ border: '1px solid grey', gridArea: '' }}
+                              key={tileId}
                             />
                           )
                         })}
