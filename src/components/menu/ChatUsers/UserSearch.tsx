@@ -26,6 +26,7 @@ export const UserSearch = ({ users, setUsers }) => {
         value={userSearch}
         onChange={handleChange}
         variant='outlined'
+        autoFocus
         className={classes.userSearchInput}
         InputProps={{
           endAdornment: (
