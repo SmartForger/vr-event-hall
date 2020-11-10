@@ -28,6 +28,10 @@ export const getConversationFiltered = /* GraphQL */ `
         items {
           id
           userId
+          user {
+            firstName
+            lastName
+          }
           conversationId
           createdAt
           updatedAt

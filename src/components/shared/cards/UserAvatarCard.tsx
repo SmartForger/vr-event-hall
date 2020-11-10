@@ -6,6 +6,8 @@ import { MuteIcon } from 'assets'
 import { IUser } from 'types'
 import { useAttendeeAudioStatus } from 'amazon-chime-sdk-component-library-react'
 
+const colors = ['red', 'orange', 'purple', 'green', 'brown', 'grey', 'blue']
+
 interface UserAvatarCardProps {
   user: IUser
   isRaisedHand?: boolean
@@ -26,17 +28,23 @@ export const UserAvatarCard: FC<UserAvatarCardProps> = ({
   const classes = useStyles()
   const { muted } = useAttendeeAudioStatus(attendeeId)
 
+  // we'll include a special marking next to a user's name
+  // if they are a duplciate mvrk user with a `+numebr@mvkr.co`
+  // email to help avoid confusion
+  const plusMvrkUserIndicator = user?.email?.match?.(/\+(.*)@mvrk\.co/i)
+  const userValFromName = (user?.firstName?.charCodeAt(0) || 0) + (user?.lastName?.charCodeAt(0) || 0)
   return (
     <div className={`${classes.user} ${onClick ? classes.click : ''}`} {...(onClick ? { onClick } : {})}>
       <Avatar
         alt={`${user.firstName} ${user.lastName}`}
         src={`https://dx2ge6d9z64m9.cloudfront.net/public/${user.avatar}`}
-        className={classes.avatar}
+        className={`${classes.avatar} ${colors[userValFromName % colors.length]}`}
       />
       <div className={classes.userInfo}>
         {/* <div className={classes.userActivityCircle} /> */}
         <Typography variant='body1' component='p' align='center'>
-          {user.firstName} {user.lastName}
+          {user.firstName} {user.lastName}{' '}
+          {plusMvrkUserIndicator?.[1] ? <span className={classes.secondary}>+{plusMvrkUserIndicator?.[1]}</span> : ''}
         </Typography>
         {isRaisedHand ? (
           <Box flex={1} display='flex' justifyContent='flex-end' alignItems='center'>
@@ -62,7 +70,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '36px',
     fontSize: '1.5rem',
     marginLeft: '16px',
-    marginRight: '16px'
+    marginRight: '16px',
+
+    '&.red': {
+      backgroundColor: 'red'
+    },
+    '&.orange': {
+      backgroundColor: 'orange'
+    },
+    '&.purple': {
+      backgroundColor: 'purple'
+    },
+    '&.green': {
+      backgroundColor: 'green'
+    },
+    '&.brown': {
+      backgroundColor: 'brown'
+    },
+    '&.grey': {
+      backgroundColor: 'grey'
+    },
+    '&.blue': {
+      backgroundColor: 'blue'
+    }
   },
   user: {
     display: 'flex',
@@ -79,6 +109,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiTypography-body1': {
       fontWeight: 300
     }
+  },
+  secondary: {
+    fontSize: '10px',
+    color: 'grey'
   },
   userActivityCircle: {
     backgroundColor: theme.palette.success.main,

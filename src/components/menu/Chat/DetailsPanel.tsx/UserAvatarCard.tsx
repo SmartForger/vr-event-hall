@@ -10,6 +10,7 @@ interface UserAvatarCardProps {
 
 export const UserAvatarCard: FC<UserAvatarCardProps> = ({ user }) => {
   const classes = useStyles()
+
   return (
     <div className={classes.user}>
       <Avatar
