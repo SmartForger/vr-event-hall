@@ -1,21 +1,20 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Scene } from 'babylonjs/scene'
 import { useWindowSize } from 'react-use'
-import { I18n, Cache } from 'aws-amplify'
+import { I18n } from 'aws-amplify'
 import { Step } from 'react-joyride'
 import { Grid, makeStyles, Snackbar, Typography } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
-
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
 import { menuDrawerOpen, toggleDrawer } from 'redux/menu'
-
 // Components
 import {
   About,
   ClassRoomContainer,
   Contact,
   Header,
+  IntroTutorial,
   Loader,
   Modal,
   Navigation,
@@ -23,32 +22,28 @@ import {
   ProfileMenu,
   SceneWrapper,
   Support,
-  Tutorial,
-  IntroTutorial
+  Tutorial
 } from 'components'
 import { ToastAlert, Video } from 'components/shared'
 import { graphQLSubscription } from 'graphql/helpers'
 // TODO: rename once we  have the real thing
 import { onCreateNotification } from 'graphql/subscriptions'
 import Receiver from '../Receiver'
-
 // Helpers
-import { ISession, Sessions, tutorialSteps, introTutorialSteps, sessionTutorialSteps } from '../helpers'
+import { introTutorialSteps, ISession, Sessions, sessionTutorialSteps, tutorialSteps } from '../helpers'
 import { GameFlowStepsConfig } from '../helpers/steps'
 import {
   ETouchpoints,
   EventStages,
   GameFlowSteps,
   IDemo,
-  ITeleportLocation,
-  IUser,
   INoticeConfig,
-  TNoticeType,
-  ISubscriptionObject
+  ISubscriptionObject,
+  ITeleportLocation,
+  IUser
 } from 'types'
 import { Demos } from '../helpers/demos'
 import { Alert } from '@material-ui/lab'
-import { incrementNotification } from '../redux/chat'
 import { VideoChatProvider } from 'providers'
 import { JoyrideTutorialStyles } from '../components/shared/tutorial/JoyrideTutorialStyles'
 import { useBrowserCache } from '../hooks'
@@ -89,7 +84,12 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   const [activeNotice, setActiveNotice] = useState<INoticeConfig>({})
   let noticeSubscription = useRef<ISubscriptionObject | null>(null)
 
-  const [tutorialViewedLoading, tutorialViewed, setTutorialViewed] = useBrowserCache('event-tutorial-dismissed')
+  const [welcomeTutorialViewedLoading, welcomeTutorialViewed, setWelcomeTutorialViewed] = useBrowserCache(
+    'welcome-tutorial-dismissed'
+  )
+  const [sessionTutorialViewedLoading, sessionTutorialViewed, setSessionTutorialViewed] = useBrowserCache(
+    'session-tutorial-dismissed'
+  )
   const [stepsEnabled, setStepsEnabled] = useState<boolean>(false)
   const [scene, setScene] = useState<Scene>()
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -369,7 +369,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
             />
             <ProfileMenu
               toggleTutorial={() => toggleTutorial(true)}
-              toggleIntroTutorial={() => setTutorialViewed(false)}
+              toggleIntroTutorial={() => setWelcomeTutorialViewed(false)}
               toggleDrawer={handleToggleDrawer}
               setGameState={setGameState}
               mapLocation={mapLocation}
@@ -419,14 +419,24 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
 
             {vcOff ? null : <VideoChatContainer />}
 
-            {!tutorialViewedLoading && (
+            {!welcomeTutorialViewedLoading && (
               <IntroTutorial
-                run={!tutorialViewed}
+                run={!welcomeTutorialViewed}
                 steps={introTutorialSteps(user)}
-                onClose={() => setTutorialViewed(true)}
+                onClose={() => setWelcomeTutorialViewed(true)}
                 styles={JoyrideTutorialStyles}
               />
             )}
+
+            {!sessionTutorialViewedLoading &&
+              (gameState === GameFlowSteps.Sessions || gameState === GameFlowSteps.Explore) && (
+                <IntroTutorial
+                  run={!sessionTutorialViewed}
+                  steps={sessionTutorialSteps}
+                  onClose={() => setSessionTutorialViewed(true)}
+                  styles={JoyrideTutorialStyles}
+                />
+              )}
 
             {eventStartingSoon ? (
               <ToastAlert type='notice' isOpen={eventStartingSoon && !eSSClosed} onClose={() => setESSClosed(true)}>

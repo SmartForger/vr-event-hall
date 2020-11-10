@@ -19,8 +19,7 @@ export const introTutorialSteps: (user: IUser | undefined) => Step[] = user => {
       target: '#profileDrawer',
       title: 'Main menu',
       content:
-        'The menu allows you to access your profile, event info, ' +
-        'chat directly 1:1 or in topical channels with other users. You can also revisit the tutorial at any time.',
+        'The menu allows you to access your profile, event info, and chat directly 1:1 with other users. You can also revisit the tutorial at any time.',
       disableBeacon: true,
       placement: 'left'
     },
@@ -28,8 +27,7 @@ export const introTutorialSteps: (user: IUser | undefined) => Step[] = user => {
       target: '#topNavContainer',
       title: 'Countdown',
       content:
-        'We’ll be tuning in live to hear the latest from our key leaders in 5G and subject matter experts.' +
-        ' When the timer expires it will be replaced with a link to join us for our live programming.',
+        'We’ll be tuning in live to hear the latest from our key leaders in 5G and subject matter experts. When the timer expires it will be replaced with a link to join us for our live programming.',
       disableBeacon: true,
       placement: 'bottom'
     }
