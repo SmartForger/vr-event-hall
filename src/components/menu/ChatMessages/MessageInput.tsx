@@ -35,27 +35,32 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
     // if only white space in message return.
     if (trimmedMessage === '') return
 
-    if (questionMode) {
-      const question = {
-        sessionId: videoChatState?.session?.id || videoChatState?.sessionId,
-        answered: 'false',
-        content: trimmedMessage,
-        userId: userId
+    try {
+      if (questionMode) {
+        const question = {
+          sessionId: videoChatState?.session?.id || videoChatState?.sessionId,
+          answered: 'false',
+          content: trimmedMessage,
+          userId: userId
+        }
+
+        await graphQLMutation(createSessionQuestion, question)
+        return
       }
 
-      await graphQLMutation(createSessionQuestion, question)
-      return
-    }
+      const message: IMessageInput = {
+        createdAt: new Date().toISOString(),
+        conversationId: conversationId,
+        content: trimmedMessage,
+        authorId: userId,
+        deleted: 'false'
+      }
 
-    const message: IMessageInput = {
-      createdAt: new Date().toISOString(),
-      conversationId: conversationId,
-      content: trimmedMessage,
-      authorId: userId,
-      deleted: 'false'
+      await graphQLMutation(createMessage, message)
+    } catch (e) {
+      // restore the unsent message if it didnt go through
+      setNewMessage(trimmedMessage)
     }
-
-    await graphQLMutation(createMessage, message)
   }
 
   const toggleQuestionMode = () => {
