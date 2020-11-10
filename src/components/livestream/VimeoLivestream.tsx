@@ -51,7 +51,7 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
             <iframe
               className={classes.iframe}
               title='Verizon 5G'
-              src='https://vimeo.com/event/380826/embed'
+              src='https://vimeo.com/event/445293/embed'
               allow='autoplay; fullscreen'
               allowFullScreen
             ></iframe>
@@ -61,7 +61,7 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
             <iframe
               className={classes.iframe}
               title='Verizon 5G'
-              src='https://vimeo.com/event/380833/embed'
+              src='https://vimeo.com/event/445311/embed'
               allow='autoplay; fullscreen'
               allowFullScreen
             ></iframe>

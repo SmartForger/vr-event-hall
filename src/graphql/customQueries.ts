@@ -12,10 +12,13 @@ export const getConversationFiltered = /* GraphQL */ `
           content
           authorId
           author {
+            id
             firstName
             lastName
             company
             title
+            email
+            avatar
           }
           conversationId
           deleted
@@ -28,6 +31,10 @@ export const getConversationFiltered = /* GraphQL */ `
         items {
           id
           userId
+          user {
+            firstName
+            lastName
+          }
           conversationId
           createdAt
           updatedAt
@@ -325,6 +332,24 @@ export const getSessionOverviewById = /* GraphQL */ `
           sessionId
           createdAt
           updatedAt
+        }
+        nextToken
+      }
+    }
+  }
+`
+export const getConversationBase = /* GraphQL */ `
+  query GetConversation($id: ID!) {
+    getConversation(id: $id) {
+      members
+      associated {
+        items {
+          id
+          userId
+          user {
+            firstName
+            lastName
+          }
         }
         nextToken
       }

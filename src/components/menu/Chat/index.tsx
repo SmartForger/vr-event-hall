@@ -6,11 +6,13 @@ import { ChatSection } from '../ChatSection'
 import { StyledChat, StyledChatHeader, StyledChatSection } from './Styled'
 import { IUser } from 'types'
 
+import { useAppState } from 'providers'
 import { ChatProvider, useChatContext } from 'providers'
 import { IConversation, ISubscriptionObject, UserStatus } from 'types'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { sessionByConversationId } from 'graphql/queries'
 import { onCreateGlobalMessageMin } from 'graphql/customSubscriptions'
+import { getConversationBase } from 'graphql/customQueries'
 
 // Images
 import liveChatBubbleIcon from 'assets/liveChatBubbleIcon.svg'
@@ -28,9 +30,9 @@ interface ChatProps {
   vcOff?: boolean
 }
 
-export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, showUserList, vcOff }) => {
+export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, showUserList, vcOff, user }) => {
   const { chatState, dispatch } = useChatContext()
-
+  const { setUser } = useAppState()
   const totalUnread = Object.keys(chatState?.unreadMessagesByConversation)?.reduce?.(
     (totalUnread: number, convoKey) => {
       totalUnread += chatState?.unreadMessagesByConversation?.[convoKey] || 0
@@ -40,6 +42,19 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
   )
   let updateUnreadMessageSubscription = useRef<ISubscriptionObject | null>(null)
 
+  const fetchNewConvoAndPopulateUser = async (convId: string) => {
+    let newRelevantConvo = await graphQLQuery(getConversationBase, 'getConversation', { id: convId })
+    // addConversation(newRelevantConvo)
+    let updatedUserConvos = user?.conversations?.items || []
+    updatedUserConvos.push({
+      conversationId: convId,
+      user: user!,
+      userId: user?.id || '',
+      conversation: newRelevantConvo
+    })
+    setUser({ ...user, conversations: { items: updatedUserConvos } })
+  }
+
   useEffect(() => {
     setupUnreadSubscription()
     return () => {
@@ -48,12 +63,17 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
   }, [])
 
   const updateUnreadConversationMessages = ({ onCreateGlobalMessage }) => {
+    const newMessageConversationId = onCreateGlobalMessage.conversationId
     // increment the unread messages unless you're on the chat where the new message came in
-    if (onCreateGlobalMessage.conversationId !== chatState.conversationId) {
+    if (newMessageConversationId !== chatState.conversationId) {
       dispatch({
         type: 'INCREMENT_UNREAD_CONVO_MESSAGE',
-        payload: { conversationId: onCreateGlobalMessage.conversationId }
+        payload: { conversationId: newMessageConversationId }
       })
+      // if this is a new conversation for this user, refetch the conversations to populate the list
+      if (!user?.conversations?.items?.some(convo => convo.conversationId === newMessageConversationId)) {
+        fetchNewConvoAndPopulateUser(newMessageConversationId)
+      }
     }
   }
 
@@ -83,7 +103,7 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
           </IconButton>
         </StyledChatHeader>
 
-        {/* Was requested to remove Channel Chat DAY OF DEADLINE -- who know if this is permanent, so commenting out for now */}
+        {/* re-remove channels */}
         {/* <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
           <ChatSection title='Channels' conversationId={conversationId} />
         </StyledChatSection> */}

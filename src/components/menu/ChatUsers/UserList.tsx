@@ -4,10 +4,12 @@ import { VariableSizeList, VariableSizeProps } from 'react-window'
 
 import { UserRow } from './UserRow'
 
-import { UserListContext, useVideoChatContext } from 'providers'
+import { UserListContext, useVideoChatContext, useChatContext } from 'providers'
 import { IUser, ToggleDrawer } from 'types'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { createNewConversation } from 'graphql/helpers'
+
+import { createNewConversation, graphQLQuery } from 'graphql/helpers'
+import { getConversationWithAssociated } from 'graphql/customQueries'
 
 interface UserListProps {
   user?: IUser | null
@@ -17,7 +19,8 @@ interface UserListProps {
 }
 
 export const UserList: FC<UserListProps> = ({ user, users, listRef, toggleDrawer }) => {
-  const { dispatch } = useVideoChatContext()
+  const { dispatch: videoChatDispatch } = useVideoChatContext()
+  const { dispatch: chatDispatch } = useChatContext()
   const sizeMap = useRef({})
   const setSize = useCallback((index, size) => {
     sizeMap.current = { ...sizeMap.current, [index]: size }
@@ -28,15 +31,27 @@ export const UserList: FC<UserListProps> = ({ user, users, listRef, toggleDrawer
   const createConversation = async (index: number) => {
     if (user) {
       const conversationId = await createNewConversation(user, users[index], `${user.id}-${users[index].id}`)
-      dispatch({
-        type: 'SET_DETAILS',
-        payload: { conversationId, conversationUser: users[index] }
+      const conversationDetails = await graphQLQuery(getConversationWithAssociated, 'getConversation', {
+        id: conversationId
       })
+
+      // i really hate that we have multiple chat contexts,
+      // and i dont want to go down this route, but i am worried
+      // that i will break something if i remove the videoChatContext
+      // from here. For now, dispatching to both to be safe :(
+      const dispatchValue = {
+        type: 'SET_DETAILS',
+        payload: {
+          conversationId,
+          conversation: conversationDetails,
+          conversationUser: users[index],
+          conversationOpen: true
+        }
+      }
+      videoChatDispatch(dispatchValue)
+      chatDispatch(dispatchValue)
       if (toggleDrawer) {
-        toggleDrawer(null, 'rightOverlay', true)
-        setTimeout(() => {
-          toggleDrawer(null, 'rightChatUserList', false)
-        }, 300)
+        toggleDrawer(null, 'rightChatUserList', false)
       }
     }
   }

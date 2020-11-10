@@ -19,6 +19,7 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
   const classes = useStyles()
   const { videoChatState } = useVideoChatContext()
   const [newMessage, setNewMessage] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
   const [questionMode, setQuestionMode] = useState<boolean>(false)
   const { chatState } = useChatContext()
 
@@ -30,30 +31,40 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
     if (e.key && e.key !== 'Enter') {
       return
     }
-    if (newMessage === '') return
+    setLoading(true)
+    const trimmedMessage = newMessage.trim()
+    setNewMessage('')
+    // if only white space in message return.
+    if (trimmedMessage === '') return
 
-    if (questionMode) {
-      const question = {
-        sessionId: videoChatState?.session?.id || videoChatState?.sessionId,
-        answered: 'false',
-        content: newMessage,
-        userId: userId
+    try {
+      if (questionMode) {
+        const question = {
+          sessionId: videoChatState?.session?.id || videoChatState?.sessionId,
+          answered: 'false',
+          content: trimmedMessage,
+          userId: userId
+        }
+
+        await graphQLMutation(createSessionQuestion, question)
+        return
       }
 
-      await graphQLMutation(createSessionQuestion, question)
-      return setNewMessage('')
-    }
+      const message: IMessageInput = {
+        createdAt: new Date().toISOString(),
+        conversationId: conversationId,
+        content: trimmedMessage,
+        authorId: userId,
+        deleted: 'false'
+      }
 
-    const message: IMessageInput = {
-      createdAt: new Date().toISOString(),
-      conversationId: conversationId,
-      content: newMessage,
-      authorId: userId,
-      deleted: 'false'
+      await graphQLMutation(createMessage, message)
+    } catch (e) {
+      // restore the unsent message if it didnt go through
+      setNewMessage(trimmedMessage)
+    } finally {
+      setLoading(false)
     }
-
-    await graphQLMutation(createMessage, message)
-    setNewMessage('')
   }
 
   const toggleQuestionMode = () => {
@@ -69,6 +80,7 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
           inputProps={{ 'aria-label': 'new message input' }}
           value={newMessage}
           multiline
+          autoFocus
           onChange={handleChange}
           onKeyDown={sendMessage}
         />
@@ -80,6 +92,7 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
             className={`${classes.iconButton} ${classes.submitButton}`}
             aria-label='send'
             onClick={sendMessage}
+            disabled={loading}
           >
             <Send />
           </IconButton>
@@ -134,6 +147,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
+      color: 'white'
+    },
+    '&:disabled': {
+      backgroundColor: '#999ebd',
       color: 'white'
     }
   }

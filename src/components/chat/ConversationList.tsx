@@ -138,7 +138,6 @@ export const ConversationList: FC<ConversationListProps> = ({
   const selectConversation = async (conversationID, defaultName?, nameOverride?) => {
     if (conversationID) {
       setChatLoading(true)
-
       const conversationData = await graphQLQuery(getConversation, 'getConversation', { id: conversationID })
       dispatch(
         setActiveConversation({

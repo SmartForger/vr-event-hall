@@ -10,9 +10,12 @@ import { Video } from 'components/shared'
 import { createChimeMeeting } from 'helpers'
 import { ISession } from 'helpers/sessions'
 import { GameFlowStepsConfig } from 'helpers/steps'
-import { GameFlowSteps } from 'types'
+import { GameFlowSteps, IUser } from 'types'
+import { useSessionDetails } from 'hooks/useSessionDetails'
 import { useAppState, UserAdminType, useVideoChatContext } from 'providers'
-import { graphQLQuery } from 'graphql/helpers'
+
+import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
+import { updateSession } from 'graphql/mutations'
 import { getAttendeeInfo, getSessionOverviewById } from 'graphql/customQueries'
 
 interface SessionProps {
@@ -24,6 +27,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
   const classes = useStyles()
   const meetingManager = useMeetingManager()
   const { videoChatState, dispatch } = useVideoChatContext()
+  const sessionDetails = useSessionDetails(session.id)
   const {
     appState: { user }
   } = useAppState()
@@ -47,7 +51,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
     }
     const {
       data: { meeting, attendee }
-    } = await createChimeMeeting({ meetingId: videoChatState.meetingId, userId: user?.id })
+    } = await createChimeMeeting({ meetingId: videoChatState.sessionId, userId: user?.id })
 
     const joinData = {
       meetingInfo: meeting.Meeting,
@@ -70,6 +74,12 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
     }
 
     await meetingManager.join(joinData)
+
+    await graphQLMutation(updateSession, {
+      id: sessionDetails.id,
+      active: true
+    })
+
     dispatch({
       type: 'SET_DETAILS',
       payload: {
@@ -80,6 +90,10 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
       }
     })
   }
+
+  const isSessionAdmin = sessionDetails.admins?.items.some(u => u.userId === user?.id)
+  const sessionActive = sessionDetails.active === 'true'
+  const availableSeats = 200 - (sessionDetails.users?.items.length || 0)
 
   return (
     <>
@@ -108,10 +122,12 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
                 {session.side.body}
               </Typography>
               <Box display='flex'>
-                <Button onClick={joinClassRoom} variant='outlined'>
-                  Join Session
-                </Button>
-                <Typography className={classes.availableSeatsMessage}>25 Seats Available</Typography>
+                {(isSessionAdmin || sessionActive) && (
+                  <Button onClick={joinClassRoom} variant='outlined' disabled={availableSeats < 1}>
+                    Join Session
+                  </Button>
+                )}
+                <Typography className={classes.availableSeatsMessage}>{availableSeats} Seats Available</Typography>
                 <Button
                   startIcon={<ArrowBackIcon />}
                   onClick={() => {
@@ -134,7 +150,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '0 3rem',
     height: 'calc(100% - 115px)',
     width: 'calc(100% - 64px)',
-    top: '115px',
+    top: '180px',
     display: 'flex',
     alignItems: 'center',
     backgroundColor: 'transparent',

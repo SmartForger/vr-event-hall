@@ -5,10 +5,11 @@ import { get, forEach } from 'lodash'
 
 // Helpers
 import { IUser, IMeetingInfo } from 'types'
-import { graphQLSubscription } from 'graphql/helpers'
+import { graphQLSubscription, graphQLQuery } from 'graphql/helpers'
 import { onCreateGlobalMessage } from 'graphql/subscriptions'
+import { getConversationBase } from 'graphql/customQueries'
 import { useDispatch, useSelector } from 'react-redux'
-import { getNotifications, setConversations, setPersons, incrementNotification } from 'redux/chat'
+import { getNotifications, setConversations, addConversation, setPersons, incrementNotification } from 'redux/chat'
 import { VideoChatModal } from 'components/videochat/Meeting'
 import { Loader } from 'components/shared'
 
@@ -55,10 +56,10 @@ export const Chat: FC<ChatProps> = ({ user, users }) => {
 
     dispatch(setPersons(persons))
 
-    const newMessageCreated = data => {
-      const conversationId = data.onCreateGlobalMessage.messageConversationId
+    const newMessageCreated = ({ onCreateGlobalMessage }) => {
+      const conversationId = onCreateGlobalMessage.messageConversationId
       // Ignore the message if: it isn't for this user, it was created by this user, or it is from livestream
-      if (data.onCreateGlobalMessage.authorId === user!.id || conversationId === '8ec185f0-e5c2-423d-8164-f5439a24cf0d')
+      if (onCreateGlobalMessage.authorId === user!.id || conversationId === '8ec185f0-e5c2-423d-8164-f5439a24cf0d')
         return
 
       dispatch(incrementNotification(conversationId))

@@ -24,7 +24,7 @@ import { useAppState, usePollContext, useVideoChatContext } from 'providers'
 import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
 import { getSessionPolls } from 'graphql/customQueries'
 import { listPollAnswerss } from 'graphql/queries'
-import { createPollAnswer } from 'graphql/mutations'
+import { createPollAnswer, updateSessionPoll } from 'graphql/mutations'
 import { onUpdateSessionPoll } from 'graphql/subscriptions'
 import { ISubscriptionObject, IAskedPollQuestion, EPollDisplayMode, IPollAnswerResults } from 'types'
 import { FreeBreakfastOutlined } from '@material-ui/icons'
@@ -33,11 +33,13 @@ interface PollDrawerProps {}
 
 export const PollDrawer: FC<PollDrawerProps> = () => {
   const classes = useStyles()
+
   const { pollState, dispatch } = usePollContext()
   const { videoChatState } = useVideoChatContext()
   const {
     appState: { user }
   } = useAppState()
+  let pollInactifyTimer
   let pollUpdatedSubscription = useRef<ISubscriptionObject | null>(null)
 
   const updateActivePoll = ({ onUpdateSessionPoll }) => {
@@ -57,6 +59,13 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
       if (q.active === 'true') {
         // set the found active questino as the poll provider's active question
         dispatch({ type: 'SET_POLL', payload: { question: q, questionId: q.id, open: true } })
+
+        // this should really happen on the moderator instead of the participant.
+        // I cant find the moderator piece, so Im putting it here for now
+        // so that polls auto-deactivate since Steve called it out specifically.
+        pollInactifyTimer = setTimeout(() => {
+          graphQLMutation(updateSessionPoll, { id: q.id, active: 'false' })
+        }, 30000)
         return true
       }
     })
@@ -94,6 +103,7 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
 
     return () => {
       pollUpdatedSubscription?.current?.unsubscribe()
+      clearTimeout(pollInactifyTimer)
       dispatch({ type: 'SET_ANSWER', payload: '' })
     }
   }, [])
@@ -203,7 +213,7 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
           </span>
         </div>
         {pollState.mode !== EPollDisplayMode.results && (
-          <CountdownTimer totalTime={10} onCountdownEnd={() => outOfTime()} />
+          <CountdownTimer totalTime={30} onCountdownEnd={() => outOfTime()} />
         )}
       </div>
       <div className={classes.pollContent}>
@@ -285,7 +295,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     padding: '16px 24px',
-    minHeight: '300px',
+    minHeight: '100px',
     '& h6': {
       marginBottom: '16px'
     }
@@ -308,7 +318,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   waiting: {
-    height: '100px'
+    height: '60px'
   },
   closePollWindow: {
     width: '75px',

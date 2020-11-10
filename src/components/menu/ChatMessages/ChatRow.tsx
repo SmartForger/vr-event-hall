@@ -5,6 +5,7 @@ import { Box, IconButton, makeStyles, Theme, Typography } from '@material-ui/cor
 import { useChatListContext, UserAdminType, useChatContext, useAppState } from 'providers'
 import { PinIcon, TrashIcon } from 'assets'
 import { isAdmin } from 'helpers'
+import { PersonInfoItem } from './PersonInfoItem'
 
 export const ChatRow = ({ data, index, skipSetSize = false, isPinned = false, ...props }) => {
   const classes = useStyles()
@@ -41,10 +42,7 @@ export const ChatRow = ({ data, index, skipSetSize = false, isPinned = false, ..
     <div ref={root} className={classes.root} {...props}>
       <Wrapper {...wrapperProps}>
         <Typography variant='subtitle2' color='textPrimary'>
-          <span className={classes.bold}>
-            {data.author?.firstName} {data.author?.lastName}
-          </span>{' '}
-          {format(new Date(data.createdAt), 'p')}
+          {data.author && <PersonInfoItem user={data.author} date={format(new Date(data.createdAt), 'p')} />}
         </Typography>
         {isAdmin ? (
           <Box display='flex'>
@@ -69,9 +67,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'flex-start',
     paddingLeft: theme.spacing(3),
     paddingBottom: theme.spacing(2)
-  },
-  bold: {
-    fontWeight: 'bold'
   },
   inline: {
     display: 'inline',
