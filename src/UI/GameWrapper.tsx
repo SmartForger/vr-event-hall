@@ -515,9 +515,14 @@ const useStyles = makeStyles({
   toastESSTitle: {},
   toastESSButton: {
     height: '24px',
-    padding: '12px 24px',
     fontSize: '12px',
     marginBottom: '1rem',
+    padding: 0,
+    width: 140,
+    display: 'flex',
+    flexWrap: 'nowrap',
+    justifyContent: 'center',
+    alignItems: 'center',
     '&:hover': {
       backgroundColor: 'black',
       color: 'white'

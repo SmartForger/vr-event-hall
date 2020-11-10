@@ -8,7 +8,7 @@ export const introTutorialSteps: (user: IUser | undefined) => Step[] = user => {
       target: 'body',
       title: (
         <>
-          Welcome to 5G: Innovation Sessions, <span>{user?.firstName}</span>.
+          Welcome to 5G Innovation Sessions, <span>{user?.firstName}</span>.
         </>
       ),
       content: 'Get to know how to make the most of your experience with us.',
