@@ -80,6 +80,7 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
           inputProps={{ 'aria-label': 'new message input' }}
           value={newMessage}
           multiline
+          autoFocus
           onChange={handleChange}
           onKeyDown={sendMessage}
         />
