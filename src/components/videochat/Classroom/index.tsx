@@ -33,7 +33,7 @@ import { onUpdateSession } from 'graphql/subscriptions'
 import { ISubscriptionObject, ISession } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
-import { ConditionalWrapper } from 'components/shared'
+import { ConditionalWrapper, DialogCard } from 'components/shared'
 import { NullEngine } from 'babylonjs'
 
 interface ClassRoomVideoChatModalProps {}
@@ -46,6 +46,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   const [presenterTileId, setPresenterTileId] = useState<number | null>(null)
   const [currentSession, setCurrentSession] = useState<ISession | null>(null)
   const [userStarted, setUserStarted] = useState<boolean>(false)
+  const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
 
   // Chime
   const audioVideo = useAudioVideo()
@@ -60,7 +61,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
 
   const { videoChatState, dispatch } = useVideoChatContext()
   const [tabValue, setTabValue] = useState<number>(0)
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(false)
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(true)
   let isPresenter = videoChatState?.session?.admins.items.some(admin => admin.userId === (user?.id as string))
   let isVideoPresenter = videoChatState?.session?.presenterPins.includes(user?.id as string)
 
@@ -172,6 +173,12 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
     }
   }, [videoChatState?.session?.presenterPins])
 
+  useEffect(() => {
+    if (videoChatState?.session?.qaActive) {
+      setQADialogOpen(true)
+    }
+  }, [videoChatState?.session?.qaActive])
+
   return (
     <UserActivityProvider>
       <PollProvider>
@@ -206,6 +213,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                               tileId={tileId}
                               name={roster[attendeeId] && roster[attendeeId].name ? roster[attendeeId].name : ''}
                               style={{ border: '1px solid grey', gridArea: '' }}
+                              key={tileId}
                             />
                           )
                         })}
@@ -250,6 +258,17 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                     </Toolbar>
                     <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
                       <ChatMessages videoChat={true} />
+                      {qaDialogOpen ? (
+                        <DialogCard
+                          title='Q&A now open!'
+                          message={`Submit your question by clicking the question mark icon in the chat message box`}
+                          onConfirm={() => setQADialogOpen(false)}
+                          onCancel={() => setQADialogOpen(false)}
+                          className={classes.dialog}
+                          confirmText='Ok'
+                          hideCancel
+                        />
+                      ) : null}
                     </TabPanel>
                     <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
                       <PeoplePanel isAdmin={isPresenter} />
@@ -334,5 +353,10 @@ const useStyles = makeStyles(() => ({
   },
   black: {
     background: 'black'
+  },
+  dialog: {
+    position: 'absolute',
+    top: 0,
+    width: '100%'
   }
 }))
