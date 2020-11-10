@@ -43,23 +43,35 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
   const { chatState, dispatch } = useChatContext()
   const { width: windowWidth } = useWindowSize()
 
-  const filteredMessages = messages.filter(
-    message => message.id !== chatState?.session?.pinnedMessageId && message?.deleted !== 'true'
-  )
-
   const sizeMap = useRef({})
   const setSize = useCallback((index, size) => (sizeMap.current = { ...sizeMap.current, [index]: size }), [])
-  const getSize = useCallback(
-    index => sizeMap.current[index] || setTimeout(() => sizeMap.current[index] || calculateSize(index), 50),
-    []
-  )
 
-  const calculateSize = index => {
-    if (filteredMessages[index] && filteredMessages[index].content.length) {
-      return filteredMessages[index].content.length * 2.25
+  const getItemSize = row => {
+    const text = row.content
+
+    let rowHeight: number
+
+    if (!text || text.length < 35) {
+      rowHeight = 50
+    } else if (text.length > 35 && text.length < 100) {
+      rowHeight = 75
+    } else if (text.length > 100 && text.length < 200) {
+      rowHeight = text.length * 0.8
+    } else if (text.length > 300) {
+      rowHeight = text.length * 0.7
+    } else {
+      rowHeight = text.length
     }
-    return 100
+
+    return rowHeight
   }
+
+  const filteredMessages = messages
+    .filter(message => message.id !== chatState?.session?.pinnedMessageId && message?.deleted !== 'true')
+    .map((message, idx) => {
+      setSize(idx, message.content.length * 2.25)
+      return message
+    })
 
   useEffect(() => {
     const verizonList = [
@@ -174,7 +186,7 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
           <VariableSizeList
             height={height - 80}
             width={width}
-            itemSize={getSize}
+            itemSize={i => getItemSize(filteredMessages[i])}
             itemCount={filteredMessages.length}
             ref={listRef}
           >

@@ -159,7 +159,6 @@ export default class Receiver {
               }
               break
             case 'sessions':
-              console.log(JSONdata)
               let newSession
               switch (JSONdata!.param) {
                 case '1':

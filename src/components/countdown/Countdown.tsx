@@ -59,6 +59,7 @@ export const Countdown: FC<CountdownProps> = ({ streamStartTime, notifyESS, setS
   const [remainingHours, setRemainingHours] = useState<string>(initialTimeRemaining.hours)
   const [remainingMinutes, setRemainingMinutes] = useState<string>(initialTimeRemaining.minutes)
   const [remainingSeconds, setRemainingSeconds] = useState<string>(initialTimeRemaining.seconds)
+  const [hideCountdown, setHideCountdown] = useState<boolean>(false)
 
   useEffect(() => {
     const countdownUpdater = setInterval(() => {
@@ -69,8 +70,9 @@ export const Countdown: FC<CountdownProps> = ({ streamStartTime, notifyESS, setS
       setRemainingMinutes(rem.minutes)
       setRemainingSeconds(rem.seconds)
 
-      if (new Date(streamStartTime).getTime() - new Date().getTime() <= 0) {
+      if (new Date(streamStartTime).getTime() - new Date().getTime() <= 1000) {
         setShowLivestream(true)
+        setHideCountdown(true)
       }
     }, 1000)
 
@@ -91,13 +93,18 @@ export const Countdown: FC<CountdownProps> = ({ streamStartTime, notifyESS, setS
     ) {
       // trigger the toast alert
       // for Event Starting Soon
-      setShowLivestream(true)
       notifyESS()
+    }
+
+    if (Number(remainingDays) === 0 && Number(remainingHours) === 0 && Number(remainingMinutes) < 1) {
+      // hide the countdown and show the livestream button at 1 min
+      setHideCountdown(true)
+      setShowLivestream(true)
     }
   }, [notifyESS, remainingMinutes])
 
   return (
-    <div className={classes.countdown}>
+    <div id='countdown-display' className={hideCountdown ? classes.displayNone : classes.countdown}>
       <AccessTimeIcon fontSize='small' />
 
       {Number(remainingDays) > 2 ? (
@@ -140,6 +147,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       marginTop: 'unset'
     }
+  },
+  displayNone: {
+    display: 'none'
   },
   timeDisplay: {
     margin: '0 0.5rem',

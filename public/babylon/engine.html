@@ -185,9 +185,9 @@
     (async function() {
         window.scene = null;
         window.toolkit = true;
-        var versionStamp = 'd25e3d32-e50e-41d7-bf0c-6af9c41d2e96';
-        var pagetype = "project", defaultscene= "VerizonEnterprise.gltf", physics = false, navmesh = true, renderengine = 0, animstartup= 0, antialias = true, adaptive = true, timeout = 1, autoclose=true, datax = "#00FF00", folder = "scenes/", title = "Verizon-VX360-3D";
-        var maxsize = true, maxwidth = 1440, maxheight = 720;
+        var versionStamp = 'ce2075ed-3e08-46fb-bd42-75f6fc5550dc';
+        var pagetype = "project", defaultscene= "VerizonEnterprise.gltf", physics = false, navmesh = true, renderengine = 0, animstartup= 0, antialias = true, adaptive = false, timeout = 1, autoclose=true, datax = "#00FF00", folder = "scenes/", title = "Verizon-VX360-3D";
+        var maxsize = true, maxwidth = 1600, maxheight = 1600; // Note: Temp Using Max Width Only
         var loaded = false, paused = false, downloaded = 0;
         var proj = document.getElementById("proj");
         var panel = document.getElementById("panel");
@@ -443,21 +443,22 @@
         }
         var resizeRenderingCanvas = function() {
             engine.resize();
+            // TEMP: Must Clean Up (Always Applying Hardware Scaling)
             if (maxsize === true) {
-                if (divcvs.width < divcvs.height) {
-                    if (divcvs.height > maxheight) {
-                        var wratio = maxheight / divcvs.height;
-                        divcvs.height = maxheight;
-                        divcvs.width *= wratio;
+                var wratio = 1 / (maxwidth / divcvs.width);
+                var hratio = 1 / (maxheight / divcvs.height);
+                if (divcvs.width > maxwidth || divcvs.height > maxheight) {
+                    if(wratio > hratio){
+                        // window.screenRatio = wratio;
+                        engine.setHardwareScalingLevel(wratio);
+                        //console.log("Hardware Scaling W-Ratio: " + wratio);
+                    }else{
+                        // window.screenRatio = hratio;
+                        engine.setHardwareScalingLevel(hratio);
+                        //console.log("Hardware Scaling H-Ratio: " + hratio);
                     }
-                } else {
-                    if (divcvs.width > maxwidth) {
-                        var hratio = maxwidth / divcvs.width;
-                        divcvs.width = maxwidth;
-                        divcvs.height *= hratio;
-                    }    
-                }           
-            }            
+                }   
+            }
         }
         // ************************************************************************ //
         // BABYLON ENGINE - Create Engine And Load Project Scene Hiearchy           //
