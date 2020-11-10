@@ -68,3 +68,53 @@ export const StyledContent = styled.div`
     }
   }
 `
+
+interface GridProps {
+  tileCount: number
+  isContentSharing
+}
+
+export const StyledGrid = styled.section<GridProps>`
+  display: grid;
+  height: 100vh;
+  width: 100%;
+  div[data-testid='video-tile'] video {
+    position: relative;
+  }
+  ${({ isContentSharing, tileCount }) => {
+    if (isContentSharing && tileCount > 0) {
+      return `
+        grid-template-columns: 80% 20%;
+        ${
+          tileCount === 1
+            ? `
+          .user-video[data-testid='video-tile'] {
+            max-height: 25%;
+          }
+        `
+            : ''
+        }
+      `
+    } else if (tileCount >= 2) {
+      return `
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        justify-content: center;
+        .user-video:nth-child(3) {
+          margin-left: 50%;
+        }
+        ${
+          tileCount > 2
+            ? `
+          grid-auto-rows: 50%;
+        `
+            : ''
+        }
+      `
+    } else {
+      return `
+        grid-template-columns: 1fr;
+      `
+    }
+  }}
+`

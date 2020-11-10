@@ -19,7 +19,7 @@ import { Modal } from '@mvrk-hq/vx360-components'
 
 import MeetingControls from '../MeetingControls'
 import MeetingDetails from '../MeetingDetails'
-import { StyledLayout, StyledContent } from './Styled'
+import { StyledLayout, StyledContent, StyledGrid } from './Styled'
 import { DetailsPanel, PeoplePanel, ToolsPanel } from '../Panels'
 import { PollDrawer } from '../PollDrawer'
 import { DeviceSetup } from '../DeviceSetup'
@@ -180,27 +180,29 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
             <StyledLayout drawerWidth={drawerOpen ? 350 : 0}>
               <StyledContent>
                 <div className='presenter'>
-                  <MeetingDetails isClassroom={true} />
-                  {isLocalUserSharing || sharingAttendeeId ? <ContentShare /> : null}
-                  <VideoGrid
-                    layout={null}
-                    size={isVideoEnabled ? tiles.length + 1 : tiles.length}
+                  <MeetingDetails
+                    isClassroom={true}
+                    isActive={Boolean(tiles.length > 0 || isLocalUserSharing || sharingAttendeeId || isVideoEnabled)}
+                  />
+                  <StyledGrid
+                    tileCount={isVideoEnabled ? tiles.length + 1 : tiles.length}
+                    isContentSharing={isLocalUserSharing || sharingAttendeeId}
                     style={isVideoEnabled || tiles.length > 0 ? {} : { backgroundColor: 'transparent' }}
                   >
+                    {isLocalUserSharing || sharingAttendeeId ? <ContentShare /> : null}
                     <ConditionalWrapper
                       condition={isLocalUserSharing || sharingAttendeeId}
-                      wrapper={children => (
-                        <Box display='flex' flexDirection='column'>
-                          {children}
-                        </Box>
-                      )}
+                      wrapper={children => <Box display='grid'>{children}</Box>}
                     >
                       <>
-                        {isVideoEnabled ? <LocalVideo nameplate={`${user?.firstName} ${user?.lastName}`} /> : null}
+                        {isVideoEnabled ? (
+                          <LocalVideo nameplate={`${user?.firstName} ${user?.lastName}`} className='user-video' />
+                        ) : null}
                         {tiles.map(tileId => {
                           const attendeeId = tileIdToAttendeeId[tileId]
                           return (
                             <RemoteVideo
+                              className='user-video'
                               tileId={tileId}
                               name={roster[attendeeId] && roster[attendeeId].name ? roster[attendeeId].name : ''}
                               style={{ border: '1px solid grey', gridArea: '' }}
@@ -209,7 +211,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                         })}
                       </>
                     </ConditionalWrapper>
-                  </VideoGrid>
+                  </StyledGrid>
                   <MeetingControls
                     setVisible={setVisible}
                     isClassroom={true}
