@@ -52,9 +52,9 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     let rowHeight: number
 
     if (!text || text.length < 35) {
-      rowHeight = 50
+      rowHeight = 100
     } else if (text.length > 35 && text.length < 100) {
-      rowHeight = 75
+      rowHeight = 150
     } else if (text.length > 100 && text.length < 200) {
       rowHeight = text.length * 0.8
     } else if (text.length > 300) {
