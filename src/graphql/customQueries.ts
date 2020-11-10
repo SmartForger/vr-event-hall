@@ -338,7 +338,6 @@ export const getSessionOverviewById = /* GraphQL */ `
     }
   }
 `
-
 export const getConversationBase = /* GraphQL */ `
   query GetConversation($id: ID!) {
     getConversation(id: $id) {
