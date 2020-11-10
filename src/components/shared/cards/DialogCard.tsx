@@ -12,6 +12,7 @@ interface DialogCardProps {
   className?: string
   confirmText?: string
   cancelText?: string
+  hideCancel?: boolean
 }
 
 export const DialogCard: FC<DialogCardProps> = ({
@@ -23,7 +24,8 @@ export const DialogCard: FC<DialogCardProps> = ({
   containerHeight,
   className,
   confirmText,
-  cancelText
+  cancelText,
+  hideCancel
 }) => {
   const classes = useStyles()
 
@@ -49,7 +51,7 @@ export const DialogCard: FC<DialogCardProps> = ({
           </CardActionArea>
           {onConfirm || onCancel ? (
             <CardActions className={classes.actions}>
-              {onCancel && (
+              {onCancel && !hideCancel && (
                 <Button size='small' variant='contained' className={classes.cancel} onClick={onCancel}>
                   {cancelText || 'Cancel'}
                 </Button>

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { IconButton, InputBase, Paper } from '@material-ui/core'
+import { Box, IconButton, InputBase, Paper } from '@material-ui/core'
 import { SendOutlined as Send, Mood as Smile } from '@material-ui/icons'
 
 import { createMessage, createSessionQuestion } from 'graphql/mutations'
@@ -73,6 +73,21 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
 
   return (
     <div className={classes.root}>
+      {questionMode ? (
+        <Box
+          bgcolor='black'
+          height='20px'
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          width='100%'
+          marginTop='-20px'
+        >
+          <Box color='white' component='p' fontSize='0.85rem' textAlign='center' margin='0'>
+            You are in Q&A mode. Submit your question below
+          </Box>
+        </Box>
+      ) : null}
       <Paper className={classes.paper}>
         <InputBase
           className={classes.input}
@@ -85,9 +100,11 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
           onKeyDown={sendMessage}
         />
         <div className={classes.icons}>
-          <IconButton disabled={!videoChatState?.session?.qaActive} onClick={toggleQuestionMode}>
-            {videoChatState?.session?.qaActive && questionMode ? <QuestionIcon /> : <QuestionDisabledIcon />}
-          </IconButton>
+          {videoChatState?.isClassroom && videoChatState?.session?.qaActive ? (
+            <IconButton onClick={toggleQuestionMode}>
+              {videoChatState?.session?.qaActive && questionMode ? <QuestionIcon /> : <QuestionDisabledIcon />}
+            </IconButton>
+          ) : null}
           <IconButton
             className={`${classes.iconButton} ${classes.submitButton}`}
             aria-label='send'
