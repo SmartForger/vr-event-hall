@@ -43,7 +43,7 @@ export const ChatDrawer = ({ vcOff }) => {
     videoChatDispatch({ type: 'SET_LOADING', payload: true })
     const {
       data: { meeting, attendee }
-    } = await createChimeMeeting({ meetingId: videoChatState.meetingId, userId: user?.id })
+    } = await createChimeMeeting({ meetingId: chatState?.conversation?.id, userId: user?.id })
 
     const joinData = {
       meetingInfo: meeting.Meeting,

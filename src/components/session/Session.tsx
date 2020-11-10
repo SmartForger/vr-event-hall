@@ -50,7 +50,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
     }
     const {
       data: { meeting, attendee }
-    } = await createChimeMeeting({ meetingId: videoChatState.meetingId, userId: user?.id })
+    } = await createChimeMeeting({ meetingId: videoChatState.sessionId, userId: user?.id })
 
     const joinData = {
       meetingInfo: meeting.Meeting,
