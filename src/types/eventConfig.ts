@@ -16,19 +16,19 @@ export enum Environments {
 
 export const defaultEventConfigs: { [key: string]: EventConfig } = {
   prod: {
-    id: 'fcff0141-4a49-4322-9b64-4618e4081249',
+    id: 'bbbbbbbb-4a49-4322-9b64-4618e4081249',
     name: Environments.PROD,
     useBackupStream: false,
     vcOff: false
   },
   dev: {
-    id: 'fcff0141-4a49-4322-9b64-4618e4081249',
+    id: 'aaaaaaaa-4a49-4322-9b64-4618e4081249',
     name: Environments.DEV,
     useBackupStream: false,
     vcOff: false
   },
   staging: {
-    id: 'fcff0141-4a49-4322-9b64-4618e4081249',
+    id: '00000000-4a49-4322-9b64-4618e4081249',
     name: Environments.STAGING,
     useBackupStream: false,
     vcOff: false
