@@ -4,11 +4,13 @@ import { ConversationList } from './ConversationList'
 import { get, forEach } from 'lodash'
 
 // Helpers
+import { useAppState } from 'providers'
 import { IUser, IMeetingInfo } from 'types'
-import { graphQLSubscription } from 'graphql/helpers'
+import { graphQLSubscription, graphQLQuery } from 'graphql/helpers'
 import { onCreateGlobalMessage } from 'graphql/subscriptions'
+import { getConversationBase } from 'graphql/customQueries'
 import { useDispatch, useSelector } from 'react-redux'
-import { getNotifications, setConversations, setPersons, incrementNotification } from 'redux/chat'
+import { getNotifications, setConversations, addConversation, setPersons, incrementNotification } from 'redux/chat'
 import { VideoChatModal } from 'components/videochat/Meeting'
 import { Loader } from 'components/shared'
 
@@ -19,6 +21,7 @@ interface ChatProps {
 
 export const Chat: FC<ChatProps> = ({ user, users }) => {
   const dispatch = useDispatch()
+  const { setUser } = useAppState()
   const notifications = useSelector(getNotifications)
   const [chatOpen, setChatOpen] = useState<boolean>(false)
   // Key for conversations should be the conversation ID for easy lookup
@@ -26,6 +29,16 @@ export const Chat: FC<ChatProps> = ({ user, users }) => {
   const [videoChatIsVisible, setVideoChatVisible] = useState<boolean>(false)
   const [videoChatLoading, setVideoChatLoading] = useState<boolean>(false)
   const [meetingInfo, setMeetingInfo] = useState<IMeetingInfo | unknown>(null)
+
+  const fetchNewConvoAndPopulateUser = async (convId: string) => {
+    debugger
+    let newRelevantConvo = await graphQLQuery(getConversationBase, 'getConversation', { id: convId })
+    addConversation(newRelevantConvo)
+    debugger
+    let updatedUserConvos = user?.conversations?.items || []
+    updatedUserConvos.push(newRelevantConvo)
+    setUser({ ...user, conversations: { items: updatedUserConvos } })
+  }
 
   useEffect(() => {
     const userConversations = get(user, 'conversations.items', []).map(conversation => {
@@ -55,13 +68,19 @@ export const Chat: FC<ChatProps> = ({ user, users }) => {
 
     dispatch(setPersons(persons))
 
-    const newMessageCreated = data => {
-      const conversationId = data.onCreateGlobalMessage.messageConversationId
+    const newMessageCreated = ({ onCreateGlobalMessage }) => {
+      const conversationId = onCreateGlobalMessage.messageConversationId
+      debugger
       // Ignore the message if: it isn't for this user, it was created by this user, or it is from livestream
-      if (data.onCreateGlobalMessage.authorId === user!.id || conversationId === '8ec185f0-e5c2-423d-8164-f5439a24cf0d')
+      if (onCreateGlobalMessage.authorId === user!.id || conversationId === '8ec185f0-e5c2-423d-8164-f5439a24cf0d')
         return
 
       dispatch(incrementNotification(conversationId))
+      debugger
+      // if this is a new conversation for this user, refetch the conversations to populate the list
+      if (!userConversations.some(convo => convo.id === conversationId)) {
+        fetchNewConvoAndPopulateUser(conversationId)
+      }
     }
 
     const subscription = graphQLSubscription(onCreateGlobalMessage, {}, newMessageCreated)
