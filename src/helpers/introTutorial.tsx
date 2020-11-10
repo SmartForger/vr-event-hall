@@ -25,7 +25,7 @@ export const introTutorialSteps: (user: IUser | undefined) => Step[] = user => {
       placement: 'left'
     },
     {
-      target: '#topNavContainer',
+      target: '#countdown-display',
       title: 'Countdown',
       content:
         'We’ll be tuning in live to hear the latest from our key leaders in 5G and subject matter experts.' +
