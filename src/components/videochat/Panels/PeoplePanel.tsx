@@ -15,6 +15,7 @@ import { graphQLMutation } from 'graphql/helpers'
 import { updateSession } from 'graphql/mutations'
 import { useAppState, useVideoChatContext } from 'providers'
 import { useRosterState } from 'providers/RosterProvider'
+import { PinMenu } from './PinMenu'
 
 interface PeoplePanelProps {
   isAdmin?: boolean
@@ -32,8 +33,6 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
   const rosterArray = Object.values(roster)
   // const [raisedHands, setRaisedHands] = useState<any>([])
   const [anchorEl, setAnchorEl] = React.useState(null)
-
-  const isPinned = videoChatState?.session?.presenterPins.some(pin => pin === user?.id)
 
   // let createSubscription = useRef<ISubscriptionObject | null>(null)
   // let updateSubscription = useRef<ISubscriptionObject | null>(null)
@@ -89,7 +88,6 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
         presenterPins: uniq([...(videoChatState?.session?.presenterPins || []), userId])
       })
     }
-    handleClose()
   }
 
   const handleUnPin = async (userId: string) => {
@@ -99,11 +97,6 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
         presenterPins: videoChatState?.session?.presenterPins.filter(pin => pin !== userId)
       })
     }
-    handleClose()
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
   }
 
   // const toggleUserMute = (userId: string, muted: boolean) => {
@@ -225,42 +218,33 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
             </div>
           </div>
         </div>
-        {rosterArray.map(user => (
-          <div className={classes.user}>
-            <Avatar
-              alt={user.name}
-              src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
-              className={classes.avatar}
-            />
-            <div className={classes.userInfo}>
-              <div className={classes.userActivityCircle} />
-              <Typography variant='body1' component='p' align='center'>
-                {user.name}
-              </Typography>
-              {isAdmin ? (
-                <div className={classes.moreButton}>
-                  <IconButton onClick={handleClick}>
-                    <MoreHoriz />
-                  </IconButton>
-                  <Menu
-                    id={`${user.externalUserId}-menu`}
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    {!isPinned ? (
-                      <MenuItem onClick={() => handlePin(user.externalUserId || '')}>Pin Video</MenuItem>
-                    ) : (
-                      <MenuItem onClick={() => handleUnPin(user.externalUserId || '')}>Unpin Video</MenuItem>
-                    )}
-                    <MenuItem onClick={handleClose}>Cancel</MenuItem>
-                  </Menu>
-                </div>
-              ) : null}
+        {rosterArray.map(rosterUser => {
+          return (
+            <div className={classes.user}>
+              <Avatar
+                alt={rosterUser.name}
+                src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
+                className={classes.avatar}
+              />
+              <div className={classes.userInfo}>
+                <div className={classes.userActivityCircle} />
+                <Typography variant='body1' component='p' align='center'>
+                  {rosterUser.name}
+                </Typography>
+                {isAdmin ? (
+                  <div className={classes.moreButton}>
+                    <PinMenu
+                      user={rosterUser}
+                      handlePin={handlePin}
+                      handleUnPin={handleUnPin}
+                      isPinned={videoChatState?.session?.presenterPins.some(pin => pin === rosterUser?.externalUserId)}
+                    />
+                  </div>
+                ) : null}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </section>
     </>
   )

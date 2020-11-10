@@ -10,9 +10,11 @@ import {
   VideoTile,
   useLocalVideo,
   LocalVideo,
-  useAudioVideo
+  useAudioVideo,
+  RemoteVideo,
+  useContentShareControls
 } from 'amazon-chime-sdk-component-library-react'
-import { Drawer, makeStyles, Tab, Tabs, Toolbar } from '@material-ui/core'
+import { Box, Drawer, makeStyles, Tab, Tabs, Toolbar } from '@material-ui/core'
 import { Modal } from '@mvrk-hq/vx360-components'
 
 import MeetingControls from '../MeetingControls'
@@ -31,6 +33,8 @@ import { onUpdateSession } from 'graphql/subscriptions'
 import { ISubscriptionObject, ISession } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
+import { ConditionalWrapper } from 'components/shared'
+import { NullEngine } from 'babylonjs'
 
 interface ClassRoomVideoChatModalProps {}
 
@@ -45,9 +49,10 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
 
   // Chime
   const audioVideo = useAudioVideo()
-  const { isVideoEnabled } = useLocalVideo()
-  const { tiles, attendeeIdToTileId } = useRemoteVideoTileState()
+  const { isVideoEnabled, toggleVideo } = useLocalVideo()
+  const { tiles, attendeeIdToTileId, tileIdToAttendeeId } = useRemoteVideoTileState()
   const { isLocalUserSharing, sharingAttendeeId } = useContentShareState()
+  const { toggleContentShare } = useContentShareControls()
   const { roster } = useRosterState()
   const rosterArray = Object.values(roster)
 
@@ -158,6 +163,15 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
     setDrawerOpen(!drawerOpen)
   }
 
+  useEffect(() => {
+    if (isVideoEnabled && !videoChatState?.session?.presenterPins.includes(user?.id || '')) {
+      toggleVideo()
+    }
+    if (isLocalUserSharing && !videoChatState?.session?.presenterPins.includes(user?.id || '')) {
+      toggleContentShare()
+    }
+  }, [videoChatState?.session?.presenterPins])
+
   return (
     <UserActivityProvider>
       <PollProvider>
@@ -169,16 +183,32 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                   <MeetingDetails isClassroom={true} />
                   {isLocalUserSharing || sharingAttendeeId ? <ContentShare /> : null}
                   <VideoGrid
-                    layout='standard'
+                    layout={null}
                     size={isVideoEnabled ? tiles.length + 1 : tiles.length}
                     style={isVideoEnabled || tiles.length > 0 ? {} : { backgroundColor: 'transparent' }}
                   >
-                    {isVideoEnabled ? (
-                      <LocalVideo className={isLocalUserSharing || sharingAttendeeId ? 'mini-video' : ''} />
-                    ) : null}
-                    {tiles.map(tileId => (
-                      <VideoTile style={{ border: '1px solid grey', gridArea: '' }} nameplate={`${tileId}`} />
-                    ))}
+                    <ConditionalWrapper
+                      condition={isLocalUserSharing || sharingAttendeeId}
+                      wrapper={children => (
+                        <Box display='flex' flexDirection='column'>
+                          {children}
+                        </Box>
+                      )}
+                    >
+                      <>
+                        {isVideoEnabled ? <LocalVideo nameplate={`${user?.firstName} ${user?.lastName}`} /> : null}
+                        {tiles.map(tileId => {
+                          const attendeeId = tileIdToAttendeeId[tileId]
+                          return (
+                            <RemoteVideo
+                              tileId={tileId}
+                              name={roster[attendeeId] && roster[attendeeId].name ? roster[attendeeId].name : ''}
+                              style={{ border: '1px solid grey', gridArea: '' }}
+                            />
+                          )
+                        })}
+                      </>
+                    </ConditionalWrapper>
                   </VideoGrid>
                   <MeetingControls
                     setVisible={setVisible}
