@@ -6,19 +6,22 @@ import { ReactComponent as Logo } from 'assets/verizon-logo-white.svg'
 
 interface MeetingDetailsProps {
   isClassroom?: boolean
+  isActive?: boolean
 }
 
-const MeetingDetails: FC<MeetingDetailsProps> = ({ isClassroom }) => {
+const MeetingDetails: FC<MeetingDetailsProps> = ({ isClassroom, isActive }) => {
   const meetingManager = useMeetingManager()
 
   return (
     <StyledFlex container layout='fill-space-centered' className={isClassroom ? 'classroom' : ''}>
-      <Flex mb='2rem' mr={{ md: '2rem' }} ml={{ md: '7%' }} px='1rem'>
-        <Logo width={250} height={60} />
-        <Heading level={4} tag='h1' mb={2}>
-          The session will begin shortly
-        </Heading>
-      </Flex>
+      {isActive ? null : (
+        <Flex mb='2rem' mr={{ md: '2rem' }} ml={{ md: '7%' }} px='1rem'>
+          <Logo width={250} height={60} />
+          <Heading level={4} tag='h1' mb={2}>
+            The session will begin shortly
+          </Heading>
+        </Flex>
+      )}
     </StyledFlex>
   )
 }
