@@ -12,10 +12,13 @@ export const getConversationFiltered = /* GraphQL */ `
           content
           authorId
           author {
+            id
             firstName
             lastName
             company
             title
+            email
+            avatar
           }
           conversationId
           deleted
