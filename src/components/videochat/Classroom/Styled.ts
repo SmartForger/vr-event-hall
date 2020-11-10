@@ -100,15 +100,21 @@ export const StyledGrid = styled.section<GridProps>`
         grid-template-columns: 1fr 1fr;
         align-items: center;
         justify-content: center;
-        .user-video:nth-child(3) {
-          margin-left: 50%;
-        }
         ${
           tileCount > 2
             ? `
           grid-auto-rows: 50%;
         `
             : ''
+        }
+        ${
+          tileCount === 3
+            ? `
+          .user-video:nth-child(3) {
+            margin-left: 50%;
+          }
+        `
+            : null
         }
       `
     } else {
