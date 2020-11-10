@@ -149,7 +149,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '0 3rem',
     height: 'calc(100% - 115px)',
     width: 'calc(100% - 64px)',
-    top: '200px',
+    top: '180px',
     display: 'flex',
     alignItems: 'center',
     backgroundColor: 'transparent',
