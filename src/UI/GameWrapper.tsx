@@ -335,8 +335,16 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   }
 
   return (
-    <div id='game'>
-      <iframe id='ifx' width='100%' height='100%' scrolling='no' frameBorder='0' title='ifx' />
+    <div id='game' className={classes.gameContainer}>
+      <iframe
+        id='ifx'
+        className={classes.frameContainer}
+        width='100%'
+        height='100%'
+        scrolling='no'
+        frameBorder='0'
+        title='ifx'
+      />
       {gameLoading && <Loader loaderOptions={loaderOptions} />}
       <VideoChatProvider>
         {!gameLoading && showGUI && (
@@ -530,5 +538,12 @@ const useStyles = makeStyles({
   },
   toastPosition: {
     right: 88
+  },
+  gameContainer: {
+    backgroundColor: '#e7e7e7'
+  },
+  frameContainer: {
+    marginTop: 60,
+    height: 'calc(100vh - 60px)'
   }
 })
