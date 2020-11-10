@@ -138,7 +138,6 @@ export const ConversationList: FC<ConversationListProps> = ({
   const selectConversation = async (conversationID, defaultName?, nameOverride?) => {
     if (conversationID) {
       setChatLoading(true)
-
       const conversationData = await graphQLQuery(getConversation, 'getConversation', { id: conversationID })
       dispatch(
         setActiveConversation({
@@ -179,6 +178,7 @@ export const ConversationList: FC<ConversationListProps> = ({
     setView(Views.CONVERSATION)
     setPreviousView(Views.PEOPLE)
     setChatLoading(true)
+    debugger
     if (person.conversationId) {
       await selectConversation(person.conversationId, '', person.name)
     } else {

@@ -16,7 +16,6 @@ interface IPollContextObject {
   results?: IPollAnswerResults
   mode: EPollDisplayMode
   msRemaining: number
-  // userType: UserAdminType
 }
 
 const initialState: IPollContextObject = {
@@ -27,7 +26,6 @@ const initialState: IPollContextObject = {
   mode: EPollDisplayMode.question,
   open: false,
   msRemaining: 30000 // 30 seconds
-  // userType: UserAdminType.GUEST,
 }
 
 export const PollContext = createContext<{
