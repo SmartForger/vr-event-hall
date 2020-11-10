@@ -26,6 +26,10 @@ export const UserAvatarCard: FC<UserAvatarCardProps> = ({
   const classes = useStyles()
   const { muted } = useAttendeeAudioStatus(attendeeId)
 
+  // we'll include a special marking next to a user's name
+  // if they are a duplciate mvrk user with a `+numebr@mvkr.co`
+  // email to help avoid confusion
+  const plusMvrkUserIndicator = user?.email?.match?.(/\+(.*)@mvrk\.co/i)
   return (
     <div className={`${classes.user} ${onClick ? classes.click : ''}`} {...(onClick ? { onClick } : {})}>
       <Avatar
@@ -36,7 +40,8 @@ export const UserAvatarCard: FC<UserAvatarCardProps> = ({
       <div className={classes.userInfo}>
         {/* <div className={classes.userActivityCircle} /> */}
         <Typography variant='body1' component='p' align='center'>
-          {user.firstName} {user.lastName}
+          {user.firstName} {user.lastName}{' '}
+          {plusMvrkUserIndicator?.[1] ? <span className={classes.secondary}>+{plusMvrkUserIndicator?.[1]}</span> : ''}
         </Typography>
         {isRaisedHand ? (
           <Box flex={1} display='flex' justifyContent='flex-end' alignItems='center'>
@@ -79,6 +84,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiTypography-body1': {
       fontWeight: 300
     }
+  },
+  secondary: {
+    fontSize: '12px',
+    color: 'grey'
   },
   userActivityCircle: {
     backgroundColor: theme.palette.success.main,
