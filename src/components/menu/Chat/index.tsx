@@ -83,9 +83,10 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
           </IconButton>
         </StyledChatHeader>
 
-        <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
+        {/* re-remove channels */}
+        {/* <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
           <ChatSection title='Channels' conversationId={conversationId} />
-        </StyledChatSection>
+        </StyledChatSection> */}
 
         <StyledChatSection className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
           <ChatSection title='Direct Messages' conversationId={conversationId} isDirectMessage />
