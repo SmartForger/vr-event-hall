@@ -2,7 +2,7 @@ export enum GameFlowSteps {
   Intro = 'intro',
   Welcome = 'welcome',
   Explore = 'explore',
-  BackToExplore = 'bacaktoexplore',
+  BackToExplore = 'backtoexplore',
   Demo = 'demo',
   Robot = 'robot',
   Sessions = 'sessions',
