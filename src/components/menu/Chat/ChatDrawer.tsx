@@ -7,7 +7,6 @@ import { ChatMessages } from '../ChatMessages'
 import { TabPanel } from './TabPanel'
 
 import { useAppState, useChatContext, UserAdminType, useVideoChatContext } from 'providers'
-import { DetailsPanel } from './DetailsPanel.tsx'
 import { createChimeMeeting } from 'helpers'
 import { graphQLQuery } from 'graphql/helpers'
 import { getAttendeeInfo } from 'graphql/customQueries'
