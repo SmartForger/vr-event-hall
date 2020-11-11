@@ -16,7 +16,7 @@ const common: ICommonDict = {
   confirmationCode: 'Confirmation Code',
   confirmEmail: 'Confirm E-mail',
   confirmEmailInstructions:
-    'A confirmation code was sent to your e-mail. Didn’t receive it? Check your spam folder or resend code.',
+    'A confirmation code was sent to your e-mail. Didn’t receive it? Check your spam folder or hit back and try again.',
   confirmPassword: 'Confirm Password',
   continue: 'Continue',
   dontHaveAnAccount: "Don't have an account?",
