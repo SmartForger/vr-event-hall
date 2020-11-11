@@ -9,9 +9,9 @@ export const fiveGCoverage: IDemo = {
     body:
       'How do you build 5G right? Start with America’s most reliable network, Verizon. Then build in the coverage of 5G Nationwide and add the unprecedented performance of 5G Ultra Wideband, the fastest 5G in the world.',
     expert: '',
-    nextDemoText: 'Tata Consultancy',
-    nextDemo: E3DDemoNameVals.tata,
-    nextDemoThumbnail: 'tata-thumbnail.png'
+    nextDemoText: 'MEC explained.',
+    nextDemo: E3DDemoNameVals.mecExplainer,
+    nextDemoThumbnail: 'mecExplainerThumbnail.png'
   },
   timestamps: {
     0: [
