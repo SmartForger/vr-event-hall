@@ -1,4 +1,4 @@
-import { IDemoCollection } from '../types'
+import { E3DDemoNameVals, IDemoCollection } from '../types'
 import { tata } from './demos/tata'
 import { mecExplainer } from './demos/mec'
 import { indy } from './demos/indy'
@@ -20,10 +20,13 @@ export const Demos: IDemoCollection = {
     video: '5statesofready720.mp4',
     poster: FivestatesofreadyImg,
     conversationId: '1d26e076-954e-4455-bf28-cc964f633f3d',
-    side: {
+    end: {
       header: 'The 5 States of Ready',
       body:
-        "How do you prepare for a future that can't be seen? By assessing your needs using the 5 states of ready framework—Verizon’s approach to enhancing the agility, security and mobility of all our customers.\n"
+        "How do you prepare for a future that can't be seen? By assessing your needs using the 5 states of ready framework—Verizon’s approach to enhancing the agility, security and mobility of all our customers.\n",
+      nextDemoText: '5G Ultra Wideband and 5G Nationwide.',
+      nextDemo: E3DDemoNameVals.fiveGCoverage,
+      nextDemoThumbnail: 'fiveGCoverageThumbnail.png'
     },
     poll: {
       id: '5statesofready',
