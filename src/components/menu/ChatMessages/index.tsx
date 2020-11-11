@@ -7,7 +7,7 @@ import { MessageList } from './MessageList'
 
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { useAppState, useVideoChatContext, useChatContext } from 'providers'
-import { ISubscriptionObject } from 'types'
+import { ISubscriptionObject, IUser } from 'types'
 import { getConversationFiltered } from 'graphql/customQueries'
 import { onCreateMessageWithAuthor, onUpdateMessageWithAuthor } from 'graphql/customSubscriptions'
 
@@ -40,10 +40,20 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
     }
   }
 
+  const isUserAdmin = user => {
+    return videoChatState?.session?.admins.items.some((adminUser: IUser) => adminUser.id === user.id)
+  }
+
   // get the conversation id based on the correct context
-  const conversationId = videoChat
-    ? videoChatState?.session?.conversationId || videoChatState?.conversationId
-    : chatState?.conversationId
+  let conversationId = chatState?.conversationId
+  if (videoChat) {
+    if (isUserAdmin(user) && videoChatState.icId) {
+      conversationId = videoChatState.icId
+    } else {
+      conversationId = videoChatState?.session?.conversationId || videoChatState?.conversationId
+    }
+  }
+
   const getConversationDetails = async () => {
     const conversation = await graphQLQuery(getConversationFiltered, 'getConversation', {
       id: conversationId
