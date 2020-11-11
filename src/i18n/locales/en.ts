@@ -147,7 +147,7 @@ const scenes: IScenesDict = {
   sessions: 'Sessions',
   connect: 'Connect',
   liveStream: 'Live Stream',
-  startingSoon: 'The Digital Transformation of Venues speaker session begins now.',
+  startingSoon: 'The Live Event is starting soon',
   goToLiveStream: 'Go to Live Stream'
 }
 
