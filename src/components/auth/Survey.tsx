@@ -117,7 +117,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
                   multiline
                   rows={qName === 'learningObjectives' ? 4 : 1}
                   id={`survey-answer-${qName}`}
-                  variant='outlined'
+                  variant='filled'
                   inputProps={{ style: { border: 'none' } }}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => answerSurveyQuestion(question, e.target.value)}
                 />
@@ -172,9 +172,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 0,
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
-    },
-    '& label': {
-      color: theme.palette.grey[500]
     },
     '& fieldset': {
       borderRadius: 0,

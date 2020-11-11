@@ -167,9 +167,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
     },
-    '& label': {
-      color: theme.palette.grey[500]
-    },
     '& fieldset': {
       borderRadius: 0,
       borderColor: '#dadada',
