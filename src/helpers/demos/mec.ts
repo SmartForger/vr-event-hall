@@ -10,9 +10,9 @@ export const mecExplainer: IDemo = {
     body:
       '5G Edge puts the power of the cloud right into the Verizon network - bringing computing power closer to where it’s needed. It’s the world’s first mobile edge compute platform with AWS Wavelength.',
     expert: '',
-    nextDemoText: 'Verizon 5G Ultra Wideband at the Indy 500',
-    nextDemo: E3DDemoNameVals.indy,
-    nextDemoThumbnail: 'indy-thumbnail.png'
+    nextDemoText: 'Speed of Thought',
+    nextDemo: E3DDemoNameVals.sot,
+    nextDemoThumbnail: 'sot-thumbnail.png'
   },
   timestamps: {
     0: [
