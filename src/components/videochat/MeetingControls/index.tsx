@@ -47,7 +47,7 @@ const MeetingControls: FC<MeetingControlProps> = ({
   return (
     <StyledControls className='controls' active={!!isUserActive} totalControls={isPresenter ? 4 : 5}>
       <ControlBar className='controls-menu' layout='undocked-horizontal' showLabels={false}>
-        <CustomAudioInputControl />
+        <CustomAudioInputControl isAdmin={Boolean(isPresenter || isVideoPresenter)} />
         <CustomControlBarButton
           icon={<ChatIcon width={16} height={16} />}
           onClick={() => toggleDrawer && toggleDrawer(null, 'rightPersistent', true)}

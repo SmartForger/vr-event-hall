@@ -141,7 +141,10 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   }, [roster, tiles])
 
   useEffect(() => {
-    if (videoChatState?.session?.muted && !isPresenter && !isVideoPresenter) {
+    if (isPresenter || isVideoPresenter) {
+      return
+    }
+    if (videoChatState?.session?.muted) {
       audioVideo?.realtimeSetCanUnmuteLocalAudio(false)
       audioVideo?.realtimeMuteLocalAudio()
     } else {
