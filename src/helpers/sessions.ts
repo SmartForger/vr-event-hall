@@ -19,7 +19,7 @@ export interface ISession {
 export const Sessions: { [key: string]: ISession } = {
   healthcareInsurance: {
     id: '4ab7c286-2a47-428c-8ca0-4cc765e153dd',
-    image: 'healthcareServicesImage',
+    image: healthcareServicesImage,
     side: {
       category: 'Breakout Session',
       header: 'Healthcare, Insurance & Life Sciences.',
@@ -31,7 +31,7 @@ export const Sessions: { [key: string]: ISession } = {
   },
   retailTravelDistribution: {
     id: 'dc10cd28-efab-43c3-8cb7-b40402c0e78b',
-    image: 'travelRetailImage',
+    image: travelRetailImage,
     side: {
       category: 'Breakout Session',
       header: 'Retail/Hospitality, Travel & Distribution.',
@@ -43,7 +43,7 @@ export const Sessions: { [key: string]: ISession } = {
   },
   financialServices: {
     id: '58a60c43-041f-4a6e-b1c9-d207ffd06c62',
-    image: 'financialServicesImage',
+    image: financialServicesImage,
     side: {
       category: 'Breakout Session',
       header: 'Financial Services.',
@@ -55,7 +55,7 @@ export const Sessions: { [key: string]: ISession } = {
   },
   manufacturingEnergyUtilities: {
     id: 'aa4195e4-e9cd-483c-b6be-ad205d176227',
-    image: 'manufacturingImage',
+    image: manufacturingImage,
     side: {
       category: 'Breakout Session',
       header: 'Manufacturing, Automotive, Construction, Energy & Utilities.',
@@ -67,7 +67,7 @@ export const Sessions: { [key: string]: ISession } = {
   },
   mediaEntertainmentTech: {
     id: '4a9b328b-85b5-4393-a232-550ac67962f9',
-    image: 'mediaImage',
+    image: mediaImage,
     side: {
       category: 'Breakout Session',
       header: 'Media, Entertainment, Technology & Service.',
