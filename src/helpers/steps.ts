@@ -53,8 +53,8 @@ export const GameFlowStepsConfig = {
   [GameFlowSteps.Session]: {
     title: GameFlowSteps.Session.toUpperCase(),
     animation: {
-      state: 3,
-      time: 2700
+      state: 5,
+      time: 1500
     }
   },
   [GameFlowSteps.BackToSessions]: {
