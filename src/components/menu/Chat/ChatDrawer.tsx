@@ -7,7 +7,6 @@ import { ChatMessages } from '../ChatMessages'
 import { TabPanel } from './TabPanel'
 
 import { useAppState, useChatContext, UserAdminType, useVideoChatContext } from 'providers'
-import { DetailsPanel } from './DetailsPanel.tsx'
 import { createChimeMeeting } from 'helpers'
 import { graphQLQuery } from 'graphql/helpers'
 import { getAttendeeInfo } from 'graphql/customQueries'
@@ -114,14 +113,10 @@ export const ChatDrawer = ({ vcOff }) => {
             }}
           >
             <Tab label='Chat' className={classes.tab} />
-            <Tab label='Details' className={classes.tab} />
           </Tabs>
         </Toolbar>
         <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
           <ChatMessages videoChat={false} />
-        </TabPanel>
-        <TabPanel value={tabValue} index={1} className={classes.tabPanel}>
-          <DetailsPanel />
         </TabPanel>
       </div>
     </Drawer>
@@ -164,7 +159,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tab: {
     flex: 1,
-    maxWidth: '50%',
+    maxWidth: '100%',
     minWidth: '50%'
   },
   tabPanel: { flex: 1 },
