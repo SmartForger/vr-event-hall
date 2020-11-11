@@ -26,7 +26,10 @@ export const ChatDrawer = ({ vcOff }) => {
   const meetingManager = useMeetingManager()
 
   const closeDrawer = () => {
-    dispatch({ type: 'SET_DETAILS', payload: { conversationId: '', conversationOpen: false, selectedUser: null } })
+    dispatch({
+      type: 'SET_DETAILS',
+      payload: { conversationId: '', conversation: null, conversationOpen: false, selectedUser: null }
+    })
   }
 
   const handleChange = (_, newValue) => {

@@ -43,6 +43,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
   }, [])
 
   const joinClassRoom = async () => {
+    console.log(session)
     dispatch({ type: 'SET_LOADING', payload: true })
     if (videoChatState.presenterPins.includes(user?.id as string)) {
       dispatch({ type: 'SET_DETAILS', payload: { adminType: UserAdminType.PRESENTER } })

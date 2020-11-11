@@ -107,7 +107,6 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
             <Chat
               toggleDrawer={toggleDrawer}
               drawerOpen={drawerOpen}
-              user={user}
               users={users}
               conversationId={conversationId}
               showUserList={() => setShowUserList(true)}
