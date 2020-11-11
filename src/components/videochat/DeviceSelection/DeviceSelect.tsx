@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { InputLabel, makeStyles, MenuItem, Select } from '@material-ui/core'
 import { VideoQuality } from 'amazon-chime-sdk-component-library-react'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 interface IDevice {
   deviceId?: string
@@ -26,9 +27,10 @@ export const DeviceSelect: FC<DeviceSelectProps> = ({ label, id, devices, select
       <Select
         labelId={id}
         name={id}
-        fullWidth
+        className={classes.dropdown}
         value={selected}
         label={label}
+        IconComponent={ExpandMoreIcon}
         onChange={(e: React.ChangeEvent<{ value: unknown }>) => handleChange(e.target.value as string)}
       >
         {devices.map(device => (
@@ -43,8 +45,16 @@ export const DeviceSelect: FC<DeviceSelectProps> = ({ label, id, devices, select
 
 const useStyles = makeStyles(() => ({
   label: {
-    color: '#000',
-    fontSize: '0.75rem',
-    marginRight: 3
+    color: '#747676',
+    fontSize: '0.75rem'
+  },
+  dropdown: {
+    width: '200px',
+    '& div': {
+      paddingLeft: '10px'
+    },
+    '& svg': {
+      color: '#000'
+    }
   }
 }))

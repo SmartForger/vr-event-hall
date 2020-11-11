@@ -32,7 +32,7 @@ export const MeetingJoinDetails: FC<MeetingJoinDetailsProps> = ({ meetingId, loc
     <>
       <Flex container alignItems='flex-start' flexDirection='column' style={{ marginTop: '24px' }}>
         <Button variant='contained' onClick={handleJoinMeeting} style={{ textTransform: 'none' }}>
-          {isLoading ? 'Loading...' : 'Join meeting'}
+          {isLoading ? 'Loading...' : 'Join Session'}
         </Button>
       </Flex>
       {error && (

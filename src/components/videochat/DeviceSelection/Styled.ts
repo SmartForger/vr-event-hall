@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 export const title = `
   font-size: 1rem !important;
-  margin-bottom: 8px;
   font-weight: bold;
 `
 
@@ -61,5 +60,8 @@ export const StyledInputGroup = styled.div`
 export const preview = `
   & > video {
     border: 1px solid black;
+    width: 500px;
+    height: 345px;
+    margin-top: 15px;
   }
 `
