@@ -227,7 +227,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                         {isVideoEnabled ? (
                           <LocalVideo nameplate={`${user?.firstName} ${user?.lastName}`} className='user-video' />
                         ) : isPresenter || isVideoPresenter ? (
-                          <div className={classes.avatarContainer}>
+                          <div className={`${classes.avatarContainer} empty-video`}>
                             <div className={classes.avatarCircle}>
                               <div className={classes.avatarLetter}>{user?.firstName?.[0] || ''}</div>
                             </div>
@@ -255,7 +255,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                                 key={pinId}
                               />
                             ) : (
-                              <div className={classes.avatarContainer} key={pinId}>
+                              <div className={`${classes.avatarContainer} empty-video`} key={pinId}>
                                 <div className={classes.avatarCircle}>
                                   <div className={classes.avatarLetter}>{name?.[0] || ''}</div>
                                 </div>
@@ -414,7 +414,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     color: 'white',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'relative'
   },
   avatarCircle: {
     width: '100px',
