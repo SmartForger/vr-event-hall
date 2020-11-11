@@ -344,7 +344,6 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
         scrolling='no'
         frameBorder='0'
         title='ifx'
-        style={{ display: 'none' }}
       />
       {gameLoading && <Loader loaderOptions={loaderOptions} />}
       <VideoChatProvider>
