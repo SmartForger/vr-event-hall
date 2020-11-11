@@ -36,6 +36,7 @@ export const onCreateConvoLink = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -91,10 +92,21 @@ export const onCreateMessage = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
       conversationId
+      conversation {
+        items {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       deleted
       createdAt
       updatedAt
@@ -135,10 +147,21 @@ export const onUpdateMessage = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
       conversationId
+      conversation {
+        items {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       deleted
       createdAt
       updatedAt
@@ -179,10 +202,21 @@ export const onCreateGlobalMessage = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
       conversationId
+      conversation {
+        items {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       deleted
       createdAt
       updatedAt
@@ -242,6 +276,7 @@ export const onCreateUser = /* GraphQL */ `
         nextToken
       }
       onVideoCall
+      online
       createdAt
       updatedAt
     }
@@ -281,6 +316,7 @@ export const onUpdateSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      icId
       admins {
         items {
           id
@@ -326,10 +362,14 @@ export const onUpdateSession = /* GraphQL */ `
           postalCode
           title
           onVideoCall
+          online
           createdAt
           updatedAt
         }
         conversationId
+        conversation {
+          nextToken
+        }
         deleted
         createdAt
         updatedAt
@@ -463,6 +503,7 @@ export const onCreateSessionQuestion = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -507,6 +548,7 @@ export const onUpdateSessionQuestion = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -551,6 +593,7 @@ export const onCreateRaisedHand = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -594,6 +637,7 @@ export const onUpdateRaisedHand = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -637,6 +681,7 @@ export const onCreateGlobalRaisedHand = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -681,6 +726,7 @@ export const onCreateVideoChatInvite = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -768,6 +814,7 @@ export const onCreateSessionPollAnswer = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -811,6 +858,7 @@ export const onUpdateSessionPollAnswer = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
