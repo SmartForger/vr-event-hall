@@ -175,6 +175,19 @@ export const getSession = /* GraphQL */ `
         updatedAt
       }
       icId
+      ic {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       admins {
         items {
           id
@@ -226,7 +239,11 @@ export const getSession = /* GraphQL */ `
         }
         conversationId
         conversation {
-          nextToken
+          id
+          name
+          members
+          createdAt
+          updatedAt
         }
         deleted
         createdAt
@@ -308,6 +325,13 @@ export const listSessions = /* GraphQL */ `
           updatedAt
         }
         icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
         admins {
           nextToken
         }
@@ -818,6 +842,13 @@ export const sessionByConversationId = /* GraphQL */ `
           updatedAt
         }
         icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
         admins {
           nextToken
         }
@@ -902,7 +933,11 @@ export const messageByAuthor = /* GraphQL */ `
         }
         conversationId
         conversation {
-          nextToken
+          id
+          name
+          members
+          createdAt
+          updatedAt
         }
         deleted
         createdAt
@@ -958,7 +993,11 @@ export const messageByAuthorByDate = /* GraphQL */ `
         }
         conversationId
         conversation {
-          nextToken
+          id
+          name
+          members
+          createdAt
+          updatedAt
         }
         deleted
         createdAt
@@ -1014,7 +1053,11 @@ export const messageByConversation = /* GraphQL */ `
         }
         conversationId
         conversation {
-          nextToken
+          id
+          name
+          members
+          createdAt
+          updatedAt
         }
         deleted
         createdAt
@@ -1070,7 +1113,11 @@ export const messageByConversationDate = /* GraphQL */ `
         }
         conversationId
         conversation {
-          nextToken
+          id
+          name
+          members
+          createdAt
+          updatedAt
         }
         deleted
         createdAt
