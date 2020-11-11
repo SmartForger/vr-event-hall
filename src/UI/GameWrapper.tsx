@@ -427,7 +427,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
 
             {vcOff ? null : <VideoChatContainer />}
 
-            {!welcomeTutorialViewedLoading && (
+            {!welcomeTutorialViewedLoading && showGUI && (
               <IntroTutorial
                 run={!welcomeTutorialViewed}
                 steps={introTutorialSteps(user)}
