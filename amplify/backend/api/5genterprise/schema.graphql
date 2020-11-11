@@ -43,6 +43,7 @@ type Session
   conversationId: ID!
   conversation: Conversation @connection(fields: ["conversationId"])
   icId: ID!
+  ic: Conversation @connection(fields: ["icId"])
   admins: [AdminUser] @connection(keyName: "byAdminSession", fields: ["id"])
   users: [UserSessionReservation] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
   pinnedMessageId: ID!
