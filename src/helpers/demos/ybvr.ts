@@ -11,9 +11,9 @@ export const ybvr: IDemo = {
       'For years, the ambitions of innovative organizations have outpaced the cloud’s ability to meet them. Not anymore. Introducing Verizon 5G Edge, the first mobile edge compute platform with AWS Wavelength in the world.',
     qr: '5GQR.png',
     expert: '',
-    nextDemoText: '5G Nationwide',
-    nextDemo: E3DDemoNameVals.fiveGCoverage,
-    nextDemoThumbnail: '5gnationwide-thumbnail.png'
+    nextDemoText: '5G Edge and data-driven decision making',
+    nextDemo: E3DDemoNameVals.shotTracker,
+    nextDemoThumbnail: 'shottracker-thumbnail.png'
   },
   timestamps: {
     0: [

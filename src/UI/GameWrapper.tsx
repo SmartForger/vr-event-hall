@@ -335,8 +335,16 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   }
 
   return (
-    <div id='game'>
-      <iframe id='ifx' width='100%' height='100%' scrolling='no' frameBorder='0' title='ifx' />
+    <div id='game' className={classes.gameContainer}>
+      <iframe
+        id='ifx'
+        className={classes.frameContainer}
+        width='100%'
+        height='100%'
+        scrolling='no'
+        frameBorder='0'
+        title='ifx'
+      />
       {gameLoading && <Loader loaderOptions={loaderOptions} />}
       <VideoChatProvider>
         {!gameLoading && showGUI && (
@@ -419,7 +427,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
 
             {vcOff ? null : <VideoChatContainer />}
 
-            {!welcomeTutorialViewedLoading && (
+            {!welcomeTutorialViewedLoading && showGUI && (
               <IntroTutorial
                 run={!welcomeTutorialViewed}
                 steps={introTutorialSteps(user)}
@@ -499,7 +507,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
                   infoMessage && setInfoMessage(null)
                 }}
               >
-                <Alert severity={successMessage ? 'success' : infoMessage ? 'info' : 'error'} variant='filled'>
+                <Alert severity={successMessage ? 'success' : infoMessage ? 'info' : 'error'} variant='outlined'>
                   {successMessage ? successMessage : infoMessage ? infoMessage : errorMessage}
                 </Alert>
               </Snackbar>
@@ -530,5 +538,12 @@ const useStyles = makeStyles({
   },
   toastPosition: {
     right: 88
+  },
+  gameContainer: {
+    backgroundColor: '#e7e7e7'
+  },
+  frameContainer: {
+    marginTop: 60,
+    height: 'calc(100vh - 60px)'
   }
 })

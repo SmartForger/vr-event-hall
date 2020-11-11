@@ -28,6 +28,7 @@ export default class Receiver {
       e => {
         try {
           const JSONdata = JSON!.parse(e.data)
+
           if (JSONdata!.dragValue) {
             if (activeScene === GameFlowSteps.Explore && !hideTextExplore && Number(JSONdata!.dragValue) > 0.05) {
               hideTextExplore = true
@@ -36,14 +37,14 @@ export default class Receiver {
               hideTextExplore = false
               setHideExploreText(false)
             } else if (
-              activeScene === GameFlowSteps.Sessions &&
+              (activeScene === GameFlowSteps.Session || activeScene === GameFlowSteps.Sessions) &&
               !hideTextSessions &&
               Number(JSONdata!.dragValue) > 0.05
             ) {
               hideTextSessions = true
               setHideSessionsText(true)
             } else if (
-              activeScene === GameFlowSteps.Sessions &&
+              (activeScene === GameFlowSteps.Session || activeScene === GameFlowSteps.Sessions) &&
               hideTextSessions &&
               Number(JSONdata!.dragValue) < 0.05
             ) {

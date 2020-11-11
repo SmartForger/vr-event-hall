@@ -42,7 +42,7 @@ export const VideoChatContainer = () => {
     dispatch({ type: 'SET_LOADING', payload: true })
     const {
       data: { meeting, attendee }
-    } = await createChimeMeeting({ meetingId: videoChatState.meetingId, userId: user?.id })
+    } = await createChimeMeeting({ meetingId: dialogInfo?.conversationId || '', userId: user?.id })
 
     const joinData = {
       meetingInfo: meeting.Meeting,

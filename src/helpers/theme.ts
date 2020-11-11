@@ -82,6 +82,11 @@ export const theme: Theme = createMuiTheme({
         padding: '10px'
       }
     },
+    MuiOutlinedInput: {
+      input: {
+        padding: '11.7px 14px'
+      }
+    },
     MuiFormLabel: {
       root: {
         color: '#D8DADA',
@@ -90,6 +95,11 @@ export const theme: Theme = createMuiTheme({
         '&.Mui-focused': {
           color: '#000000'
         }
+      }
+    },
+    MuiInputLabel: {
+      outlined: {
+        transform: 'translate(14px, 13.5px) scale(1)'
       }
     },
     MuiButton: {

@@ -141,6 +141,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'calc(100% - 60px)',
     display: 'flex',
     flexDirection: 'column',
+    overflow: 'hidden',
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       width: '256px'

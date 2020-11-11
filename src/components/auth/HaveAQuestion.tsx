@@ -93,7 +93,7 @@ export const HaveAQuestion: FC<HaveAQuestionProps> = ({ userEmail, setAuthState 
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setQuestion({ ...question, userAnswer: e.target.value })
           }
-          variant='outlined'
+          variant='filled'
           inputProps={{
             placeholder: 'Enter question',
             style: { border: 'none' }
@@ -146,9 +146,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 0,
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
-    },
-    '& label': {
-      color: theme.palette.grey[500]
     },
     '& fieldset': {
       borderRadius: 0,
