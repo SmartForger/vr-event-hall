@@ -37,9 +37,8 @@ export const DirectMessage: FC<IChatDirectMessage> = ({ data, openConversation, 
         <StyledLeftContent>
           <StyledUserStatus
             className={classnames({
-              // online: messageUser.user.status === UserActiveState.ACTIVE,
-              // offline: messageUser.user.status !== UserActiveState.INACTIVE
-              offline: true
+              online: messageUser.user.online === true,
+              offline: messageUser.user.online !== false
             })}
           />
           <StyledUserName>

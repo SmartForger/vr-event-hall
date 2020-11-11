@@ -113,6 +113,7 @@ export const updateUser = /* GraphQL */ `
         nextToken
       }
       onVideoCall
+      online
       createdAt
       updatedAt
     }
