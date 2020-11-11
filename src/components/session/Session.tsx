@@ -64,11 +64,11 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
         const user = await graphQLQuery(getAttendeeInfo, 'getUser', { id: externalUserId })
 
         return {
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          avatar: user.avatar,
-          title: user.title || '',
-          company: user.company || ''
+          name: `${user?.firstName} ${user?.lastName}`,
+          email: user?.email || '',
+          avatar: user?.avatar || '',
+          title: user?.title || '',
+          company: user?.company || ''
         }
       }
       return { name: '', avatar: '', email: '', title: '', company: '' }
