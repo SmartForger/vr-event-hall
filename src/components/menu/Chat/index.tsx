@@ -69,8 +69,6 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
   }
 
   const updateUnreadConversationMessages = ({ onCreateGlobalMessage }) => {
-    console.log('CREATE')
-    console.log(onCreateGlobalMessage)
     const newMessageConversationId = onCreateGlobalMessage.conversationId
     // increment the unread messages unless you're on the chat where the new message came in
     if (
