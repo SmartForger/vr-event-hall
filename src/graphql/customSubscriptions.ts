@@ -45,6 +45,7 @@ export const onCreateGlobalMessageMin = /* GraphQL */ `
     onCreateGlobalMessage {
       id
       conversationId
+      authorId
       deleted
       createdAt
       updatedAt
