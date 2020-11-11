@@ -225,18 +225,24 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
     const errorObj: ICompanyRegErrors = {
       company: !userInfo.company ? I18n.get('requiredField') : '',
       companySize: !userInfo.companySize ? I18n.get('requiredField') : '',
-      companyAddress1: !userInfo.companyAddress1 ? I18n.get('requiredField') : '',
-      companyCity: !userInfo.companyCity
-        ? I18n.get('requiredField')
-        : !validateNonNumeric(userInfo.companyCity as string)
-        ? I18n.get('invalidCity')
-        : '',
-      companyState: !userInfo.companyState ? I18n.get('requiredField') : '',
-      companyPostalCode: !userInfo.companyPostalCode
-        ? I18n.get('requiredField')
-        : !validateZip(userInfo.companyPostalCode as string)
-        ? I18n.get('invalidZip')
-        : ''
+      // removing these fields for now
+      // also making them not required for validation
+      companyAddress1: '',
+      companyCity: '',
+      companyState: '',
+      companyPostalCode: ''
+      // companyAddress1: !userInfo.companyAddress1 ? I18n.get('requiredField') : '',
+      // companyCity: !userInfo.companyCity
+      //   ? I18n.get('requiredField')
+      //   : !validateNonNumeric(userInfo.companyCity as string)
+      //   ? I18n.get('invalidCity')
+      //   : '',
+      // companyState: !userInfo.companyState ? I18n.get('requiredField') : '',
+      // companyPostalCode: !userInfo.companyPostalCode
+      //   ? I18n.get('requiredField')
+      //   : !validateZip(userInfo.companyPostalCode as string)
+      //   ? I18n.get('invalidZip')
+      //   : ''
     }
 
     const hasErrors = Object.keys(errorObj).some(key => errorObj[key] !== '')
@@ -542,8 +548,8 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             {!!companyErrors.companySize && <FormHelperText>{companyErrors.companySize}</FormHelperText>}
           </FormControl>
         </Grid>
-
-        <Grid item xs={12}>
+        {/* Removing these fields */}
+        {/* <Grid item xs={12}>
           <TextField
             variant='outlined'
             label={I18n.get('companyAddress')}
@@ -620,7 +626,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             onChange={handleChange}
             onKeyPress={handleKeyPress}
           />
-        </Grid>
+        </Grid> */}
       </Grid>
       {/* advance to the next section */}
       <Grid item>
