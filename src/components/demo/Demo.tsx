@@ -8,6 +8,7 @@ import classnames from 'classnames'
 import { get } from 'lodash'
 import { Poll } from 'components'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import { Demos } from '../../helpers'
 import { I18n } from 'aws-amplify'
 
@@ -90,9 +91,6 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
 
   const actionClicked = (action, param?) => {
     switch (action) {
-      case 'expert':
-        window.postMessage(JSON.stringify({ command: 'chat', param: param }), '*')
-        break
       case 'explore':
         setScene(GameFlowSteps.BackToExplore)
         break
@@ -130,8 +128,16 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
   }
 
   const buildEndVideoSideLayout = content => (
-    <Grid xs={4} lg={3} className={classes.endContainer} container direction={'column'}>
-      <Grid xs={6} className={classes.endContentContainer} container alignItems='center' direction='row'>
+    <Grid
+      xs={4}
+      lg={3}
+      className={classnames(classes.endContainer, {
+        [classes.extraPaddingBottom]: !displayPoll
+      })}
+      container
+      direction={'column'}
+    >
+      <Grid xs={6} className={classes.endContentContainer} container alignItems='flex-start' direction='row'>
         {content.logo && (
           <Grid item xs={12}>
             <img src={require(`assets/demo/${content.logo}`)} alt={content.logo} />
@@ -159,12 +165,9 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
             </Typography>
           </Grid>
         )}
-        <Grid xs={12} container direction={'row'} alignItems='flex-end'>
-          {buildLink({ text: 'Send a message', goTo: 'connect' }, classes.textAlignRight)}
-        </Grid>
       </Grid>
       {/* break and then next demo */}
-      <Grid xs={6} className={classes.endContentContainer} container alignItems='center' direction='row'>
+      <Grid xs={6} className={classes.endContentContainer} container alignItems='flex-end' direction='row'>
         {content.nextDemo && (
           <>
             <Grid xs={12} container direction={'row'} alignItems='flex-end'>
@@ -176,18 +179,15 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
               {buildLink({ text: 'View all demos', goTo: 'explore', colSize: 6 }, classes.textAlignRight)}
             </Grid>
             <Box flexGrow={1}>
-              <img
-                className={classes.thumbnail}
-                src={require(`assets/demo/${content.nextDemoThumbnail}`)}
-                alt='Demo thumbnail'
-                onClick={() => actionClicked('demo', content.nextDemo)}
-              />
+              <figure className={classes.thumbnail} onClick={() => actionClicked('demo', content.nextDemo)}>
+                <img src={require(`assets/demo/${content.nextDemoThumbnail}`)} alt='Demo thumbnail' />
+                <figcaption>
+                  <Typography variant='h2' className={classnames(classes.subHeader)}>
+                    {content.nextDemoText}
+                  </Typography>
+                </figcaption>
+              </figure>
             </Box>
-            <Grid item xs={12}>
-              <Typography variant='h2' className={classnames(classes.subHeader)}>
-                {content.nextDemoText}
-              </Typography>
-            </Grid>
           </>
         )}
       </Grid>
@@ -207,7 +207,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
           <Video videoSrc={`${assetUrl}${demo.intro}`} onEnded={introEnded} autoPlay={true} />
         </div>
       )}
-      {renderDemo && activeTimestamp && (
+      {renderDemo && (
         <Grid
           className={classnames(classes.transition, classes.mainContainer, { [classes.maxHeightWidth]: displayPoll })}
           container
@@ -231,6 +231,10 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
                 >
                   Back
                 </Button>
+
+                <Button startIcon={<MailOutlineIcon />} onClick={() => actionClicked('connect')}>
+                  Send a message
+                </Button>
               </Box>
             </Grid>
           )}
@@ -245,6 +249,10 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
                   }}
                 >
                   Back
+                </Button>
+
+                <Button startIcon={<MailOutlineIcon />} onClick={() => actionClicked('connect')}>
+                  Send a message
                 </Button>
               </Box>
             </Grid>
@@ -352,61 +360,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
               </Grid>
             </Grid>
           )}
-          {videoConcluded && demo.end && buildEndVideoSideLayout(demo.end)}
-        </Grid>
-      )}
-      {renderDemo && !activeTimestamp && (
-        <Grid className={classes.transition} container justify={'space-between'} spacing={2}>
-          <Grid
-            className={classes.videoRightContent}
-            container
-            item
-            direction='column'
-            alignItems='flex-start'
-            justify='center'
-            xs={5}
-          >
-            {demo.side?.title && (
-              <Typography component='h5' variant='h5' color='textPrimary' gutterBottom>
-                {demo.side?.title}
-              </Typography>
-            )}
-            <Typography component='h1' variant='h2' color='textPrimary' gutterBottom>
-              {demo.side?.header}
-            </Typography>
-            <Typography
-              component='p'
-              variant='body2'
-              color='textPrimary'
-              gutterBottom
-              dangerouslySetInnerHTML={{ __html: demo.side?.body || '' }}
-            />
-            <Button
-              startIcon={<ArrowBackIcon />}
-              onClick={() => {
-                setScene(GameFlowSteps.BackToExplore)
-              }}
-            >
-              Back
-            </Button>
-          </Grid>
-          {displayPoll && demo.poll && (
-            <Grid item xs={7} className={classes.padding}>
-              <Poll poll={demo.poll} user={user} />
-            </Grid>
-          )}
-          {!displayPoll && (
-            <Grid item xs={7} className={classes.videoRight}>
-              {demo.video && (
-                <Video
-                  videoSrc={`${assetUrl}${demo.video}`}
-                  posterSrc={demo.poster || ''}
-                  autoPlay={autoPlay}
-                  onEnded={videoEnded}
-                />
-              )}
-            </Grid>
-          )}
+          {((videoConcluded && demo.end) || !activeTimestamp) && buildEndVideoSideLayout(demo.end)}
         </Grid>
       )}
     </div>
@@ -462,7 +416,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   thumbnail: {
     cursor: 'pointer',
-    width: '100%'
+    position: 'relative',
+
+    '& > img': {
+      width: '100%'
+    },
+
+    '& > figcaption': {
+      bottom: 0,
+      color: theme.palette.common.white,
+      padding: theme.spacing(2),
+      position: 'absolute',
+      textShadow: `1px 1px 2px ${theme.palette.common.black}`
+    }
   },
   textAlignRight: {
     textAlign: 'right'
@@ -480,34 +446,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '14px',
     cursor: 'pointer',
     fontFamily: 'Verizon-Bold'
-  },
-  videoRight: {
-    padding: '5rem !important',
-    '& .MuiGrid-item': {
-      padding: '3rem !important'
-    },
-    [theme.breakpoints.down('md')]: {
-      padding: '3rem !important'
-    }
-  },
-  videoRightContent: {
-    padding: '5rem !important',
-    '& .MuiGrid-item': {
-      padding: '3rem !important'
-    },
-    '& a': {
-      color: '#000'
-    },
-    [theme.breakpoints.down('md')]: {
-      padding: '3rem !important'
-    }
-  },
-  padding: {
-    padding: '3rem 5rem !important',
-    '& h4': {
-      paddingRight: '0 !important',
-      fontSize: 32
-    }
   },
   inlineDisplay: {
     display: 'inline-flex'
@@ -590,6 +528,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: '2rem'
     }
   },
+  extraPaddingBottom: {
+    paddingBottom: 'calc(6rem + 60px)'
+  },
   contentContainer: {
     '&:nth-child(2)': {
       paddingTop: '3rem'
@@ -609,7 +550,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   contentActionBox: {
-    marginTop: 27
+    marginTop: 27,
+
+    '& .MuiButton-root': {
+      marginRight: theme.spacing(4)
+    }
   },
   transition: {
     opacity: 1,

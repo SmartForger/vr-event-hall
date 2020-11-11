@@ -17,7 +17,6 @@ interface IWelcomeProps {
 export const WelcomeScene: FC<IWelcomeProps> = ({ user, setGameState, activeScene, transition }) => {
   const [exit, setExit] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(activeScene === GameFlowSteps.Welcome && transition)
-  const [showVideo, setShowVideo] = useState<boolean>(false)
   const classes = useStyles()
 
   useEffect(() => {
@@ -32,14 +31,17 @@ export const WelcomeScene: FC<IWelcomeProps> = ({ user, setGameState, activeScen
     // eslint-disable-next-line
   }, [])
 
+  const explore = () => {
+    setGameState(GameFlowSteps.Explore)
+  }
+
   return (
     <>
       {!loading && (
         <div
           id='scene-welcome'
           className={classnames(classes.transition, classes.root, {
-            [classes.transitionOut]: exit,
-            [classes.introZIndex]: showVideo
+            [classes.transitionOut]: exit
           })}
         >
           <Grid container direction='column' justify='center' spacing={2}>
@@ -49,7 +51,7 @@ export const WelcomeScene: FC<IWelcomeProps> = ({ user, setGameState, activeScen
               </Typography>
             </Grid>
             <Grid item>
-              <Typography component='h2' variant='h2'>
+              <Typography classes={{ root: classes.heading }} component='h2' variant='h2'>
                 Welcome to 5G Innovation Sessions.
               </Typography>
             </Grid>
@@ -72,35 +74,12 @@ export const WelcomeScene: FC<IWelcomeProps> = ({ user, setGameState, activeScen
             </Grid>
             <Grid item container spacing={1}>
               <Grid item xs={12} sm={6}>
-                <PillButton className={classes.button} backgroundColor='transparent' onClick={() => setShowVideo(true)}>
+                <PillButton className={classes.button} backgroundColor='transparent' onClick={() => explore()}>
                   Explore
                 </PillButton>
               </Grid>
             </Grid>
           </Grid>
-        </div>
-      )}
-      {showVideo && (
-        <div className={classnames('video-containment', classes.intro, classes.transition)}>
-          <IconButton
-            className={classes.closeButton}
-            color='default'
-            aria-label='close'
-            onClick={() => {
-              setGameState(GameFlowSteps.Explore)
-              setShowVideo(false)
-            }}
-          >
-            <CloseIcon fontSize='large' />
-          </IconButton>
-          <Video
-            videoSrc={'https://d1oc551tl862q5.cloudfront.net/welcome-4.mp4'}
-            onEnded={() => {
-              setGameState(GameFlowSteps.Explore)
-              setShowVideo(false)
-            }}
-            autoPlay={true}
-          />
         </div>
       )}
     </>
@@ -136,6 +115,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: '55px'
     }
   },
+  heading: {
+    fontSize: 50,
+    lineHeight: '48px'
+  },
   introZIndex: {
     zIndex: 20000
   },
@@ -152,7 +135,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column'
   },
   button: {
-    width: 200,
+    width: 132,
+    height: 42,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     fontWeight: 600
   },
   inlineButton: {

@@ -11,7 +11,7 @@ import { graphQLQuery, graphQLMutation, graphQLSubscription } from 'graphql/help
 import { getSessionQuestionsAndPolls } from 'graphql/customQueries'
 import { ChatMessages } from 'components/menu/ChatMessages'
 import { IPollObject, IQuestionObject, ISubscriptionObject } from 'types'
-import { updateSession, updateSessionPoll } from 'graphql/mutations'
+import { updateSession, updateSessionPoll, updateSessionQuestion } from 'graphql/mutations'
 import { DialogCard } from 'components/shared'
 import { onCreateSessionPoll, onCreateSessionQuestion } from 'graphql/subscriptions'
 
@@ -112,6 +112,14 @@ export const ToolsPanel = () => {
     setDialogType('')
   }
 
+  const handleClearQA = async (question: IQuestionObject) => {
+    await graphQLMutation(updateSessionQuestion, {
+      id: question.id,
+      answered: 'true'
+    })
+    setQuestions(questions.filter(x => x.id !== question.id))
+  }
+
   return (
     <>
       <Accordion square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
@@ -140,7 +148,13 @@ export const ToolsPanel = () => {
                     <Typography variant='subtitle1' className={classes.subtitle}>
                       {question?.user?.firstName} {question?.user?.lastName}
                     </Typography>
-                    <Button variant='outlined' className={`${classes.roundedButton} ${classes.clearButton}`}>
+                    <Button
+                      variant='outlined'
+                      className={`${classes.roundedButton} ${classes.clearButton}`}
+                      onClick={(e: React.MouseEvent) => {
+                        handleClearQA(question)
+                      }}
+                    >
                       Clear
                     </Button>
                   </section>

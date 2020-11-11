@@ -9,9 +9,9 @@ export const indy: IDemo = {
     header: 'Into the heart of the action.',
     body: 'Verizon is dedicated to bringing immersive and improved sports experiences to fans around the world.',
     expert: '',
-    nextDemoText: 'Shot Tracker latency simulation',
-    nextDemo: E3DDemoNameVals.shotTracker,
-    nextDemoThumbnail: 'shotTrackerThumbnail.png'
+    nextDemoText: '5G MEC and smart venues.',
+    nextDemo: E3DDemoNameVals.crowdVision,
+    nextDemoThumbnail: 'crowd-vision-thumbnail.png'
   },
   timestamps: {
     0: [

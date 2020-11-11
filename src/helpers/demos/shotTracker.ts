@@ -8,9 +8,9 @@ export const shotTracker: IDemo = {
   end: {
     header: 'The future is here.',
     body: 'Learn how 5G and MEC can help breathe life into organizations’ more daring ideas.',
-    nextDemoText: 'YBVR 5G and MEC',
-    nextDemo: E3DDemoNameVals.ybvr,
-    nextDemoThumbnail: 'ybvr-thumbnail.png',
+    nextDemoText: 'The transformation of healthcare',
+    nextDemo: E3DDemoNameVals.avesha,
+    nextDemoThumbnail: 'avesha-thumbnail.png',
     expert: ''
   },
   timestamps: {

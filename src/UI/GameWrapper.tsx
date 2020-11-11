@@ -427,7 +427,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
 
             {vcOff ? null : <VideoChatContainer />}
 
-            {!welcomeTutorialViewedLoading && (
+            {!welcomeTutorialViewedLoading && showGUI && (
               <IntroTutorial
                 run={!welcomeTutorialViewed}
                 steps={introTutorialSteps(user)}
@@ -507,7 +507,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
                   infoMessage && setInfoMessage(null)
                 }}
               >
-                <Alert severity={successMessage ? 'success' : infoMessage ? 'info' : 'error'} variant='filled'>
+                <Alert severity={successMessage ? 'success' : infoMessage ? 'info' : 'error'} variant='outlined'>
                   {successMessage ? successMessage : infoMessage ? infoMessage : errorMessage}
                 </Alert>
               </Snackbar>

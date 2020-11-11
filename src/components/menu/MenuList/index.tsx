@@ -85,7 +85,7 @@ export const MenuList: FC<MenuListProps> = ({
         <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Sessions)}>
           <MenuTooltip drawerOpen={drawerOpen} title='Sessions' placement='left'>
             <StyledMenuListIcon>
-              <img src={sessionIcon} alt='Session icon' width='19' />
+              <img src={sessionIcon} alt='Session icon' width='16' />
             </StyledMenuListIcon>
           </MenuTooltip>
           Breakout Sessions
@@ -109,7 +109,7 @@ export const MenuList: FC<MenuListProps> = ({
         <StyledMenuListItem onClick={() => toggleIntroTutorial()}>
           <MenuTooltip drawerOpen={drawerOpen} title='Tutorial' placement='left'>
             <StyledMenuListIcon>
-              <img src={gradCapIcon} alt='Grad cap icon' width='19' />
+              <img src={gradCapIcon} alt='Grad cap icon' width='24' />
             </StyledMenuListIcon>
           </MenuTooltip>
           Tutorial
