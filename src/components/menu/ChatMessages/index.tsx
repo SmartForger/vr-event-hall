@@ -31,7 +31,11 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
   let updateSubscription = useRef<ISubscriptionObject | null>(null)
 
   const addNewMessage = ({ onCreateMessage }) => {
-    setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
+    if (videoChat && onCreateMessage.conversationId === videoChatState?.session?.conversationId) {
+      setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
+    } else if (!videoChat && onCreateMessage.conversationId === chatState?.conversationId) {
+      setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
+    }
   }
 
   const messageUpdated = ({ onUpdateMessage }) => {
@@ -44,6 +48,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
   const conversationId = videoChat
     ? videoChatState?.session?.conversationId || videoChatState?.conversationId
     : chatState?.conversationId
+
   const getConversationDetails = async () => {
     const conversation = await graphQLQuery(getConversationFiltered, 'getConversation', {
       id: conversationId
@@ -59,6 +64,8 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
 
   useEffect(() => {
     if (conversationId) {
+      subscription?.current?.unsubscribe()
+      updateSubscription?.current?.unsubscribe()
       getConversationDetails()
       dispatch({ type: 'CLEAR_UNREAD_CONVO_MESSAGE', payload: { conversationId } })
     }
