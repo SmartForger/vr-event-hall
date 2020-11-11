@@ -43,6 +43,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
   }, [])
 
   const joinClassRoom = async () => {
+    console.log(session)
     dispatch({ type: 'SET_LOADING', payload: true })
     if (videoChatState.presenterPins.includes(user?.id as string)) {
       dispatch({ type: 'SET_DETAILS', payload: { adminType: UserAdminType.PRESENTER } })
@@ -63,11 +64,11 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
         const user = await graphQLQuery(getAttendeeInfo, 'getUser', { id: externalUserId })
 
         return {
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          avatar: user.avatar,
-          title: user.title || '',
-          company: user.company || ''
+          name: `${user?.firstName} ${user?.lastName}`,
+          email: user?.email || '',
+          avatar: user?.avatar || '',
+          title: user?.title || '',
+          company: user?.company || ''
         }
       }
       return { name: '', avatar: '', email: '', title: '', company: '' }
@@ -101,6 +102,9 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
       {renderSession && (
         <Container className={`${classes.root} ${classes.transition}`} component='main' maxWidth={false}>
           <Grid container justify={'space-between'} spacing={2}>
+            <Grid item xs={7} className={classes.contentContainer}>
+              <img src={session.image} className={classes.sessionSplashImage} />
+            </Grid>
             <Grid container item direction='column' alignItems='flex-start' justify='center' xs={5}>
               <Typography className={classes.marginBottom} component='h5' variant='h5' color='textPrimary' gutterBottom>
                 Session
@@ -151,32 +155,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '0 3rem',
     height: 'calc(100% - 115px)',
     width: 'calc(100% - 64px)',
-    top: '180px',
+    top: '115px',
     display: 'flex',
     alignItems: 'center',
+    position: 'absolute',
     backgroundColor: 'transparent',
     color: '#000',
     '& .MuiGrid-item': {
-      padding: '3rem',
-      position: 'fixed',
-      right: '70px',
-      top: 0,
-      bottom: 0
+      padding: '3rem'
     },
     [theme.breakpoints.down('sm')]: {
-      height: 'auto',
-      '& .MuiGrid-item': {
-        right: '30px',
-        top: '65px'
-      }
+      height: 'auto'
     },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 740px)`]: {
-      top: '55px'
+      top: '85px'
     }
-  },
-  availableSeatsMessage: {
-    fontSize: '14px',
-    margin: '10px 30px 0 30px'
   },
   preEventVidPlaceholderImg: {
     width: '100%'
@@ -186,6 +179,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   marginBottom: {
     marginBottom: 17
+  },
+  availableSeatsMessage: {
+    fontSize: '14px',
+    margin: '10px 30px 0 30px'
+  },
+  sessionSplashImage: {
+    position: 'relative',
+    width: '100%',
+    height: '100%'
   },
   transition: {
     opacity: 1,

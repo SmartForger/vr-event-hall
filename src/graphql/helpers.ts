@@ -19,7 +19,14 @@ export const graphQLQuery = async (query: string, queryName: string, options: an
   return data[queryName]
 }
 
-export const graphQLMutation = async (mutation: string, input: any) => {
+export const graphQLMutation = async (mutation: string, input: any, mutationName?: string) => {
+  if (mutationName) {
+    const { data }: any = await API.graphql(graphqlOperation(mutation, { input }))
+    if (data[mutationName] && data[mutationName].items) {
+      return data[mutationName].items
+    }
+    return data[mutationName]
+  }
   return await API.graphql(graphqlOperation(mutation, { input }))
 }
 
