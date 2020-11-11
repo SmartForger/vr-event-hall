@@ -10,7 +10,7 @@ export const graphQLQuery = async (query: string, queryName: string, options: an
   }
   const { data }: any = await API.graphql(graphqlOperation(query, options))
   // checks for list queries vs individual item queries
-  if (data[queryName].items) {
+  if (data[queryName] && data[queryName].items) {
     if (queryName === 'userByEmail') {
       return data[queryName].items[0]
     }
