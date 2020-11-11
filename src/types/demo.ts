@@ -53,11 +53,6 @@ export interface IDemo {
   intro?: string
   video?: string
   poster?: string
-  side?: {
-    header: string
-    body: string
-    title?: string
-  }
   end?: {
     header: string
     body: string

@@ -45,8 +45,7 @@ export const Demos: IDemoCollection = {
     video: 'avesha720.mp4',
     poster: aveshaImg,
     conversationId: 'a4870c64-eabb-44a2-9d64-74384570439a',
-    side: {
-      title: '5G MEC',
+    end: {
       header: 'The transformation of healthcare.',
       body:
         'Avesha Systems is working with several hospitals to test how machine learning inference done at the edge utilizing Wavelength and Verizon 5G can assist doctors in identifying polyps in real-time.'
@@ -58,8 +57,7 @@ export const Demos: IDemoCollection = {
     video: 'crowdvision720.mp4',
     poster: crowdvisionImg,
     conversationId: 'ccc0fec7-4bdc-4dc4-8356-1406276294dd',
-    side: {
-      title: 'SOLUTION',
+    end: {
       header: '5G MEC and Smart Venues',
       body:
         'CrowdVision uses sensors to generate highly detailed pictures of crowds in public places. Installing the product, though, typically required miles of Ethernet cable, racks full of servers and very high bandwidth. Now, using Verizon 5G Edge and AWS Wavelength for processing and backbone is significantly opening up opportunities for CrowdVision to place equipment at more venues, helping improve safety and comfort.'
@@ -71,7 +69,7 @@ export const Demos: IDemoCollection = {
     type: 'sot',
     video: 'sot720.mp4',
     poster: sotImg,
-    side: {
+    end: {
       header: 'Speed of Thought',
       body:
         "Each generation of wireless technology brings us closer together.  Now, at the dawn of 5G, visionaries are evolving the mission of connectivity to tackle some of society's biggest challenges. From robotic devices that could allow doctors to perform surgeries thousands of miles away to a smart city that aims to eliminate pedestrian deaths, innovators are using 5G to change the world as we know it.\n" +
@@ -86,7 +84,7 @@ export const Demos: IDemoCollection = {
     type: 'zixi',
     video: 'Zixi.mp4',
     poster: zixiImg,
-    side: {
+    end: {
       header: 'Zixi',
       body:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.\n' +
@@ -98,7 +96,7 @@ export const Demos: IDemoCollection = {
     type: 'iceMobility',
     video: 'IceMobility.mp4',
     poster: iceImg,
-    side: {
+    end: {
       header: 'Ice Mobility',
       body:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.\n' +
