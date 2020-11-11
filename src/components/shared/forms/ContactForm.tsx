@@ -109,7 +109,11 @@ export const ContactForm: FC<ContactFormProps> = ({
               'Content-Type': 'application/json;charset=utf-8'
             },
             mode: 'no-cors',
-            body: JSON.stringify({ ...contactFormInfo, phoneNumber: formatPhoneNumber(contactFormInfo.phoneNumber) })
+            body: JSON.stringify({
+              ...contactFormInfo,
+              event: 'Verizon-5G-Enterprise',
+              phoneNumber: formatPhoneNumber(contactFormInfo.phoneNumber)
+            })
           })
         } else {
           graphQLMutation(createUserInteraction, {
