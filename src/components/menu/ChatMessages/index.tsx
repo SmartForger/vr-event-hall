@@ -48,7 +48,9 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
     const conversation = await graphQLQuery(getConversationFiltered, 'getConversation', {
       id: conversationId
     })
-    setMessages(conversation.messages.items.filter(message => message.deleted !== 'true'))
+    if (conversation && conversation.messages) {
+      setMessages(conversation.messages.items.filter(message => message.deleted !== 'true'))
+    }
 
     subscription.current = graphQLSubscription(onCreateMessageWithAuthor, { conversationId }, addNewMessage)
 
