@@ -11,7 +11,7 @@ export const fiveGCoverage: IDemo = {
     expert: '',
     nextDemoText: 'MEC explained.',
     nextDemo: E3DDemoNameVals.mecExplainer,
-    nextDemoThumbnail: 'mecExplainerThumbnail.png'
+    nextDemoThumbnail: 'mec-thumbnail.png'
   },
   timestamps: {
     0: [

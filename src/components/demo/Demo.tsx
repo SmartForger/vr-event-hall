@@ -91,9 +91,6 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
 
   const actionClicked = (action, param?) => {
     switch (action) {
-      case 'expert':
-        window.postMessage(JSON.stringify({ command: 'chat', param: param }), '*')
-        break
       case 'explore':
         setScene(GameFlowSteps.BackToExplore)
         break
@@ -131,8 +128,16 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
   }
 
   const buildEndVideoSideLayout = content => (
-    <Grid xs={4} lg={3} className={classes.endContainer} container direction={'column'}>
-      <Grid xs={6} className={classes.endContentContainer} container alignItems='center' direction='row'>
+    <Grid
+      xs={4}
+      lg={3}
+      className={classnames(classes.endContainer, {
+        [classes.extraPaddingBottom]: !displayPoll
+      })}
+      container
+      direction={'column'}
+    >
+      <Grid xs={6} className={classes.endContentContainer} container alignItems='flex-start' direction='row'>
         {content.logo && (
           <Grid item xs={12}>
             <img src={require(`assets/demo/${content.logo}`)} alt={content.logo} />
@@ -162,7 +167,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
         )}
       </Grid>
       {/* break and then next demo */}
-      <Grid xs={6} className={classes.endContentContainer} container alignItems='center' direction='row'>
+      <Grid xs={6} className={classes.endContentContainer} container alignItems='flex-end' direction='row'>
         {content.nextDemo && (
           <>
             <Grid xs={12} container direction={'row'} alignItems='flex-end'>
@@ -522,6 +527,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.only('xs')]: {
       paddingRight: '2rem'
     }
+  },
+  extraPaddingBottom: {
+    paddingBottom: 'calc(6rem + 60px)'
   },
   contentContainer: {
     '&:nth-child(2)': {

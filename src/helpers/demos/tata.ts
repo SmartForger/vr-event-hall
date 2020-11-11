@@ -11,6 +11,14 @@ export const tata: IDemo = {
   intro: 'TCS-intro_720.mp4',
   video: 'tata720.mp4',
   conversationId: '5faff25c-bbd7-4503-8747-a29e2e971014',
+  end: {
+    header: 'The future of manufacturing.',
+    body: '',
+    expert: '',
+    nextDemoText: 'Transforming the fan experience',
+    nextDemo: E3DDemoNameVals.ybvr,
+    nextDemoThumbnail: 'ybvr-thumbnail.png'
+  },
   timestamps: {
     0: [
       {
