@@ -300,6 +300,19 @@ export const createSession = /* GraphQL */ `
         updatedAt
       }
       icId
+      ic {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       admins {
         items {
           id
@@ -351,7 +364,11 @@ export const createSession = /* GraphQL */ `
         }
         conversationId
         conversation {
-          nextToken
+          id
+          name
+          members
+          createdAt
+          updatedAt
         }
         deleted
         createdAt
@@ -438,6 +455,19 @@ export const updateSession = /* GraphQL */ `
         updatedAt
       }
       icId
+      ic {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       admins {
         items {
           id
@@ -489,7 +519,11 @@ export const updateSession = /* GraphQL */ `
         }
         conversationId
         conversation {
-          nextToken
+          id
+          name
+          members
+          createdAt
+          updatedAt
         }
         deleted
         createdAt
@@ -576,6 +610,19 @@ export const deleteSession = /* GraphQL */ `
         updatedAt
       }
       icId
+      ic {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       admins {
         items {
           id
@@ -627,7 +674,11 @@ export const deleteSession = /* GraphQL */ `
         }
         conversationId
         conversation {
-          nextToken
+          id
+          name
+          members
+          createdAt
+          updatedAt
         }
         deleted
         createdAt
@@ -747,6 +798,13 @@ export const createSessionReservation = /* GraphQL */ `
           updatedAt
         }
         icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
         admins {
           nextToken
         }
@@ -841,6 +899,13 @@ export const updateSessionReservation = /* GraphQL */ `
           updatedAt
         }
         icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
         admins {
           nextToken
         }
@@ -920,14 +985,8 @@ export const createMessage = /* GraphQL */ `
       }
       conversationId
       conversation {
-        items {
-          id
-          name
-          members
-          createdAt
-          updatedAt
-        }
-        nextToken
+        id
+        members
       }
       deleted
       createdAt
@@ -975,14 +1034,17 @@ export const updateMessage = /* GraphQL */ `
       }
       conversationId
       conversation {
-        items {
-          id
-          name
-          members
-          createdAt
-          updatedAt
+        id
+        name
+        members
+        messages {
+          nextToken
         }
-        nextToken
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       deleted
       createdAt
@@ -1030,14 +1092,17 @@ export const deleteMessage = /* GraphQL */ `
       }
       conversationId
       conversation {
-        items {
-          id
-          name
-          members
-          createdAt
-          updatedAt
+        id
+        name
+        members
+        messages {
+          nextToken
         }
-        nextToken
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       deleted
       createdAt
@@ -1390,6 +1455,13 @@ export const createAdminLink = /* GraphQL */ `
           updatedAt
         }
         icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
         admins {
           nextToken
         }
@@ -1482,6 +1554,13 @@ export const updateAdminLink = /* GraphQL */ `
           updatedAt
         }
         icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
         admins {
           nextToken
         }

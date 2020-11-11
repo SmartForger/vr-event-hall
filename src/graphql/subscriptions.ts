@@ -98,14 +98,17 @@ export const onCreateMessage = /* GraphQL */ `
       }
       conversationId
       conversation {
-        items {
-          id
-          name
-          members
-          createdAt
-          updatedAt
+        id
+        name
+        members
+        messages {
+          nextToken
         }
-        nextToken
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       deleted
       createdAt
@@ -153,14 +156,17 @@ export const onUpdateMessage = /* GraphQL */ `
       }
       conversationId
       conversation {
-        items {
-          id
-          name
-          members
-          createdAt
-          updatedAt
+        id
+        name
+        members
+        messages {
+          nextToken
         }
-        nextToken
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       deleted
       createdAt
@@ -208,14 +214,17 @@ export const onCreateGlobalMessage = /* GraphQL */ `
       }
       conversationId
       conversation {
-        items {
-          id
-          name
-          members
-          createdAt
-          updatedAt
+        id
+        name
+        members
+        messages {
+          nextToken
         }
-        nextToken
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       deleted
       createdAt
@@ -317,6 +326,19 @@ export const onUpdateSession = /* GraphQL */ `
         updatedAt
       }
       icId
+      ic {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       admins {
         items {
           id
@@ -368,7 +390,11 @@ export const onUpdateSession = /* GraphQL */ `
         }
         conversationId
         conversation {
-          nextToken
+          id
+          name
+          members
+          createdAt
+          updatedAt
         }
         deleted
         createdAt

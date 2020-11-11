@@ -83,7 +83,7 @@ type Message
   authorId: ID!
   author: User! @connection(fields: ["authorId"])
   conversationId: ID!
-  conversation: [Conversation] @connection(fields: ["conversationId"])
+  conversation: Conversation @connection(fields: ["conversationId"])
   # will still be true or false but Booleans are not indexable in dynamo
   deleted: String!
   createdAt: AWSDateTime!
