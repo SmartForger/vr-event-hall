@@ -10,6 +10,9 @@ import { graphQLQuery } from 'graphql/helpers'
 import { userByEmailBase } from 'graphql/customQueries'
 import { useAppState } from 'providers'
 
+import { graphQLMutation } from 'graphql/helpers'
+import { updateUser } from 'graphql/mutations'
+
 interface SignInProps {
   setAuthState: (state: AuthFlowSteps) => void
   setUserEmail: (email: string) => void
@@ -35,7 +38,15 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
       if (!foundUser.avatar) {
         foundUser.avatar = defaultAvatar
       }
+
+      foundUser.online = true
       setUser(foundUser)
+
+      await graphQLMutation(updateUser, {
+        id: foundUser.id,
+        online: true
+      })
+
       // TODO: Uncomment after registration
       // setAuthState(AuthFlowSteps.ThankYou)
       history.push(redirectRoute)

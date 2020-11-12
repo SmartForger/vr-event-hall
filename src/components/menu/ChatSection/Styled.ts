@@ -73,7 +73,7 @@ export const StyledUserStatus = styled.span`
   height: 0.75rem;
   width: 0.75rem;
   border-radius: 50%;
-  margin-right: 0.5rem;
+  margin-right: 0.75rem;
 
   &.online {
     background-color: #00ac3e;
