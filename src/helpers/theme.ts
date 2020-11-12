@@ -109,7 +109,14 @@ export const theme: Theme = createMuiTheme({
 
         fontSize: '14px',
         textTransform: 'none',
-        padding: '10px 44px'
+        padding: '10px 44px',
+        margin: '44px 0'
+      },
+      outlined: {
+        margin: '36px 0'
+      },
+      text: {
+        margin: '36px 0'
       },
       contained: {
         backgroundColor: '#000000',

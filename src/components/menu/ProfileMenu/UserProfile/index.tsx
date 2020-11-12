@@ -324,7 +324,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   inlineButton: {
-    margin: '0 .5rem',
+    margin: '34px .5rem',
     fontFamily: 'Verizon-Regular',
     height: '26px',
     padding: '16px 24px'
