@@ -35,6 +35,7 @@ import { ISubscriptionObject, ISession } from 'types'
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
 import { ConditionalWrapper, DialogCard } from 'components/shared'
 import { NullEngine } from 'babylonjs'
+import { findSessionById, Sessions } from '../../../helpers'
 
 interface ClassRoomVideoChatModalProps {}
 
@@ -43,9 +44,10 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   const {
     appState: { user }
   } = useAppState()
+  const { videoChatState, dispatch } = useVideoChatContext()
   const [presenterTileId, setPresenterTileId] = useState<number | null>(null)
   const [currentSession, setCurrentSession] = useState<ISession | null>(null)
-  const [userStarted, setUserStarted] = useState<boolean>(false)
+  const [userStarted, setUserStarted] = useState<boolean>(videoChatState.isAttendee)
   const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
   const [currentPresenterTotal, setCurrentPresenterTotal] = useState<number>(0)
 
@@ -60,7 +62,6 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
 
   let sessionUpdatedSubscription = useRef<ISubscriptionObject | null>(null)
 
-  const { videoChatState, dispatch } = useVideoChatContext()
   const [tabValue, setTabValue] = useState<number>(0)
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true)
   let isPresenter = videoChatState?.session?.admins.items.some(admin => admin.userId === (user?.id as string))
@@ -229,7 +230,7 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                       <>
                         {isVideoEnabled ? (
                           <LocalVideo nameplate={`${user?.firstName} ${user?.lastName}`} className='user-video' />
-                        ) : isPresenter || isVideoPresenter ? (
+                        ) : isVideoPresenter ? (
                           <div className={`${classes.avatarContainer} empty-video`}>
                             <div className={classes.avatarCircle}>
                               <div className={classes.avatarLetter}>{user?.firstName?.[0] || ''}</div>
@@ -332,7 +333,9 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                       </TabPanel>
                     ) : (
                       <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
-                        <DetailsPanel />
+                        {currentSession && (
+                          <DetailsPanel body={findSessionById(currentSession?.id || '')?.side.chatBody || ''} />
+                        )}
                       </TabPanel>
                     )}
                   </div>

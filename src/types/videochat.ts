@@ -46,6 +46,7 @@ interface IAdminUser {
   userId: string
   sessionId: string
   user: IUser
+  userType: string
 }
 
 interface IAdminUserList {

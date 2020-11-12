@@ -139,7 +139,7 @@ const scenes: IScenesDict = {
     'What can Verizon 5G Ultra Wideband do for your business? Explore the various ways our 5G network is moving businesses like yours forward.',
   sessionsSceneTitle: 'Talk with our experts.',
   sessionsSceneBlurb:
-    'Learn how your business can take advantage of the full, transformative power of Verizon 5G Ultra Wideband. Let our experts to take you on a deeper dive into vertical-specific use cases to demonstrate how Verizon 5G can benefit you. Each session includes a live Q&A. Capacity is limited to 200 attendees each.',
+    'Learn how your business can take advantage of the full, transformative power of Verizon 5G Ultra Wideband. Let our experts to take you on a deeper dive into vertical-specific use cases to demonstrate how Verizon 5G can benefit you. Each session includes a live Q&A.',
   clickAndDragToExplore: 'Click and drag to explore',
   theEventWillBeginIn: 'The next session will begin in',
   theEventWillStartOn: 'The next session will start on',

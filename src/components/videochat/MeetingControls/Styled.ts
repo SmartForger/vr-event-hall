@@ -39,6 +39,7 @@ export const StyledControls = styled.div<StyledProps>`
       color: black;
       text-transform: none;
       padding: 4px 24px;
+      margin: 0;
     }
   }
 `
