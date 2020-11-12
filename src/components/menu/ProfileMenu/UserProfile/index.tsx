@@ -2,11 +2,7 @@ import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from '
 import { useHistory } from 'react-router-dom'
 
 import Promise from 'bluebird'
-import { Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
-import CreateIcon from '@material-ui/icons/Create'
-import arrowLeftIcon from 'assets/arrowLeftIcon.svg'
-import arrowRightIcon from 'assets/arrowRightIcon.svg'
-
+import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
 
 // Plugins
 import classNames from 'classnames'
@@ -16,19 +12,14 @@ import { VariableSizeProps } from 'react-window'
 // Components
 import { PillButton } from 'components'
 
-
 // Helpers
 import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
 import { getUser, listSessions, listAdminUsers } from 'graphql/queries'
 import { updateUser, createAdminLink, deleteAdminLink } from 'graphql/mutations'
 import { useAppState } from 'providers'
-import { AnchorType, ISubscriptionObject, IUser, ToggleDrawer, ISession } from 'types'
-
-// Styles
-import { Grid, Avatar, Typography, makeStyles, TextField, Button } from '@material-ui/core'
 
 // Types
-import { IUser } from 'types'
+import { IUser, ISession } from 'types'
 
 // Images
 import profileBg from 'assets/userProfileBg.jpg'
@@ -55,6 +46,9 @@ interface IUserProfileProps {
 export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const classes = useStyles()
   const history = useHistory()
+  const {
+    appState: { user: authedUser }
+  } = useAppState()
 
   const [showSecretManageTools, setSecretManagementToolsVisible] = useState<boolean>()
   const [loading, setLoading] = useState<boolean>(false)
@@ -298,25 +292,26 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           </Button>
         </>
       )}
+      <Grid item xs={12}>
+        <PillButton
+          className={classes.inlineButton}
+          loading={loading}
+          type='submit'
+          onClick={() => setEditModeState(false)}
+        >
+          Close
+        </PillButton>
 
-      <PillButton
-        className={classes.inlineButton}
-        loading={loading}
-        type='submit'
-        onClick={() => setEditModeState(false)}
-      >
-        Close
-      </PillButton>
-
-      <PillButton
-        className={classes.inlineButton}
-        loading={loading}
-        type='submit'
-        onClick={() => updateUserData()}
-        solid
-      >
-        Save
-      </PillButton>
+        <PillButton
+          className={classes.inlineButton}
+          loading={loading}
+          type='submit'
+          onClick={() => updateUserData()}
+          solid
+        >
+          Save
+        </PillButton>
+      </Grid>
     </section>
   )
 
@@ -408,7 +403,6 @@ const useStyles = makeStyles(theme => ({
     margin: '8px 0px'
   },
   inlineButton: {
-    margin: '34px .5rem',
     fontFamily: 'Verizon-Regular',
     height: '26px',
     fontSize: '12px',
