@@ -42,6 +42,11 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
       foundUser.online = true
       setUser(foundUser)
 
+      await graphQLMutation(updateUser, {
+        id: foundUser.id,
+        online: true
+      })
+
       // TODO: Uncomment after registration
       // setAuthState(AuthFlowSteps.ThankYou)
       history.push(redirectRoute)
@@ -70,11 +75,6 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
         const user = await Auth.signIn(email.toLowerCase(), password)
         setUserEmail(email)
         getCurrentUser(user.attributes.email)
-
-        graphQLMutation(updateUser, {
-          id: user?.id,
-          online: true
-        })
       } catch (error) {
         if (error.code === 'UserNotConfirmedException') {
           setUserEmail(email)
