@@ -10,6 +10,9 @@ import { graphQLQuery } from 'graphql/helpers'
 import { userByEmailBase } from 'graphql/customQueries'
 import { useAppState } from 'providers'
 
+import { graphQLMutation } from 'graphql/helpers'
+import { updateUser } from 'graphql/mutations'
+
 interface SignInProps {
   setAuthState: (state: AuthFlowSteps) => void
   setUserEmail: (email: string) => void
@@ -35,7 +38,15 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
       if (!foundUser.avatar) {
         foundUser.avatar = defaultAvatar
       }
+
+      foundUser.online = true
       setUser(foundUser)
+
+      await graphQLMutation(updateUser, {
+        id: foundUser.id,
+        online: true
+      })
+
       // TODO: Uncomment after registration
       // setAuthState(AuthFlowSteps.ThankYou)
       history.push(redirectRoute)
@@ -87,7 +98,7 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
   }
 
   return (
-    <Grid container direction='column' justify='center' spacing={2}>
+    <Grid container direction='column' justify='center' spacing={4}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
           {I18n.get('signIn')}
@@ -101,7 +112,7 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
           </Link>
         </Typography>
       </Grid>
-      <Grid item container spacing={2} justify='center'>
+      <Grid item container spacing={4} justify='center'>
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -146,7 +157,7 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
         </Grid>
       )}
 
-      <Grid item container spacing={2} justify='space-between'>
+      <Grid item container spacing={4} justify='space-between'>
         <Grid item xs={12} sm={6}>
           <PillButton
             loading={loading}
@@ -205,7 +216,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   forgotButtonContainer: {
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
     [theme.breakpoints.down('xs')]: {
       marginTop: '1rem',
       textAlign: 'center'
@@ -219,7 +230,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#000',
     margin: '0 .5rem',
     fontFamily: 'Verizon-Regular',
-    textDecoration: 'underline'
+    textDecoration: 'underline',
+    verticalAlign: 'baseline'
   },
   tooltipList: {
     paddingLeft: '.5rem'

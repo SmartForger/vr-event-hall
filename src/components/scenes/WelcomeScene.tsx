@@ -140,7 +140,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontWeight: 600
+    fontWeight: 600,
+    margin: '42px 0'
   },
   inlineButton: {
     color: '#000',

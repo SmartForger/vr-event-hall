@@ -17,9 +17,11 @@ const MeetingDetails: FC<MeetingDetailsProps> = ({ isClassroom, isActive }) => {
       {isActive ? null : (
         <Flex mb='2rem' mr={{ md: '2rem' }} ml={{ md: '7%' }} px='1rem'>
           <Logo width={250} height={60} />
-          <Heading level={4} tag='h1' mb={2}>
-            The session will begin shortly
-          </Heading>
+          {isClassroom ? (
+            <Heading level={4} tag='h1' mb={2}>
+              The session will begin shortly
+            </Heading>
+          ) : null}
         </Flex>
       )}
     </StyledFlex>

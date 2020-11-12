@@ -23,9 +23,11 @@ export const UserSearch = ({ users, setUsers }) => {
     <div className={classes.userSearchContainer}>
       <TextField
         id='user-search'
+        className={classes.userSearchField}
         value={userSearch}
         onChange={handleChange}
         variant='outlined'
+        placeholder='Name search'
         autoFocus
         InputProps={{
           endAdornment: (
@@ -49,18 +51,25 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '8px'
+    padding: '0 20px 20px',
+    borderBottom: '1px solid #D8DADA'
+  },
+  userSearchField: {
+    width: '100%'
   },
   userSearchInput: {
     borderRadius: 0,
-    borderBottom: '1px solid #000000',
-    borderTop: '1px solid #D8DADA',
-    borderLeft: '1px solid #D8DADA',
-    borderRight: '1px solid #D8DADA',
-    width: 270,
+    border: 'none',
+    borderBottom: '1px solid black',
+
     '& .MuiInputBase-input': {
-      padding: '10px',
-      borderRight: 'none'
+      height: 42,
+      padding: '0 10px',
+      border: 'none'
+    },
+
+    '& .MuiOutlinedInput-notchedOutline': {
+      top: 0
     }
   }
 }))

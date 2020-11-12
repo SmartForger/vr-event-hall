@@ -1,21 +1,29 @@
 import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
-import { I18n, Storage, Auth } from 'aws-amplify'
-import { VariableSizeProps } from 'react-window'
 import { useHistory } from 'react-router-dom'
-import { Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
-import CreateIcon from '@material-ui/icons/Create'
-import arrowLeftIcon from 'assets/arrowLeftIcon.svg'
-import arrowRightIcon from 'assets/arrowRightIcon.svg'
 
+import Promise from 'bluebird'
+import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
+
+// Plugins
+import classNames from 'classnames'
+import { I18n, Auth } from 'aws-amplify'
+import { VariableSizeProps } from 'react-window'
+
+// Components
 import { PillButton } from 'components'
 
+// Helpers
 import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
-import { getUser } from 'graphql/queries'
-import { updateUser } from 'graphql/mutations'
+import { getUser, listSessions, listAdminUsers } from 'graphql/queries'
+import { updateUser, createAdminLink, deleteAdminLink } from 'graphql/mutations'
 import { useAppState } from 'providers'
-import { AnchorType, ISubscriptionObject, IUser, ToggleDrawer } from 'types'
 
-import profileBg from 'assets/userProfileBg.png'
+// Types
+import { IUser, ISession } from 'types'
+
+// Images
+import profileBg from 'assets/userProfileBg.jpg'
+import iconEditProfile from 'assets/icon-edit-profile.svg'
 
 interface IProfileErrors {
   firstName: string
@@ -35,17 +43,19 @@ interface IUserProfileProps {
   user?: IUser
 }
 
-export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
+export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const classes = useStyles()
   const history = useHistory()
+  const {
+    appState: { user: authedUser }
+  } = useAppState()
+
+  const [showSecretManageTools, setSecretManagementToolsVisible] = useState<boolean>()
   const [loading, setLoading] = useState<boolean>(false)
   const [editModeState, setEditModeState] = useState<boolean>(false)
   const [profileInfo, setProfileInfo] = useState<IUser | undefined>(user)
   const [profileErrors, setProfileErrors] = useState<IProfileErrors>(initialProfileErrors)
-  const { appState } = useAppState()
-  const authedUser = appState.user
 
-  let [users, setUsers] = useState<IUser[]>([])
   const listRef = useRef<VariableSizeProps>()
 
   const getProfileInfo = async (userId: string) => {
@@ -59,22 +69,18 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
     }
   }, [editModeState])
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { target } = e
-    setProfileInfo({
-      ...profileInfo,
-      [target.name]: target.value
-    })
-  }
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       updateUserData()
     }
   }
 
-  const handleSubmit = (e: FormEvent<Element>) => {
-    e.preventDefault()
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { target } = e
+    setProfileInfo({
+      ...profileInfo,
+      [target.name]: target.value
+    })
   }
 
   const updateUserData = async () => {
@@ -125,51 +131,106 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
     return false
   }
 
-  const saveUser = async () => {
-    const hasErrors = profileFormHasErrors()
-    if (!hasErrors) {
-      setLoading(true)
-      try {
-        await updateUserData()
-        setEditModeState(false)
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setLoading(false)
+  // allows MVRK users to change their own permissions
+  // HIDDEN -- must click the "company | title" line,
+  // then hit edit to see options
+  const changePermissions = async (desiredAdminType: string) => {
+    setLoading(true)
+    try {
+      const sessions = await graphQLQuery(listSessions, 'listSessions', {})
+      let permissions = await graphQLQuery(listAdminUsers, 'listAdminUsers', {
+        userId: authedUser?.id
+      })
+
+      // delete the previous permisions
+      await Promise.mapSeries(permissions, p => {
+        return graphQLMutation(deleteAdminLink, {
+          id: p.id
+        })
+      })
+      // add the new permissions
+      if (desiredAdminType === 'sme' || desiredAdminType === 'moderator') {
+        await Promise.mapSeries(sessions, async (sess: ISession) => {
+          await graphQLMutation(createAdminLink, {
+            sessionId: sess?.id,
+            userId: authedUser?.id,
+            userType: desiredAdminType
+          })
+        })
       }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
 
   const logout = () => {
+    graphQLMutation(updateUser, {
+      id: profileInfo?.id,
+      online: false
+    })
+
     Auth.signOut()
     history.push('/')
   }
 
   const profileDisplay = (
     <>
-      <div className={classes.name}>
-        {profileInfo?.firstName} {profileInfo?.lastName}
-      </div>
+      <img src={profileBg} alt='profile background' />
+      <Avatar
+        alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
+        src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+        className={classes.avatar}
+      />
+      <section className={classes.profileMain}>
+        <div className={classes.name}>
+          {profileInfo?.firstName} {profileInfo?.lastName}
+        </div>
 
-      <div className={classes.title}>
-        <span>{profileInfo?.company}</span>
-        <span className={classes.dotSeperator} />
-        <span>{profileInfo?.title}</span>
-      </div>
-      <div className={classes.centeredButtonContainer}>
-        <Button startIcon={<CreateIcon />} onClick={() => setEditModeState(true)}>
-          Edit Profile
+        <div className={classes.title} onClick={() => setSecretManagementToolsVisible(true)}>
+          <span>{profileInfo?.company}</span>
+          <span className={classes.dotSeperator} />
+          <span>{profileInfo?.title}</span>
+        </div>
+        <Button
+          startIcon={<img src={iconEditProfile} alt='Edit profile' width='18px' />}
+          onClick={() => setEditModeState(true)}
+        >
+          <Typography component='span' variant='subtitle2'>
+            Edit Profile
+          </Typography>
         </Button>
-      </div>
 
-      <PillButton className={classes.logoutButton} loading={loading} type='submit' onClick={() => logout()} solid>
-        Logout
-      </PillButton>
+        <PillButton
+          className={classes.logoutButton}
+          loading={loading}
+          type='submit'
+          backgroundColor='transparent'
+          onClick={() => logout()}
+        >
+          Log out
+        </PillButton>
+      </section>
     </>
   )
 
   const editModeDispaly = (
-    <>
+    <section className={classes.profileMain}>
+      <Grid container alignItems='center' spacing={4}>
+        <Grid item xs={4}>
+          <Avatar
+            alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
+            src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+            className={classNames(classes.avatar, classes.avatarEdit)}
+          />
+        </Grid>
+        {/* TODO: Implement upload image feature */}
+        <Grid item xs={8} style={{ display: 'none' }}>
+          <PillButton onClick={() => console.debug('Upload avatar')}>Upload image</PillButton>
+        </Grid>
+      </Grid>
+
       <TextField
         variant='outlined'
         label={I18n.get('firstName')}
@@ -217,39 +278,47 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
         onChange={handleChange}
         onKeyPress={handleKeyPress}
       />
+      {showSecretManageTools && authedUser?.email?.match(/@mvrk.co$/i) && (
+        <>
+          <h5>Permissions (Visible to MVRK Users Only)</h5>
+          <Button className={classes.permissionButton} onClick={() => changePermissions('moderator')}>
+            Make Me Moderator (all sessions)
+          </Button>
+          <Button className={classes.permissionButton} onClick={() => changePermissions('sme')}>
+            Make Me Presenter (all sessions)
+          </Button>
+          <Button className={classes.permissionButton} onClick={() => changePermissions('user')}>
+            Make Me Normal (all sessions)
+          </Button>
+        </>
+      )}
+      <Grid item xs={12}>
+        <PillButton
+          className={classes.inlineButton}
+          loading={loading}
+          type='submit'
+          onClick={() => setEditModeState(false)}
+        >
+          Close
+        </PillButton>
 
-      <PillButton
-        className={classes.inlineButton}
-        loading={loading}
-        type='submit'
-        onClick={() => setEditModeState(false)}
-      >
-        Close
-      </PillButton>
-
-      <PillButton
-        className={classes.inlineButton}
-        loading={loading}
-        type='submit'
-        onClick={() => updateUserData()}
-        solid
-      >
-        Save
-      </PillButton>
-    </>
+        <PillButton
+          className={classes.inlineButton}
+          loading={loading}
+          type='submit'
+          onClick={() => updateUserData()}
+          solid
+        >
+          Save
+        </PillButton>
+      </Grid>
+    </section>
   )
+
   return (
     <div className={classes.root}>
-      <img src={profileBg} alt='profile background' />
-      <Avatar
-        alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
-        src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
-        className={classes.avatar}
-      />
-      <section className={classes.profileMain}>
-        {!editModeState && profileDisplay}
-        {editModeState && editModeDispaly}
-      </section>
+      {!editModeState && profileDisplay}
+      {editModeState && editModeDispaly}
     </div>
   )
 }
@@ -265,35 +334,42 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     marginLeft: 'calc(50% - 40px)',
-    marginTop: '-40px',
-    width: '80px',
-    height: '80px'
+    marginTop: '-50px',
+    width: '76px',
+    height: '76px',
+    fontSize: '38px',
+    position: 'absolute',
+    backgroundColor: '#0088CE'
+  },
+  avatarEdit: {
+    width: '100px',
+    height: '100px',
+    margin: '0',
+    position: 'relative'
   },
   name: {
     margin: '4px',
-    fontSize: '26px',
+    fontSize: '24px',
+    fontFamily: '"Verizon-Bold"',
     textAlign: 'center'
   },
   title: {
-    margin: '4px',
-    fontSize: '16px',
+    margin: '6px 0 36px',
+    fontSize: '14px',
     textAlign: 'center'
   },
   logoutButton: {
+    minWidth: '165px',
     position: 'absolute',
-    bottom: '0px',
-    marginBottom: '10px'
+    bottom: '0',
+    left: '0',
+    right: '0',
+    margin: '0 auto'
   },
   closeDrawer: {
     position: 'absolute',
     bottom: '30px',
     marginBottom: '50px'
-  },
-  centeredButtonContainer: {
-    marginTop: '40px',
-    textAlign: 'center',
-    justifyContent: 'center',
-    width: '100%'
   },
   dotSeperator: {
     position: 'relative',
@@ -308,7 +384,7 @@ const useStyles = makeStyles(theme => ({
   profileMain: {
     color: 'black',
     height: 'calc(100% - 150px - 60px)',
-    padding: '16px'
+    padding: '30px 16px'
   },
   input: {
     color: '#000',
@@ -323,11 +399,15 @@ const useStyles = makeStyles(theme => ({
       borderBottomColor: '#000'
     }
   },
+  permissionButton: {
+    margin: '8px 0px'
+  },
   inlineButton: {
-    margin: '0 .5rem',
     fontFamily: 'Verizon-Regular',
     height: '26px',
-    padding: '16px 24px'
+    fontSize: '12px',
+    padding: '6px 14px',
+    margin: '20px 10px 0 0'
   },
   footer: {
     bottom: 0,
