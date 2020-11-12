@@ -6,13 +6,14 @@ import { UserAvatarCard } from 'components'
 
 export const UserRow = ({ data, index, ...props }) => {
   const classes = useStyles()
-  const { setSize, windowWidth, createConversation } = useUserListContext()
+  const { setSize, windowWidth, count, createConversation } = useUserListContext()
   const root = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    setSize(index, root?.current?.getBoundingClientRect().height)
+    const height = root?.current?.getBoundingClientRect().height || 36
+    setSize(index, height + 10)
     // eslint-disable-next-line
-  }, [windowWidth])
+  }, [windowWidth, count])
 
   return (
     <div ref={root} className={classes.root} {...props}>

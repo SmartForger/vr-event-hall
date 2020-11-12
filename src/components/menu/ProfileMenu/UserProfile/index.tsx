@@ -1,22 +1,29 @@
 import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
-import { I18n, Storage, Auth } from 'aws-amplify'
-import { VariableSizeProps } from 'react-window'
 import { useHistory } from 'react-router-dom'
-import Promise from 'bluebird'
-import { Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
-import CreateIcon from '@material-ui/icons/Create'
-import arrowLeftIcon from 'assets/arrowLeftIcon.svg'
-import arrowRightIcon from 'assets/arrowRightIcon.svg'
 
+import Promise from 'bluebird'
+import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
+
+// Plugins
+import classNames from 'classnames'
+import { I18n, Auth } from 'aws-amplify'
+import { VariableSizeProps } from 'react-window'
+
+// Components
 import { PillButton } from 'components'
 
+// Helpers
 import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
 import { getUser, listSessions, listAdminUsers } from 'graphql/queries'
 import { updateUser, createAdminLink, deleteAdminLink } from 'graphql/mutations'
 import { useAppState } from 'providers'
-import { AnchorType, ISubscriptionObject, IUser, ToggleDrawer, ISession } from 'types'
 
-import profileBg from 'assets/userProfileBg.png'
+// Types
+import { IUser, ISession } from 'types'
+
+// Images
+import profileBg from 'assets/userProfileBg.jpg'
+import iconEditProfile from 'assets/icon-edit-profile.svg'
 
 interface IProfileErrors {
   firstName: string
@@ -36,16 +43,18 @@ interface IUserProfileProps {
   user?: IUser
 }
 
-export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
+export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const classes = useStyles()
   const history = useHistory()
+  const {
+    appState: { user: authedUser }
+  } = useAppState()
+
   const [showSecretManageTools, setSecretManagementToolsVisible] = useState<boolean>()
   const [loading, setLoading] = useState<boolean>(false)
   const [editModeState, setEditModeState] = useState<boolean>(false)
   const [profileInfo, setProfileInfo] = useState<IUser | undefined>(user)
   const [profileErrors, setProfileErrors] = useState<IProfileErrors>(initialProfileErrors)
-  const { appState } = useAppState()
-  const authedUser = appState.user
 
   const listRef = useRef<VariableSizeProps>()
 
@@ -168,29 +177,60 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
 
   const profileDisplay = (
     <>
-      <div className={classes.name}>
-        {profileInfo?.firstName} {profileInfo?.lastName}
-      </div>
+      <img src={profileBg} alt='profile background' />
+      <Avatar
+        alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
+        src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+        className={classes.avatar}
+      />
+      <section className={classes.profileMain}>
+        <div className={classes.name}>
+          {profileInfo?.firstName} {profileInfo?.lastName}
+        </div>
 
-      <div className={classes.title} onClick={() => setSecretManagementToolsVisible(true)}>
-        <span>{profileInfo?.company}</span>
-        <span className={classes.dotSeperator} />
-        <span>{profileInfo?.title}</span>
-      </div>
-      <div className={classes.centeredButtonContainer}>
-        <Button startIcon={<CreateIcon />} onClick={() => setEditModeState(true)}>
-          Edit Profile
+        <div className={classes.title} onClick={() => setSecretManagementToolsVisible(true)}>
+          <span>{profileInfo?.company}</span>
+          <span className={classes.dotSeperator} />
+          <span>{profileInfo?.title}</span>
+        </div>
+        <Button
+          startIcon={<img src={iconEditProfile} alt='Edit profile' width='18px' />}
+          onClick={() => setEditModeState(true)}
+        >
+          <Typography component='span' variant='subtitle2'>
+            Edit Profile
+          </Typography>
         </Button>
-      </div>
 
-      <PillButton className={classes.logoutButton} loading={loading} type='submit' onClick={() => logout()} solid>
-        Logout
-      </PillButton>
+        <PillButton
+          className={classes.logoutButton}
+          loading={loading}
+          type='submit'
+          backgroundColor='transparent'
+          onClick={() => logout()}
+        >
+          Log out
+        </PillButton>
+      </section>
     </>
   )
 
   const editModeDispaly = (
-    <>
+    <section className={classes.profileMain}>
+      <Grid container alignItems='center' spacing={4}>
+        <Grid item xs={4}>
+          <Avatar
+            alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
+            src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+            className={classNames(classes.avatar, classes.avatarEdit)}
+          />
+        </Grid>
+        {/* TODO: Implement upload image feature */}
+        <Grid item xs={8} style={{ display: 'none' }}>
+          <PillButton onClick={() => console.debug('Upload avatar')}>Upload image</PillButton>
+        </Grid>
+      </Grid>
+
       <TextField
         variant='outlined'
         label={I18n.get('firstName')}
@@ -242,49 +282,43 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
         <>
           <h5>Permissions (Visible to MVRK Users Only)</h5>
           <Button className={classes.permissionButton} onClick={() => changePermissions('moderator')}>
-            Set As Moderator (all sessions)
+            Make Me Moderator (all sessions)
           </Button>
           <Button className={classes.permissionButton} onClick={() => changePermissions('sme')}>
-            Set As Presenter (all sessions)
+            Make Me Presenter (all sessions)
           </Button>
           <Button className={classes.permissionButton} onClick={() => changePermissions('user')}>
-            Remove Normal User (all sessions)
+            Make Me Normal (all sessions)
           </Button>
         </>
       )}
+      <Grid item xs={12}>
+        <PillButton
+          className={classes.inlineButton}
+          loading={loading}
+          type='submit'
+          onClick={() => setEditModeState(false)}
+        >
+          Close
+        </PillButton>
 
-      <PillButton
-        className={classes.inlineButton}
-        loading={loading}
-        type='submit'
-        onClick={() => setEditModeState(false)}
-      >
-        Close
-      </PillButton>
-
-      <PillButton
-        className={classes.inlineButton}
-        loading={loading}
-        type='submit'
-        onClick={() => updateUserData()}
-        solid
-      >
-        Save
-      </PillButton>
-    </>
+        <PillButton
+          className={classes.inlineButton}
+          loading={loading}
+          type='submit'
+          onClick={() => updateUserData()}
+          solid
+        >
+          Save
+        </PillButton>
+      </Grid>
+    </section>
   )
+
   return (
     <div className={classes.root}>
-      <img src={profileBg} alt='profile background' />
-      <Avatar
-        alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
-        src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
-        className={classes.avatar}
-      />
-      <section className={classes.profileMain}>
-        {!editModeState && profileDisplay}
-        {editModeState && editModeDispaly}
-      </section>
+      {!editModeState && profileDisplay}
+      {editModeState && editModeDispaly}
     </div>
   )
 }
@@ -300,35 +334,42 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     marginLeft: 'calc(50% - 40px)',
-    marginTop: '-40px',
-    width: '80px',
-    height: '80px'
+    marginTop: '-50px',
+    width: '76px',
+    height: '76px',
+    fontSize: '38px',
+    position: 'absolute',
+    backgroundColor: '#0088CE'
+  },
+  avatarEdit: {
+    width: '100px',
+    height: '100px',
+    margin: '0',
+    position: 'relative'
   },
   name: {
     margin: '4px',
-    fontSize: '26px',
+    fontSize: '24px',
+    fontFamily: '"Verizon-Bold"',
     textAlign: 'center'
   },
   title: {
-    margin: '4px',
-    fontSize: '16px',
+    margin: '6px 0 36px',
+    fontSize: '14px',
     textAlign: 'center'
   },
   logoutButton: {
+    minWidth: '165px',
     position: 'absolute',
-    bottom: '0px',
-    marginBottom: '10px'
+    bottom: '0',
+    left: '0',
+    right: '0',
+    margin: '0 auto'
   },
   closeDrawer: {
     position: 'absolute',
     bottom: '30px',
     marginBottom: '50px'
-  },
-  centeredButtonContainer: {
-    marginTop: '40px',
-    textAlign: 'center',
-    justifyContent: 'center',
-    width: '100%'
   },
   dotSeperator: {
     position: 'relative',
@@ -343,7 +384,7 @@ const useStyles = makeStyles(theme => ({
   profileMain: {
     color: 'black',
     height: 'calc(100% - 150px - 60px)',
-    padding: '16px'
+    padding: '30px 16px'
   },
   input: {
     color: '#000',
@@ -362,10 +403,11 @@ const useStyles = makeStyles(theme => ({
     margin: '8px 0px'
   },
   inlineButton: {
-    margin: '34px .5rem',
     fontFamily: 'Verizon-Regular',
     height: '26px',
-    padding: '16px 24px'
+    fontSize: '12px',
+    padding: '6px 14px',
+    margin: '20px 10px 0 0'
   },
   footer: {
     bottom: 0,
