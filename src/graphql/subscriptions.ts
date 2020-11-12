@@ -756,6 +756,52 @@ export const onCreateVideoChatInvite = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      declined
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateVideoChatInvite = /* GraphQL */ `
+  subscription OnUpdateVideoChatInvite($id: ID!) {
+    onUpdateVideoChatInvite(id: $id) {
+      id
+      conversationId
+      userId
+      invitingUserId
+      invitingUser {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      declined
       createdAt
       updatedAt
     }

@@ -986,7 +986,16 @@ export const createMessage = /* GraphQL */ `
       conversationId
       conversation {
         id
+        name
         members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       deleted
       createdAt
@@ -1600,6 +1609,105 @@ export const updateAdminLink = /* GraphQL */ `
     }
   }
 `
+export const deleteAdminLink = /* GraphQL */ `
+  mutation DeleteAdminLink($input: DeleteAdminUserInput!, $condition: ModelAdminUserConditionInput) {
+    deleteAdminLink(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      userType
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const createPollAnswer = /* GraphQL */ `
   mutation CreatePollAnswer($input: CreatePollAnswersInput!, $condition: ModelPollAnswersConditionInput) {
     createPollAnswer(input: $input, condition: $condition) {
@@ -2072,6 +2180,7 @@ export const createVideoChatInvite = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      declined
       createdAt
       updatedAt
     }
@@ -2116,6 +2225,7 @@ export const updateVideoChatInvite = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      declined
       createdAt
       updatedAt
     }
@@ -2160,6 +2270,7 @@ export const deleteVideoChatInvite = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      declined
       createdAt
       updatedAt
     }

@@ -121,7 +121,7 @@ enum AdminUserType {
 }
 
 type AdminUser
-  @model(mutations: { create: "createAdminLink", update: "updateAdminLink" }, queries: null, subscriptions: null)
+  @model(mutations: { create: "createAdminLink", update: "updateAdminLink", delete: "deleteAdminLink" }, subscriptions: null)
   @key(name: "byAdminUser", fields: ["userId", "sessionId"])
   @key(name: "byAdminSession", fields: ["sessionId", "userId"]) {
   id: ID!
@@ -276,6 +276,7 @@ type VideoChatInvite @model(subscriptions: null) {
   userId: ID!
   invitingUserId: ID!
   invitingUser: User! @connection(fields: ["invitingUserId"])
+  declined: Boolean
 }
 
 type Subscription {
@@ -294,4 +295,5 @@ type Subscription {
   onUpdateRaisedHand(sessionId: ID!): RaisedHand @aws_subscribe(mutations: ["updateRaisedHand"])
   onCreateGlobalRaisedHand: RaisedHand @aws_subscribe(mutations: ["createRaisedHand"])
   onCreateVideoChatInvite(userId: ID!): VideoChatInvite @aws_subscribe(mutations: ["createVideoChatInvite"])
+  onUpdateVideoChatInvite(id: ID!): VideoChatInvite @aws_subscribe(mutations: ["updateVideoChatInvite"])
 }

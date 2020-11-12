@@ -62,6 +62,7 @@ export interface ISession {
   description: string
   active?: string
   conversationId: string
+  icId: string
   muted?: boolean
   qaActive?: boolean
   polls?: IPollObjectList
@@ -77,4 +78,5 @@ export interface IVideoChatInvite {
   invitingUserId: string
   conversationId: string
   invitingUser: IUser
+  declined: boolean
 }
