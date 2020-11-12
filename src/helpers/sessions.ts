@@ -23,7 +23,7 @@ export const Sessions: { [key: string]: ISession } = {
     side: {
       category: 'Breakout Session',
       header: 'Healthcare, Insurance & Life Sciences.',
-      schedule: 'Weekday, November XX • X–X PM EST',
+      schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.'
@@ -35,7 +35,7 @@ export const Sessions: { [key: string]: ISession } = {
     side: {
       category: 'Breakout Session',
       header: 'Retail/Hospitality, Travel & Distribution.',
-      schedule: 'Weekday, November XX • X–X PM EST',
+      schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.'
@@ -48,7 +48,7 @@ export const Sessions: { [key: string]: ISession } = {
       category: 'Breakout Session',
       header: 'Financial Services.',
       speakers: [],
-      schedule: 'Weekday, November XX • X–X PM EST',
+      schedule: 'Session will begin immediately following the live stream.',
       body:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.'
     }
@@ -59,7 +59,7 @@ export const Sessions: { [key: string]: ISession } = {
     side: {
       category: 'Breakout Session',
       header: 'Manufacturing, Automotive, Construction, Energy & Utilities.',
-      schedule: 'Weekday, November XX • X–X PM EST',
+      schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.'
@@ -71,7 +71,7 @@ export const Sessions: { [key: string]: ISession } = {
     side: {
       category: 'Breakout Session',
       header: 'Media, Entertainment, Technology & Service.',
-      schedule: 'Weekday, November XX • X–X PM EST',
+      schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body: "Insights into the powerful ecosystem possibilities with Verizon's 5G Nationwide and 5G Ultra Wideband."
     }
