@@ -507,7 +507,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
                   infoMessage && setInfoMessage(null)
                 }}
               >
-                <Alert severity={successMessage ? 'success' : infoMessage ? 'info' : 'error'} variant='outlined'>
+                <Alert severity={successMessage ? 'success' : infoMessage ? 'info' : 'error'} variant='filled'>
                   {successMessage ? successMessage : infoMessage ? infoMessage : errorMessage}
                 </Alert>
               </Snackbar>
