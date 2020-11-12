@@ -88,7 +88,7 @@ export const StyledGrid = styled.section<GridProps>`
         ${
           tileCount === 1
             ? `
-          .user-video[data-testid='video-tile'] {
+          .user-video[data-testid='video-tile'], .empty-video {
             max-height: 25%;
           }
         `

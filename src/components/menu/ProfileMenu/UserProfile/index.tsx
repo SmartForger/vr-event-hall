@@ -317,9 +317,6 @@ const useStyles = makeStyles(theme => ({
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
     },
-    '& label': {
-      color: theme.palette.grey[500]
-    },
     '& fieldset': {
       borderRadius: 0,
       borderColor: '#dadada',
@@ -327,7 +324,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   inlineButton: {
-    margin: '0 .5rem',
+    margin: '34px .5rem',
     fontFamily: 'Verizon-Regular',
     height: '26px',
     padding: '16px 24px'

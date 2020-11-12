@@ -166,7 +166,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
       }
 
       // Logic for setting Small Business or Enterprise
-      const campaignURL = userInfo.companySize == '500+' ? 'enterprise1Ent' : 'enterprise1Small';
+      const campaignURL = userInfo.companySize == '500+' ? 'enterprise1Ent' : 'enterprise1Small'
 
       const response = await axios({
         method: 'post',
@@ -296,7 +296,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         </Typography>
       </Grid>
 
-      <Grid item container spacing={2}>
+      <Grid item container spacing={4}>
         <Grid item xs={12}>
           {acceptedFiles[0] ? (
             <Typography variant='body2'>
@@ -502,7 +502,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           {I18n.get('aboutYourCompany')}
         </Typography>
       </Grid>
-      <Grid item container spacing={2}>
+      <Grid item container spacing={4}>
         <Grid item xs={12} sm={6}>
           <TextField
             variant='outlined'
@@ -693,9 +693,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 0,
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
-    },
-    '& label': {
-      color: theme.palette.grey[500]
     },
     '& fieldset': {
       borderRadius: 0,

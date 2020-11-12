@@ -7,7 +7,7 @@ import { MicrophoneActivityPreviewBar } from './MicrophoneActivityPreviewBar'
 export const MicrophoneActivityPreview = () => {
   return (
     <StyledPreviewGroup>
-      <Label style={{ display: 'block', marginBottom: '.5rem' }}>Microphone activity</Label>
+      <Label style={{ display: 'block', marginBottom: '14px' }}>Microphone activity</Label>
       <MicrophoneActivityPreviewBar />
     </StyledPreviewGroup>
   )

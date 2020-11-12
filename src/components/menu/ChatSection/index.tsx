@@ -120,14 +120,17 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
         </>
       ) : (
         <>
-          {user?.conversations?.items?.slice(0, previewCount).map((data, index) => {
-            const unreadInChannel = chatState.unreadMessagesByConversation[data.conversationId] > 0
-            return (
-              <StyledChatSectionItem key={`expanded-${index}`}>
-                <DirectMessage data={data} openConversation={openConversation} isUnread={unreadInChannel} />
-              </StyledChatSectionItem>
-            )
-          })}
+          {user?.conversations?.items
+            ?.filter(item => item?.conversation?.members.length === 2)
+            .slice(0, previewCount)
+            .map((data, index) => {
+              const unreadInChannel = chatState.unreadMessagesByConversation[data.conversationId] > 0
+              return (
+                <StyledChatSectionItem key={`expanded-${index}`}>
+                  <DirectMessage data={data} openConversation={openConversation} isUnread={unreadInChannel} />
+                </StyledChatSectionItem>
+              )
+            })}
         </>
       )}
     </StyledChatSection>

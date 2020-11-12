@@ -16,7 +16,7 @@ const common: ICommonDict = {
   confirmationCode: 'Confirmation Code',
   confirmEmail: 'Confirm E-mail',
   confirmEmailInstructions:
-    'A confirmation code was sent to your e-mail. Didn’t receive it? Check your spam folder or resend code.',
+    'A confirmation code was sent to your e-mail. Didn’t receive it? Check your spam folder or hit back and try again.',
   confirmPassword: 'Confirm Password',
   continue: 'Continue',
   dontHaveAnAccount: "Don't have an account?",
@@ -139,7 +139,7 @@ const scenes: IScenesDict = {
     'What can Verizon 5G Ultra Wideband do for your business? Explore the various ways our 5G network is moving businesses like yours forward.',
   sessionsSceneTitle: 'Talk with our experts.',
   sessionsSceneBlurb:
-    'Hear from thought-provoking leaders who explain how Verizon 5G is already transforming industries.',
+    'Learn how your business can take advantage of the full, transformative power of Verizon 5G Ultra Wideband. Let our experts to take you on a deeper dive into vertical-specific use cases to demonstrate how Verizon 5G can benefit you. Each session includes a live Q&A. Capacity is limited to 200 attendees each.',
   clickAndDragToExplore: 'Click and drag to explore',
   theEventWillBeginIn: 'The next session will begin in',
   theEventWillStartOn: 'The next session will start on',
@@ -147,7 +147,7 @@ const scenes: IScenesDict = {
   sessions: 'Sessions',
   connect: 'Connect',
   liveStream: 'Live Stream',
-  startingSoon: 'The Digital Transformation of Venues speaker session begins now.',
+  startingSoon: 'The Live Event is starting soon',
   goToLiveStream: 'Go to Live Stream'
 }
 

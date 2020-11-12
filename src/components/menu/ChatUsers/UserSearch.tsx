@@ -27,13 +27,13 @@ export const UserSearch = ({ users, setUsers }) => {
         onChange={handleChange}
         variant='outlined'
         autoFocus
-        className={classes.userSearchInput}
         InputProps={{
           endAdornment: (
             <InputAdornment position='end'>
               <Search />
             </InputAdornment>
-          )
+          ),
+          className: classes.userSearchInput
         }}
         aria-describedby='user-search'
         inputProps={{
@@ -53,9 +53,14 @@ const useStyles = makeStyles(() => ({
   },
   userSearchInput: {
     borderRadius: 0,
-    width: '80%',
+    borderBottom: '1px solid #000000',
+    borderTop: '1px solid #D8DADA',
+    borderLeft: '1px solid #D8DADA',
+    borderRight: '1px solid #D8DADA',
+    width: 270,
     '& .MuiInputBase-input': {
-      padding: '10px'
+      padding: '10px',
+      borderRight: 'none'
     }
   }
 }))

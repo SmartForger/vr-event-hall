@@ -7,7 +7,7 @@ import { MessageList } from './MessageList'
 
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { useAppState, useVideoChatContext, useChatContext } from 'providers'
-import { ISubscriptionObject } from 'types'
+import { ISubscriptionObject, IUser } from 'types'
 import { getConversationFiltered } from 'graphql/customQueries'
 import { onCreateMessageWithAuthor, onUpdateMessageWithAuthor } from 'graphql/customSubscriptions'
 
@@ -31,7 +31,11 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
   let updateSubscription = useRef<ISubscriptionObject | null>(null)
 
   const addNewMessage = ({ onCreateMessage }) => {
-    setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
+    if (videoChat && onCreateMessage.conversationId === videoChatState?.session?.conversationId) {
+      setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
+    } else if (!videoChat && onCreateMessage.conversationId === chatState?.conversationId) {
+      setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
+    }
   }
 
   const messageUpdated = ({ onUpdateMessage }) => {
@@ -40,15 +44,27 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
     }
   }
 
+  const isUserAdmin = user => {
+    return videoChatState?.session?.admins.items.some((adminUser: IUser) => adminUser.id === user.id)
+  }
+
   // get the conversation id based on the correct context
-  const conversationId = videoChat
-    ? videoChatState?.session?.conversationId || videoChatState?.conversationId
-    : chatState?.conversationId
+  let conversationId = chatState?.conversationId
+  if (videoChat) {
+    if (isUserAdmin(user) && videoChatState.icId) {
+      conversationId = videoChatState.icId
+    } else {
+      conversationId = videoChatState?.session?.conversationId || videoChatState?.conversationId
+    }
+  }
+
   const getConversationDetails = async () => {
     const conversation = await graphQLQuery(getConversationFiltered, 'getConversation', {
       id: conversationId
     })
-    setMessages(conversation.messages.items.filter(message => message.deleted !== 'true'))
+    if (conversation && conversation.messages) {
+      setMessages(conversation.messages.items.filter(message => message.deleted !== 'true'))
+    }
 
     subscription.current = graphQLSubscription(onCreateMessageWithAuthor, { conversationId }, addNewMessage)
 
@@ -57,6 +73,8 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
 
   useEffect(() => {
     if (conversationId) {
+      subscription?.current?.unsubscribe()
+      updateSubscription?.current?.unsubscribe()
       getConversationDetails()
       dispatch({ type: 'CLEAR_UNREAD_CONVO_MESSAGE', payload: { conversationId } })
     }
@@ -85,7 +103,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
 
   return (
     <div className={classes.root}>
-      <MessageList listRef={listRef} messages={messages} />
+      <MessageList listRef={listRef} messages={messages} isVideoChat={videoChat} />
       <MessageInput userId={user?.id || ''} internal={internal} conversationId={conversationId} />
     </div>
   )

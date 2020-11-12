@@ -56,7 +56,7 @@ const App = () => {
         setStreamStartTime(eventConfigData.streamStartTime)
         setEventStage(eventConfigData.stage)
         setUseBackupStream(eventConfigData.useBackupStream)
-        setVCOff(eventConfigData.useBackupStream)
+        setVCOff(eventConfigData.vcOff)
       } catch (err) {
         console.error('Error getting event config', err)
       }

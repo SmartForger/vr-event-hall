@@ -9,7 +9,7 @@ import { PersonInfoItem } from './PersonInfoItem'
 
 export const ChatRow = ({ data, index, skipSetSize = false, isPinned = false, ...props }) => {
   const classes = useStyles()
-  const { setSize, windowWidth, onPin, onDelete, unPin, isAdmin } = useChatListContext()
+  const { setSize, windowWidth, onPin, onDelete, unPin, isAdmin, isVideoChat } = useChatListContext()
   const root = useRef<HTMLDivElement | null>(null)
   const { chatState } = useChatContext()
   const {
@@ -29,7 +29,7 @@ export const ChatRow = ({ data, index, skipSetSize = false, isPinned = false, ..
 
   const pinMessage = () => {
     if (isPinned) {
-      unPin()
+      unPin(-1)
     } else {
       onPin(index)
     }
@@ -46,12 +46,16 @@ export const ChatRow = ({ data, index, skipSetSize = false, isPinned = false, ..
         </Typography>
         {isAdmin ? (
           <Box display='flex'>
-            <IconButton onClick={pinMessage}>
-              <PinIcon />
-            </IconButton>
-            <IconButton onClick={deleteMessage}>
-              <TrashIcon />
-            </IconButton>
+            {isVideoChat ? (
+              <IconButton onClick={pinMessage}>
+                <PinIcon />
+              </IconButton>
+            ) : null}
+            {isVideoChat || data.authorId === user?.id ? (
+              <IconButton onClick={deleteMessage}>
+                <TrashIcon />
+              </IconButton>
+            ) : null}
           </Box>
         ) : null}
       </Wrapper>

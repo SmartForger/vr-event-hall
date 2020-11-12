@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core'
 
 import { ChatRow } from './ChatRow'
 
-import { ChatListContext, useAppState, useChatContext } from 'providers'
+import { ChatListContext, useAppState, useChatContext, useVideoChatContext } from 'providers'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { graphQLMutation } from 'graphql/helpers'
 import { updateMessage, updateSession } from 'graphql/mutations'
@@ -16,12 +16,18 @@ interface MessageListProps {
   user?: IUser
   listRef?: MutableRefObject<VariableSizeProps>
   messages: IMessage[]
+  isVideoChat?: boolean
 }
 // TODO: localize with i18n
 const dialogInfo = {
   pin: {
     title: 'Pin new message',
     message: 'You are about to pin a new message and replace the current one.',
+    messageLine2: 'Are you sure?'
+  },
+  unpin: {
+    title: 'Unpin message',
+    message: 'You are about to unpin a message.',
     messageLine2: 'Are you sure?'
   },
   delete: {
@@ -31,16 +37,18 @@ const dialogInfo = {
   }
 }
 
-export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
+export const MessageList: FC<MessageListProps> = ({ messages, listRef, isVideoChat }) => {
   const classes = useStyles()
   const [showDialog, setShowDialog] = useState<boolean>(false)
   const [dialogType, setDialogType] = useState<string>('')
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [isAdmin, setAdmin] = useState<boolean>(false)
+  const [pinnedMessageSize, setPinnedMessageSize] = useState<number>(0)
   const {
     appState: { user }
   } = useAppState()
   const { chatState, dispatch } = useChatContext()
+  const { videoChatState, dispatch: videoChatDispatch } = useVideoChatContext()
   const { width: windowWidth } = useWindowSize()
 
   const sizeMap = useRef({})
@@ -104,7 +112,7 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     }
   }, [])
 
-  const openDialog = (index: number, type: 'pin' | 'delete') => {
+  const openDialog = (index: number, type: 'pin' | 'unpin' | 'delete') => {
     setSelectedIndex(index)
     setDialogType(type)
     setShowDialog(true)
@@ -114,10 +122,15 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     openDialog(index, 'pin')
   }
 
-  const unPin = async () => {
-    dispatch({ type: 'SET_DETAILS', payload: { session: { ...chatState.session, pinnedMessage: null } } })
-    const session = await graphQLMutation(updateSession, { id: chatState?.session?.id, pinnedMessageId: '0' })
+  const unPin = async index => {
+    openDialog(index, 'unpin')
+  }
+
+  const unPinConfirm = async () => {
+    dispatch({ type: 'SET_DETAILS', payload: { session: { ...videoChatState.session, pinnedMessage: null } } })
+    const session = await graphQLMutation(updateSession, { id: videoChatState?.session?.id, pinnedMessageId: '0' })
     dispatch({ type: 'SET_DETAILS', payload: { session } })
+    resetDialog()
   }
 
   const onDelete = (index: number) => {
@@ -136,10 +149,14 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
         type: 'SET_DETAILS',
         payload: { session: { ...chatState.session, pinnedMessage: messages[selectedIndex] } }
       })
-      const session = await graphQLMutation(updateSession, {
-        id: chatState?.session?.id,
-        pinnedMessageId: messages[selectedIndex].id
-      })
+      const session = await graphQLMutation(
+        updateSession,
+        {
+          id: videoChatState?.session?.id || '',
+          pinnedMessageId: messages[selectedIndex].id
+        },
+        'updateSession'
+      )
       dispatch({ type: 'SET_DETAILS', payload: { session } })
       resetDialog()
     }
@@ -160,31 +177,50 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef }) => {
     }
   }
 
+  const getPinnedMessage = () => {
+    const message = document.getElementById('pinnedMessage')
+    if (message) {
+      return message.offsetHeight
+    }
+    return 0
+  }
+
+  useEffect(() => {
+    if (videoChatState?.session?.pinnedMessage) {
+      const message = document.getElementById('pinnedMessage')
+      if (message) {
+        return setPinnedMessageSize(message.offsetHeight)
+      }
+    }
+    setPinnedMessageSize(0)
+  }, [videoChatState?.session?.pinnedMessage])
+
   return (
-    <ChatListContext.Provider value={{ setSize, windowWidth, onPin, onDelete, unPin, isAdmin }}>
+    <ChatListContext.Provider value={{ setSize, windowWidth, onPin, onDelete, unPin, isAdmin, isVideoChat }}>
       {showDialog ? (
         <DialogCard
           title={dialogInfo[dialogType || ''].title}
           message={dialogInfo[dialogType || ''].message}
           messageLine2={dialogInfo[dialogType || ''].messageLine2}
-          onConfirm={dialogType === 'pin' ? onPinConfirm : onDeleteConfirm}
+          onConfirm={dialogType === 'pin' ? onPinConfirm : dialogType === 'unpin' ? unPinConfirm : onDeleteConfirm}
           onCancel={onCancel}
           containerHeight={listRef?.current?.offsetHeight}
         />
       ) : null}
-      {chatState?.session?.pinnedMessage ? (
+      {videoChatState?.session?.pinnedMessage ? (
         <ChatRow
-          data={chatState?.session?.pinnedMessage}
+          data={videoChatState?.session?.pinnedMessage}
           index={0}
           skipSetSize={true}
           isPinned={true}
           className={classes.pinnedMessage}
+          id='pinnedMessage'
         />
       ) : null}
       <AutoSizer>
         {({ height, width }) => (
           <VariableSizeList
-            height={height - 80}
+            height={videoChatState?.session?.pinnedMessage ? height - 80 - pinnedMessageSize : height - 80}
             width={width}
             itemSize={i => getItemSize(filteredMessages[i])}
             itemCount={filteredMessages.length}

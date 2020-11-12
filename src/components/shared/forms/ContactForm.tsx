@@ -109,7 +109,11 @@ export const ContactForm: FC<ContactFormProps> = ({
               'Content-Type': 'application/json;charset=utf-8'
             },
             mode: 'no-cors',
-            body: JSON.stringify({ ...contactFormInfo, phoneNumber: formatPhoneNumber(contactFormInfo.phoneNumber) })
+            body: JSON.stringify({
+              ...contactFormInfo,
+              event: 'Verizon-5G-Enterprise',
+              phoneNumber: formatPhoneNumber(contactFormInfo.phoneNumber)
+            })
           })
         } else {
           graphQLMutation(createUserInteraction, {
@@ -134,13 +138,13 @@ export const ContactForm: FC<ContactFormProps> = ({
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <Grid container spacing={2}>
+      <Grid container spacing={4}>
         <Grid item sm={6} xs={12}>
           <TextField
             required
             fullWidth
             name='firstName'
-            variant='filled'
+            variant='outlined'
             error={!!errors.firstName}
             helperText={errors.firstName}
             label={I18n.get('firstName')}
@@ -154,7 +158,7 @@ export const ContactForm: FC<ContactFormProps> = ({
             required
             fullWidth
             name='lastName'
-            variant='filled'
+            variant='outlined'
             error={!!errors.lastName}
             helperText={errors.lastName}
             label={I18n.get('lastName')}
@@ -168,7 +172,7 @@ export const ContactForm: FC<ContactFormProps> = ({
             required
             fullWidth
             name='phoneNumber'
-            variant='filled'
+            variant='outlined'
             error={!!errors.phoneNumber}
             helperText={errors.phoneNumber}
             label={I18n.get('phoneNumber')}
@@ -182,7 +186,7 @@ export const ContactForm: FC<ContactFormProps> = ({
             required
             fullWidth
             name='email'
-            variant='filled'
+            variant='outlined'
             error={!!errors.email}
             helperText={errors.email}
             label={I18n.get('email')}

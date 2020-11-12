@@ -17,9 +17,14 @@ import { useVideoChatContext } from 'providers'
 interface AudioInputControlProps {
   muteLabel?: string
   unmuteLabel?: string
+  isAdmin?: boolean
 }
 
-export const CustomAudioInputControl: FC<AudioInputControlProps> = ({ muteLabel = 'Mute', unmuteLabel = 'Unmute' }) => {
+export const CustomAudioInputControl: FC<AudioInputControlProps> = ({
+  muteLabel = 'Mute',
+  unmuteLabel = 'Unmute',
+  isAdmin
+}) => {
   const meetingManager = useMeetingManager()
   const { muted, toggleMute } = useToggleLocalMute()
   const audioVideo = useAudioVideo()
@@ -37,6 +42,9 @@ export const CustomAudioInputControl: FC<AudioInputControlProps> = ({ muteLabel 
   }))
   // Listen for mute all call
   useEffect(() => {
+    if (isAdmin) {
+      return
+    }
     audioVideo?.realtimeSetCanUnmuteLocalAudio(!videoChatState.globalMute)
     if (videoChatState.globalMute) {
       audioVideo?.realtimeMuteLocalAudio()

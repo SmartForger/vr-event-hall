@@ -55,6 +55,7 @@ export const createUser = /* GraphQL */ `
         nextToken
       }
       onVideoCall
+      online
       createdAt
       updatedAt
     }
@@ -113,6 +114,7 @@ export const updateUser = /* GraphQL */ `
         nextToken
       }
       onVideoCall
+      online
       createdAt
       updatedAt
     }
@@ -171,6 +173,7 @@ export const deleteUser = /* GraphQL */ `
         nextToken
       }
       onVideoCall
+      online
       createdAt
       updatedAt
     }
@@ -296,6 +299,20 @@ export const createSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      icId
+      ic {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       admins {
         items {
           id
@@ -341,10 +358,18 @@ export const createSession = /* GraphQL */ `
           postalCode
           title
           onVideoCall
+          online
           createdAt
           updatedAt
         }
         conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
         deleted
         createdAt
         updatedAt
@@ -429,6 +454,20 @@ export const updateSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      icId
+      ic {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       admins {
         items {
           id
@@ -474,10 +513,18 @@ export const updateSession = /* GraphQL */ `
           postalCode
           title
           onVideoCall
+          online
           createdAt
           updatedAt
         }
         conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
         deleted
         createdAt
         updatedAt
@@ -562,6 +609,20 @@ export const deleteSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      icId
+      ic {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       admins {
         items {
           id
@@ -607,10 +668,18 @@ export const deleteSession = /* GraphQL */ `
           postalCode
           title
           onVideoCall
+          online
           createdAt
           updatedAt
         }
         conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
         deleted
         createdAt
         updatedAt
@@ -711,6 +780,7 @@ export const createSessionReservation = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -721,6 +791,14 @@ export const createSessionReservation = /* GraphQL */ `
         active
         conversationId
         conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
           id
           name
           members
@@ -803,6 +881,7 @@ export const updateSessionReservation = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -813,6 +892,14 @@ export const updateSessionReservation = /* GraphQL */ `
         active
         conversationId
         conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
           id
           name
           members
@@ -892,10 +979,15 @@ export const createMessage = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
       conversationId
+      conversation {
+        id
+        members
+      }
       deleted
       createdAt
       updatedAt
@@ -936,10 +1028,24 @@ export const updateMessage = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
       conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       deleted
       createdAt
       updatedAt
@@ -980,10 +1086,24 @@ export const deleteMessage = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
       conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       deleted
       createdAt
       updatedAt
@@ -1055,6 +1175,7 @@ export const createSurveyAnswer = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1104,6 +1225,7 @@ export const updateSurveyAnswer = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1153,6 +1275,7 @@ export const deleteSurveyAnswer = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1201,6 +1324,7 @@ export const createConvoLink = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1256,6 +1380,7 @@ export const updateConvoLink = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1312,6 +1437,7 @@ export const createAdminLink = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1322,6 +1448,14 @@ export const createAdminLink = /* GraphQL */ `
         active
         conversationId
         conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
           id
           name
           members
@@ -1402,6 +1536,7 @@ export const updateAdminLink = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1412,6 +1547,14 @@ export const updateAdminLink = /* GraphQL */ `
         active
         conversationId
         conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
           id
           name
           members
@@ -1616,6 +1759,7 @@ export const createRaisedHand = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1659,6 +1803,7 @@ export const updateRaisedHand = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1702,6 +1847,7 @@ export const createSessionQuestion = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1746,6 +1892,7 @@ export const updateSessionQuestion = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1829,6 +1976,7 @@ export const createSessionPollAnswer = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1875,6 +2023,7 @@ export const updateSessionPollAnswer = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1919,6 +2068,7 @@ export const createVideoChatInvite = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -1962,6 +2112,7 @@ export const updateVideoChatInvite = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
@@ -2005,6 +2156,7 @@ export const deleteVideoChatInvite = /* GraphQL */ `
           nextToken
         }
         onVideoCall
+        online
         createdAt
         updatedAt
       }
