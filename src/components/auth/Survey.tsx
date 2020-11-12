@@ -92,7 +92,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
   }
 
   return (
-    <Grid container direction='column' justify='center' spacing={2}>
+    <Grid container direction='column' justify='center' spacing={4}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
           {I18n.get('surveyTitle')}
@@ -103,7 +103,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
           {I18n.get('surveyInstructions')}
         </Typography>
       </Grid>
-      <Grid item container spacing={2}>
+      <Grid item container spacing={4}>
         {Array.from(surveyQuestions).map(([qName, question], index: number) => (
           <>
             {qName !== 'keynoteSpeaker' && qName !== 'industrySpecificQuestion' ? (

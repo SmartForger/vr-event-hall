@@ -1,6 +1,13 @@
 import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
 import { useHistory } from 'react-router-dom'
 
+import Promise from 'bluebird'
+import { Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
+import CreateIcon from '@material-ui/icons/Create'
+import arrowLeftIcon from 'assets/arrowLeftIcon.svg'
+import arrowRightIcon from 'assets/arrowRightIcon.svg'
+
+
 // Plugins
 import classNames from 'classnames'
 import { I18n, Auth } from 'aws-amplify'
@@ -9,11 +16,13 @@ import { VariableSizeProps } from 'react-window'
 // Components
 import { PillButton } from 'components'
 
+
 // Helpers
+import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
+import { getUser, listSessions, listAdminUsers } from 'graphql/queries'
+import { updateUser, createAdminLink, deleteAdminLink } from 'graphql/mutations'
 import { useAppState } from 'providers'
-import { getUser } from 'graphql/queries'
-import { updateUser } from 'graphql/mutations'
-import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
+import { AnchorType, ISubscriptionObject, IUser, ToggleDrawer, ISession } from 'types'
 
 // Styles
 import { Grid, Avatar, Typography, makeStyles, TextField, Button } from '@material-ui/core'
@@ -47,12 +56,12 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const classes = useStyles()
   const history = useHistory()
 
+  const [showSecretManageTools, setSecretManagementToolsVisible] = useState<boolean>()
   const [loading, setLoading] = useState<boolean>(false)
   const [editModeState, setEditModeState] = useState<boolean>(false)
   const [profileInfo, setProfileInfo] = useState<IUser | undefined>(user)
   const [profileErrors, setProfileErrors] = useState<IProfileErrors>(initialProfileErrors)
 
-  let [users, setUsers] = useState<IUser[]>([])
   const listRef = useRef<VariableSizeProps>()
 
   const getProfileInfo = async (userId: string) => {
@@ -66,22 +75,18 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     }
   }, [editModeState])
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { target } = e
-    setProfileInfo({
-      ...profileInfo,
-      [target.name]: target.value
-    })
-  }
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       updateUserData()
     }
   }
 
-  const handleSubmit = (e: FormEvent<Element>) => {
-    e.preventDefault()
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { target } = e
+    setProfileInfo({
+      ...profileInfo,
+      [target.name]: target.value
+    })
   }
 
   const updateUserData = async () => {
@@ -132,22 +137,46 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     return false
   }
 
-  const saveUser = async () => {
-    const hasErrors = profileFormHasErrors()
-    if (!hasErrors) {
-      setLoading(true)
-      try {
-        await updateUserData()
-        setEditModeState(false)
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setLoading(false)
+  // allows MVRK users to change their own permissions
+  // HIDDEN -- must click the "company | title" line,
+  // then hit edit to see options
+  const changePermissions = async (desiredAdminType: string) => {
+    setLoading(true)
+    try {
+      const sessions = await graphQLQuery(listSessions, 'listSessions', {})
+      let permissions = await graphQLQuery(listAdminUsers, 'listAdminUsers', {
+        userId: authedUser?.id
+      })
+
+      // delete the previous permisions
+      await Promise.mapSeries(permissions, p => {
+        return graphQLMutation(deleteAdminLink, {
+          id: p.id
+        })
+      })
+      // add the new permissions
+      if (desiredAdminType === 'sme' || desiredAdminType === 'moderator') {
+        await Promise.mapSeries(sessions, async (sess: ISession) => {
+          await graphQLMutation(createAdminLink, {
+            sessionId: sess?.id,
+            userId: authedUser?.id,
+            userType: desiredAdminType
+          })
+        })
       }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
 
   const logout = () => {
+    graphQLMutation(updateUser, {
+      id: profileInfo?.id,
+      online: false
+    })
+
     Auth.signOut()
     history.push('/')
   }
@@ -165,7 +194,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           {profileInfo?.firstName} {profileInfo?.lastName}
         </div>
 
-        <div className={classes.title}>
+        <div className={classes.title} onClick={() => setSecretManagementToolsVisible(true)}>
           <span>{profileInfo?.company}</span>
           <span className={classes.dotSeperator} />
           <span>{profileInfo?.title}</span>
@@ -255,6 +284,20 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         onChange={handleChange}
         onKeyPress={handleKeyPress}
       />
+      {showSecretManageTools && authedUser?.email?.match(/@mvrk.co$/i) && (
+        <>
+          <h5>Permissions (Visible to MVRK Users Only)</h5>
+          <Button className={classes.permissionButton} onClick={() => changePermissions('moderator')}>
+            Make Me Moderator (all sessions)
+          </Button>
+          <Button className={classes.permissionButton} onClick={() => changePermissions('sme')}>
+            Make Me Presenter (all sessions)
+          </Button>
+          <Button className={classes.permissionButton} onClick={() => changePermissions('user')}>
+            Make Me Normal (all sessions)
+          </Button>
+        </>
+      )}
 
       <PillButton
         className={classes.inlineButton}
@@ -361,7 +404,12 @@ const useStyles = makeStyles(theme => ({
       borderBottomColor: '#000'
     }
   },
+  permissionButton: {
+    margin: '8px 0px'
+  },
   inlineButton: {
+    margin: '34px .5rem',
+    fontFamily: 'Verizon-Regular',
     height: '26px',
     fontSize: '12px',
     padding: '6px 14px',

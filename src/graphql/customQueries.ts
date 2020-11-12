@@ -208,6 +208,7 @@ export const userByEmailBase = /* GraphQL */ `
                   user {
                     firstName
                     lastName
+                    online
                   }
                 }
               }

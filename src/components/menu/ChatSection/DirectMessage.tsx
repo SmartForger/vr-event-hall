@@ -6,13 +6,10 @@ import {
   StyledDirectMessageItem,
   StyledLeftContent,
   StyledUserStatus,
-  StyledUserName,
-  StyledNotificationIcon
+  StyledUserName
 } from './Styled'
 
 import { IConvoLink } from 'types'
-import { IconButton } from '@material-ui/core'
-import { MoreHoriz } from '@material-ui/icons'
 import { useAppState } from 'providers'
 import { AttentionDot } from '../AttentionDot'
 
@@ -33,21 +30,18 @@ export const DirectMessage: FC<IChatDirectMessage> = ({ data, openConversation, 
     <StyledDirectMessage onClick={() => openConversation(conversationId)}>
       <StyledDirectMessageItem>
         <StyledLeftContent>
-          {/* <StyledUserStatus
+          <StyledUserStatus
             className={classnames({
-              online: conversationUser.activeState === UserActiveState.ACTIVE,
-              offline: conversationUser.activeState !== UserActiveState.INACTIVE
+              online: messageUser.user.online === true,
+              offline: messageUser.user.online !== true
             })}
-          /> */}
+          />
           <StyledUserName>
             {messageUser?.user.firstName} {messageUser?.user.lastName}
           </StyledUserName>
         </StyledLeftContent>
         <AttentionDot showing={isUnread} />
       </StyledDirectMessageItem>
-      <IconButton edge='end' size='small' onClick={() => console.log('more clicked')}>
-        <MoreHoriz />
-      </IconButton>
     </StyledDirectMessage>
   )
 }

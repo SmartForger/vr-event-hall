@@ -25,6 +25,7 @@ export interface IUser {
   companyCountry?: string
   createdAt?: string
   updatedAt?: string
+  online?: boolean
 }
 
 interface UserConversationList {
