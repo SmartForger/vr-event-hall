@@ -1,5 +1,10 @@
-import React, { useState } from 'react'
-import { useMeetingManager } from 'amazon-chime-sdk-component-library-react'
+import React, { useEffect, useRef, useState } from 'react'
+import {
+  ActionType,
+  Severity,
+  useMeetingManager,
+  useNotificationDispatch
+} from 'amazon-chime-sdk-component-library-react'
 import { Drawer, IconButton, makeStyles, Tab, Tabs, Toolbar, Theme, Typography } from '@material-ui/core'
 import { Close, VideocamOutlined } from '@material-ui/icons'
 
@@ -7,10 +12,12 @@ import { ChatMessages } from '../ChatMessages'
 import { TabPanel } from './TabPanel'
 
 import { useAppState, useChatContext, UserAdminType, useVideoChatContext } from 'providers'
-import { createChimeMeeting } from 'helpers'
-import { graphQLMutation, graphQLQuery } from 'graphql/helpers'
+import { createChimeMeeting, endChimeMeeting } from 'helpers'
+import { graphQLMutation, graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { getAttendeeInfo } from 'graphql/customQueries'
 import { createVideoChatInvite } from 'graphql/mutations'
+import { onUpdateVideoChatInvite } from 'graphql/subscriptions'
+import { ISubscriptionObject } from 'types'
 
 interface ChatDrawerProps {
   vcOff?: boolean
@@ -24,7 +31,11 @@ export const ChatDrawer = ({ vcOff }) => {
   const { chatState, dispatch } = useChatContext()
   const { videoChatState, dispatch: videoChatDispatch } = useVideoChatContext()
   const [tabValue, setTabValue] = useState<number>(0)
+  const [inviteId, setInviteId] = useState<string>('')
   const meetingManager = useMeetingManager()
+  const notificationDispatch = useNotificationDispatch()
+
+  let videoChatInviteSubscription = useRef<ISubscriptionObject | null>(null)
 
   const closeDrawer = () => {
     dispatch({
@@ -42,17 +53,57 @@ export const ChatDrawer = ({ vcOff }) => {
     return chatUser?.user?.firstName ? `${chatUser?.user?.firstName} ${chatUser?.user?.lastName}` : ''
   }
 
+  const leaveMeeting = () => {
+    const meetingId = meetingManager.meetingId
+    meetingManager.leave()
+    videoChatDispatch({
+      type: 'SET_DETAILS',
+      payload: {
+        visible: false,
+        attendeeId: '',
+        meetingId: ''
+      }
+    })
+    notificationDispatch({
+      type: ActionType.ADD,
+      payload: {
+        severity: Severity.INFO,
+        message: `The video chat invite was declined`,
+        autoClose: true,
+        replaceAll: true
+      }
+    })
+    if (meetingId) {
+      endChimeMeeting(meetingId)
+    }
+  }
+
+  const onInviteUpdated = ({ onUpdateVideoChatInvite }) => {
+    if (onUpdateVideoChatInvite.invitingUserId === user?.id && onUpdateVideoChatInvite.declined === true) {
+      console.log('USER DECLINED')
+      leaveMeeting()
+    } else {
+      videoChatInviteSubscription?.current?.unsubscribe()
+    }
+  }
+
   const joinVideoCall = async () => {
     videoChatDispatch({ type: 'SET_LOADING', payload: true })
     const {
       data: { meeting, attendee }
     } = await createChimeMeeting({ meetingId: chatState?.conversation?.id, userId: user?.id })
     const convoUser = chatState?.conversation?.associated.items.find(a => a.userId !== user?.id)
-    await graphQLMutation(createVideoChatInvite, {
-      conversationId: chatState?.conversation?.id,
-      userId: convoUser?.userId,
-      invitingUserId: user?.id
-    })
+    const invite = await graphQLMutation(
+      createVideoChatInvite,
+      {
+        conversationId: chatState?.conversation?.id,
+        userId: convoUser?.userId,
+        invitingUserId: user?.id,
+        declined: false
+      },
+      'createVideoChatInvite'
+    )
+    setInviteId(invite.id)
 
     const joinData = {
       meetingInfo: meeting.Meeting,
@@ -85,6 +136,19 @@ export const ChatDrawer = ({ vcOff }) => {
       }
     })
   }
+
+  useEffect(() => {
+    if (meetingManager.meetingId && inviteId) {
+      videoChatInviteSubscription.current = graphQLSubscription(
+        onUpdateVideoChatInvite,
+        { id: inviteId },
+        onInviteUpdated
+      )
+    }
+    return () => {
+      videoChatInviteSubscription?.current?.unsubscribe()
+    }
+  }, [meetingManager.meetingId, inviteId])
 
   return (
     <Drawer

@@ -986,7 +986,16 @@ export const createMessage = /* GraphQL */ `
       conversationId
       conversation {
         id
+        name
         members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       deleted
       createdAt
@@ -2072,6 +2081,7 @@ export const createVideoChatInvite = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      declined
       createdAt
       updatedAt
     }
@@ -2116,6 +2126,7 @@ export const updateVideoChatInvite = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      declined
       createdAt
       updatedAt
     }
@@ -2160,6 +2171,7 @@ export const deleteVideoChatInvite = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      declined
       createdAt
       updatedAt
     }

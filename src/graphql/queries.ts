@@ -723,6 +723,7 @@ export const getVideoChatInvite = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      declined
       createdAt
       updatedAt
     }
@@ -759,6 +760,7 @@ export const listVideoChatInvites = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        declined
         createdAt
         updatedAt
       }

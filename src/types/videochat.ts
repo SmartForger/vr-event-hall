@@ -78,4 +78,5 @@ export interface IVideoChatInvite {
   invitingUserId: string
   conversationId: string
   invitingUser: IUser
+  declined: boolean
 }

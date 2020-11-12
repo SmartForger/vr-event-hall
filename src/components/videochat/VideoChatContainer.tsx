@@ -4,12 +4,13 @@ import { useMeetingManager } from 'amazon-chime-sdk-component-library-react'
 import { useAppState, useVideoChatContext } from 'providers'
 import { VideoChatModal } from './Meeting'
 import { ISubscriptionObject, IVideoChatInvite } from 'types'
-import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
+import { graphQLMutation, graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { onCreateVideoChatInvite } from 'graphql/subscriptions'
 import { DialogCard } from 'components/shared'
 import { createChimeMeeting } from 'helpers'
 import { getAttendeeInfo } from 'graphql/customQueries'
 import { makeStyles } from '@material-ui/core'
+import { updateVideoChatInvite } from 'graphql/mutations'
 
 export const VideoChatContainer = () => {
   const classes = useStyles()
@@ -78,7 +79,8 @@ export const VideoChatContainer = () => {
     setDialogInfo(null)
   }
 
-  const ignoreCall = () => {
+  const ignoreCall = async invite => {
+    await graphQLMutation(updateVideoChatInvite, { id: invite.id, declined: true })
     setDialogInfo(null)
   }
 
@@ -90,7 +92,7 @@ export const VideoChatContainer = () => {
           title='New Video Call'
           message={`${dialogInfo.invitingUser.firstName} ${dialogInfo.invitingUser.lastName} would like to start a video call`}
           onConfirm={joinVideoCall}
-          onCancel={ignoreCall}
+          onCancel={() => ignoreCall(dialogInfo)}
           className={classes.dialog}
           confirmText='Join'
           cancelText='Decline'
