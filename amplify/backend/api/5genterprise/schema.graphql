@@ -121,7 +121,7 @@ enum AdminUserType {
 }
 
 type AdminUser
-  @model(mutations: { create: "createAdminLink", update: "updateAdminLink" }, queries: null, subscriptions: null)
+  @model(mutations: { create: "createAdminLink", update: "updateAdminLink", delete: "deleteAdminLink" }, subscriptions: null)
   @key(name: "byAdminUser", fields: ["userId", "sessionId"])
   @key(name: "byAdminSession", fields: ["sessionId", "userId"]) {
   id: ID!
