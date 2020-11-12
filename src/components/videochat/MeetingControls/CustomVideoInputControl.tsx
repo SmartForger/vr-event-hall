@@ -37,12 +37,12 @@ export const CustomVideoInputControl: FC<CustomVideoInputControlProps> = ({ labe
   return (
     <CustomControlBarButton
       icon={
-        isVideoEnabled ? <CameraOffIcon width={16} height={16} fill='white' /> : <CameraOnIcon width={16} height={16} />
+        isVideoEnabled ? <CameraOnIcon width={16} height={16} /> : <CameraOffIcon width={16} height={16} fill='white' />
       }
       onClick={toggleVideo}
       label={label}
       popOver={dropdownOptions}
-      backgroundColor={isVideoEnabled ? theme.palette.error.main : 'white'}
+      backgroundColor={isVideoEnabled ? 'white' : theme.palette.error.main}
     />
   )
 }
