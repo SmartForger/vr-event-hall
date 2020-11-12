@@ -11,6 +11,7 @@ import { DeviceType } from 'amazon-chime-sdk-component-library-react/lib/types'
 
 import { isOptionActive } from './helpers'
 import { CustomControlBarButton } from './Styled'
+import { HeadphoneIcon } from 'assets/HeadphoneIcon'
 
 interface CustomAudioOutputControlProps {
   label?: string
@@ -24,12 +25,12 @@ export const CustomAudioOutputControl: FC<CustomAudioOutputControlProps> = ({ la
   const dropdownOptions: PopOverItemProps[] = devices.map((device: DeviceType) => ({
     children: <span>{device.label}</span>,
     checked: isOptionActive(selectedDevice, device.deviceId),
-    onClick: (): Promise<void> => meetingManager.selectAudioOutputDevice(device.deviceId)
+    onClick: () => meetingManager.selectAudioOutputDevice(device.deviceId)
   }))
 
   return (
     <CustomControlBarButton
-      icon={<Sound disabled={!isAudioOn} />}
+      icon={<HeadphoneIcon />}
       onClick={toggleAudio}
       label={label}
       popOver={dropdownOptions.length ? dropdownOptions : null}

@@ -60,25 +60,33 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
 
     meetingManager.getAttendee = async (chimeAttendeeId: string, externalUserId?: string) => {
       if (externalUserId) {
-        const user = await graphQLQuery(getAttendeeInfo, 'getUser', { id: externalUserId })
+        const attendee = await graphQLQuery(getAttendeeInfo, 'getUser', { id: externalUserId })
 
         return {
-          name: `${user?.firstName} ${user?.lastName}`,
-          email: user?.email || '',
-          avatar: user?.avatar || '',
-          title: user?.title || '',
-          company: user?.company || ''
+          name: `${attendee?.firstName} ${attendee?.lastName}`,
+          email: attendee?.email || '',
+          avatar: attendee?.avatar || '',
+          title: attendee?.title || '',
+          company: attendee?.company || ''
         }
       }
       return { name: '', avatar: '', email: '', title: '', company: '' }
     }
 
     await meetingManager.join(joinData)
+    await meetingManager.audioVideo?.chooseVideoInputDevice(null)
 
     await graphQLMutation(updateSession, {
       id: sessionDetails.id,
       active: true
     })
+
+    const isAttendee = !sessionDetails.admins.items.some(admin => admin.userId === user?.id)
+    if (isAttendee) {
+      await meetingManager.audioVideo?.realtimeSetCanUnmuteLocalAudio(false)
+      await meetingManager.audioVideo?.realtimeMuteLocalAudio()
+      await meetingManager.start()
+    }
 
     dispatch({
       type: 'SET_DETAILS',
@@ -87,7 +95,8 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
         visible: true,
         isClassroom: true,
         attendeeId: attendee.Attendee.AttendeeId,
-        meetingId: meeting.Meeting.MeetingId
+        meetingId: meeting.Meeting.MeetingId,
+        isAttendee
       }
     })
   }

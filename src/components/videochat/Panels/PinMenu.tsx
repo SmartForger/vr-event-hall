@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import { MoreHoriz } from '@material-ui/icons'
 
-export const PinMenu = ({ user, handlePin, handleUnPin, isPinned }) => {
+export const PinMenu = ({ user, handlePin, handleUnPin, isPinned, totalPins }) => {
   const [anchorEl, setAnchorEl] = useState(null)
 
   const handleClick = event => {
@@ -34,7 +34,13 @@ export const PinMenu = ({ user, handlePin, handleUnPin, isPinned }) => {
         open={Boolean(anchorEl)}
         onClose={close}
       >
-        {!isPinned ? <MenuItem onClick={pin}>Pin Video</MenuItem> : <MenuItem onClick={unpin}>Unpin Video</MenuItem>}
+        {!isPinned ? (
+          <MenuItem onClick={pin} disabled={totalPins === 4}>
+            Pin Video
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={unpin}>Unpin Video</MenuItem>
+        )}
         <MenuItem onClick={close}>Cancel</MenuItem>
       </Menu>
     </>

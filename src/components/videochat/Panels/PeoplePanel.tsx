@@ -82,7 +82,7 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
   }
 
   const handlePin = async (userId: string) => {
-    if (userId) {
+    if (userId && (videoChatState?.session?.presenterPins?.length || 0) < 4) {
       await graphQLMutation(updateSession, {
         id: videoChatState?.session?.id,
         presenterPins: uniq([...(videoChatState?.session?.presenterPins || []), userId])
@@ -201,6 +201,7 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
                         user={rosterUser}
                         handlePin={handlePin}
                         handleUnPin={handleUnPin}
+                        totalPins={videoChatState?.session?.presenterPins?.length || 0}
                         isPinned={videoChatState?.session?.presenterPins.some(
                           pin => pin === rosterUser?.externalUserId
                         )}
