@@ -15,7 +15,7 @@ import { updateUser } from 'graphql/mutations'
 import { useAppState } from 'providers'
 import { AnchorType, ISubscriptionObject, IUser, ToggleDrawer } from 'types'
 
-import profileBg from 'assets/userProfileBg.png'
+import profileBg from 'assets/userProfileBg.jpg'
 
 interface IProfileErrors {
   firstName: string
@@ -162,8 +162,14 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
         </Button>
       </div>
 
-      <PillButton className={classes.logoutButton} loading={loading} type='submit' onClick={() => logout()} solid>
-        Logout
+      <PillButton
+        className={classes.logoutButton}
+        loading={loading}
+        type='submit'
+        backgroundColor='transparent'
+        onClick={() => logout()}
+      >
+        Log out
       </PillButton>
     </>
   )
@@ -265,24 +271,30 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     marginLeft: 'calc(50% - 40px)',
-    marginTop: '-40px',
-    width: '80px',
-    height: '80px'
+    marginTop: '-50px',
+    width: '76px',
+    height: '76px',
+    fontSize: '38px',
+    position: 'absolute',
+    backgroundColor: '#0088CE'
   },
   name: {
     margin: '4px',
-    fontSize: '26px',
+    fontSize: '24px',
+    fontFamily: '"Verizon-Bold"',
     textAlign: 'center'
   },
   title: {
     margin: '4px',
-    fontSize: '16px',
+    fontSize: '14px',
     textAlign: 'center'
   },
   logoutButton: {
     position: 'absolute',
-    bottom: '0px',
-    marginBottom: '10px'
+    bottom: '0',
+    left: '0',
+    right: '0',
+    margin: '0 auto'
   },
   closeDrawer: {
     position: 'absolute',
@@ -308,7 +320,7 @@ const useStyles = makeStyles(theme => ({
   profileMain: {
     color: 'black',
     height: 'calc(100% - 150px - 60px)',
-    padding: '16px'
+    padding: '30px 16px'
   },
   input: {
     color: '#000',

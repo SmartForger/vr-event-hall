@@ -157,7 +157,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
         >
           <div className={classes.displayMenu}>
             <div className={classes.profileCloseContainer}>
-              <IconButton onClick={() => setShowProfileDrawer(false)} disableRipple>
+              <IconButton color='inherit' onClick={() => setShowProfileDrawer(false)} disableRipple>
                 <Close />
               </IconButton>
             </div>
@@ -306,12 +306,13 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     profileCloseContainer: {
+      color: 'rgba(255, 255, 255, 0.6)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'flex-end',
       zIndex: 100,
       '& .MuiIconButton-root': {
-        padding: '4px 12px',
+        padding: '4px',
         '&:hover': {
           backgroundColor: 'transparent'
         }
