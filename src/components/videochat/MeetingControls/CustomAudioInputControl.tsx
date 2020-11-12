@@ -55,10 +55,10 @@ export const CustomAudioInputControl: FC<AudioInputControlProps> = ({
     <CustomControlBarButton
       icon={<MuteIcon muted={muted} width={16} height={16} />}
       onClick={toggleMute}
-      label={muted ? unmuteLabel : muteLabel}
+      label={muted ? muteLabel : unmuteLabel}
       popOver={dropdownOptions}
       removeSideMargin='right'
-      backgroundColor={muted ? theme.palette.error.main : 'white'}
+      backgroundColor={muted ? 'white' : theme.palette.error.main}
     />
   )
 }

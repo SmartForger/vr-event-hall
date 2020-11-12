@@ -19,6 +19,7 @@ interface IVideoChatContextObject {
   presenterPins: string[]
   moderators: string[]
   pinnedMessage: IMessage | null
+  isAttendee: boolean
 }
 
 const initialState = {
@@ -37,7 +38,8 @@ const initialState = {
   globalMute: false,
   presenterPins: [],
   moderators: [],
-  pinnedMessage: null
+  pinnedMessage: null,
+  isAttendee: true
 }
 
 export const VideoChatContext = createContext<{

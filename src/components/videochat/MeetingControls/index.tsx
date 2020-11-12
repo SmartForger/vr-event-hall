@@ -15,6 +15,7 @@ import { updateSession } from 'graphql/mutations'
 import { ToggleDrawer } from 'types'
 
 import { ChatIcon, SpeakerMuteIcon } from 'assets'
+import { CustomAudioOutputControl } from './CustomAudioOutputControl'
 
 interface MeetingControlProps {
   setVisible: (val: boolean) => void
@@ -47,7 +48,10 @@ const MeetingControls: FC<MeetingControlProps> = ({
   return (
     <StyledControls className='controls' active={!!isUserActive} totalControls={isPresenter ? 4 : 5}>
       <ControlBar className='controls-menu' layout='undocked-horizontal' showLabels={false}>
-        <CustomAudioInputControl isAdmin={Boolean(isPresenter || isVideoPresenter)} />
+        {isClassroom && (isPresenter || isVideoPresenter) ? (
+          <CustomAudioInputControl isAdmin={Boolean(isPresenter || isVideoPresenter)} />
+        ) : null}
+        {isClassroom && !isPresenter && !isVideoPresenter ? <CustomAudioOutputControl /> : null}
         <CustomControlBarButton
           icon={<ChatIcon width={16} height={16} />}
           onClick={() => toggleDrawer && toggleDrawer(null, 'rightPersistent', true)}
@@ -59,14 +63,14 @@ const MeetingControls: FC<MeetingControlProps> = ({
         <EndMeetingControl setVisible={setVisible} isPresenter={isPresenter} />
         <section className='controls-menu-right'>
           {(isClassroom && isVideoPresenter) || !isClassroom ? <CustomContentShareControl /> : null}
-          {isClassroom && isPresenter ? (
+          {/* {isClassroom && isPresenter ? (
             <CustomControlBarButton
               icon={<SpeakerMuteIcon width={16} height={16} fill={videoChatState.globalMute ? 'white' : 'black'} />}
               onClick={toggleMuteAll}
               backgroundColor={videoChatState.globalMute ? theme.palette.error.main : 'white'}
               label='Mute All'
             />
-          ) : null}
+          ) : null} */}
         </section>
       </ControlBar>
     </StyledControls>

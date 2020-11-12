@@ -43,9 +43,8 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
   }, [])
 
   const joinClassRoom = async () => {
-    console.log(session)
     dispatch({ type: 'SET_LOADING', payload: true })
-    if (videoChatState.presenterPins.includes(user?.id as string)) {
+    if (videoChatState?.session?.presenterPins.includes(user?.id as string)) {
       dispatch({ type: 'SET_DETAILS', payload: { adminType: UserAdminType.PRESENTER } })
     } else if (videoChatState.moderators.includes(user?.id as string)) {
       dispatch({ type: 'SET_DETAILS', payload: { adminType: UserAdminType.MODERATOR } })
@@ -61,25 +60,33 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
 
     meetingManager.getAttendee = async (chimeAttendeeId: string, externalUserId?: string) => {
       if (externalUserId) {
-        const user = await graphQLQuery(getAttendeeInfo, 'getUser', { id: externalUserId })
+        const attendee = await graphQLQuery(getAttendeeInfo, 'getUser', { id: externalUserId })
 
         return {
-          name: `${user?.firstName} ${user?.lastName}`,
-          email: user?.email || '',
-          avatar: user?.avatar || '',
-          title: user?.title || '',
-          company: user?.company || ''
+          name: `${attendee?.firstName} ${attendee?.lastName}`,
+          email: attendee?.email || '',
+          avatar: attendee?.avatar || '',
+          title: attendee?.title || '',
+          company: attendee?.company || ''
         }
       }
       return { name: '', avatar: '', email: '', title: '', company: '' }
     }
 
     await meetingManager.join(joinData)
+    await meetingManager.audioVideo?.chooseVideoInputDevice(null)
 
     await graphQLMutation(updateSession, {
       id: sessionDetails.id,
       active: true
     })
+
+    const isAttendee = !sessionDetails.admins.items.some(admin => admin.userId === user?.id)
+    if (isAttendee) {
+      await meetingManager.audioVideo?.realtimeSetCanUnmuteLocalAudio(false)
+      await meetingManager.audioVideo?.realtimeMuteLocalAudio()
+      await meetingManager.start()
+    }
 
     dispatch({
       type: 'SET_DETAILS',
@@ -88,7 +95,8 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
         visible: true,
         isClassroom: true,
         attendeeId: attendee.Attendee.AttendeeId,
-        meetingId: meeting.Meeting.MeetingId
+        meetingId: meeting.Meeting.MeetingId,
+        isAttendee
       }
     })
   }
