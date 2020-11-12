@@ -1,21 +1,29 @@
 import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
-import { I18n, Storage, Auth } from 'aws-amplify'
-import { VariableSizeProps } from 'react-window'
 import { useHistory } from 'react-router-dom'
-import { Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
-import CreateIcon from '@material-ui/icons/Create'
-import arrowLeftIcon from 'assets/arrowLeftIcon.svg'
-import arrowRightIcon from 'assets/arrowRightIcon.svg'
 
+// Plugins
+import classNames from 'classnames'
+import { I18n, Auth } from 'aws-amplify'
+import { VariableSizeProps } from 'react-window'
+
+// Components
 import { PillButton } from 'components'
 
-import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
+// Helpers
+import { useAppState } from 'providers'
 import { getUser } from 'graphql/queries'
 import { updateUser } from 'graphql/mutations'
-import { useAppState } from 'providers'
-import { AnchorType, ISubscriptionObject, IUser, ToggleDrawer } from 'types'
+import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
 
+// Styles
+import { Grid, Avatar, Typography, makeStyles, TextField, Button } from '@material-ui/core'
+
+// Types
+import { IUser } from 'types'
+
+// Images
 import profileBg from 'assets/userProfileBg.jpg'
+import iconEditProfile from 'assets/icon-edit-profile.svg'
 
 interface IProfileErrors {
   firstName: string
@@ -35,15 +43,14 @@ interface IUserProfileProps {
   user?: IUser
 }
 
-export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
+export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const classes = useStyles()
   const history = useHistory()
+
   const [loading, setLoading] = useState<boolean>(false)
   const [editModeState, setEditModeState] = useState<boolean>(false)
   const [profileInfo, setProfileInfo] = useState<IUser | undefined>(user)
   const [profileErrors, setProfileErrors] = useState<IProfileErrors>(initialProfileErrors)
-  const { appState } = useAppState()
-  const authedUser = appState.user
 
   let [users, setUsers] = useState<IUser[]>([])
   const listRef = useRef<VariableSizeProps>()
@@ -147,35 +154,60 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
 
   const profileDisplay = (
     <>
-      <div className={classes.name}>
-        {profileInfo?.firstName} {profileInfo?.lastName}
-      </div>
+      <img src={profileBg} alt='profile background' />
+      <Avatar
+        alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
+        src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+        className={classes.avatar}
+      />
+      <section className={classes.profileMain}>
+        <div className={classes.name}>
+          {profileInfo?.firstName} {profileInfo?.lastName}
+        </div>
 
-      <div className={classes.title}>
-        <span>{profileInfo?.company}</span>
-        <span className={classes.dotSeperator} />
-        <span>{profileInfo?.title}</span>
-      </div>
-      <div className={classes.centeredButtonContainer}>
-        <Button startIcon={<CreateIcon />} onClick={() => setEditModeState(true)}>
-          Edit Profile
+        <div className={classes.title}>
+          <span>{profileInfo?.company}</span>
+          <span className={classes.dotSeperator} />
+          <span>{profileInfo?.title}</span>
+        </div>
+        <Button
+          startIcon={<img src={iconEditProfile} alt='Edit profile' width='18px' />}
+          onClick={() => setEditModeState(true)}
+        >
+          <Typography component='span' variant='subtitle2'>
+            Edit Profile
+          </Typography>
         </Button>
-      </div>
 
-      <PillButton
-        className={classes.logoutButton}
-        loading={loading}
-        type='submit'
-        backgroundColor='transparent'
-        onClick={() => logout()}
-      >
-        Log out
-      </PillButton>
+        <PillButton
+          className={classes.logoutButton}
+          loading={loading}
+          type='submit'
+          backgroundColor='transparent'
+          onClick={() => logout()}
+        >
+          Log out
+        </PillButton>
+      </section>
     </>
   )
 
   const editModeDispaly = (
-    <>
+    <section className={classes.profileMain}>
+      <Grid container alignItems='center' spacing={4}>
+        <Grid item xs={4}>
+          <Avatar
+            alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
+            src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+            className={classNames(classes.avatar, classes.avatarEdit)}
+          />
+        </Grid>
+        {/* TODO: Implement upload image feature */}
+        <Grid item xs={8} style={{ display: 'none' }}>
+          <PillButton onClick={() => console.debug('Upload avatar')}>Upload image</PillButton>
+        </Grid>
+      </Grid>
+
       <TextField
         variant='outlined'
         label={I18n.get('firstName')}
@@ -242,20 +274,13 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
       >
         Save
       </PillButton>
-    </>
+    </section>
   )
+
   return (
     <div className={classes.root}>
-      <img src={profileBg} alt='profile background' />
-      <Avatar
-        alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
-        src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
-        className={classes.avatar}
-      />
-      <section className={classes.profileMain}>
-        {!editModeState && profileDisplay}
-        {editModeState && editModeDispaly}
-      </section>
+      {!editModeState && profileDisplay}
+      {editModeState && editModeDispaly}
     </div>
   )
 }
@@ -278,6 +303,12 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     backgroundColor: '#0088CE'
   },
+  avatarEdit: {
+    width: '100px',
+    height: '100px',
+    margin: '0',
+    position: 'relative'
+  },
   name: {
     margin: '4px',
     fontSize: '24px',
@@ -285,11 +316,12 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center'
   },
   title: {
-    margin: '4px',
+    margin: '6px 0 36px',
     fontSize: '14px',
     textAlign: 'center'
   },
   logoutButton: {
+    minWidth: '165px',
     position: 'absolute',
     bottom: '0',
     left: '0',
@@ -300,12 +332,6 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     bottom: '30px',
     marginBottom: '50px'
-  },
-  centeredButtonContainer: {
-    marginTop: '40px',
-    textAlign: 'center',
-    justifyContent: 'center',
-    width: '100%'
   },
   dotSeperator: {
     position: 'relative',
@@ -336,10 +362,10 @@ const useStyles = makeStyles(theme => ({
     }
   },
   inlineButton: {
-    margin: '0 .5rem',
-    fontFamily: 'Verizon-Regular',
     height: '26px',
-    padding: '16px 24px'
+    fontSize: '12px',
+    padding: '6px 14px',
+    margin: '20px 10px 0 0'
   },
   footer: {
     bottom: 0,
