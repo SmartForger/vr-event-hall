@@ -296,7 +296,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
         </Typography>
       </Grid>
 
-      <Grid item container spacing={2}>
+      <Grid item container spacing={4}>
         <Grid item xs={12}>
           {acceptedFiles[0] ? (
             <Typography variant='body2'>
@@ -502,7 +502,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           {I18n.get('aboutYourCompany')}
         </Typography>
       </Grid>
-      <Grid item container spacing={2}>
+      <Grid item container spacing={4}>
         <Grid item xs={12} sm={6}>
           <TextField
             variant='outlined'

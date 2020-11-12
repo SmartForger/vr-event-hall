@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
       // Verizon branding guidelines dictate the left/right padding has to be the same as the height of the button
       height: '42px',
       padding: '0 42px',
+      margin: '42px 0',
       textTransform: 'none',
       '&:disabled': {
         borderRadius: '24px',
