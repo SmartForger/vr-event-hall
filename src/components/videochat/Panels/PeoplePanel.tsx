@@ -176,75 +176,60 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
         </div>
       ) : null} */}
       <section className={!isAdmin ? classes.listContainer : ''}>
-        <div className={classes.user}>
-          <Avatar
-            alt={`Amber George`}
-            src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
-            className={classes.avatar}
-          />
-          <div className={classes.userInfo}>
-            <div className={classes.userActivityCircle} />
-            <Typography variant='body1' component='p' align='center'>
-              Amber George
-              <Typography variant='caption' className={classes.userType}>
-                (Presenter)
-              </Typography>
-            </Typography>
-            <div className={classes.moreButton}>
-              <IconButton onClick={() => console.log('MORE')}>
-                <MoreHoriz />
-              </IconButton>
-            </div>
-          </div>
-        </div>
-        <div className={classes.user}>
-          <Avatar
-            alt={`Cheyenne Levin`}
-            src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
-            className={classes.avatar}
-          />
-          <div className={classes.userInfo}>
-            <div className={classes.userActivityCircle} />
-            <Typography variant='body1' component='p' align='center'>
-              Cheyenne Levin
-              <Typography variant='caption' className={classes.userType}>
-                (Moderator)
-              </Typography>
-            </Typography>
-            <div className={classes.moreButton}>
-              <IconButton onClick={() => console.log('MORE')}>
-                <MoreHoriz />
-              </IconButton>
-            </div>
-          </div>
-        </div>
-        {rosterArray.map(rosterUser => {
-          return (
-            <div className={classes.user}>
-              <Avatar
-                alt={rosterUser.name}
-                src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
-                className={classes.avatar}
-              />
-              <div className={classes.userInfo}>
-                <div className={classes.userActivityCircle} />
-                <Typography variant='body1' component='p' align='center'>
-                  {rosterUser.name}
-                </Typography>
-                {isAdmin ? (
-                  <div className={classes.moreButton}>
-                    <PinMenu
-                      user={rosterUser}
-                      handlePin={handlePin}
-                      handleUnPin={handleUnPin}
-                      isPinned={videoChatState?.session?.presenterPins.some(pin => pin === rosterUser?.externalUserId)}
-                    />
-                  </div>
-                ) : null}
+        {rosterArray
+          .filter(r => videoChatState.session?.admins.items.some(a => a.userId === r.externalUserId))
+          .map(rosterUser => {
+            const adminUser = videoChatState.session?.admins.items.find(a => a.userId === rosterUser.externalUserId)
+            return (
+              <div className={classes.user}>
+                <Avatar
+                  alt={rosterUser.name}
+                  src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
+                  className={classes.avatar}
+                />
+                <div className={classes.userInfo}>
+                  <div className={classes.userActivityCircle} />
+                  <Typography variant='body1' component='p' align='center'>
+                    {rosterUser.name}
+                    <Typography variant='caption' className={classes.userType}>
+                      ({adminUser?.userType === 'sme' ? 'Presenter' : 'Moderator'})
+                    </Typography>
+                  </Typography>
+                  {isAdmin ? (
+                    <div className={classes.moreButton}>
+                      <PinMenu
+                        user={rosterUser}
+                        handlePin={handlePin}
+                        handleUnPin={handleUnPin}
+                        isPinned={videoChatState?.session?.presenterPins.some(
+                          pin => pin === rosterUser?.externalUserId
+                        )}
+                      />
+                    </div>
+                  ) : null}
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        {rosterArray
+          .filter(r => !videoChatState.session?.admins.items.some(a => a.userId === r.externalUserId))
+          .map(rosterUser => {
+            return (
+              <div className={classes.user}>
+                <Avatar
+                  alt={rosterUser.name}
+                  src={`https://dx2ge6d9z64m9.cloudfront.net/public/1234`}
+                  className={classes.avatar}
+                />
+                <div className={classes.userInfo}>
+                  <div className={classes.userActivityCircle} />
+                  <Typography variant='body1' component='p' align='center'>
+                    {rosterUser.name}
+                  </Typography>
+                </div>
+              </div>
+            )
+          })}
       </section>
     </>
   )
