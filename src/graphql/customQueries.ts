@@ -193,6 +193,7 @@ export const userByEmailBase = /* GraphQL */ `
         id
         firstName
         lastName
+        phoneNumber
         email
         avatar
         title
