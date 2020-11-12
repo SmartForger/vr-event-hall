@@ -60,8 +60,8 @@ export const StyledInputGroup = styled.div`
 export const preview = `
   & > video {
     border: 1px solid black;
-    width: 500px;
-    height: 345px;
+    width: 550px;
+    height: 375px;
     margin-top: 15px;
   }
 `
