@@ -29,7 +29,12 @@ export const SpeakerDevices = () => {
         selected={selectedDevice || ''}
         handleChange={handleChange}
       />
-      <Button startIcon={<SpeakerUnmuteIcon width={14} height={14} />} variant='outlined' className={classes.button}>
+      <Button
+        startIcon={<SpeakerUnmuteIcon width={14} height={14} />}
+        variant='outlined'
+        className={classes.button}
+        onClick={handleTestSpeaker}
+      >
         Test
       </Button>
     </Box>
@@ -38,7 +43,7 @@ export const SpeakerDevices = () => {
 
 const useStyles = makeStyles(() => ({
   button: {
-    marginTop: '1rem',
+    margin: '26px 0',
     paddingTop: 0,
     paddingBottom: 0
   }

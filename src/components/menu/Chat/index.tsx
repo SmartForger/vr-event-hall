@@ -21,7 +21,6 @@ import { IconButton } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
 
 interface ChatProps {
-  user?: IUser
   users?: IUser[]
   drawerOpen: boolean
   conversationId: string
@@ -30,9 +29,12 @@ interface ChatProps {
   vcOff?: boolean
 }
 
-export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, showUserList, vcOff, user }) => {
+export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, showUserList, vcOff }) => {
   const { chatState, dispatch } = useChatContext()
-  const { setUser } = useAppState()
+  const {
+    appState: { user },
+    setUser
+  } = useAppState()
   const totalUnread = Object.keys(chatState?.unreadMessagesByConversation)?.reduce?.(
     (totalUnread: number, convoKey) => {
       totalUnread += chatState?.unreadMessagesByConversation?.[convoKey] || 0
@@ -44,15 +46,17 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
 
   const fetchNewConvoAndPopulateUser = async (convId: string) => {
     let newRelevantConvo = await graphQLQuery(getConversationBase, 'getConversation', { id: convId })
+    if (newRelevantConvo.members.includes(user?.id)) {
+      let updatedUserConvos = user?.conversations?.items || []
+      updatedUserConvos.push({
+        conversationId: convId,
+        user: user!,
+        userId: user?.id || '',
+        conversation: newRelevantConvo
+      })
+      setUser({ ...user, conversations: { items: updatedUserConvos } })
+    }
     // addConversation(newRelevantConvo)
-    let updatedUserConvos = user?.conversations?.items || []
-    updatedUserConvos.push({
-      conversationId: convId,
-      user: user!,
-      userId: user?.id || '',
-      conversation: newRelevantConvo
-    })
-    setUser({ ...user, conversations: { items: updatedUserConvos } })
   }
 
   useEffect(() => {
@@ -62,18 +66,36 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
     }
   }, [])
 
+  const checkUserConversations = (conversationId: string) => {
+    return user?.conversations?.items.some(item => item.conversationId === conversationId) || false
+  }
+
   const updateUnreadConversationMessages = ({ onCreateGlobalMessage }) => {
+    if (onCreateGlobalMessage.authorId === user?.id) {
+      return
+    }
     const newMessageConversationId = onCreateGlobalMessage.conversationId
+    console.log('UNREAD')
+    console.log(newMessageConversationId !== chatState.conversationId)
+    console.log(checkUserConversations(newMessageConversationId))
+    console.log(onCreateGlobalMessage.conversation.members.includes(user?.id))
     // increment the unread messages unless you're on the chat where the new message came in
-    if (newMessageConversationId !== chatState.conversationId) {
+    if (
+      newMessageConversationId !== chatState.conversationId &&
+      checkUserConversations(newMessageConversationId) &&
+      onCreateGlobalMessage.conversation.members.includes(user?.id)
+    ) {
       dispatch({
         type: 'INCREMENT_UNREAD_CONVO_MESSAGE',
         payload: { conversationId: newMessageConversationId }
       })
-      // if this is a new conversation for this user, refetch the conversations to populate the list
-      if (!user?.conversations?.items?.some(convo => convo.conversationId === newMessageConversationId)) {
-        fetchNewConvoAndPopulateUser(newMessageConversationId)
-      }
+    }
+    // if this is a new conversation for this user, refetch the conversations to populate the list
+    if (
+      !checkUserConversations(newMessageConversationId) &&
+      onCreateGlobalMessage.conversation.members.includes(user?.id)
+    ) {
+      fetchNewConvoAndPopulateUser(newMessageConversationId)
     }
   }
 

@@ -69,7 +69,7 @@ export const ConfirmSignUp: FC<ConfirmSignUpProps> = ({ userEmail, userPd, setAu
   }
 
   return (
-    <Grid container direction='column' justify='center' spacing={2}>
+    <Grid container direction='column' justify='center' spacing={4}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
           {I18n.get('confirmEmail')}
@@ -87,7 +87,7 @@ export const ConfirmSignUp: FC<ConfirmSignUpProps> = ({ userEmail, userPd, setAu
           </Link>
         </Typography>
       </Grid>
-      <Grid item container spacing={2}>
+      <Grid item container spacing={4}>
         <Grid item xs={12} sm={6} md={12} lg={6}>
           <TextField
             fullWidth
@@ -166,9 +166,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 0,
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
-    },
-    '& label': {
-      color: theme.palette.grey[500]
     },
     '& fieldset': {
       borderRadius: 0,

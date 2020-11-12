@@ -54,7 +54,7 @@ export const ResendCode: FC<ResendCodeProps> = ({ userEmail, setAuthState }) => 
   }
 
   return (
-    <Grid container direction='column' justify='center' spacing={2}>
+    <Grid container direction='column' justify='center' spacing={4}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
           {I18n.get('resendCode')}
@@ -69,7 +69,7 @@ export const ResendCode: FC<ResendCodeProps> = ({ userEmail, setAuthState }) => 
           {I18n.get('signIn')}
         </Link>
       </Grid>
-      <Grid item container spacing={2}>
+      <Grid item container spacing={4}>
         <Grid item xs={12}>
           <TextField
             fullWidth
@@ -87,7 +87,7 @@ export const ResendCode: FC<ResendCodeProps> = ({ userEmail, setAuthState }) => 
           />
         </Grid>
       </Grid>
-      <Grid item container spacing={1} justify='space-between'>
+      <Grid item container spacing={2} justify='space-between'>
         <Grid item>
           <PillButton
             type='submit'
@@ -145,9 +145,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 0,
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
-    },
-    '& label': {
-      color: theme.palette.grey[500]
     },
     '& fieldset': {
       borderRadius: 0,

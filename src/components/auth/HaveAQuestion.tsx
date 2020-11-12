@@ -73,7 +73,7 @@ export const HaveAQuestion: FC<HaveAQuestionProps> = ({ userEmail, setAuthState 
   }
 
   return (
-    <Grid container direction='column' justify='center' spacing={2}>
+    <Grid container direction='column' justify='center' spacing={4}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
           Have a question?
@@ -84,7 +84,7 @@ export const HaveAQuestion: FC<HaveAQuestionProps> = ({ userEmail, setAuthState 
           If you have an industry-specific 5G question you would like addressed during the breakout, let us know here!
         </Typography>
       </Grid>
-      <Grid item container spacing={2}>
+      <Grid item container spacing={4}>
         <TextField
           id='have-a-question'
           fullWidth
@@ -93,7 +93,7 @@ export const HaveAQuestion: FC<HaveAQuestionProps> = ({ userEmail, setAuthState 
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setQuestion({ ...question, userAnswer: e.target.value })
           }
-          variant='outlined'
+          variant='filled'
           inputProps={{
             placeholder: 'Enter question',
             style: { border: 'none' }
@@ -146,9 +146,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 0,
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
-    },
-    '& label': {
-      color: theme.palette.grey[500]
     },
     '& fieldset': {
       borderRadius: 0,

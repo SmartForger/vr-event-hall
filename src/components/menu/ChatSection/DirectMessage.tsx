@@ -29,7 +29,7 @@ export const DirectMessage: FC<IChatDirectMessage> = ({ data, openConversation, 
     appState: { user }
   } = useAppState()
   const { conversationId, conversation } = data
-  const messageUser = conversation.associated.items.filter(a => a.userId !== user?.id)[0]
+  const messageUser = conversation?.associated.items.filter(a => a.userId !== user?.id)[0]
 
   return (
     <StyledDirectMessage onClick={() => openConversation(conversationId)}>

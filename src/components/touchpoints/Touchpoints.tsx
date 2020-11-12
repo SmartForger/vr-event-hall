@@ -36,9 +36,6 @@ export const Touchpoints: FC<ITouchpointsProps> = ({ demo, activeTouchpoint, set
 
   const actionClicked = action => {
     switch (action) {
-      case 'expert':
-        window.postMessage(JSON.stringify({ command: 'chat', param: demo.conversationId }), '*')
-        break
       case 'explore':
         setScene(GameFlowSteps.BackToExplore)
         break

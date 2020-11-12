@@ -19,7 +19,7 @@ type User @model(subscriptions: null) @key(name: "ByEmail", fields: ["email"], q
   conversations: [ConvoLink] @connection(keyName: "byConvoUser", fields: ["id"])
   messages: [Message] @connection(keyName: "byAuthor", fields: ["id"])
   sessions: [UserSessionReservation] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
-  onVideoCall: String,
+  onVideoCall: String
   online: Boolean
 }
 
@@ -42,6 +42,8 @@ type Session
   active: String!
   conversationId: ID!
   conversation: Conversation @connection(fields: ["conversationId"])
+  icId: ID!
+  ic: Conversation @connection(fields: ["icId"])
   admins: [AdminUser] @connection(keyName: "byAdminSession", fields: ["id"])
   users: [UserSessionReservation] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
   pinnedMessageId: ID!
@@ -81,6 +83,7 @@ type Message
   authorId: ID!
   author: User! @connection(fields: ["authorId"])
   conversationId: ID!
+  conversation: Conversation @connection(fields: ["conversationId"])
   # will still be true or false but Booleans are not indexable in dynamo
   deleted: String!
   createdAt: AWSDateTime!

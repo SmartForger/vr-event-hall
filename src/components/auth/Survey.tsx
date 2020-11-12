@@ -92,7 +92,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
   }
 
   return (
-    <Grid container direction='column' justify='center' spacing={2}>
+    <Grid container direction='column' justify='center' spacing={4}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
           {I18n.get('surveyTitle')}
@@ -103,7 +103,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
           {I18n.get('surveyInstructions')}
         </Typography>
       </Grid>
-      <Grid item container spacing={2}>
+      <Grid item container spacing={4}>
         {Array.from(surveyQuestions).map(([qName, question], index: number) => (
           <>
             {qName !== 'keynoteSpeaker' && qName !== 'industrySpecificQuestion' ? (
@@ -117,7 +117,7 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
                   multiline
                   rows={qName === 'learningObjectives' ? 4 : 1}
                   id={`survey-answer-${qName}`}
-                  variant='outlined'
+                  variant='filled'
                   inputProps={{ style: { border: 'none' } }}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => answerSurveyQuestion(question, e.target.value)}
                 />
@@ -172,9 +172,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 0,
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
-    },
-    '& label': {
-      color: theme.palette.grey[500]
     },
     '& fieldset': {
       borderRadius: 0,
