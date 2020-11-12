@@ -30,9 +30,9 @@ export const MeetingJoinDetails: FC<MeetingJoinDetailsProps> = ({ meetingId, loc
 
   return (
     <>
-      <Flex container alignItems='flex-start' flexDirection='column' style={{ marginTop: '24px' }}>
+      <Flex container alignItems='flex-start' flexDirection='column'>
         <Button variant='contained' onClick={handleJoinMeeting} style={{ textTransform: 'none' }}>
-          {isLoading ? 'Loading...' : 'Join meeting'}
+          {isLoading ? 'Loading...' : 'Join Session'}
         </Button>
       </Flex>
       {error && (
