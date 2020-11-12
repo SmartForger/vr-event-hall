@@ -35,6 +35,7 @@ import { ISubscriptionObject, ISession } from 'types'
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
 import { ConditionalWrapper, DialogCard } from 'components/shared'
 import { NullEngine } from 'babylonjs'
+import { findSessionById, Sessions } from '../../../helpers'
 
 interface ClassRoomVideoChatModalProps {}
 
@@ -332,7 +333,9 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                       </TabPanel>
                     ) : (
                       <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
-                        <DetailsPanel />
+                        {currentSession && (
+                          <DetailsPanel body={findSessionById(currentSession?.id || '')?.side.chatBody || ''} />
+                        )}
                       </TabPanel>
                     )}
                   </div>

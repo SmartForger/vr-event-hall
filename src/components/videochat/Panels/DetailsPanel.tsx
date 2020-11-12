@@ -1,7 +1,7 @@
 import React from 'react'
 import { Avatar, makeStyles, Typography } from '@material-ui/core'
 
-export const DetailsPanel = () => {
+export const DetailsPanel = (props: { body: string }) => {
   const classes = useStyles()
 
   return (
@@ -11,9 +11,7 @@ export const DetailsPanel = () => {
           Info
         </Typography>
         <Typography variant='body2' gutterBottom>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate totam aspernatur reiciendis! Similique
-          deleniti, amet, quidem asperiores tenetur explicabo minima maxime beatae, laborum ipsum quae inventore quis
-          magnam cupiditate recusandae!
+          {props.body}
         </Typography>
       </div>
       <div>

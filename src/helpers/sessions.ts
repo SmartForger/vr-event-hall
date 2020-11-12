@@ -13,6 +13,7 @@ export interface ISession {
     schedule: string
     body: string
     speakers?: string[]
+    chatBody: string
   }
 }
 
@@ -26,7 +27,9 @@ export const Sessions: { [key: string]: ISession } = {
       schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.'
+        '5G Edge will enable AI, near real time connectivity and other new technologies and capabilities for healthcare. This session will cover the implications of 5G edge on healthcare, insurance and life sciences, what organizations need to do to prepare and how they can partner with Verizon on 5G innovation.',
+      chatBody:
+        'This session will cover the implications of 5G edge on healthcare, what organizations need to do to prepare and how they can partner with Verizon on 5G innovation.'
     }
   },
   retailTravelDistribution: {
@@ -38,7 +41,9 @@ export const Sessions: { [key: string]: ISession } = {
       schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.'
+        '5G Edge will usher in the ability to create unique, branded customer experiences, increase operational efficiency and provide holistic supply chain visibility by enabling AI/ML, near real-time connectivity and other new capabilities for retail, travel and distribution. This session will cover the implications of 5G Edge for the Retail, Travel and Distribution industries.',
+      chatBody:
+        'This session will cover the implications of 5G Edge for the Retail, Travel and Distribution industries, as well as what organizations need to do to prepare for 5G and edge compute and how to partner with Verizon to achieve success.'
     }
   },
   financialServices: {
@@ -50,7 +55,9 @@ export const Sessions: { [key: string]: ISession } = {
       speakers: [],
       schedule: 'Session will begin immediately following the live stream.',
       body:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.'
+        '5G Edge will enable highly secure, near real-time connectivity, AI/ML and other new technologies for Financial Services. This session will discuss timely 5G Edge use cases in the financial services industry and how organizations can engage with Verizon to begin their pathway to 5G.',
+      chatBody:
+        'This session will discuss timely 5G Edge use cases in the financial services industry and how organizations can engage with Verizon to begin their pathway to 5G.'
     }
   },
   manufacturingEnergyUtilities: {
@@ -62,7 +69,9 @@ export const Sessions: { [key: string]: ISession } = {
       schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce blandit risus ut nulla fringilla, id lobortis ligula scelerisque. Pellentesque porta lacus non velit ultricies, at vulputate magna ultricies. Sed tincidunt orci vitae turpis ultricies posuere. Pellentesque ultrices diam quis urna interdum.'
+        '5G Edge will enable advanced manufacturing, GT&D infrastructure transformation, accelerated outcomes using ML & AI as well as additional capabilities for industry. This session will cover the implications of 5G edge for industrial systems and what organizations need to do to prepare as well as how to partner with Verizon to achieve success.',
+      chatBody:
+        'This session will cover the implications of 5G edge for industrial systems and what organizations need to do to prepare as well as how to partner with Verizon to achieve success.'
     }
   },
   mediaEntertainmentTech: {
@@ -73,7 +82,19 @@ export const Sessions: { [key: string]: ISession } = {
       header: 'Media, Entertainment, Technology & Service.',
       schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
-      body: "Insights into the powerful ecosystem possibilities with Verizon's 5G Nationwide and 5G Ultra Wideband."
+      body:
+        '5G Edge will help Media and Entertainment companies transform the way they operate, deliver core services, keep fans and audiences engaged, and enhance end user experiences. This session discusses the implications of 5G edge for M&E and the role it will play in building out future-ready venues, transforming content contribution-distribution models, and strengthening fan affinity and audience engagement.',
+      chatBody:
+        'This session discusses the implications of 5G edge for Media and Entertainment and the role it will play in building out future-ready venues, transforming content contribution-distribution models, and strengthening fan affinity and audience engagement.'
+    }
+  }
+}
+
+export const findSessionById = (id: string) => {
+  for (let key in Sessions) {
+    const session = Sessions[key]
+    if (session.id === id) {
+      return session
     }
   }
 }
