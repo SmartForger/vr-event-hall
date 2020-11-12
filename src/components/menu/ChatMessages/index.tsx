@@ -7,7 +7,7 @@ import { MessageList } from './MessageList'
 
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { useAppState, useVideoChatContext, useChatContext } from 'providers'
-import { ISubscriptionObject, IUser } from 'types'
+import { ISubscriptionObject } from 'types'
 import { getConversationFiltered } from 'graphql/customQueries'
 import { onCreateMessageWithAuthor, onUpdateMessageWithAuthor } from 'graphql/customSubscriptions'
 
