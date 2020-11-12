@@ -97,7 +97,7 @@ export const SignUp: FC<SignUpProps> = ({ setAuthState, setUserEmail, setUserPd 
   }
 
   return (
-    <Grid container direction='column' justify='center' spacing={2}>
+    <Grid container direction='column' justify='center' spacing={4}>
       <Grid item>
         <Typography variant='h2' className={classes.heading} paragraph>
           <span dangerouslySetInnerHTML={{ __html: I18n.get('joinUs') }}></span>
@@ -111,7 +111,7 @@ export const SignUp: FC<SignUpProps> = ({ setAuthState, setUserEmail, setUserPd 
           </Link>
         </Typography>
       </Grid>
-      <Grid item container spacing={2} justify='center'>
+      <Grid item container spacing={4} justify='center'>
         <Grid item xs={12}>
           <TextField
             fullWidth

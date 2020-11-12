@@ -37,8 +37,18 @@ export const theme: Theme = createMuiTheme({
     },
     MuiFormHelperText: {
       root: {
-        fontSize: '12px',
-        color: '#000000'
+        fontSize: '10px',
+        color: '#000000',
+
+        '&.Mui-error': {
+          color: '#000000'
+        },
+        '&.Mui-success': {
+          color: '#000000'
+        }
+      },
+      contained: {
+        marginLeft: '0'
       }
     },
     MuiInputBase: {
@@ -83,8 +93,19 @@ export const theme: Theme = createMuiTheme({
       }
     },
     MuiOutlinedInput: {
+      root: {
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: '#393939',
+          borderWidth: '1px'
+        }
+      },
       input: {
         padding: '11.7px 14px'
+      },
+      notchedOutline: {
+        '& span': {
+          display: 'none'
+        }
       }
     },
     MuiFormLabel: {
@@ -93,13 +114,17 @@ export const theme: Theme = createMuiTheme({
         fontSize: '14px',
 
         '&.Mui-focused': {
-          color: '#000000'
+          color: '#969797'
         }
       }
     },
     MuiInputLabel: {
       outlined: {
-        transform: 'translate(14px, 13.5px) scale(1)'
+        transform: 'translate(14px, 13.5px) scale(1)',
+
+        '&$shrink': {
+          transform: 'translate(0, -14px) scale(0.75)'
+        }
       }
     },
     MuiButton: {
@@ -212,10 +237,10 @@ export const theme: Theme = createMuiTheme({
   },
   palette: {
     error: {
-      main: '#ED7000'
+      main: '#ed7003'
     },
     success: {
-      main: '#00AC3E'
+      main: '#00ad3c'
     }
   }
 })

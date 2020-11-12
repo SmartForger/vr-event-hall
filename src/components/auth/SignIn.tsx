@@ -87,7 +87,7 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
   }
 
   return (
-    <Grid container direction='column' justify='center' spacing={2}>
+    <Grid container direction='column' justify='center' spacing={4}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
           {I18n.get('signIn')}
@@ -101,7 +101,7 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
           </Link>
         </Typography>
       </Grid>
-      <Grid item container spacing={2} justify='center'>
+      <Grid item container spacing={4} justify='center'>
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -146,7 +146,7 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
         </Grid>
       )}
 
-      <Grid item container spacing={2} justify='space-between'>
+      <Grid item container spacing={4} justify='space-between'>
         <Grid item xs={12} sm={6}>
           <PillButton
             loading={loading}
