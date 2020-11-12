@@ -43,7 +43,7 @@ export const SpeakerDevices = () => {
 
 const useStyles = makeStyles(() => ({
   button: {
-    marginTop: '1rem',
+    margin: '26px 0',
     paddingTop: 0,
     paddingBottom: 0
   }
