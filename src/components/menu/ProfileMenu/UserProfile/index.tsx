@@ -141,6 +141,11 @@ export const UserProfile: FC<IUserProfileProps> = ({ toggleDrawer, user }) => {
   }
 
   const logout = () => {
+    graphQLMutation(updateUser, {
+      id: profileInfo?.id,
+      online: false
+    })
+
     Auth.signOut()
     history.push('/')
   }
