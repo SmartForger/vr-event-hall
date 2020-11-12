@@ -161,6 +161,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   submitButton: {
     borderRadius: 0,
     backgroundColor: theme.palette.primary.main,
+    margin: '20px 0',
     color: 'white',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,

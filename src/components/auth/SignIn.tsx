@@ -205,7 +205,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   forgotButtonContainer: {
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
     [theme.breakpoints.down('xs')]: {
       marginTop: '1rem',
       textAlign: 'center'
@@ -219,7 +219,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#000',
     margin: '0 .5rem',
     fontFamily: 'Verizon-Regular',
-    textDecoration: 'underline'
+    textDecoration: 'underline',
+    verticalAlign: 'baseline'
   },
   tooltipList: {
     paddingLeft: '.5rem'

@@ -182,7 +182,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   availableSeatsMessage: {
     fontSize: '14px',
-    margin: '10px 30px 0 30px'
+    margin: '46px 30px 36px 30px'
   },
   sessionSplashImage: {
     position: 'relative',
