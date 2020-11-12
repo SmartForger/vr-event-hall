@@ -1,8 +1,10 @@
-import React, { FC, MutableRefObject, useRef, useCallback, useState } from 'react'
+import React, { FC, MutableRefObject, useRef, useCallback, useEffect } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList, VariableSizeProps } from 'react-window'
+import { groupBy } from 'lodash'
 
 import { UserRow } from './UserRow'
+import { UserDivider } from './UserDivider'
 
 import { UserListContext, useVideoChatContext, useChatContext } from 'providers'
 import { IUser, ToggleDrawer } from 'types'
@@ -21,16 +23,45 @@ interface UserListProps {
 export const UserList: FC<UserListProps> = ({ user, users, listRef, toggleDrawer }) => {
   const { dispatch: videoChatDispatch } = useVideoChatContext()
   const { dispatch: chatDispatch } = useChatContext()
+
+  const tmpUsers = users.map(user => ({
+    ...user,
+    nameInitial: user.firstName?.substr(0, 1)
+  }))
+
+  const tmp = groupBy(tmpUsers, 'nameInitial')
+  const groupedUsers: Array<IUser | string> = []
+  Object.keys(tmp).forEach(initial => {
+    groupedUsers.push(initial)
+    groupedUsers.push(...tmp[initial])
+  })
+
+  useEffect(() => {
+    if (listRef?.current) {
+      listRef.current.resetAfterIndex(0)
+    }
+  }, [groupedUsers])
+
   const sizeMap = useRef({})
-  const setSize = useCallback((index, size) => {
-    sizeMap.current = { ...sizeMap.current, [index]: size }
-  }, [])
-  const getSize = useCallback(index => sizeMap.current[index] || 50, [])
+  const setSize = useCallback(
+    (index, size) => {
+      sizeMap.current = { ...sizeMap.current, [index]: size }
+    },
+    [groupedUsers]
+  )
+  const getSize = useCallback(
+    index => {
+      const defaultSize = typeof groupedUsers[index] === 'string' ? 30 : 46
+      return sizeMap.current[index] || defaultSize
+    },
+    [groupedUsers]
+  )
   const { width: windowWidth } = useWindowSize()
 
   const createConversation = async (index: number) => {
     if (user) {
-      const conversationId = await createNewConversation(user, users[index], `${user.id}-${users[index].id}`)
+      const selectedUser = groupedUsers[index] as IUser
+      const conversationId = await createNewConversation(user, selectedUser, `${user.id}-${selectedUser.id}`)
       const conversationDetails = await graphQLQuery(getConversationWithAssociated, 'getConversation', {
         id: conversationId
       })
@@ -44,7 +75,7 @@ export const UserList: FC<UserListProps> = ({ user, users, listRef, toggleDrawer
         payload: {
           conversationId,
           conversation: conversationDetails,
-          conversationUser: users[index],
+          conversationUser: selectedUser,
           conversationOpen: true
         }
       }
@@ -57,13 +88,23 @@ export const UserList: FC<UserListProps> = ({ user, users, listRef, toggleDrawer
   }
 
   return (
-    <UserListContext.Provider value={{ setSize, windowWidth, createConversation }}>
+    <UserListContext.Provider value={{ setSize, count: groupedUsers.length, windowWidth, createConversation }}>
       <AutoSizer>
         {({ height, width }) => (
-          <VariableSizeList height={height} width={width} itemSize={getSize} itemCount={users.length} ref={listRef}>
+          <VariableSizeList
+            height={height}
+            width={width}
+            itemSize={getSize}
+            itemCount={groupedUsers.length}
+            ref={listRef}
+          >
             {({ index, style }) => (
               <div style={style}>
-                <UserRow index={index} data={users[index]} />
+                {typeof groupedUsers[index] === 'string' ? (
+                  <UserDivider index={index} letter={groupedUsers[index]} />
+                ) : (
+                  <UserRow index={index} data={groupedUsers[index]} />
+                )}
               </div>
             )}
           </VariableSizeList>
