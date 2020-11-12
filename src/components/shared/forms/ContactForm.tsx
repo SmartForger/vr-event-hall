@@ -138,7 +138,7 @@ export const ContactForm: FC<ContactFormProps> = ({
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <Grid container spacing={2}>
+      <Grid container spacing={4}>
         <Grid item sm={6} xs={12}>
           <TextField
             required

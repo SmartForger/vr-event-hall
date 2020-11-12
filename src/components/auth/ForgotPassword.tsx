@@ -85,7 +85,7 @@ export const ForgotPassword: FC<ForgotPasswordProps> = ({ setAuthState }) => {
   }
 
   return (
-    <Grid container direction='column' spacing={2}>
+    <Grid container direction='column' spacing={4}>
       <Grid item>
         <Typography variant='h2' className={classes.heading} paragraph>
           {I18n.get('forgotPassword')}

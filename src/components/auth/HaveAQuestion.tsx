@@ -73,7 +73,7 @@ export const HaveAQuestion: FC<HaveAQuestionProps> = ({ userEmail, setAuthState 
   }
 
   return (
-    <Grid container direction='column' justify='center' spacing={2}>
+    <Grid container direction='column' justify='center' spacing={4}>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
           Have a question?
@@ -84,7 +84,7 @@ export const HaveAQuestion: FC<HaveAQuestionProps> = ({ userEmail, setAuthState 
           If you have an industry-specific 5G question you would like addressed during the breakout, let us know here!
         </Typography>
       </Grid>
-      <Grid item container spacing={2}>
+      <Grid item container spacing={4}>
         <TextField
           id='have-a-question'
           fullWidth
