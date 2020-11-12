@@ -202,7 +202,7 @@ export const ToolsPanel = () => {
           ))}
         </AccordionDetails>
       </Accordion>
-      {videoChatState.icId ? (
+      {videoChatState?.session?.icId ? (
         <Accordion square expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
           <AccordionSummary aria-controls='panel3d-content' id='panel3d-header'>
             <Typography className={classes.title} variant='body1'>

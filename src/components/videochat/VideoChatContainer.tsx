@@ -23,6 +23,7 @@ export const VideoChatContainer = () => {
   let subscription = useRef<ISubscriptionObject | null>(null)
 
   const onVideoChatInvite = ({ onCreateVideoChatInvite }) => {
+    console.log(onCreateVideoChatInvite)
     if (onCreateVideoChatInvite?.userId === user?.id) {
       setDialogInfo(onCreateVideoChatInvite)
     }

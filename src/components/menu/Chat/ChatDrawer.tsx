@@ -8,8 +8,9 @@ import { TabPanel } from './TabPanel'
 
 import { useAppState, useChatContext, UserAdminType, useVideoChatContext } from 'providers'
 import { createChimeMeeting } from 'helpers'
-import { graphQLQuery } from 'graphql/helpers'
+import { graphQLMutation, graphQLQuery } from 'graphql/helpers'
 import { getAttendeeInfo } from 'graphql/customQueries'
+import { createVideoChatInvite } from 'graphql/mutations'
 
 interface ChatDrawerProps {
   vcOff?: boolean
@@ -46,6 +47,12 @@ export const ChatDrawer = ({ vcOff }) => {
     const {
       data: { meeting, attendee }
     } = await createChimeMeeting({ meetingId: chatState?.conversation?.id, userId: user?.id })
+    const convoUser = chatState?.conversation?.associated.items.find(a => a.userId !== user?.id)
+    await graphQLMutation(createVideoChatInvite, {
+      conversationId: chatState?.conversation?.id,
+      userId: convoUser?.userId,
+      invitingUserId: user?.id
+    })
 
     const joinData = {
       meetingInfo: meeting.Meeting,
@@ -99,7 +106,7 @@ export const ChatDrawer = ({ vcOff }) => {
           </IconButton>
         </div>
         <Toolbar className={classes.toolbar}>
-          {vcOff ? (
+          {!vcOff ? (
             <IconButton className={classes.cameraButton} onClick={joinVideoCall}>
               <VideocamOutlined />
             </IconButton>
