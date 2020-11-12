@@ -135,7 +135,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
         >
           <div className={classes.displayMenu}>
             <div className={classes.userCloseContainer}>
-              <IconButton onClick={() => setShowUserList(false)} disableRipple>
+              <IconButton onClick={() => setShowUserList(false)} disableRipple className={classes.closeIcon}>
                 <Close />
               </IconButton>
             </div>
@@ -304,6 +304,9 @@ const useStyles = makeStyles((theme: Theme) =>
           backgroundColor: 'transparent'
         }
       }
+    },
+    closeIcon: {
+      padding: '6px !important'
     },
     profileCloseContainer: {
       color: 'rgba(255, 255, 255, 0.6)',
