@@ -87,6 +87,20 @@ export const Sessions: { [key: string]: ISession } = {
       chatBody:
         'This session discusses the implications of 5G edge for Media and Entertainment and the role it will play in building out future-ready venues, transforming content contribution-distribution models, and strengthening fan affinity and audience engagement.'
     }
+  },
+  livestream: {
+    id: '009b358b-a5b5-4393-a232-550ac67962f9',
+    image: mediaImage,
+    side: {
+      category: 'Breakout Session',
+      header: 'Live Stream',
+      schedule: 'Session will begin immediately following the live stream.',
+      speakers: [],
+      body:
+        '5G Edge will help Media and Entertainment companies transform the way they operate, deliver core services, keep fans and audiences engaged, and enhance end user experiences. This session discusses the implications of 5G edge for M&E and the role it will play in building out future-ready venues, transforming content contribution-distribution models, and strengthening fan affinity and audience engagement.',
+      chatBody:
+        'This session discusses the implications of 5G edge for Media and Entertainment and the role it will play in building out future-ready venues, transforming content contribution-distribution models, and strengthening fan affinity and audience engagement.'
+    }
   }
 }
 
