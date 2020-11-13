@@ -121,6 +121,17 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
         },
         'createSessionParticipant'
       )
+      dispatch({
+        type: 'SET_DETAILS',
+        payload: {
+          session: {
+            ...videoChatState.session,
+            participants: {
+              items: [...(videoChatState?.session?.participants?.items || []), participantInfo]
+            }
+          }
+        }
+      })
       setParticipantId(participantInfo.id)
     } else {
       const participant = videoChatState?.session?.participants?.items.find(p => p.userId === user?.id)
@@ -145,6 +156,12 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
       setRedirectTrigger(true)
     }
   }, [eventStage])
+
+  useEffect(() => {
+    if (videoChatState?.session?.admins?.items?.some?.(a => a.userId === user?.id)) {
+      setAdmin(true)
+    }
+  }, [videoChatState?.session?.admins])
 
   const close = () => {
     setRedirectTrigger(true)

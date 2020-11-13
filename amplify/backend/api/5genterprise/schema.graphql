@@ -61,7 +61,11 @@ type Session
 # for active users in session
 type UserSessionParticipant
   @model(
-    mutations: { create: "createSessionParticipant", update: "updateSessionParticipant" delete: "deleteSessionParticipant"}
+    mutations: {
+      create: "createSessionParticipant"
+      update: "updateSessionParticipant"
+      delete: "deleteSessionParticipant"
+    }
     queries: null
     subscriptions: null
   )
@@ -122,7 +126,11 @@ type SurveyAnswer @model(subscriptions: null, queries: null) {
 }
 
 type ConvoLink
-  @model(mutations: { create: "createConvoLink", update: "updateConvoLink", delete: "deleteConvoLink" }, queries: null, subscriptions: null)
+  @model(
+    mutations: { create: "createConvoLink", update: "updateConvoLink", delete: "deleteConvoLink" }
+    queries: null
+    subscriptions: null
+  )
   @key(name: "byConvoUser", fields: ["userId", "conversationId"])
   @key(name: "byUserConvo", fields: ["conversationId", "userId"]) {
   id: ID!
@@ -138,7 +146,10 @@ enum AdminUserType {
 }
 
 type AdminUser
-  @model(mutations: { create: "createAdminLink", update: "updateAdminLink", delete: "deleteAdminLink" }, subscriptions: null)
+  @model(
+    mutations: { create: "createAdminLink", update: "updateAdminLink", delete: "deleteAdminLink" }
+    subscriptions: null
+  )
   @key(name: "byAdminUser", fields: ["userId", "sessionId"])
   @key(name: "byAdminSession", fields: ["sessionId", "userId"]) {
   id: ID!
@@ -313,6 +324,7 @@ type Subscription {
   onCreateGlobalRaisedHand: RaisedHand @aws_subscribe(mutations: ["createRaisedHand"])
   onCreateVideoChatInvite(userId: ID!): VideoChatInvite @aws_subscribe(mutations: ["createVideoChatInvite"])
   onUpdateVideoChatInvite(id: ID!): VideoChatInvite @aws_subscribe(mutations: ["updateVideoChatInvite"])
-  onCreateSessionParticipant(userId: ID!): UserSessionParticipant @aws_subscribe(mutations: ["createSessionParticipant"])
+  onCreateSessionParticipant(sessionId: ID!): UserSessionParticipant
+    @aws_subscribe(mutations: ["createSessionParticipant"])
   onUpdateSessionParticipant(id: ID!): UserSessionParticipant @aws_subscribe(mutations: ["updateSessionParticipant"])
 }
