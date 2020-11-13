@@ -334,6 +334,16 @@ export const createSession = /* GraphQL */ `
         }
         nextToken
       }
+      participants {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       pinnedMessageId
       pinnedMessage {
         id
@@ -480,6 +490,16 @@ export const updateSession = /* GraphQL */ `
         nextToken
       }
       users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      participants {
         items {
           id
           userId
@@ -644,6 +664,16 @@ export const deleteSession = /* GraphQL */ `
         }
         nextToken
       }
+      participants {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       pinnedMessageId
       pinnedMessage {
         id
@@ -743,6 +773,318 @@ export const deleteSession = /* GraphQL */ `
     }
   }
 `
+export const createSessionParticipant = /* GraphQL */ `
+  mutation CreateSessionParticipant(
+    $input: CreateUserSessionParticipantInput!
+    $condition: ModelUserSessionParticipantConditionInput
+  ) {
+    createSessionParticipant(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        participants {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateSessionParticipant = /* GraphQL */ `
+  mutation UpdateSessionParticipant(
+    $input: UpdateUserSessionParticipantInput!
+    $condition: ModelUserSessionParticipantConditionInput
+  ) {
+    updateSessionParticipant(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        participants {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteSessionParticipant = /* GraphQL */ `
+  mutation DeleteSessionParticipant(
+    $input: DeleteUserSessionParticipantInput!
+    $condition: ModelUserSessionParticipantConditionInput
+  ) {
+    deleteSessionParticipant(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        participants {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const createSessionReservation = /* GraphQL */ `
   mutation CreateSessionReservation(
     $input: CreateUserSessionReservationInput!
@@ -809,6 +1151,9 @@ export const createSessionReservation = /* GraphQL */ `
           nextToken
         }
         users {
+          nextToken
+        }
+        participants {
           nextToken
         }
         pinnedMessageId
@@ -910,6 +1255,9 @@ export const updateSessionReservation = /* GraphQL */ `
           nextToken
         }
         users {
+          nextToken
+        }
+        participants {
           nextToken
         }
         pinnedMessageId
@@ -1411,6 +1759,62 @@ export const updateConvoLink = /* GraphQL */ `
     }
   }
 `
+export const deleteConvoLink = /* GraphQL */ `
+  mutation DeleteConvoLink($input: DeleteConvoLinkInput!, $condition: ModelConvoLinkConditionInput) {
+    deleteConvoLink(input: $input, condition: $condition) {
+      id
+      userId
+      conversationId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const createAdminLink = /* GraphQL */ `
   mutation CreateAdminLink($input: CreateAdminUserInput!, $condition: ModelAdminUserConditionInput) {
     createAdminLink(input: $input, condition: $condition) {
@@ -1475,6 +1879,9 @@ export const createAdminLink = /* GraphQL */ `
           nextToken
         }
         users {
+          nextToken
+        }
+        participants {
           nextToken
         }
         pinnedMessageId
@@ -1576,6 +1983,9 @@ export const updateAdminLink = /* GraphQL */ `
         users {
           nextToken
         }
+        participants {
+          nextToken
+        }
         pinnedMessageId
         pinnedMessage {
           id
@@ -1673,6 +2083,9 @@ export const deleteAdminLink = /* GraphQL */ `
           nextToken
         }
         users {
+          nextToken
+        }
+        participants {
           nextToken
         }
         pinnedMessageId

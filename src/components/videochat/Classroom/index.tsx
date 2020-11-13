@@ -295,6 +295,9 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
                   <div className={classes.logo}>
                     <Logo />
                   </div>
+                  <div className={classes.sessionTitle}>
+                    {findSessionById(currentSession?.id || '')?.side.shortHeader || ''}
+                  </div>
                   <div className={classes.displayMenu}>
                     <Toolbar className={classes.toolbar}>
                       <Tabs
@@ -373,6 +376,13 @@ const useStyles = makeStyles(() => ({
     minHeight: '60px',
     maxHeight: '60px'
   },
+  sessionTitle: {
+    minHeight: '50px',
+    borderTop: '1px solid #D8DADA',
+    padding: '15px 20px',
+    fontWeight: 700,
+    fontSize: '20px'
+  },
   mainMenu: {
     height: 'calc(100% - 60px)',
     overflow: 'scroll'
@@ -389,7 +399,8 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 0,
     alignItems: 'flex-start',
     minHeight: '50px',
-    borderBottom: '1px solid #D8DADA'
+    borderBottom: '1px solid #D8DADA',
+    borderTop: '1px solid #D8DADA'
   },
   tabs: {
     display: 'flex',
