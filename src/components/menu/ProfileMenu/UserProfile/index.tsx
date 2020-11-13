@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent, useMemo } from 'react'
+import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Promise from 'bluebird'
@@ -6,7 +6,7 @@ import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconBut
 
 // Plugins
 import classNames from 'classnames'
-import { I18n, Auth } from 'aws-amplify'
+import { I18n, Auth, Storage } from 'aws-amplify'
 import { VariableSizeProps } from 'react-window'
 
 // Components
@@ -57,31 +57,49 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const [profileInfo, setProfileInfo] = useState<IUser | undefined>(user)
   const [profileErrors, setProfileErrors] = useState<IProfileErrors>(initialProfileErrors)
   const [file, setFile] = useState<File>()
-  const [imageBlob, setImageBlob] = useState<string>()
+  const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState<string>()
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState<boolean>(false)
 
   const listRef = useRef<VariableSizeProps>()
 
   /**
-   * Image Preview
+   * Avatar Upload
    */
   useEffect(() => {
     let cancelled = false
 
-    if (file) {
-      const reader = new FileReader()
+    if (file && profileInfo) {
+      const avatar = `${profileInfo.id}.${file.type.split('/')[1]}`
+      setIsUploadingAvatar(true)
 
-      reader.addEventListener('load', () => {
-        if (!cancelled && reader.result) {
-          setImageBlob(reader.result.toString())
-        }
-      })
-
-      reader.readAsDataURL(file)
+      Promise.all([
+        Storage.put(avatar, file, { level: 'public', contentType: file.type }),
+        graphQLMutation(updateUser, {
+          id: profileInfo.id,
+          avatar
+        })
+      ])
+        .then(() => Storage.get(avatar))
+        .then(avatarUrl => {
+          if (!cancelled) {
+            setFile(undefined)
+            setIsUploadingAvatar(false)
+            setUploadedAvatarUrl(avatarUrl)
+          }
+        })
+        .catch(err => {
+          if (!cancelled) {
+            setIsUploadingAvatar(false)
+            setFile(undefined)
+          }
+        })
     }
 
     return () => {
+      // Prevent state updates if user closes drawer while uploading file
       cancelled = true
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file])
 
   const getProfileInfo = async (userId: string) => {
@@ -215,7 +233,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
       <img src={profileBg} alt='profile background' />
       <Avatar
         alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
-        src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+        src={uploadedAvatarUrl || `https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
         className={classes.avatar}
       />
       <section className={classes.profileMain}>
@@ -256,13 +274,13 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         <Grid item xs={4}>
           <Avatar
             alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
-            src={imageBlob || `https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+            src={uploadedAvatarUrl || `https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
             className={classNames(classes.avatar, classes.avatarEdit)}
           />
         </Grid>
         <Grid item xs={8}>
-          <UploadButton accept='image/jpeg, image/png' onChange={handleFileChange}>
-            Upload image
+          <UploadButton accept='image/jpeg, image/png' loading={isUploadingAvatar} onChange={handleFileChange}>
+            {isUploadingAvatar ? 'Uploading...' : 'Upload image'}
           </UploadButton>
         </Grid>
       </Grid>

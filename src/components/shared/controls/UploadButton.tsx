@@ -6,6 +6,7 @@ interface UploadButtonProps {
   accept?: string
   children?: ReactNode
   idInput?: string
+  loading?: boolean
   multiple?: boolean
   onChange: ChangeEventHandler<HTMLInputElement>
 }
@@ -14,6 +15,7 @@ export const UploadButton = ({
   accept = 'image/*',
   children = 'Upload Image',
   idInput = 'contained-button-file',
+  loading = false,
   multiple = false,
   onChange
 }: UploadButtonProps) => {
@@ -31,7 +33,7 @@ export const UploadButton = ({
       />
 
       <label htmlFor={idInput}>
-        <PillButton variant='contained' color='primary' component='span'>
+        <PillButton variant='contained' color='primary' component='span' loading={loading}>
           {children}
         </PillButton>
       </label>
