@@ -1,81 +1,43 @@
-import React, { FC } from 'react'
-import { useAudioVideo, useMeetingManager } from 'amazon-chime-sdk-component-library-react'
+import React, { FC, useEffect, useState } from 'react'
 import { uniq } from 'lodash'
-import { Avatar, IconButton, makeStyles, Menu, MenuItem, Theme, Typography } from '@material-ui/core'
-import { MoreHoriz } from '@material-ui/icons'
-
-// import { UserAvatarCard } from 'components'
+import { Avatar, makeStyles, Theme, Typography } from '@material-ui/core'
 
 import { graphQLMutation } from 'graphql/helpers'
-// import { getRaisedHandsByDismissed } from 'graphql/customQueries'
-// import { onCreateRaisedHand, onUpdateRaisedHand } from 'graphql/subscriptions'
-import { IUser } from 'types'
+import { IParticipant } from 'types'
 
 import { updateSession } from 'graphql/mutations'
 import { useAppState, useVideoChatContext } from 'providers'
-import { useRosterState, CustomAttendee } from 'providers/RosterProvider'
+import { CustomAttendee } from 'providers/RosterProvider'
 import { PinMenu } from './PinMenu'
 
 interface PeoplePanelProps {
   isAdmin?: boolean
 }
 
-export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
+export const LiveStreamPeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
   const classes = useStyles()
   const {
     appState: { user }
   } = useAppState()
-  const meetingManeger = useMeetingManager()
   const { videoChatState } = useVideoChatContext()
-  const { roster } = useRosterState()
-  const audioVideo = useAudioVideo()
+  const [participants, setParticipants] = useState<CustomAttendee[]>([])
 
-  const rosterArray: any = Object.values(roster)
-  // const [raisedHands, setRaisedHands] = useState<any>([])
+  useEffect(() => {
+    const customRoster: CustomAttendee[] =
+      videoChatState?.session?.participants?.items.map((person: IParticipant) => {
+        return {
+          chimeAttendeeId: '',
+          externalUserId: person.userId,
+          email: person.user.email,
+          avatar: person.user.avatar,
+          name: `${person.user.firstName} ${person.user.lastName}`
+        } as CustomAttendee
+      }) || []
+
+    setParticipants(customRoster)
+  }, [videoChatState?.session?.participants])
+
   const [anchorEl, setAnchorEl] = React.useState(null)
-
-  // let createSubscription = useRef<ISubscriptionObject | null>(null)
-  // let updateSubscription = useRef<ISubscriptionObject | null>(null)
-
-  // const raisedHandCreated = ({ onCreateRaisedHand }) => {
-  //   setRaisedHands(prevHands => [...prevHands, onCreateRaisedHand])
-  // }
-
-  // const raisedHandUpdated = ({ onUpdateRaisedHand }) => {
-  //   if (onUpdateRaisedHand.dismissed === 'true') {
-  //     setRaisedHands(prevRaisedHands => prevRaisedHands.filter(r => r.id !== onUpdateRaisedHand.id))
-  //   }
-  // }
-
-  // const getRaisedHands = async () => {
-  //   const currentRaisedHands = await graphQLQuery(getRaisedHandsByDismissed, 'raisedHandByDismissed', {
-  //     sessionId: videoChatState?.session?.id,
-  //     dismissed: { eq: 'false' }
-  //   })
-  //   setRaisedHands(currentRaisedHands)
-
-  //   createSubscription.current = graphQLSubscription(
-  //     onCreateRaisedHand,
-  //     { sessionId: videoChatState?.session?.id },
-  //     raisedHandCreated
-  //   )
-  //   updateSubscription.current = graphQLSubscription(
-  //     onUpdateRaisedHand,
-  //     { sessionId: videoChatState?.session?.id },
-  //     raisedHandUpdated
-  //   )
-  // }
-
-  // useEffect(() => {
-  //   if (videoChatState?.session?.id) {
-  //     getRaisedHands()
-  //   }
-
-  //   return () => {
-  //     createSubscription.current?.unsubscribe()
-  //     updateSubscription.current?.unsubscribe()
-  //   }
-  // }, [videoChatState?.session?.id])
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -99,84 +61,10 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
     }
   }
 
-  // const toggleUserMute = (userId: string, muted: boolean) => {
-  //   audioVideo?.realtimeSendDataMessage('TOGGLE_PLAYER_MUTE', {
-  //     userId: userId as string,
-  //     muted
-  //   })
-  // }
-
-  // const dismissHand = async (handId: string) => {
-  //   await graphQLMutation(updateRaisedHand, { id: handId, dismissed: 'true' })
-  // }
-
-  // useEffect(() => {
-  //   audioVideo?.realtimeSubscribeToReceiveDataMessage('TOGGLE_PLAYER_MUTE', data => {
-  //     const muteInfo = data.json()
-  //     if (muteInfo.userId === user?.id) {
-  //       // initially toggle whether they can control it
-  //       audioVideo?.realtimeSetCanUnmuteLocalAudio(!muteInfo.muted)
-  //       if (muteInfo.muted) {
-  //         // if muted is true then we also toggle the mute to on
-  //         audioVideo?.realtimeMuteLocalAudio()
-  //       }
-  //     }
-  //   })
-
-  //   return () => {
-  //     audioVideo?.realtimeUnsubscribeFromReceiveDataMessage('TOGGLE_PLAYER_MUTE')
-  //   }
-  // }, [audioVideo])
-
   return (
     <>
-      {/* {isAdmin ? (
-        <div className={classes.details}>
-          <Box
-            bgcolor='#2188CE'
-            color='white'
-            display='flex'
-            height='50px'
-            justifyContent='space-around'
-            alignItems='center'
-          >
-            <Typography variant='subtitle1' className={`${classes.bold} ${classes.raiseHandTitle}`} gutterBottom>
-              These people raise their hand
-            </Typography>
-            <RaiseHandIcon fill='white' />
-          </Box>
-          <Box>
-            <List className={classes.handsList}>
-              {raisedHands.map(hand => {
-                const rosterUser = rosterArray.find(r => r.externalUserId === hand.userId)
-                const attendeeId = rosterUser?.chimeAttendeeId
-                return (
-                  <ListItem disableGutters key={hand.user.id}>
-                    <UserAvatarCard
-                      user={hand.user}
-                      isRaisedHand
-                      handleMute={muted => toggleUserMute(hand.userId, muted)}
-                      attendeeId={attendeeId}
-                      handleDismiss={() => dismissHand(hand.id)}
-                    />
-                  </ListItem>
-                )
-              })}
-            </List>
-            {
-              <Box display='flex' justifyContent='center' alignItems='center' marginBottom={2}>
-                {raisedHands.length > 0 ? (
-                  <Button className={classes.clearAll}>Clear all</Button>
-                ) : (
-                  <Typography variant='subtitle2'>No hands yet</Typography>
-                )}
-              </Box>
-            }
-          </Box>
-        </div>
-      ) : null} */}
       <section className={!isAdmin ? classes.listContainer : ''}>
-        {rosterArray
+        {participants
           .filter(r => videoChatState.session?.admins.items.some(a => a.userId === r.externalUserId))
           .map(rosterUser => {
             const adminUser = videoChatState.session?.admins.items.find(a => a.userId === rosterUser.externalUserId)
@@ -212,7 +100,7 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
               </div>
             )
           })}
-        {rosterArray
+        {participants
           .filter(r => !videoChatState.session?.admins?.items?.some?.(a => a.userId === r.externalUserId))
           .map(rosterUser => {
             return (

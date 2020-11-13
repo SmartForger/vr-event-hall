@@ -2,10 +2,13 @@ import React from 'react'
 import { makeStyles, Grid, Link, Typography, Theme } from '@material-ui/core'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo-white.svg'
+import { useLocation } from 'react-router-dom'
 
 export const Footer = () => {
   const classes = useStyles()
-  return (
+  const location = useLocation()
+  console.log(location)
+  return location.pathname.match(/stream/i) ? null : (
     <footer className={classes.footer}>
       <Grid container className={classes.container}>
         <Grid item xs={12} sm>
