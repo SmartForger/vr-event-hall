@@ -29,12 +29,8 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
   const { videoChatState } = useVideoChatContext()
   const { roster } = useRosterState()
   const audioVideo = useAudioVideo()
-  const customRoster = videoChatState?.session?.participants?.map((person: IUser) => {
-    ;(person as CustomAttendee).chimeAttendeeId = ''
-    ;(person as CustomAttendee).externalUserId = person.id
-    return person
-  })
-  const rosterArray: any = customRoster || Object.values(roster)
+
+  const rosterArray: any = Object.values(roster)
   // const [raisedHands, setRaisedHands] = useState<any>([])
   const [anchorEl, setAnchorEl] = React.useState(null)
 

@@ -57,6 +57,13 @@ interface IPollObjectList {
   items: IPollObject[]
 }
 
+export interface IParticipant {
+  id: string
+  userId: string
+  sessionId: string
+  user: IUser
+}
+
 export interface ISession {
   id?: string
   name: string
@@ -71,7 +78,7 @@ export interface ISession {
   pinnedMessage: IMessage
   presenterPins: string[]
   admins: IAdminUserList
-  participants?: IUser[]
+  participants?: { items: IParticipant[] }
 }
 
 export interface IVideoChatInvite {

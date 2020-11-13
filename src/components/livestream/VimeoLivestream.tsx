@@ -1,31 +1,31 @@
 import React, { FC, useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import { Box, IconButton, makeStyles, Typography, Tab, Tabs, Drawer, Toolbar } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
+import { useHistory } from 'react-router-dom'
+
 import { PillButton, RouteTransition } from 'components'
 import { graphQLMutation } from '../../graphql/helpers'
 import { createUserInteraction } from '../../graphql/mutations'
-import { EventStages, IUser } from '../../types'
-import { useHistory } from 'react-router-dom'
+import { EventStages } from '../../types'
 import { findSessionById, ISession } from '../../helpers'
 
-import MeetingControls from '../videochat/MeetingControls'
-import MeetingDetails from '../videochat/MeetingDetails'
 // import { StyledLayout, StyledContent, StyledGrid } from './Styled'
-import { DetailsPanel, PeoplePanel, ToolsPanel } from '../videochat/Panels'
+import { DetailsPanel, ToolsPanel } from '../videochat/Panels'
 import { PollDrawer } from '../videochat/PollDrawer'
 import { ChatMessages, TabPanel } from 'components'
 
 // import { useMeetingEndedRedirect } from 'hooks'
 import { useAppState, useVideoChatContext, PollProvider, VideoChatProvider } from 'providers'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
-import { getSession } from 'graphql/queries'
-import { onUpdateSession } from 'graphql/subscriptions'
-import { createSessionParticipant, deleteSessionParticipant, deleteConvoLink } from 'graphql/mutations'
+import { onCreateSessionParticipant, onUpdateSession } from 'graphql/subscriptions'
 import { ISubscriptionObject } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
-import { ConditionalWrapper, DialogCard } from 'components/shared'
+import { DialogCard } from 'components/shared'
 import { Sessions } from '../../helpers'
+import { getSessionWithParticipants } from 'graphql/customQueries'
+import { createSessionParticipantMin, deleteSessionParticipantMin } from 'graphql/customMutations'
+import { LiveStreamPeoplePanel } from 'components/videochat/Panels/LiveStreamPeoplePanel'
 
 interface VimeoLiveStreamProps {
   useBackupStream: Boolean
@@ -67,17 +67,11 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
 
   const { videoChatState, dispatch } = useVideoChatContext()
   const [currentSession, setCurrentSession] = useState<ISession | null>(null)
+  const [participantId, setParticipantId] = useState<string>('')
   const setLoading = useCallback((payload: boolean) => dispatch({ type: 'SET_LOADING', payload }), [])
 
   let sessionUpdatedSubscription = useRef<ISubscriptionObject | null>(null)
-
-  // // set the livestream session id right away
-  // dispatch({
-  //   type: 'SET_DETAILS',
-  //   payload: {
-  //     sessionId: Sessions.livestream.id
-  //   }
-  // })
+  let newParticipantSubscription = useRef<ISubscriptionObject | null>(null)
 
   const updateSessionInfo = ({ onUpdateSession }) => {
     // setGlobalMute(onUpdateSession.muted)
@@ -93,7 +87,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
   }
 
   const getSessionInfo = async () => {
-    const session = await graphQLQuery(getSession, 'getSession', { id: Sessions.livestream.id })
+    const session = await graphQLQuery(getSessionWithParticipants, 'getSession', { id: Sessions.livestream.id })
     setCurrentSession(session)
     console.log(session)
     dispatch({
@@ -119,30 +113,72 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
   useEffect(() => {
     setTimeout(() => setLoading(false), 1500)
     getSessionInfo()
-    // set user as participant in livestream
-    // graphQLMutation(createSessionParticipant, {
-    //   userId: user?.id,
-    //   sessionId: Sessions.livestream.id
-    // })
 
     return () => {
-      // remove the user as participant in livestream for an accurate-ish count
-      // graphQLMutation(deleteSessionParticipant, {
-      //   userId: user?.id,
-      //   sessionId: Sessions.livestream.id
-      // })
-      // // remove the user from the session conversastion
-      // graphQLMutation(deleteConvoLink, {
-      //   userId: user?.id,
-      //   conversationId: videoChatState?.session?.conversationId
-      // })
-
       sessionUpdatedSubscription?.current?.unsubscribe()
+      newParticipantSubscription?.current?.unsubscribe()
+      // remove the user as participant in livestream for an accurate-ish count
+      if (participantId) {
+        graphQLMutation(deleteSessionParticipantMin, { id: participantId })
+      }
     }
   }, [])
 
   const handleChange = (_, newValue) => {
     setTabValue(newValue)
+  }
+
+  const participantJoined = ({ onCreateSessionParticipant }) => {
+    dispatch({
+      type: 'SET_DETAILS',
+      payload: {
+        session: {
+          ...videoChatState?.session,
+          participants: {
+            items: [...(videoChatState?.session?.participants?.items || []), onCreateSessionParticipant]
+          }
+        }
+      }
+    })
+  }
+
+  const createParticipant = async () => {
+    newParticipantSubscription?.current?.unsubscribe()
+
+    if (
+      Array.isArray(videoChatState?.session?.participants?.items) &&
+      !videoChatState?.session?.participants?.items.some(p => p.userId === user?.id)
+    ) {
+      const participantInfo = await graphQLMutation(
+        createSessionParticipantMin,
+        {
+          userId: user?.id,
+          sessionId: Sessions.livestream.id
+        },
+        'createSessionParticipant'
+      )
+      dispatch({
+        type: 'SET_DETAILS',
+        payload: {
+          session: {
+            ...videoChatState.session,
+            participants: {
+              items: [...(videoChatState?.session?.participants?.items || []), participantInfo]
+            }
+          }
+        }
+      })
+      setParticipantId(participantInfo.id)
+    } else {
+      const participant = videoChatState?.session?.participants?.items.find(p => p.userId === user?.id)
+      setParticipantId(participant?.id || '')
+    }
+
+    newParticipantSubscription.current = graphQLSubscription(
+      onCreateSessionParticipant,
+      { sessionId: Sessions.livestream.id },
+      participantJoined
+    )
   }
 
   useEffect(() => {
@@ -153,8 +189,9 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
         type: 'livestream',
         userId: user?.id
       })
+      createParticipant()
     }
-  }, [user])
+  }, [user, videoChatState?.session?.participants?.items])
 
   useEffect(() => {
     if (eventStage && ![EventStages.COUNTDOWN, EventStages.LIVESTREAM].includes(eventStage)) {
@@ -162,8 +199,30 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
     }
   }, [eventStage])
 
+  useEffect(() => {
+    if (videoChatState?.session?.admins?.items?.some?.(a => a.userId === user?.id)) {
+      setAdmin(true)
+    }
+  }, [videoChatState?.session?.admins])
+
+  const close = () => {
+    setRedirectTrigger(true)
+    if (participantId) {
+      console.log('DELETE')
+      graphQLMutation(deleteSessionParticipantMin, { id: participantId })
+    }
+  }
+
+  const goToSession = (session: ISession | null) => {
+    if (participantId) {
+      console.log('DELETE')
+      graphQLMutation(deleteSessionParticipantMin, { id: participantId })
+    }
+    history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')
+  }
+
   return (
-    <>
+    <PollProvider>
       <div className={classes.root}>
         <IconButton
           className={classes.closeButton}
@@ -253,8 +312,8 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
                   }}
                 >
                   <Tab label='Chat' className={classes.tab} />
-                  {/* <Tab label='People' className={classes.tab} /> */}
-                  {/* <Tab label={isAdmin ? 'Tools' : 'Details'} className={classes.tab} /> */}
+                  <Tab label='People' className={classes.tab} />
+                  <Tab label={isAdmin ? 'Tools' : 'Details'} className={classes.tab} />
                 </Tabs>
               </Toolbar>
               <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
@@ -271,10 +330,10 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
                   />
                 ) : null}
               </TabPanel>
-              {/* <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
-                <PeoplePanel isAdmin={isAdmin} />
-              </TabPanel> */}
-              {/* {isAdmin ? (
+              <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
+                <LiveStreamPeoplePanel isAdmin={isAdmin} />
+              </TabPanel>
+              {isAdmin ? (
                 <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
                   <ToolsPanel />
                 </TabPanel>
@@ -282,7 +341,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
                 <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
                   {currentSession && <DetailsPanel body={Sessions.livestream.side.chatBody || ''} />}
                 </TabPanel>
-              )} */}
+              )}
             </div>
           </Drawer>
           <PollDrawer />
@@ -310,7 +369,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
                   variant='outlined'
                   textColor='white'
                   backgroundColor='black'
-                  onClick={() => history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')}
+                  onClick={() => goToSession(session)}
                   classes={{ root: classes.toastESSButton }}
                 >
                   {session ? 'Join session' : 'Pick your breakout session'}
@@ -323,7 +382,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
           </div>
         </div>
       )}
-    </>
+    </PollProvider>
   )
 }
 
@@ -435,7 +494,7 @@ const useStyles = makeStyles(() => ({
   },
   tab: {
     flex: 1,
-    minWidth: '100%',
+    minWidth: '33.33%',
     maxWidth: '100%'
   },
   tabPanel: { flex: 1 },
