@@ -260,8 +260,8 @@ const useStyles = makeStyles(() => ({
   },
   closeButton: {
     position: 'absolute',
-    top: 50,
-    right: 50,
+    top: 30,
+    left: 30,
     zIndex: 10,
     '& svg': {
       color: '#fff'
