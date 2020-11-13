@@ -73,14 +73,6 @@ export const PersonInfoItem: FC<Props> = ({ user, date }) => {
             </Typography>
           </div>
         </div>
-        <div className={classes.contactInfo}>
-          <div className={classes.contactLine}>
-            <Typography variant='h6' className={classes.contactLineTitle}>
-              Email:{' '}
-            </Typography>
-            <a href={'mailto:' + user.email}>{user.email}</a>
-          </div>
-        </div>
       </Popover>
     </div>
   )
