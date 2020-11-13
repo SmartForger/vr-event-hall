@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import YouTube from 'react-youtube'
 
 import { Modal } from 'components/shared'
 import { ConversationList } from '../chat'
+import { PollDrawer } from '../videochat/PollDrawer'
+import { DetailsPanel, PeoplePanel, ToolsPanel } from '../videochat/Panels'
+import { Drawer, Tab, Tabs, Toolbar, Box } from '@material-ui/core'
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import {
   iPhone8PlusLandscapeMediaQuery,
@@ -10,8 +13,73 @@ import {
   iPhoneXLandscapeMediaQuery
 } from 'helpers/styles/media-queries'
 
+import { useAppState, useVideoChatContext, PollProvider } from 'providers'
+import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
+import { getSession } from 'graphql/queries'
+import { onUpdateSession } from 'graphql/subscriptions'
+import { ISubscriptionObject, ISession } from 'types'
+
+import { findSessionById, Sessions } from '../../helpers'
+import { ChatMessages, TabPanel } from 'components'
+import { ConditionalWrapper, DialogCard } from 'components/shared'
+import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
+
 export const LiveStream = ({ visible, setVisibility, streamSrc, user, users }) => {
   const classes = useStyles()
+  const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
+  const [tabValue, setTabValue] = useState<number>(0)
+  const [isPresenter] = useState<boolean>(false)
+  const { videoChatState, dispatch } = useVideoChatContext()
+  const [currentSession, setCurrentSession] = useState<ISession | null>(null)
+  const setLoading = useCallback((payload: boolean) => dispatch({ type: 'SET_LOADING', payload }), [])
+
+  let sessionUpdatedSubscription = useRef<ISubscriptionObject | null>(null)
+
+  const updateSessionInfo = ({ onUpdateSession }) => {
+    // setGlobalMute(onUpdateSession.muted)
+    setCurrentSession(onUpdateSession)
+    dispatch({
+      type: 'SET_DETAILS',
+      payload: {
+        session: onUpdateSession,
+        pinnedMessage: onUpdateSession.pinnedMessage
+      }
+    })
+  }
+
+  const getSessionInfo = async () => {
+    const session = await graphQLQuery(getSession, 'getSession', { id: videoChatState.sessionId })
+    setCurrentSession(session)
+
+    dispatch({
+      type: 'SET_DETAILS',
+      payload: {
+        session: session,
+        pinnedMessage: session.pinnedMessage
+      }
+    })
+
+    sessionUpdatedSubscription.current = graphQLSubscription(
+      onUpdateSession,
+      { id: videoChatState?.session?.id || videoChatState.sessionId },
+      updateSessionInfo
+    )
+  }
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 1500)
+    if (videoChatState.sessionId) {
+      getSessionInfo()
+    }
+
+    return () => {
+      sessionUpdatedSubscription?.current?.unsubscribe()
+    }
+  }, [])
+
+  const handleChange = (_, newValue) => {
+    setTabValue(newValue)
+  }
 
   return (
     <Modal open={visible} onClose={() => setVisibility(false)}>

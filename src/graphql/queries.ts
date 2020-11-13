@@ -209,6 +209,16 @@ export const getSession = /* GraphQL */ `
         }
         nextToken
       }
+      participants {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       pinnedMessageId
       pinnedMessage {
         id
@@ -338,6 +348,9 @@ export const listSessions = /* GraphQL */ `
         users {
           nextToken
         }
+        participants {
+          nextToken
+        }
         pinnedMessageId
         pinnedMessage {
           id
@@ -457,6 +470,9 @@ export const getAdminUser = /* GraphQL */ `
           nextToken
         }
         users {
+          nextToken
+        }
+        participants {
           nextToken
         }
         pinnedMessageId
@@ -1006,6 +1022,9 @@ export const sessionByConversationId = /* GraphQL */ `
           nextToken
         }
         users {
+          nextToken
+        }
+        participants {
           nextToken
         }
         pinnedMessageId

@@ -98,15 +98,16 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
   }
 
   useEffect(() => {
-    getInitiallyActiveQuestions()
-    // getAllUserAnswers()
+    if (videoChatState?.session?.id) {
+      getInitiallyActiveQuestions()
+    }
 
     return () => {
       pollUpdatedSubscription?.current?.unsubscribe()
       clearTimeout(pollInactifyTimer)
       dispatch({ type: 'SET_ANSWER', payload: '' })
     }
-  }, [])
+  }, [videoChatState?.session?.id])
 
   const handlePollResponse = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: 'SET_ANSWER', payload: event.target.value })

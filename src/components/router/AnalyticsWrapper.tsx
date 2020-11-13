@@ -5,9 +5,11 @@ import AuthBG from 'assets/entrp-welcome-bg.jpg'
 
 import { AuthWrapper } from 'components/auth'
 import { UserAuthenticatedRoutes } from './UserAuthenticatedRoutes'
+import { RosterProvider } from 'providers/RosterProvider'
+import { VideoChatProvider } from 'providers'
 import { GameWrapper } from 'UI'
 import { Header } from 'components'
-import { VimeoLiveStream } from 'components/livestream'
+import { LiveStreamWrapper } from 'components/livestream'
 
 export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, useBackupStream, vcOff }) => {
   const location = useLocation()
@@ -22,10 +24,10 @@ export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, u
       <Route exact path='/'>
         <AuthWrapper backgroundImage={AuthBG} setUser={setUser} />
       </Route>
-      <Route exact path='/stream'>
-        <VimeoLiveStream useBackupStream={useBackupStream} user={user} eventStage={eventStage} />
-      </Route>
       <UserAuthenticatedRoutes user={user} setUser={setUser}>
+        <Route exact path='/stream'>
+          <LiveStreamWrapper useBackupStream={useBackupStream} eventStage={eventStage} />
+        </Route>
         <Route exact path='/event'>
           <GameWrapper user={user} eventStage={eventStage} streamStartTime={streamStartTime} vcOff={vcOff} />
         </Route>

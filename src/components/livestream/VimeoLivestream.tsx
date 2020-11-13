@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useMemo, useState } from 'react'
-import { Box, IconButton, makeStyles, Typography } from '@material-ui/core'
+import React, { FC, useEffect, useState, useCallback, useRef, useMemo } from 'react'
+import { Box, IconButton, makeStyles, Typography, Tab, Tabs, Drawer, Toolbar } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
 import { PillButton, RouteTransition } from 'components'
 import { graphQLMutation } from '../../graphql/helpers'
@@ -8,17 +8,43 @@ import { EventStages, IUser } from '../../types'
 import { useHistory } from 'react-router-dom'
 import { findSessionById, ISession } from '../../helpers'
 
+import MeetingControls from '../videochat/MeetingControls'
+import MeetingDetails from '../videochat/MeetingDetails'
+// import { StyledLayout, StyledContent, StyledGrid } from './Styled'
+import { DetailsPanel, PeoplePanel, ToolsPanel } from '../videochat/Panels'
+import { PollDrawer } from '../videochat/PollDrawer'
+import { ChatMessages, TabPanel } from 'components'
+
+// import { useMeetingEndedRedirect } from 'hooks'
+import { useAppState, useVideoChatContext, PollProvider, VideoChatProvider } from 'providers'
+import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
+import { getSession } from 'graphql/queries'
+import { onUpdateSession } from 'graphql/subscriptions'
+import { createSessionParticipant, deleteSessionParticipant, deleteConvoLink } from 'graphql/mutations'
+import { ISubscriptionObject } from 'types'
+
+import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
+import { ConditionalWrapper, DialogCard } from 'components/shared'
+import { Sessions } from '../../helpers'
+
 interface VimeoLiveStreamProps {
   useBackupStream: Boolean
-  user?: IUser
   eventStage?: EventStages
 }
+export const LiveStreamWrapper: FC<VimeoLiveStreamProps> = (props: VimeoLiveStreamProps) => (
+  <VideoChatProvider>
+    <VimeoLiveStream {...props} />
+  </VideoChatProvider>
+)
 
-export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, user, eventStage }) => {
+const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage }) => {
   const classes = useStyles()
   const [redirectTrigger, setRedirectTrigger] = useState<boolean>(false)
   const [openModal, setOpenModal] = useState(false)
   const history = useHistory()
+  const {
+    appState: { user }
+  } = useAppState()
 
   const session: ISession | null = useMemo(() => {
     // return Sessions.healthcareInsurance
@@ -35,6 +61,89 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
       return ''
     }
   }, [session])
+  const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
+  const [tabValue, setTabValue] = useState<number>(0)
+  const [isAdmin, setAdmin] = useState<boolean>(false)
+
+  const { videoChatState, dispatch } = useVideoChatContext()
+  const [currentSession, setCurrentSession] = useState<ISession | null>(null)
+  const setLoading = useCallback((payload: boolean) => dispatch({ type: 'SET_LOADING', payload }), [])
+
+  let sessionUpdatedSubscription = useRef<ISubscriptionObject | null>(null)
+
+  // // set the livestream session id right away
+  // dispatch({
+  //   type: 'SET_DETAILS',
+  //   payload: {
+  //     sessionId: Sessions.livestream.id
+  //   }
+  // })
+
+  const updateSessionInfo = ({ onUpdateSession }) => {
+    // setGlobalMute(onUpdateSession.muted)
+    setCurrentSession(onUpdateSession)
+    dispatch({
+      type: 'SET_DETAILS',
+      payload: {
+        session: onUpdateSession,
+        pinnedMessage: onUpdateSession.pinnedMessage,
+        attendees: onUpdateSession.attendees
+      }
+    })
+  }
+
+  const getSessionInfo = async () => {
+    const session = await graphQLQuery(getSession, 'getSession', { id: Sessions.livestream.id })
+    setCurrentSession(session)
+    console.log(session)
+    dispatch({
+      type: 'SET_DETAILS',
+      payload: {
+        session: session,
+        conversationId: session?.conversationId,
+        pinnedMessage: session.pinnedMessage
+      }
+    })
+    // if the user is one of the admins, set them as such
+    if (session?.admins?.items?.some?.(a => a.userId === user?.id)) {
+      setAdmin(true)
+    }
+
+    sessionUpdatedSubscription.current = graphQLSubscription(
+      onUpdateSession,
+      { id: Sessions.livestream.id },
+      updateSessionInfo
+    )
+  }
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 1500)
+    getSessionInfo()
+    // set user as participant in livestream
+    // graphQLMutation(createSessionParticipant, {
+    //   userId: user?.id,
+    //   sessionId: Sessions.livestream.id
+    // })
+
+    return () => {
+      // remove the user as participant in livestream for an accurate-ish count
+      // graphQLMutation(deleteSessionParticipant, {
+      //   userId: user?.id,
+      //   sessionId: Sessions.livestream.id
+      // })
+      // // remove the user from the session conversastion
+      // graphQLMutation(deleteConvoLink, {
+      //   userId: user?.id,
+      //   conversationId: videoChatState?.session?.conversationId
+      // })
+
+      sessionUpdatedSubscription?.current?.unsubscribe()
+    }
+  }, [])
+
+  const handleChange = (_, newValue) => {
+    setTabValue(newValue)
+  }
 
   useEffect(() => {
     if (user?.id) {
@@ -86,6 +195,98 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
             ></iframe>
           </>
         )}
+        <div className={classes.streamSide}>
+          <IconButton
+            className={classes.closeButton}
+            onClick={() => setOpenModal(true)}
+            disableFocusRipple
+            disableRipple
+            disableTouchRipple
+          >
+            <Close />
+          </IconButton>
+          {!useBackupStream ? (
+            <>
+              <iframe
+                className={classes.iframe}
+                title='Verizon 5G'
+                src='https://vimeo.com/event/445293/embed'
+                allow='autoplay; fullscreen'
+                allowFullScreen
+              ></iframe>
+            </>
+          ) : (
+            <>
+              <iframe
+                className={classes.iframe}
+                title='Verizon 5G'
+                src='https://vimeo.com/event/445311/embed'
+                allow='autoplay; fullscreen'
+                allowFullScreen
+              ></iframe>
+            </>
+          )}
+        </div>
+
+        {/* chat drawer */}
+        <div className={classes.chatSide}>
+          <Drawer
+            anchor={'right'}
+            open={true}
+            ModalProps={{ hideBackdrop: true }}
+            variant='persistent'
+            classes={{
+              paper: classes.messagePaper
+            }}
+          >
+            <div className={classes.logo}>
+              <Logo />
+            </div>
+            <div className={classes.displayMenu}>
+              <Toolbar className={classes.toolbar}>
+                <Tabs
+                  value={tabValue}
+                  onChange={handleChange}
+                  className={classes.tabs}
+                  TabIndicatorProps={{
+                    style: { top: 0, backgroundColor: '#D52B1E', height: '4px' }
+                  }}
+                >
+                  <Tab label='Chat' className={classes.tab} />
+                  {/* <Tab label='People' className={classes.tab} /> */}
+                  {/* <Tab label={isAdmin ? 'Tools' : 'Details'} className={classes.tab} /> */}
+                </Tabs>
+              </Toolbar>
+              <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
+                <ChatMessages videoChat={true} isLivestream={true} />
+                {qaDialogOpen ? (
+                  <DialogCard
+                    title='Q&A now open!'
+                    message={`Submit your question by clicking the question mark icon in the chat message box`}
+                    onConfirm={() => setQADialogOpen(false)}
+                    onCancel={() => setQADialogOpen(false)}
+                    className={classes.dialog}
+                    confirmText='Ok'
+                    hideCancel
+                  />
+                ) : null}
+              </TabPanel>
+              {/* <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
+                <PeoplePanel isAdmin={isAdmin} />
+              </TabPanel> */}
+              {/* {isAdmin ? (
+                <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
+                  <ToolsPanel />
+                </TabPanel>
+              ) : (
+                <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
+                  {currentSession && <DetailsPanel body={Sessions.livestream.side.chatBody || ''} />}
+                </TabPanel>
+              )} */}
+            </div>
+          </Drawer>
+          <PollDrawer />
+        </div>
       </div>
       <RouteTransition animationTrigger={redirectTrigger} route='/event' timeout={300} />
       {openModal && (
@@ -136,14 +337,14 @@ const useStyles = makeStyles(() => ({
     zIndex: 1,
     top: 0,
     left: 0,
-    width: '100%',
+    width: 'calc(100% - 351px)',
     height: '100%',
     border: 'none'
   },
   closeButton: {
     position: 'absolute',
-    top: 50,
-    right: 50,
+    top: 30,
+    left: 30,
     zIndex: 10,
     '& svg': {
       color: '#fff'
@@ -184,5 +385,92 @@ const useStyles = makeStyles(() => ({
       backgroundColor: 'black',
       color: 'white'
     }
+  },
+  streamSide: {
+    width: '100%'
+  },
+  chatSide: {},
+  hamburgerMenu: {
+    position: 'absolute',
+    top: '30px',
+    right: '45px',
+    display: 'inline-block',
+    cursor: 'pointer'
+  },
+  messagePaper: {
+    '&.MuiPaper-root': {
+      backgroundColor: 'white !important'
+    }
+  },
+  logo: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    background: 'white',
+    minHeight: '60px',
+    maxHeight: '60px'
+  },
+  mainMenu: {
+    height: 'calc(100% - 60px)',
+    overflow: 'scroll'
+  },
+  displayMenu: {
+    width: '350px',
+    color: 'white',
+    height: 'calc(100% - 60px)',
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  toolbar: {
+    paddingRight: 0,
+    paddingLeft: 0,
+    alignItems: 'flex-start',
+    minHeight: '50px',
+    borderBottom: '1px solid #D8DADA'
+  },
+  tabs: {
+    display: 'flex',
+    width: '100%',
+    color: 'black'
+  },
+  tab: {
+    flex: 1,
+    minWidth: '100%',
+    maxWidth: '100%'
+  },
+  tabPanel: { flex: 1 },
+  peoplePanel: {
+    '& .MuiBox-root': {
+      paddingTop: 0
+    }
+  },
+  black: {
+    background: 'black'
+  },
+  dialog: {
+    position: 'absolute',
+    top: 0,
+    width: '100%'
+  },
+  avatarContainer: {
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    color: 'white',
+    alignItems: 'center',
+    position: 'relative'
+  },
+  avatarCircle: {
+    width: '100px',
+    height: '100px',
+    background: 'blue',
+    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9
+  },
+  avatarLetter: {
+    fontSize: '3rem'
   }
 }))
