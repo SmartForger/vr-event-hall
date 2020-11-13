@@ -17,7 +17,7 @@ import { ChatMessages, TabPanel } from 'components'
 // import { useMeetingEndedRedirect } from 'hooks'
 import { useAppState, useVideoChatContext, PollProvider, VideoChatProvider } from 'providers'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
-import { onUpdateSession } from 'graphql/subscriptions'
+import { onCreateSessionParticipant, onUpdateSession } from 'graphql/subscriptions'
 import { ISubscriptionObject, ISession } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
@@ -53,6 +53,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
   const setLoading = useCallback((payload: boolean) => dispatch({ type: 'SET_LOADING', payload }), [])
 
   let sessionUpdatedSubscription = useRef<ISubscriptionObject | null>(null)
+  let newParticipantSubscription = useRef<ISubscriptionObject | null>(null)
 
   const updateSessionInfo = ({ onUpdateSession }) => {
     // setGlobalMute(onUpdateSession.muted)
@@ -97,6 +98,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
 
     return () => {
       sessionUpdatedSubscription?.current?.unsubscribe()
+      newParticipantSubscription?.current?.unsubscribe()
       // remove the user as participant in livestream for an accurate-ish count
       if (participantId) {
         graphQLMutation(deleteSessionParticipantMin, { id: participantId })
@@ -108,7 +110,23 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
     setTabValue(newValue)
   }
 
+  const participantJoined = ({ onCreateSessionParticipant }) => {
+    dispatch({
+      type: 'SET_DETAILS',
+      payload: {
+        session: {
+          ...videoChatState?.session,
+          participants: {
+            items: [...(videoChatState?.session?.participants?.items || []), onCreateSessionParticipant]
+          }
+        }
+      }
+    })
+  }
+
   const createParticipant = async () => {
+    newParticipantSubscription?.current?.unsubscribe()
+
     if (
       Array.isArray(videoChatState?.session?.participants?.items) &&
       !videoChatState?.session?.participants?.items.some(p => p.userId === user?.id)
@@ -137,6 +155,12 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
       const participant = videoChatState?.session?.participants?.items.find(p => p.userId === user?.id)
       setParticipantId(participant?.id || '')
     }
+
+    newParticipantSubscription.current = graphQLSubscription(
+      onCreateSessionParticipant,
+      { sessionId: Sessions.livestream.id },
+      participantJoined
+    )
   }
 
   useEffect(() => {

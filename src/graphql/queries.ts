@@ -216,12 +216,6 @@ export const getSession = /* GraphQL */ `
           sessionId
           createdAt
           updatedAt
-          user {
-            firstName
-            lastName
-            email
-            avatar
-          }
         }
         nextToken
       }

@@ -326,5 +326,6 @@ type Subscription {
   onUpdateVideoChatInvite(id: ID!): VideoChatInvite @aws_subscribe(mutations: ["updateVideoChatInvite"])
   onCreateSessionParticipant(sessionId: ID!): UserSessionParticipant
     @aws_subscribe(mutations: ["createSessionParticipant"])
-  onUpdateSessionParticipant(id: ID!): UserSessionParticipant @aws_subscribe(mutations: ["updateSessionParticipant"])
+  onUpdateSessionParticipant(sessionId: ID!): UserSessionParticipant
+    @aws_subscribe(mutations: ["updateSessionParticipant"])
 }
