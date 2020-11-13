@@ -15,7 +15,7 @@ import { PollDrawer } from '../videochat/PollDrawer'
 import { ChatMessages, TabPanel } from 'components'
 
 // import { useMeetingEndedRedirect } from 'hooks'
-import { useAppState, useVideoChatContext, PollProvider } from 'providers'
+import { useAppState, useVideoChatContext, PollProvider, VideoChatProvider } from 'providers'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { getSession } from 'graphql/queries'
 import { onUpdateSession } from 'graphql/subscriptions'
@@ -24,34 +24,40 @@ import { ISubscriptionObject, ISession } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
 import { ConditionalWrapper, DialogCard } from 'components/shared'
-import { NullEngine } from 'babylonjs'
 import { Sessions } from '../../helpers'
 
 interface VimeoLiveStreamProps {
   useBackupStream: Boolean
-  user?: IUser
   eventStage?: EventStages
 }
+export const LiveStreamWrapper: FC<VimeoLiveStreamProps> = (props: VimeoLiveStreamProps) => (
+  <VideoChatProvider>
+    <VimeoLiveStream {...props} />
+  </VideoChatProvider>
+)
 
-export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, user, eventStage }) => {
+const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage }) => {
   const classes = useStyles()
   const [redirectTrigger, setRedirectTrigger] = useState<boolean>(false)
   const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
   const [tabValue, setTabValue] = useState<number>(0)
   const [isAdmin, setAdmin] = useState<boolean>(false)
+  const {
+    appState: { user }
+  } = useAppState()
   const { videoChatState, dispatch } = useVideoChatContext()
   const [currentSession, setCurrentSession] = useState<ISession | null>(null)
   const setLoading = useCallback((payload: boolean) => dispatch({ type: 'SET_LOADING', payload }), [])
 
   let sessionUpdatedSubscription = useRef<ISubscriptionObject | null>(null)
 
-  // set the livestream session id right away
-  dispatch({
-    type: 'SET_DETAILS',
-    payload: {
-      sessionId: Sessions.livestream.id
-    }
-  })
+  // // set the livestream session id right away
+  // dispatch({
+  //   type: 'SET_DETAILS',
+  //   payload: {
+  //     sessionId: Sessions.livestream.id
+  //   }
+  // })
 
   const updateSessionInfo = ({ onUpdateSession }) => {
     // setGlobalMute(onUpdateSession.muted)
@@ -67,12 +73,14 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
   }
 
   const getSessionInfo = async () => {
-    const session = await graphQLQuery(getSession, 'getSession', { id: videoChatState.sessionId })
+    const session = await graphQLQuery(getSession, 'getSession', { id: Sessions.livestream.id })
     setCurrentSession(session)
+    console.log(session)
     dispatch({
       type: 'SET_DETAILS',
       payload: {
         session: session,
+        conversationId: session?.conversationId,
         pinnedMessage: session.pinnedMessage
       }
     })
@@ -83,33 +91,31 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
 
     sessionUpdatedSubscription.current = graphQLSubscription(
       onUpdateSession,
-      { id: videoChatState?.session?.id || videoChatState.sessionId },
+      { id: Sessions.livestream.id },
       updateSessionInfo
     )
   }
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1500)
-    if (videoChatState.sessionId) {
-      getSessionInfo()
-    }
+    getSessionInfo()
     // set user as participant in livestream
-    graphQLMutation(createSessionParticipant, {
-      userId: user?.id,
-      sessionId: Sessions.livestream.id
-    })
+    // graphQLMutation(createSessionParticipant, {
+    //   userId: user?.id,
+    //   sessionId: Sessions.livestream.id
+    // })
 
     return () => {
       // remove the user as participant in livestream for an accurate-ish count
-      graphQLMutation(deleteSessionParticipant, {
-        userId: user?.id,
-        sessionId: Sessions.livestream.id
-      })
-      // remove the user from the session conversastion
-      graphQLMutation(deleteConvoLink, {
-        userId: user?.id,
-        conversationId: videoChatState?.session?.conversationId
-      })
+      // graphQLMutation(deleteSessionParticipant, {
+      //   userId: user?.id,
+      //   sessionId: Sessions.livestream.id
+      // })
+      // // remove the user from the session conversastion
+      // graphQLMutation(deleteConvoLink, {
+      //   userId: user?.id,
+      //   conversationId: videoChatState?.session?.conversationId
+      // })
 
       sessionUpdatedSubscription?.current?.unsubscribe()
     }
@@ -203,7 +209,7 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
                 </Tabs>
               </Toolbar>
               <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
-                <ChatMessages videoChat={true} />
+                <ChatMessages videoChat={true} isLivestream={true} />
                 {qaDialogOpen ? (
                   <DialogCard
                     title='Q&A now open!'

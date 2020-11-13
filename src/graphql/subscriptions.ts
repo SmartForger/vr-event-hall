@@ -343,7 +343,6 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
-          sessionId
           userType
           createdAt
           updatedAt
@@ -354,7 +353,6 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
-          sessionId
           createdAt
           updatedAt
         }
@@ -364,7 +362,6 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
-          sessionId
           createdAt
           updatedAt
         }
@@ -414,7 +411,6 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
-          sessionId
           dismissed
           createdAt
           updatedAt
@@ -425,7 +421,6 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
-          sessionId
           answered
           content
           createdAt
@@ -436,7 +431,6 @@ export const onUpdateSession = /* GraphQL */ `
       polls {
         items {
           id
-          sessionId
           active
           name
           question
@@ -453,7 +447,6 @@ export const onUpdateSession = /* GraphQL */ `
       pollAnswers {
         items {
           id
-          sessionId
           userId
           answer
           createdAt
