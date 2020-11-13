@@ -92,6 +92,14 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
     // eslint-disable-next-line
   }, [currentConversationId])
 
+  // if this changes after initial load (stream player)
+  // then we should set the new conversation id
+  useEffect(() => {
+    if (videoChatState.conversationId) {
+      setConversationId(videoChatState.conversationId)
+    }
+  }, [videoChatState.conversationId])
+
   useEffect(() => {
     if (messages.length > 0) {
       scrollToBottom()

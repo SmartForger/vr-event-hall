@@ -38,7 +38,7 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
   const [redirectTrigger, setRedirectTrigger] = useState<boolean>(false)
   const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
   const [tabValue, setTabValue] = useState<number>(0)
-  const [isPresenter] = useState<boolean>(false)
+  const [isAdmin, setAdmin] = useState<boolean>(false)
   const { videoChatState, dispatch } = useVideoChatContext()
   const [currentSession, setCurrentSession] = useState<ISession | null>(null)
   const setLoading = useCallback((payload: boolean) => dispatch({ type: 'SET_LOADING', payload }), [])
@@ -76,6 +76,10 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
         pinnedMessage: session.pinnedMessage
       }
     })
+    // if the user is one of the admins, set them as such
+    if (session?.admins?.items?.some?.(a => a.userId === user?.id)) {
+      setAdmin(true)
+    }
 
     sessionUpdatedSubscription.current = graphQLSubscription(
       onUpdateSession,
@@ -86,11 +90,9 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1500)
-
     if (videoChatState.sessionId) {
       getSessionInfo()
     }
-
     // set user as participant in livestream
     graphQLMutation(createSessionParticipant, {
       userId: user?.id,
@@ -197,7 +199,7 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
                 >
                   <Tab label='Chat' className={classes.tab} />
                   <Tab label='People' className={classes.tab} />
-                  <Tab label={isPresenter ? 'Tools' : 'Details'} className={classes.tab} />
+                  <Tab label={isAdmin ? 'Tools' : 'Details'} className={classes.tab} />
                 </Tabs>
               </Toolbar>
               <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
@@ -215,9 +217,9 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
                 ) : null}
               </TabPanel>
               <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
-                <PeoplePanel isAdmin={isPresenter} />
+                <PeoplePanel isAdmin={isAdmin} />
               </TabPanel>
-              {isPresenter ? (
+              {isAdmin ? (
                 <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
                   <ToolsPanel />
                 </TabPanel>
