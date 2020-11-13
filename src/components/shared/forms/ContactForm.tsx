@@ -138,7 +138,7 @@ export const ContactForm: FC<ContactFormProps> = ({
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
         <Grid item sm={6} xs={12}>
           <TextField
             required
@@ -212,7 +212,7 @@ export const ContactForm: FC<ContactFormProps> = ({
           </FormControl>
         </Grid>
       </Grid>
-      <Box mt={'26px'}>
+      <Box>
         <Button type='submit' variant='contained' disableElevation>
           {I18n.get('submit')}
         </Button>

@@ -38,13 +38,18 @@ export const Connect: FC<ConnectProps> = ({ transition, user, setSuccessMessage,
         <Container className={classes.root} component='main' maxWidth={false}>
           <Box className={classes.box}>
             <Typography className={classes.title} component='h1' variant='h1' color='textPrimary' gutterBottom>
-              Let's connect.
+              Contact us.
+            </Typography>
+            <Typography component='p' variant='body2' color='textPrimary' gutterBottom>
+              The fourth industrial revolution is here, ready to transform industry and open doors to new opportunities.
+              But this transformation requires an advanced kind of network—one that’s ready to help your business
+              innovate. Have questions? Let us help.
             </Typography>
             <ContactForm
               isHelpRequest={false}
               setSuccessMessage={setSuccessMessage}
               setErrorMessage={setErrorMessage}
-              messageHelper='Please let us know what we can do to serve your needs.'
+              messageHelper='Let us know how we can help.'
               user={user}
             />
           </Box>
