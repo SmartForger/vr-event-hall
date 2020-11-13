@@ -37,7 +37,7 @@ export const theme: Theme = createMuiTheme({
     },
     MuiFormHelperText: {
       root: {
-        fontSize: '10px',
+        fontSize: '12px',
         color: '#000000',
 
         '&.Mui-error': {
