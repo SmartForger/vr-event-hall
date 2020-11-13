@@ -37,12 +37,6 @@ export const graphQLSubscription = (subscription: string, options: any, callback
     next: ({ value: { data, errors } }) => {
       console.log(errors)
       callback(data)
-    },
-    error: e => {
-      console.error('our error')
-      console.error(e)
-      console.log('our sub')
-      console.log(subscription)
     }
   })
 }

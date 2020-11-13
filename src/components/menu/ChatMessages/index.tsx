@@ -44,9 +44,6 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
   let updateSubscription = useRef<ISubscriptionObject | null>(null)
 
   const addNewMessage = ({ onCreateMessage }) => {
-    console.log(onCreateMessage)
-    console.log('new', onCreateMessage.conversationId)
-    console.log('esiting', currentConversationId)
     if (internal && videoChat && onCreateMessage.conversationId === videoChatState?.session?.icId) {
       setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
     } else if (videoChat && onCreateMessage.conversationId === currentConversationId) {
