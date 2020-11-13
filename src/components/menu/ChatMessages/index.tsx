@@ -45,11 +45,11 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
 
   const addNewMessage = ({ onCreateMessage }) => {
     console.log(onCreateMessage)
-    console.log(onCreateMessage.conversationId)
-    console.log(videoChatState?.session?.conversationId)
+    console.log('new', onCreateMessage.conversationId)
+    console.log('esiting', currentConversationId)
     if (internal && videoChat && onCreateMessage.conversationId === videoChatState?.session?.icId) {
       setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
-    } else if (videoChat && onCreateMessage.conversationId === videoChatState?.session?.conversationId) {
+    } else if (videoChat && onCreateMessage.conversationId === currentConversationId) {
       setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
     } else if (!videoChat && onCreateMessage.conversationId === chatState?.conversationId) {
       setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
@@ -99,11 +99,11 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
 
   // if this changes after initial load (stream player)
   // then we should set the new conversation id
-  // useEffect(() => {
-  //   if (videoChatState.conversationId) {
-  //     setConversationId(videoChatState.conversationId)
-  //   }
-  // }, [videoChatState.conversationId])
+  useEffect(() => {
+    if (videoChatState.conversationId) {
+      setConversationId(videoChatState.conversationId)
+    }
+  }, [videoChatState.conversationId])
 
   useEffect(() => {
     if (messages.length > 0) {

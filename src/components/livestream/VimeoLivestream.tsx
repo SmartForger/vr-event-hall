@@ -204,8 +204,8 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
                   }}
                 >
                   <Tab label='Chat' className={classes.tab} />
-                  <Tab label='People' className={classes.tab} />
-                  <Tab label={isAdmin ? 'Tools' : 'Details'} className={classes.tab} />
+                  {/* <Tab label='People' className={classes.tab} /> */}
+                  {/* <Tab label={isAdmin ? 'Tools' : 'Details'} className={classes.tab} /> */}
                 </Tabs>
               </Toolbar>
               <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
@@ -222,10 +222,10 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
                   />
                 ) : null}
               </TabPanel>
-              <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
+              {/* <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
                 <PeoplePanel isAdmin={isAdmin} />
-              </TabPanel>
-              {isAdmin ? (
+              </TabPanel> */}
+              {/* {isAdmin ? (
                 <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
                   <ToolsPanel />
                 </TabPanel>
@@ -233,7 +233,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
                 <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
                   {currentSession && <DetailsPanel body={Sessions.livestream.side.chatBody || ''} />}
                 </TabPanel>
-              )}
+              )} */}
             </div>
           </Drawer>
           <PollDrawer />
@@ -316,8 +316,8 @@ const useStyles = makeStyles(() => ({
   },
   tab: {
     flex: 1,
-    minWidth: '33.33%',
-    maxWidth: '33.33%'
+    minWidth: '100%',
+    maxWidth: '100%'
   },
   tabPanel: { flex: 1 },
   peoplePanel: {
