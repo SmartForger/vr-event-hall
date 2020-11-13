@@ -24,9 +24,7 @@ export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, u
         <AuthWrapper backgroundImage={AuthBG} setUser={setUser} />
       </Route>
       <Route exact path='/stream'>
-        <RosterProvider>
-          <VimeoLiveStream useBackupStream={useBackupStream} user={user} eventStage={eventStage} />
-        </RosterProvider>
+        <VimeoLiveStream useBackupStream={useBackupStream} user={user} eventStage={eventStage} />
       </Route>
       <UserAuthenticatedRoutes user={user} setUser={setUser}>
         <Route exact path='/event'>

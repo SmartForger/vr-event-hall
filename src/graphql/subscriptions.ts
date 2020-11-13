@@ -360,6 +360,16 @@ export const onUpdateSession = /* GraphQL */ `
         }
         nextToken
       }
+      participants {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       pinnedMessageId
       pinnedMessage {
         id

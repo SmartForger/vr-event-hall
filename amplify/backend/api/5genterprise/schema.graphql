@@ -46,6 +46,7 @@ type Session
   ic: Conversation @connection(fields: ["icId"])
   admins: [AdminUser] @connection(keyName: "byAdminSession", fields: ["id"])
   users: [UserSessionReservation] @connection(keyName: "byUserSessionsReservs", fields: ["id"])
+  participants: [UserSessionParticipant] @connection(keyName: "byUserSessionParticipant", fields: ["id"])
   pinnedMessageId: ID!
   pinnedMessage: Message @connection(fields: ["pinnedMessageId"])
   raisedHands: [RaisedHand] @connection(keyName: "bySessionByDate", fields: ["id"])
@@ -55,6 +56,22 @@ type Session
   qaActive: Boolean
   presenterPins: [String]
   muted: Boolean
+}
+
+# for active users in session
+type UserSessionParticipant
+  @model(
+    mutations: { create: "createSessionParticipant", update: "updateSessionParticipant" delete: "deleteSessionParticipant"}
+    queries: null
+    subscriptions: null
+  )
+  @key(name: "bySessionUsersParticipant", fields: ["userId", "sessionId"])
+  @key(name: "byUserSessionParticipant", fields: ["sessionId", "userId"]) {
+  id: ID!
+  userId: ID!
+  sessionId: ID!
+  user: User! @connection(fields: ["userId"])
+  session: Session! @connection(fields: ["sessionId"])
 }
 
 type UserSessionReservation
@@ -296,4 +313,6 @@ type Subscription {
   onCreateGlobalRaisedHand: RaisedHand @aws_subscribe(mutations: ["createRaisedHand"])
   onCreateVideoChatInvite(userId: ID!): VideoChatInvite @aws_subscribe(mutations: ["createVideoChatInvite"])
   onUpdateVideoChatInvite(id: ID!): VideoChatInvite @aws_subscribe(mutations: ["updateVideoChatInvite"])
+  onCreateSessionParticipant(userId: ID!): UserSessionParticipant @aws_subscribe(mutations: ["createSessionParticipant"])
+  onUpdateSessionParticipant(id: ID!): UserSessionParticipant @aws_subscribe(mutations: ["updateSessionParticipant"])
 }
