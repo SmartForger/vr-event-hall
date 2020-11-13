@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, ReactElement } from 'react'
 import {
   createStyles,
   makeStyles,
@@ -10,6 +10,7 @@ import {
 
 interface ButtonProps extends MuiButtonProps {
   className?: string
+  component?: string | ReactElement
   textColor?: string
   borderColor?: string
   loading?: boolean

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
+import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent, useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Promise from 'bluebird'
@@ -24,6 +24,7 @@ import { IUser, ISession } from 'types'
 // Images
 import profileBg from 'assets/userProfileBg.jpg'
 import iconEditProfile from 'assets/icon-edit-profile.svg'
+import { UploadButton } from 'components/shared/controls/UploadButton'
 
 interface IProfileErrors {
   firstName: string
@@ -55,8 +56,33 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const [editModeState, setEditModeState] = useState<boolean>(false)
   const [profileInfo, setProfileInfo] = useState<IUser | undefined>(user)
   const [profileErrors, setProfileErrors] = useState<IProfileErrors>(initialProfileErrors)
+  const [file, setFile] = useState<File>()
+  const [imageBlob, setImageBlob] = useState<string>()
 
   const listRef = useRef<VariableSizeProps>()
+
+  /**
+   * Image Preview
+   */
+  useEffect(() => {
+    let cancelled = false
+
+    if (file) {
+      const reader = new FileReader()
+
+      reader.addEventListener('load', () => {
+        if (!cancelled && reader.result) {
+          setImageBlob(reader.result.toString())
+        }
+      })
+
+      reader.readAsDataURL(file)
+    }
+
+    return () => {
+      cancelled = true
+    }
+  }, [file])
 
   const getProfileInfo = async (userId: string) => {
     const foundUser = await graphQLQuery(getUser, 'getUser', { id: userId })
@@ -175,6 +201,15 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     history.push('/')
   }
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target
+
+    if (files && files[0]) {
+      const file = files[0]
+      setFile(file)
+    }
+  }
+
   const profileDisplay = (
     <>
       <img src={profileBg} alt='profile background' />
@@ -221,13 +256,14 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         <Grid item xs={4}>
           <Avatar
             alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
-            src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+            src={imageBlob || `https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
             className={classNames(classes.avatar, classes.avatarEdit)}
           />
         </Grid>
-        {/* TODO: Implement upload image feature */}
-        <Grid item xs={8} style={{ display: 'none' }}>
-          <PillButton onClick={() => console.debug('Upload avatar')}>Upload image</PillButton>
+        <Grid item xs={8}>
+          <UploadButton accept='image/jpeg, image/png' onChange={handleFileChange}>
+            Upload image
+          </UploadButton>
         </Grid>
       </Grid>
 
