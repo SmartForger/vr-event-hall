@@ -25,7 +25,7 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
     if (!user || !user.sessions || !user.sessions.items) {
       return null
     }
-    return findSessionById(user.sessions.items[0].sessionId) || null
+    return findSessionById(user.sessions.items[0]?.sessionId) || null
   }, [user])
 
   const sessionName = useMemo(() => {
@@ -109,7 +109,7 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
                   variant='outlined'
                   textColor='white'
                   backgroundColor='black'
-                  onClick={() => history.push(session ? `/event/?sessionId=${session.id}` : '/event')}
+                  onClick={() => history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')}
                   classes={{ root: classes.toastESSButton }}
                 >
                   {session ? 'Join session' : 'Pick your breakout session'}

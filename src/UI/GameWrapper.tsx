@@ -354,6 +354,12 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
     if (!sessionId) {
       return
     }
+
+    if (sessionId === 'home') {
+      setGameState(GameFlowSteps.Sessions)
+      return
+    }
+
     const session = findSessionById(sessionId)
     if (!session) {
       return
