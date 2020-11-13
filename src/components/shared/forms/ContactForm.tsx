@@ -8,6 +8,7 @@ import { validatePhoneNumber, validateEmail } from 'helpers'
 
 // Styles
 import { Box, Grid, FormControl, FormHelperText, TextField, Button } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import { IUser } from 'types'
 import { graphQLMutation } from '../../../graphql/helpers'
 import { createContactRequest, createUserInteraction } from '../../../graphql/mutations'
@@ -40,6 +41,7 @@ export const ContactForm: FC<ContactFormProps> = ({
   setErrorMessage,
   setShowModal
 }) => {
+  const classes = useStyles()
   const initialContactFormInfo: IContactFormFields = {
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
@@ -145,6 +147,12 @@ export const ContactForm: FC<ContactFormProps> = ({
             fullWidth
             name='firstName'
             variant='outlined'
+            InputProps={{
+              classes: {
+                root: classes.inputRoot,
+                input: classes.input
+              }
+            }}
             error={!!errors.firstName}
             helperText={errors.firstName}
             label={I18n.get('firstName')}
@@ -159,6 +167,12 @@ export const ContactForm: FC<ContactFormProps> = ({
             fullWidth
             name='lastName'
             variant='outlined'
+            InputProps={{
+              classes: {
+                root: classes.inputRoot,
+                input: classes.input
+              }
+            }}
             error={!!errors.lastName}
             helperText={errors.lastName}
             label={I18n.get('lastName')}
@@ -173,6 +187,12 @@ export const ContactForm: FC<ContactFormProps> = ({
             fullWidth
             name='phoneNumber'
             variant='outlined'
+            InputProps={{
+              classes: {
+                root: classes.inputRoot,
+                input: classes.input
+              }
+            }}
             error={!!errors.phoneNumber}
             helperText={errors.phoneNumber}
             label={I18n.get('phoneNumber')}
@@ -187,6 +207,12 @@ export const ContactForm: FC<ContactFormProps> = ({
             fullWidth
             name='email'
             variant='outlined'
+            InputProps={{
+              classes: {
+                root: classes.inputRoot,
+                input: classes.input
+              }
+            }}
             error={!!errors.email}
             helperText={errors.email}
             label={I18n.get('email')}
@@ -220,3 +246,13 @@ export const ContactForm: FC<ContactFormProps> = ({
     </form>
   )
 }
+
+const useStyles = makeStyles({
+  inputRoot: {
+    borderRadius: 0,
+    borderBottom: '1px solid #000'
+  },
+  input: {
+    borderBottom: 'none'
+  }
+})
