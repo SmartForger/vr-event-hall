@@ -36,13 +36,15 @@ export const UserList: FC<UserListProps> = ({ user, users, listRef, toggleDrawer
     groupedUsers.push(...tmp[initial])
   })
 
+  const sizeMap = useRef({})
+
   useEffect(() => {
     if (listRef?.current) {
       listRef.current.resetAfterIndex(0)
     }
+    sizeMap.current = {}
   }, [groupedUsers])
 
-  const sizeMap = useRef({})
   const setSize = useCallback(
     (index, size) => {
       sizeMap.current = { ...sizeMap.current, [index]: size }

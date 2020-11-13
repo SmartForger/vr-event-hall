@@ -154,6 +154,23 @@ declare module PROJECT {
 }
 declare module PROJECT {
     /**
+     * Babylon Script Component
+     * @class DebugInformation
+     */
+    class DebugInformation extends BABYLON.ScriptComponent {
+        private keys;
+        private show;
+        private popup;
+        private views;
+        private xbox;
+        private color;
+        constructor(transform: BABYLON.TransformNode, scene: BABYLON.Scene, properties?: any);
+        protected start(): void;
+        protected destroy(): void;
+    }
+}
+declare module PROJECT {
+    /**
     * Babylon Script Component
     * @class UniversalPlayerController
     */
@@ -481,23 +498,6 @@ declare module PROJECT {
         getSplineCurveLength(): number;
         getSplineCurvePositions(): BABYLON.Vector3[];
         getControlPointTransforms(): BABYLON.TransformNode[];
-        protected awake(): void;
-        protected start(): void;
-        protected destroy(): void;
-    }
-}
-declare module PROJECT {
-    /**
-     * Babylon Script Component
-     * @class DebugInformation
-     */
-    class DebugInformation extends BABYLON.ScriptComponent {
-        private keys;
-        private show;
-        private popup;
-        private views;
-        private xbox;
-        private color;
         protected awake(): void;
         protected start(): void;
         protected destroy(): void;
