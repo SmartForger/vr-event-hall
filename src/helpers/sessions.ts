@@ -100,6 +100,7 @@ export const Sessions: { [key: string]: ISession } = {
     side: {
       category: 'Breakout Session',
       header: 'Live Stream',
+      shortHeader: 'Live Stream',
       schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
