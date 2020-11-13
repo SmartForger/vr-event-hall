@@ -71,6 +71,7 @@ export interface ISession {
   pinnedMessage: IMessage
   presenterPins: string[]
   admins: IAdminUserList
+  participants?: IUser[]
 }
 
 export interface IVideoChatInvite {

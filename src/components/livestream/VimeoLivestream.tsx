@@ -19,6 +19,7 @@ import { useAppState, useVideoChatContext, PollProvider } from 'providers'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { getSession } from 'graphql/queries'
 import { onUpdateSession } from 'graphql/subscriptions'
+import { createSessionParticipant, deleteSessionParticipant, deleteConvoLink } from 'graphql/mutations'
 import { ISubscriptionObject, ISession } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
@@ -59,7 +60,8 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
       type: 'SET_DETAILS',
       payload: {
         session: onUpdateSession,
-        pinnedMessage: onUpdateSession.pinnedMessage
+        pinnedMessage: onUpdateSession.pinnedMessage,
+        attendees: onUpdateSession.attendees
       }
     })
   }
@@ -67,7 +69,6 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
   const getSessionInfo = async () => {
     const session = await graphQLQuery(getSession, 'getSession', { id: videoChatState.sessionId })
     setCurrentSession(session)
-
     dispatch({
       type: 'SET_DETAILS',
       payload: {
@@ -85,11 +86,29 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1500)
+
     if (videoChatState.sessionId) {
       getSessionInfo()
     }
 
+    // set user as participant in livestream
+    graphQLMutation(createSessionParticipant, {
+      userId: user?.id,
+      sessionId: Sessions.livestream.id
+    })
+
     return () => {
+      // remove the user as participant in livestream for an accurate-ish count
+      graphQLMutation(deleteSessionParticipant, {
+        userId: user?.id,
+        sessionId: Sessions.livestream.id
+      })
+      // remove the user from the session conversastion
+      graphQLMutation(deleteConvoLink, {
+        userId: user?.id,
+        conversationId: videoChatState?.session?.conversationId
+      })
+
       sessionUpdatedSubscription?.current?.unsubscribe()
     }
   }, [])

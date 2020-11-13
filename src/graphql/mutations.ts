@@ -981,6 +981,110 @@ export const updateSessionParticipant = /* GraphQL */ `
     }
   }
 `
+export const deleteSessionParticipant = /* GraphQL */ `
+  mutation DeleteSessionParticipant(
+    $input: DeleteUserSessionParticipantInput!
+    $condition: ModelUserSessionParticipantConditionInput
+  ) {
+    deleteSessionParticipant(input: $input, condition: $condition) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        participants {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const createSessionReservation = /* GraphQL */ `
   mutation CreateSessionReservation(
     $input: CreateUserSessionReservationInput!
@@ -1602,6 +1706,62 @@ export const createConvoLink = /* GraphQL */ `
 export const updateConvoLink = /* GraphQL */ `
   mutation UpdateConvoLink($input: UpdateConvoLinkInput!, $condition: ModelConvoLinkConditionInput) {
     updateConvoLink(input: $input, condition: $condition) {
+      id
+      userId
+      conversationId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteConvoLink = /* GraphQL */ `
+  mutation DeleteConvoLink($input: DeleteConvoLinkInput!, $condition: ModelConvoLinkConditionInput) {
+    deleteConvoLink(input: $input, condition: $condition) {
       id
       userId
       conversationId

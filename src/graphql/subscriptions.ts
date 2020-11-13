@@ -817,6 +817,208 @@ export const onUpdateVideoChatInvite = /* GraphQL */ `
     }
   }
 `
+export const onCreateSessionParticipant = /* GraphQL */ `
+  subscription OnCreateSessionParticipant($userId: ID!) {
+    onCreateSessionParticipant(userId: $userId) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        participants {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateSessionParticipant = /* GraphQL */ `
+  subscription OnUpdateSessionParticipant($id: ID!) {
+    onUpdateSessionParticipant(id: $id) {
+      id
+      userId
+      sessionId
+      user {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      session {
+        id
+        name
+        description
+        active
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        icId
+        ic {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        admins {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        participants {
+          nextToken
+        }
+        pinnedMessageId
+        pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        raisedHands {
+          nextToken
+        }
+        questions {
+          nextToken
+        }
+        polls {
+          nextToken
+        }
+        pollAnswers {
+          nextToken
+        }
+        qaActive
+        presenterPins
+        muted
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const onCreateEventConfig = /* GraphQL */ `
   subscription OnCreateEventConfig {
     onCreateEventConfig {
