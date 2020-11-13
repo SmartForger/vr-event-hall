@@ -52,7 +52,7 @@ export const MessageInput: FC<MessageInputProps> = ({ userId, internal, conversa
 
       const message: IMessageInput = {
         createdAt: new Date().toISOString(),
-        conversationId: conversationId,
+        conversationId: conversationId || videoChatState?.session?.conversationId || videoChatState?.sessionId,
         content: trimmedMessage,
         authorId: userId,
         deleted: 'false'

@@ -14,9 +14,10 @@ import { onCreateMessageWithAuthor, onUpdateMessageWithAuthor } from 'graphql/cu
 interface ChatMessagesProps {
   internal?: boolean
   videoChat?: boolean
+  isLivestream?: boolean
 }
 
-export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => {
+export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLivestream }) => {
   const classes = useStyles()
   const {
     appState: { user }
@@ -27,10 +28,11 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
   const isUserAdmin = user => {
     return videoChatState?.session?.admins.items.some(adminUser => adminUser.userId === user.id)
   }
-
   let [messages, setMessages] = useState<any>([])
   let [currentConversationId, setConversationId] = useState<string>(
-    internal && isUserAdmin(user)
+    isLivestream
+      ? '7523871f-7efc-46e9-bd6c-971b629f167e'
+      : internal && isUserAdmin(user)
       ? videoChatState?.session?.icId || ''
       : videoChat
       ? videoChatState?.session?.conversationId || ''
@@ -44,7 +46,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
   const addNewMessage = ({ onCreateMessage }) => {
     if (internal && videoChat && onCreateMessage.conversationId === videoChatState?.session?.icId) {
       setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
-    } else if (videoChat && onCreateMessage.conversationId === videoChatState?.session?.conversationId) {
+    } else if (videoChat && onCreateMessage.conversationId === currentConversationId) {
       setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
     } else if (!videoChat && onCreateMessage.conversationId === chatState?.conversationId) {
       setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
@@ -91,6 +93,14 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat }) => 
     }
     // eslint-disable-next-line
   }, [currentConversationId])
+
+  // if this changes after initial load (stream player)
+  // then we should set the new conversation id
+  useEffect(() => {
+    if (videoChatState.conversationId) {
+      setConversationId(videoChatState.conversationId)
+    }
+  }, [videoChatState.conversationId])
 
   useEffect(() => {
     if (messages.length > 0) {

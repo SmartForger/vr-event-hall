@@ -8,7 +8,7 @@ interface RosterContextValue {
   roster: RosterType
 }
 
-interface CustomAttendee extends RosterAttendeeType {
+export interface CustomAttendee extends RosterAttendeeType {
   email?: string
   avatar?: string
   title?: string
