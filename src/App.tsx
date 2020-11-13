@@ -103,8 +103,8 @@ const App = () => {
                         useBackupStream={useBackupStream}
                         vcOff={vcOff}
                       />
+                      <Footer />
                     </Router>
-                    <Footer />
                   </MeetingProvider>
                 </NotificationProvider>
               </StyledThemeProvider>

@@ -343,6 +343,7 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
+          sessionId
           userType
           createdAt
           updatedAt
@@ -353,6 +354,7 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
+          sessionId
           createdAt
           updatedAt
         }
@@ -362,6 +364,7 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
+          sessionId
           createdAt
           updatedAt
         }
@@ -411,6 +414,7 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
+          sessionId
           dismissed
           createdAt
           updatedAt
@@ -421,6 +425,7 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
+          sessionId
           answered
           content
           createdAt
@@ -431,6 +436,7 @@ export const onUpdateSession = /* GraphQL */ `
       polls {
         items {
           id
+          sessionId
           active
           name
           question
@@ -447,6 +453,7 @@ export const onUpdateSession = /* GraphQL */ `
       pollAnswers {
         items {
           id
+          sessionId
           userId
           answer
           createdAt
@@ -811,8 +818,8 @@ export const onUpdateVideoChatInvite = /* GraphQL */ `
   }
 `
 export const onCreateSessionParticipant = /* GraphQL */ `
-  subscription OnCreateSessionParticipant($userId: ID!) {
-    onCreateSessionParticipant(userId: $userId) {
+  subscription OnCreateSessionParticipant($sessionId: ID!) {
+    onCreateSessionParticipant(sessionId: $sessionId) {
       id
       userId
       sessionId
@@ -912,8 +919,8 @@ export const onCreateSessionParticipant = /* GraphQL */ `
   }
 `
 export const onUpdateSessionParticipant = /* GraphQL */ `
-  subscription OnUpdateSessionParticipant($id: ID!) {
-    onUpdateSessionParticipant(id: $id) {
+  subscription OnUpdateSessionParticipant($sessionId: ID!) {
+    onUpdateSessionParticipant(sessionId: $sessionId) {
       id
       userId
       sessionId

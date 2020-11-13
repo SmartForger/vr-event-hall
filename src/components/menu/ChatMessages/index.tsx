@@ -26,12 +26,16 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
   const { chatState, dispatch } = useChatContext()
 
   const isUserAdmin = user => {
+    console.log('IS USER ADMIN')
+    console.log(videoChatState?.session?.admins.items.some(adminUser => adminUser.userId === user.id))
     return videoChatState?.session?.admins.items.some(adminUser => adminUser.userId === user.id)
   }
   let [messages, setMessages] = useState<any>([])
   let [currentConversationId, setConversationId] = useState<string>(
-    isLivestream
-      ? '7523871f-7efc-46e9-bd6c-971b629f167e'
+    isLivestream && !internal
+      ? 'e4c21c6a-1ef2-4fbd-95cd-6fed9e8b1879'
+      : isLivestream && internal && isUserAdmin(user)
+      ? 'b0c52258-4e95-476b-a77c-fe488f637c6d'
       : internal && isUserAdmin(user)
       ? videoChatState?.session?.icId || ''
       : videoChat
@@ -97,10 +101,12 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
   // if this changes after initial load (stream player)
   // then we should set the new conversation id
   useEffect(() => {
-    if (videoChatState.conversationId) {
+    if (!internal && videoChatState.conversationId) {
       setConversationId(videoChatState.conversationId)
+    } else if (internal && videoChatState.icId && isUserAdmin(user)) {
+      setConversationId(videoChatState?.session?.icId || videoChatState.icId)
     }
-  }, [videoChatState.conversationId])
+  }, [videoChatState.conversationId, videoChatState?.session?.icId])
 
   useEffect(() => {
     if (messages.length > 0) {
