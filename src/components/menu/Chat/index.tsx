@@ -78,12 +78,12 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
     console.log('UNREAD')
     console.log(newMessageConversationId !== chatState.conversationId)
     console.log(checkUserConversations(newMessageConversationId))
-    console.log(onCreateGlobalMessage.conversation.members.includes(user?.id))
+    console.log(onCreateGlobalMessage.conversation?.members.includes(user?.id))
     // increment the unread messages unless you're on the chat where the new message came in
     if (
       newMessageConversationId !== chatState.conversationId &&
       checkUserConversations(newMessageConversationId) &&
-      onCreateGlobalMessage.conversation.members.includes(user?.id)
+      onCreateGlobalMessage.conversation?.members.includes(user?.id)
     ) {
       dispatch({
         type: 'INCREMENT_UNREAD_CONVO_MESSAGE',
@@ -93,7 +93,7 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
     // if this is a new conversation for this user, refetch the conversations to populate the list
     if (
       !checkUserConversations(newMessageConversationId) &&
-      onCreateGlobalMessage.conversation.members.includes(user?.id)
+      onCreateGlobalMessage.conversation?.members.includes(user?.id)
     ) {
       fetchNewConvoAndPopulateUser(newMessageConversationId)
     }
