@@ -246,7 +246,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 1,
     top: 0,
     left: 0,
-    width: '100%',
+    width: 'calc(100% - 351px)',
     height: '100%',
     border: 'none'
   },
