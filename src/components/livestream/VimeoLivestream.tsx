@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Box, IconButton, makeStyles, Typography } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
 import { PillButton, RouteTransition } from 'components'
@@ -6,6 +6,7 @@ import { graphQLMutation } from '../../graphql/helpers'
 import { createUserInteraction } from '../../graphql/mutations'
 import { EventStages, IUser } from '../../types'
 import { useHistory } from 'react-router-dom'
+import { findSessionById, ISession } from '../../helpers'
 
 interface VimeoLiveStreamProps {
   useBackupStream: Boolean
@@ -19,8 +20,23 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
   const [openModal, setOpenModal] = useState(false)
   const history = useHistory()
 
+  const session: ISession | null = useMemo(() => {
+    // return Sessions.healthcareInsurance
+    if (!user || !user.sessions || !user.sessions.items) {
+      return null
+    }
+    return findSessionById(user.sessions.items[0].sessionId) || null
+  }, [user])
+
+  const sessionName = useMemo(() => {
+    try {
+      return session?.side.header.slice(-1) === '.' ? session?.side.header.slice(0, -1) : session?.side.header
+    } catch (e) {
+      return ''
+    }
+  }, [session])
+
   useEffect(() => {
-    console.log(user)
     if (user?.id) {
       graphQLMutation(createUserInteraction, {
         name: 'livestream',
@@ -78,14 +94,13 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
             <Box p={4}>
               <Box mb={4} mt={2}>
                 <Typography style={{ color: '#000' }} variant='h4'>
-                  Join a breakout session.
+                  {session ? 'Join your breakout session.' : 'Join a breakout session.'}
                 </Typography>
               </Box>
               <Typography style={{ color: '#000' }}>
-                It’s almost time to hear how your business can take advantage of the full, transformative power of
-                Verizon 5G Ultra Wideband. Let our experts to take you on a deeper dive into vertical-specific use cases
-                to demonstrate how Verizon 5G can benefit you. Each session includes a live Q&A. Click below to see
-                which sessions are available to join.
+                {session
+                  ? `Your breakout session for ${sessionName} is starting soon. Click below to join your session. If you do not join within 5 minutes you may lose your seat to a guest on the waitlist.`
+                  : `It’s almost time to hear how your business can take advantage of the full, transformative power of Verizon 5G Ultra Wideband. Let our experts to take you on a deeper dive into vertical-specific use cases to demonstrate how Verizon 5G can benefit you. Each session includes a live Q&A. Click below to see which sessions are available to join.`}
               </Typography>
               <Box>
                 <PillButton
@@ -94,14 +109,14 @@ export const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, use
                   variant='outlined'
                   textColor='white'
                   backgroundColor='black'
-                  onClick={() => history.push('/event')}
+                  onClick={() => history.push(session ? `/event/?sessionId=${session.id}` : '/event')}
                   classes={{ root: classes.toastESSButton }}
                 >
-                  Pick your breakout session
+                  {session ? 'Join session' : 'Pick your breakout session'}
                 </PillButton>
               </Box>
             </Box>
-            <IconButton className={classes.closeButtonModal} onClick={() => setRedirectTrigger(true)}>
+            <IconButton className={classes.closeButtonModal} onClick={() => setOpenModal(false)}>
               <Close />
             </IconButton>
           </div>

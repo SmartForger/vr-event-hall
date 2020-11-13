@@ -30,7 +30,14 @@ import { graphQLSubscription } from 'graphql/helpers'
 import { onCreateNotification } from 'graphql/subscriptions'
 import Receiver from '../Receiver'
 // Helpers
-import { introTutorialSteps, ISession, Sessions, sessionTutorialSteps, tutorialSteps } from '../helpers'
+import {
+  findSessionById,
+  introTutorialSteps,
+  ISession,
+  Sessions,
+  sessionTutorialSteps,
+  tutorialSteps
+} from '../helpers'
 import { GameFlowStepsConfig } from '../helpers/steps'
 import {
   ETouchpoints,
@@ -338,6 +345,22 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
     }
     setActiveNotice({})
   }
+
+  useEffect(() => {
+    if (gameLoading) {
+      return
+    }
+    const sessionId = new URLSearchParams(window.location.search).get('sessionId')
+    if (!sessionId) {
+      return
+    }
+    const session = findSessionById(sessionId)
+    if (!session) {
+      return
+    }
+    setGameState(GameFlowSteps.Session)
+    setActiveSession(session)
+  }, [gameLoading])
 
   return (
     <div id='game' className={classes.gameContainer}>
