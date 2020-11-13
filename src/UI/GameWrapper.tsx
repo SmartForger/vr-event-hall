@@ -79,6 +79,11 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   const localStorage = window.localStorage
   const [eventStartingSoon, setEventStartingSoonState] = useState<boolean>(false)
   const [eSSClosed, setESSClosed] = useState<boolean>(false)
+  const [showTooltip, setShowTooltip] = useState<boolean>(false)
+
+  setTimeout(() => {
+    setShowTooltip(true)
+  }, 8000)
 
   // notice configs
   const [activeNotice, setActiveNotice] = useState<INoticeConfig>({})
@@ -427,7 +432,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
 
             {vcOff ? null : <VideoChatContainer />}
 
-            {!welcomeTutorialViewedLoading && showGUI && (
+            {showTooltip && !welcomeTutorialViewedLoading && showGUI && (
               <IntroTutorial
                 run={!welcomeTutorialViewed}
                 steps={introTutorialSteps(user)}
@@ -436,7 +441,8 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
               />
             )}
 
-            {!sessionTutorialViewedLoading &&
+            {showTooltip &&
+              !sessionTutorialViewedLoading &&
               (gameState === GameFlowSteps.Sessions || gameState === GameFlowSteps.Explore) && (
                 <IntroTutorial
                   run={!sessionTutorialViewed}
