@@ -10,6 +10,7 @@ export interface ISession {
   side: {
     category: string
     header: string
+    shortHeader: string
     schedule: string
     body: string
     speakers?: string[]
@@ -24,6 +25,7 @@ export const Sessions: { [key: string]: ISession } = {
     side: {
       category: 'Breakout Session',
       header: 'Healthcare, Insurance & Life Sciences.',
+      shortHeader: 'Healthcare',
       schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
@@ -38,6 +40,7 @@ export const Sessions: { [key: string]: ISession } = {
     side: {
       category: 'Breakout Session',
       header: 'Retail/Hospitality, Travel & Distribution.',
+      shortHeader: 'Retail',
       schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
@@ -52,6 +55,7 @@ export const Sessions: { [key: string]: ISession } = {
     side: {
       category: 'Breakout Session',
       header: 'Financial Services.',
+      shortHeader: 'Financial Services',
       speakers: [],
       schedule: 'Session will begin immediately following the live stream.',
       body:
@@ -66,6 +70,7 @@ export const Sessions: { [key: string]: ISession } = {
     side: {
       category: 'Breakout Session',
       header: 'Manufacturing, Automotive, Construction, Energy & Utilities.',
+      shortHeader: 'Manufacturing',
       schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
@@ -80,6 +85,7 @@ export const Sessions: { [key: string]: ISession } = {
     side: {
       category: 'Breakout Session',
       header: 'Media, Entertainment, Technology & Service.',
+      shortHeader: 'Media',
       schedule: 'Session will begin immediately following the live stream.',
       speakers: [],
       body:
