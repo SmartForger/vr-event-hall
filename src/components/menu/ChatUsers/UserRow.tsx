@@ -12,7 +12,6 @@ export const UserRow = ({ data, index, ...props }) => {
   useEffect(() => {
     const height = root?.current?.getBoundingClientRect().height || 36
     setSize(index, height + 10)
-    // eslint-disable-next-line
   }, [windowWidth, count])
 
   return (

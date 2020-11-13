@@ -198,6 +198,16 @@ export const userByEmailBase = /* GraphQL */ `
         avatar
         title
         company
+        sessions {
+          items {
+            id
+            userId
+            sessionId
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
         conversations {
           items {
             userId

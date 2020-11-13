@@ -1,16 +1,16 @@
-import React, { FC, useEffect, useState, useCallback, useRef } from 'react'
+import React, { FC, useEffect, useState, useCallback, useRef, useMemo } from 'react'
+import { Box, IconButton, makeStyles, Typography, Tab, Tabs, Drawer, Toolbar } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
-import { RouteTransition } from 'components'
+import { useHistory } from 'react-router-dom'
+
+import { PillButton, RouteTransition } from 'components'
 import { graphQLMutation } from '../../graphql/helpers'
 import { createUserInteraction } from '../../graphql/mutations'
-import { EventStages, IUser } from '../../types'
+import { EventStages } from '../../types'
+import { findSessionById, ISession } from '../../helpers'
 
-import { Box, Drawer, makeStyles, Tab, Tabs, Toolbar, IconButton } from '@material-ui/core'
-
-import MeetingControls from '../videochat/MeetingControls'
-import MeetingDetails from '../videochat/MeetingDetails'
 // import { StyledLayout, StyledContent, StyledGrid } from './Styled'
-import { DetailsPanel, PeoplePanel, ToolsPanel } from '../videochat/Panels'
+import { DetailsPanel, ToolsPanel } from '../videochat/Panels'
 import { PollDrawer } from '../videochat/PollDrawer'
 import { ChatMessages, TabPanel } from 'components'
 
@@ -18,15 +18,14 @@ import { ChatMessages, TabPanel } from 'components'
 import { useAppState, useVideoChatContext, PollProvider, VideoChatProvider } from 'providers'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { onCreateSessionParticipant, onUpdateSession } from 'graphql/subscriptions'
-import { ISubscriptionObject, ISession } from 'types'
+import { ISubscriptionObject } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
-import { ConditionalWrapper, DialogCard } from 'components/shared'
+import { DialogCard } from 'components/shared'
 import { Sessions } from '../../helpers'
 import { getSessionWithParticipants } from 'graphql/customQueries'
 import { createSessionParticipantMin, deleteSessionParticipantMin } from 'graphql/customMutations'
 import { LiveStreamPeoplePanel } from 'components/videochat/Panels/LiveStreamPeoplePanel'
-import { useLocation } from 'react-router-dom'
 
 interface VimeoLiveStreamProps {
   useBackupStream: Boolean
@@ -41,12 +40,31 @@ export const LiveStreamWrapper: FC<VimeoLiveStreamProps> = (props: VimeoLiveStre
 const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage }) => {
   const classes = useStyles()
   const [redirectTrigger, setRedirectTrigger] = useState<boolean>(false)
-  const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
-  const [tabValue, setTabValue] = useState<number>(0)
-  const [isAdmin, setAdmin] = useState<boolean>(false)
+  const [openModal, setOpenModal] = useState(false)
+  const history = useHistory()
   const {
     appState: { user }
   } = useAppState()
+
+  const session: ISession | null = useMemo(() => {
+    // return Sessions.healthcareInsurance
+    if (!user || !user.sessions || !user.sessions.items) {
+      return null
+    }
+    return findSessionById(user.sessions.items[0]?.sessionId) || null
+  }, [user])
+
+  const sessionName = useMemo(() => {
+    try {
+      return session?.side.header.slice(-1) === '.' ? session?.side.header.slice(0, -1) : session?.side.header
+    } catch (e) {
+      return ''
+    }
+  }, [session])
+  const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
+  const [tabValue, setTabValue] = useState<number>(0)
+  const [isAdmin, setAdmin] = useState<boolean>(false)
+
   const { videoChatState, dispatch } = useVideoChatContext()
   const [currentSession, setCurrentSession] = useState<ISession | null>(null)
   const [participantId, setParticipantId] = useState<string>('')
@@ -195,13 +213,51 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
     }
   }
 
+  const goToSession = (session: ISession | null) => {
+    if (participantId) {
+      console.log('DELETE')
+      graphQLMutation(deleteSessionParticipantMin, { id: participantId })
+    }
+    history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')
+  }
+
   return (
     <PollProvider>
       <div className={classes.root}>
+        <IconButton
+          className={classes.closeButton}
+          onClick={() => setOpenModal(true)}
+          disableFocusRipple
+          disableRipple
+          disableTouchRipple
+        >
+          <Close />
+        </IconButton>
+        {!useBackupStream ? (
+          <>
+            <iframe
+              className={classes.iframe}
+              title='Verizon 5G'
+              src='https://vimeo.com/event/445293/embed'
+              allow='autoplay; fullscreen'
+              allowFullScreen
+            ></iframe>
+          </>
+        ) : (
+          <>
+            <iframe
+              className={classes.iframe}
+              title='Verizon 5G'
+              src='https://vimeo.com/event/445311/embed'
+              allow='autoplay; fullscreen'
+              allowFullScreen
+            ></iframe>
+          </>
+        )}
         <div className={classes.streamSide}>
           <IconButton
             className={classes.closeButton}
-            onClick={close}
+            onClick={() => setOpenModal(true)}
             disableFocusRipple
             disableRipple
             disableTouchRipple
@@ -292,6 +348,40 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
         </div>
       </div>
       <RouteTransition animationTrigger={redirectTrigger} route='/event' timeout={300} />
+      {openModal && (
+        <div className={classes.modal}>
+          <div className={classes.modalBody}>
+            <Box p={4}>
+              <Box mb={4} mt={2}>
+                <Typography style={{ color: '#000' }} variant='h4'>
+                  {session ? 'Join your breakout session.' : 'Join a breakout session.'}
+                </Typography>
+              </Box>
+              <Typography style={{ color: '#000' }}>
+                {session
+                  ? `Your breakout session for ${sessionName} is starting soon. Click below to join your session. If you do not join within 5 minutes you may lose your seat to a guest on the waitlist.`
+                  : `It’s almost time to hear how your business can take advantage of the full, transformative power of Verizon 5G Ultra Wideband. Let our experts to take you on a deeper dive into vertical-specific use cases to demonstrate how Verizon 5G can benefit you. Each session includes a live Q&A. Click below to see which sessions are available to join.`}
+              </Typography>
+              <Box>
+                <PillButton
+                  type='button'
+                  className='button'
+                  variant='outlined'
+                  textColor='white'
+                  backgroundColor='black'
+                  onClick={() => goToSession(session)}
+                  classes={{ root: classes.toastESSButton }}
+                >
+                  {session ? 'Join session' : 'Pick your breakout session'}
+                </PillButton>
+              </Box>
+            </Box>
+            <IconButton className={classes.closeButtonModal} onClick={() => setOpenModal(false)}>
+              <Close />
+            </IconButton>
+          </div>
+        </div>
+      )}
     </PollProvider>
   )
 }
@@ -317,6 +407,42 @@ const useStyles = makeStyles(() => ({
     zIndex: 10,
     '& svg': {
       color: '#fff'
+    }
+  },
+  modal: {
+    position: 'fixed',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    zIndex: 9999,
+    height: '100vh',
+    width: '100vw',
+    top: 0,
+    left: 0
+  },
+  modalBody: {
+    backgroundColor: '#fff',
+    width: 560,
+    position: 'relative'
+  },
+  closeButtonModal: {
+    position: 'absolute',
+    right: 0,
+    top: 0
+  },
+  toastESSButton: {
+    height: '24px',
+    fontSize: '12px',
+    marginBottom: '1rem',
+    padding: '0 20px',
+    display: 'flex',
+    flexWrap: 'nowrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '&:hover': {
+      backgroundColor: 'black',
+      color: 'white'
     }
   },
   streamSide: {

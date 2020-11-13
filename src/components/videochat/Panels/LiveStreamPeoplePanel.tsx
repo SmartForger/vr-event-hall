@@ -1,14 +1,10 @@
 import React, { FC, useEffect, useState } from 'react'
-import { uniq } from 'lodash'
 import { Avatar, makeStyles, Theme, Typography } from '@material-ui/core'
 
-import { graphQLMutation } from 'graphql/helpers'
 import { IParticipant } from 'types'
 
-import { updateSession } from 'graphql/mutations'
 import { useAppState, useVideoChatContext } from 'providers'
 import { CustomAttendee } from 'providers/RosterProvider'
-import { PinMenu } from './PinMenu'
 
 interface PeoplePanelProps {
   isAdmin?: boolean
@@ -39,28 +35,6 @@ export const LiveStreamPeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
 
   const [anchorEl, setAnchorEl] = React.useState(null)
 
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handlePin = async (userId: string) => {
-    if (userId && (videoChatState?.session?.presenterPins?.length || 0) < 4) {
-      await graphQLMutation(updateSession, {
-        id: videoChatState?.session?.id,
-        presenterPins: uniq([...(videoChatState?.session?.presenterPins || []), userId])
-      })
-    }
-  }
-
-  const handleUnPin = async (userId: string) => {
-    if (userId) {
-      await graphQLMutation(updateSession, {
-        id: videoChatState?.session?.id,
-        presenterPins: videoChatState?.session?.presenterPins.filter(pin => pin !== userId)
-      })
-    }
-  }
-
   return (
     <>
       <section className={!isAdmin ? classes.listContainer : ''}>
@@ -83,19 +57,6 @@ export const LiveStreamPeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
                       ({adminUser?.userType === 'sme' ? 'Presenter' : 'Moderator'})
                     </Typography>
                   </Typography>
-                  {isAdmin ? (
-                    <div className={classes.moreButton}>
-                      <PinMenu
-                        user={rosterUser}
-                        handlePin={handlePin}
-                        handleUnPin={handleUnPin}
-                        totalPins={videoChatState?.session?.presenterPins?.length || 0}
-                        isPinned={videoChatState?.session?.presenterPins.some(
-                          pin => pin === rosterUser?.externalUserId
-                        )}
-                      />
-                    </div>
-                  ) : null}
                 </div>
               </div>
             )

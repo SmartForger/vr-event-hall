@@ -1,4 +1,6 @@
 import { IConvoLink } from './chat'
+import { Session } from 'inspector'
+import { ISession } from '../helpers'
 
 export interface IUser {
   id?: string
@@ -26,6 +28,15 @@ export interface IUser {
   createdAt?: string
   updatedAt?: string
   online?: boolean
+  sessions?: {
+    items: {
+      id: string
+      userId: string
+      sessionId: string
+      createdAt: string
+      updatedAt: string
+    }
+  }
 }
 
 interface UserConversationList {
