@@ -337,6 +337,16 @@ export const getSessionOverviewById = /* GraphQL */ `
         }
         nextToken
       }
+      participants {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       users {
         items {
           id

@@ -35,12 +35,12 @@ const App = () => {
   function getEnvironment() {
     const domain = window.location.hostname
 
-    if (/innovationsessions/i.test(domain) || /master\..*\.amplifyapp/i.test(domain)) {
-      return Environments.PROD
-    } else if (/staging\..*\.amplifyapp/i.test(domain)) {
+    if (/^staging.*\.innovationsessions/i.test(domain) || /staging\..*\.amplifyapp/i.test(domain)) {
       return Environments.STAGING
-    } else if (/dev\..*\.amplifyapp/i.test(domain)) {
+    } else if (/^dev.*\.innovationsessions/i.test(domain) || /dev\..*\.amplifyapp/i.test(domain)) {
       return Environments.DEV
+    } else if (/innovationsessions/i.test(domain) || /master\..*\.amplifyapp/i.test(domain)) {
+      return Environments.PROD
     } else if (/qa\..*\.amplifyapp/i.test(domain)) {
       return Environments.QA
     } else {
