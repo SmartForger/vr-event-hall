@@ -35,7 +35,10 @@ export const graphQLSubscription = (subscription: string, options: any, callback
   // @ts-ignore
   return API.graphql(graphqlOperation(subscription, options)).subscribe({
     next: ({ value: { data, errors } }) => {
-      console.log(errors)
+      if (errors) {
+        console.error(errors)
+      }
+
       callback(data)
     }
   })
