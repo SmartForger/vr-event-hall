@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { Styles } from 'react-joyride'
+import styled from 'styled-components'
 
 const buttonStyles: React.CSSProperties = {
   borderRadius: '25px',
@@ -11,14 +12,17 @@ const buttonStyles: React.CSSProperties = {
 }
 
 export const JoyrideTutorialStyles: Styles = {
+  tooltip: {
+    borderRadius: 0
+  },
   tooltipContainer: {
     textAlign: 'left'
   },
   tooltipTitle: {
-    textAlign: 'center',
+    textAlign: 'left',
     fontFamily: 'Verizon-Bold',
     fontSize: '24px',
-    marginRight: '24px'
+    paddingLeft: '10px'
   },
   buttonBack: {
     ...buttonStyles,
@@ -34,14 +38,17 @@ export const JoyrideTutorialStyles: Styles = {
   tooltipFooter: {
     display: 'flex',
     alignItems: 'left',
-    justifyContent: 'left'
+    justifyContent: 'left',
+    paddingLeft: '10px'
   },
   tooltipFooterSpacer: {
     display: 'none'
   },
   tooltipContent: {
     display: 'flex',
-    alignItems: 'left',
-    justifyContent: 'left'
+    justifyContent: 'left',
+    textAlign: 'left',
+    paddingRight: '30px',
+    fontWeight: 400
   }
 }
