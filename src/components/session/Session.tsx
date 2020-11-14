@@ -104,7 +104,6 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
   const isSessionAdmin = sessionDetails.admins?.items.some(u => u.userId === user?.id)
   const sessionActive = sessionDetails.active === 'true'
   const availableSeats = 200 - (sessionDetails.users?.items?.length || 0)
-  debugger
 
   return (
     <>

@@ -37,10 +37,10 @@ const App = () => {
 
     if (/^staging.*\.innovationsessions/i.test(domain) || /staging\..*\.amplifyapp/i.test(domain)) {
       return Environments.STAGING
+    } else if (/^dev.*\.innovationsessions/i.test(domain) || /dev\..*\.amplifyapp/i.test(domain)) {
+      return Environments.DEV
     } else if (/innovationsessions/i.test(domain) || /master\..*\.amplifyapp/i.test(domain)) {
       return Environments.PROD
-    } else if (/dev\..*\.amplifyapp/i.test(domain)) {
-      return Environments.DEV
     } else if (/qa\..*\.amplifyapp/i.test(domain)) {
       return Environments.QA
     } else {
