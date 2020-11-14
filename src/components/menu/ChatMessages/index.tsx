@@ -26,7 +26,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
   const { chatState, dispatch } = useChatContext()
 
   const isUserAdmin = user => {
-    return videoChatState?.session?.admins.items.some(adminUser => adminUser.userId === user.id)
+    return videoChatState?.session?.admins?.items?.some?.(adminUser => adminUser.userId === user.id)
   }
   let [messages, setMessages] = useState<any>([])
 
