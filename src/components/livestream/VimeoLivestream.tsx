@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState, useCallback, useRef, useMemo } from 're
 import { Box, IconButton, makeStyles, Typography, Tab, Tabs, Drawer, Toolbar } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
 import { useHistory } from 'react-router-dom'
+import classnames from 'classnames'
 
 import { PillButton, RouteTransition } from 'components'
 import { graphQLMutation } from '../../graphql/helpers'
@@ -39,12 +40,21 @@ export const LiveStreamWrapper: FC<VimeoLiveStreamProps> = (props: VimeoLiveStre
 
 const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage }) => {
   const classes = useStyles()
-  const [redirectTrigger, setRedirectTrigger] = useState<boolean>(false)
-  const [openModal, setOpenModal] = useState(false)
   const history = useHistory()
   const {
     appState: { user }
   } = useAppState()
+
+  const [redirectTrigger, setRedirectTrigger] = useState<boolean>(false)
+  const [openModal, setOpenModal] = useState(false)
+  const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
+  const [tabValue, setTabValue] = useState<number>(0)
+  const [isAdmin, setAdmin] = useState<boolean>(false)
+  const [showChatDrawer, setShowChatDrawer] = useState<boolean>(false)
+
+  const { videoChatState, dispatch } = useVideoChatContext()
+  const [currentSession, setCurrentSession] = useState<ISession | null>(null)
+  const [participantId, setParticipantId] = useState<string>('')
 
   const session: ISession | null = useMemo(() => {
     // return Sessions.healthcareInsurance
@@ -61,13 +71,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
       return ''
     }
   }, [session])
-  const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
-  const [tabValue, setTabValue] = useState<number>(0)
-  const [isAdmin, setAdmin] = useState<boolean>(false)
 
-  const { videoChatState, dispatch } = useVideoChatContext()
-  const [currentSession, setCurrentSession] = useState<ISession | null>(null)
-  const [participantId, setParticipantId] = useState<string>('')
   const setLoading = useCallback((payload: boolean) => dispatch({ type: 'SET_LOADING', payload }), [])
 
   let sessionUpdatedSubscription = useRef<ISubscriptionObject | null>(null)
@@ -205,59 +209,23 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
     }
   }, [videoChatState?.session?.admins])
 
-  const close = () => {
-    setRedirectTrigger(true)
-    if (participantId) {
-      console.log('DELETE')
-      graphQLMutation(deleteSessionParticipantMin, { id: participantId })
-    }
-  }
-
-  const goToSession = (session: ISession | null) => {
-    if (participantId) {
-      console.log('DELETE')
-      graphQLMutation(deleteSessionParticipantMin, { id: participantId })
-    }
-    history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')
-  }
+  // TODO: this should be moved to the Game Wrapper and
+  // instead have a function prop trigger this from here
+  // const goToSession = (session: ISession | null) => {
+  //   if (participantId) {
+  //     console.log('DELETE')
+  //     graphQLMutation(deleteSessionParticipantMin, { id: participantId })
+  //   }
+  //   history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')
+  // }
 
   return (
     <PollProvider>
       <div className={classes.root}>
-        <IconButton
-          className={classes.closeButton}
-          onClick={() => setOpenModal(true)}
-          disableFocusRipple
-          disableRipple
-          disableTouchRipple
-        >
-          <Close />
-        </IconButton>
-        {!useBackupStream ? (
-          <>
-            <iframe
-              className={classes.iframe}
-              title='Verizon 5G'
-              src='https://vimeo.com/event/445293/embed'
-              allow='autoplay; fullscreen'
-              allowFullScreen
-            ></iframe>
-          </>
-        ) : (
-          <>
-            <iframe
-              className={classes.iframe}
-              title='Verizon 5G'
-              src='https://vimeo.com/event/445311/embed'
-              allow='autoplay; fullscreen'
-              allowFullScreen
-            ></iframe>
-          </>
-        )}
-        <div className={classes.streamSide}>
+        <div className={showChatDrawer ? classes.streamSideWithChat : classes.streamSideFull}>
           <IconButton
             className={classes.closeButton}
-            onClick={() => setOpenModal(true)}
+            onClick={() => setRedirectTrigger(true)}
             disableFocusRipple
             disableRipple
             disableTouchRipple
@@ -267,7 +235,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
           {!useBackupStream ? (
             <>
               <iframe
-                className={classes.iframe}
+                className={classnames([classes.iframe, showChatDrawer ? classes.iframeWithChat : classes.iframeFull])}
                 title='Verizon 5G'
                 src='https://vimeo.com/event/445293/embed'
                 allow='autoplay; fullscreen'
@@ -277,7 +245,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
           ) : (
             <>
               <iframe
-                className={classes.iframe}
+                className={classnames([classes.iframe, showChatDrawer ? classes.iframeWithChat : classes.iframeFull])}
                 title='Verizon 5G'
                 src='https://vimeo.com/event/445311/embed'
                 allow='autoplay; fullscreen'
@@ -288,67 +256,70 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
         </div>
 
         {/* chat drawer */}
-        <div className={classes.chatSide}>
-          <Drawer
-            anchor={'right'}
-            open={true}
-            ModalProps={{ hideBackdrop: true }}
-            variant='persistent'
-            classes={{
-              paper: classes.messagePaper
-            }}
-          >
-            <div className={classes.logo}>
-              <Logo />
-            </div>
-            <div className={classes.displayMenu}>
-              <Toolbar className={classes.toolbar}>
-                <Tabs
-                  value={tabValue}
-                  onChange={handleChange}
-                  className={classes.tabs}
-                  TabIndicatorProps={{
-                    style: { top: 0, backgroundColor: '#D52B1E', height: '4px' }
-                  }}
-                >
-                  <Tab label='Chat' className={classes.tab} />
-                  <Tab label='People' className={classes.tab} />
-                  <Tab label={isAdmin ? 'Tools' : 'Details'} className={classes.tab} />
-                </Tabs>
-              </Toolbar>
-              <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
-                <ChatMessages videoChat={true} isLivestream={true} />
-                {qaDialogOpen ? (
-                  <DialogCard
-                    title='Q&A now open!'
-                    message={`Submit your question by clicking the question mark icon in the chat message box`}
-                    onConfirm={() => setQADialogOpen(false)}
-                    onCancel={() => setQADialogOpen(false)}
-                    className={classes.dialog}
-                    confirmText='Ok'
-                    hideCancel
-                  />
-                ) : null}
-              </TabPanel>
-              <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
-                <LiveStreamPeoplePanel isAdmin={isAdmin} />
-              </TabPanel>
-              {isAdmin ? (
-                <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
-                  <ToolsPanel />
+        {showChatDrawer && (
+          <div className={classes.chatSide}>
+            <Drawer
+              anchor={'right'}
+              open={true}
+              ModalProps={{ hideBackdrop: true }}
+              variant='persistent'
+              classes={{
+                paper: classes.messagePaper
+              }}
+            >
+              <div className={classes.logo}>
+                <Logo />
+              </div>
+              <div className={classes.displayMenu}>
+                <Toolbar className={classes.toolbar}>
+                  <Tabs
+                    value={tabValue}
+                    onChange={handleChange}
+                    className={classes.tabs}
+                    TabIndicatorProps={{
+                      style: { top: 0, backgroundColor: '#D52B1E', height: '4px' }
+                    }}
+                  >
+                    <Tab label='Chat' className={classes.tab} />
+                    <Tab label='People' className={classes.tab} />
+                    <Tab label={isAdmin ? 'Tools' : 'Details'} className={classes.tab} />
+                  </Tabs>
+                </Toolbar>
+                <TabPanel value={tabValue} index={0} className={classes.tabPanel}>
+                  <ChatMessages videoChat={true} isLivestream={true} />
+                  {qaDialogOpen ? (
+                    <DialogCard
+                      title='Q&A now open!'
+                      message={`Submit your question by clicking the question mark icon in the chat message box`}
+                      onConfirm={() => setQADialogOpen(false)}
+                      onCancel={() => setQADialogOpen(false)}
+                      className={classes.dialog}
+                      confirmText='Ok'
+                      hideCancel
+                    />
+                  ) : null}
                 </TabPanel>
-              ) : (
-                <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
-                  {currentSession && <DetailsPanel body={Sessions.livestream.side.chatBody || ''} />}
+                <TabPanel value={tabValue} index={1} className={`${classes.tabPanel} ${classes.peoplePanel}`}>
+                  <LiveStreamPeoplePanel isAdmin={isAdmin} />
                 </TabPanel>
-              )}
-            </div>
-          </Drawer>
-          <PollDrawer />
-        </div>
+                {isAdmin ? (
+                  <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
+                    <ToolsPanel />
+                  </TabPanel>
+                ) : (
+                  <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
+                    {currentSession && <DetailsPanel body={Sessions.livestream.side.chatBody || ''} />}
+                  </TabPanel>
+                )}
+              </div>
+            </Drawer>
+            <PollDrawer />
+          </div>
+        )}
       </div>
       <RouteTransition animationTrigger={redirectTrigger} route='/event' timeout={300} />
-      {openModal && (
+      {/* TODO: Move this to gamewrapper */}
+      {/* {openModal && (
         <div className={classes.modal}>
           <div className={classes.modalBody}>
             <Box p={4}>
@@ -381,7 +352,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
             </IconButton>
           </div>
         </div>
-      )}
+      )} */}
     </PollProvider>
   )
 }
@@ -396,9 +367,16 @@ const useStyles = makeStyles(() => ({
     zIndex: 1,
     top: 0,
     left: 0,
-    width: 'calc(100% - 351px)',
+    width: '100%',
     height: '100%',
-    border: 'none'
+    border: 'none',
+    transition: 'all 200ms'
+  },
+  iframeFull: {
+    width: '100%'
+  },
+  iframeWithChat: {
+    width: 'calc(100% - 351px)'
   },
   closeButton: {
     position: 'absolute',
@@ -445,7 +423,10 @@ const useStyles = makeStyles(() => ({
       color: 'white'
     }
   },
-  streamSide: {
+  streamSideWithChat: {
+    width: 'calc(100% - 351px)'
+  },
+  streamSideFull: {
     width: '100%'
   },
   chatSide: {},
