@@ -198,6 +198,16 @@ export const userByEmailBase = /* GraphQL */ `
         avatar
         title
         company
+        sessions {
+          items {
+            id
+            userId
+            sessionId
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
         conversations {
           items {
             userId
@@ -355,6 +365,177 @@ export const getConversationBase = /* GraphQL */ `
         }
         nextToken
       }
+    }
+  }
+`
+export const getSessionWithParticipants = /* GraphQL */ `
+  query GetSession($id: ID!) {
+    getSession(id: $id) {
+      id
+      name
+      description
+      active
+      conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      icId
+      ic {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      admins {
+        items {
+          id
+          userId
+          sessionId
+          userType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      participants {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+          user {
+            firstName
+            lastName
+            email
+            avatar
+          }
+        }
+        nextToken
+      }
+      pinnedMessageId
+      pinnedMessage {
+        id
+        content
+        authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          onVideoCall
+          online
+          createdAt
+          updatedAt
+        }
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        deleted
+        createdAt
+        updatedAt
+      }
+      raisedHands {
+        items {
+          id
+          userId
+          sessionId
+          dismissed
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      questions {
+        items {
+          id
+          userId
+          sessionId
+          answered
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      polls {
+        items {
+          id
+          sessionId
+          active
+          name
+          question
+          optionA
+          optionB
+          optionC
+          optionD
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      pollAnswers {
+        items {
+          id
+          sessionId
+          userId
+          answer
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      qaActive
+      presenterPins
+      muted
+      createdAt
+      updatedAt
     }
   }
 `

@@ -9,12 +9,11 @@ import { MoreHoriz } from '@material-ui/icons'
 import { graphQLMutation } from 'graphql/helpers'
 // import { getRaisedHandsByDismissed } from 'graphql/customQueries'
 // import { onCreateRaisedHand, onUpdateRaisedHand } from 'graphql/subscriptions'
-// import { ISubscriptionObject } from 'types'
+import { IUser } from 'types'
 
-// import { RaiseHandIcon } from 'assets'
 import { updateSession } from 'graphql/mutations'
 import { useAppState, useVideoChatContext } from 'providers'
-import { useRosterState } from 'providers/RosterProvider'
+import { useRosterState, CustomAttendee } from 'providers/RosterProvider'
 import { PinMenu } from './PinMenu'
 
 interface PeoplePanelProps {
@@ -30,7 +29,8 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
   const { videoChatState } = useVideoChatContext()
   const { roster } = useRosterState()
   const audioVideo = useAudioVideo()
-  const rosterArray = Object.values(roster)
+
+  const rosterArray: any = Object.values(roster)
   // const [raisedHands, setRaisedHands] = useState<any>([])
   const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -213,7 +213,7 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
             )
           })}
         {rosterArray
-          .filter(r => !videoChatState.session?.admins.items.some(a => a.userId === r.externalUserId))
+          .filter(r => !videoChatState.session?.admins?.items?.some?.(a => a.userId === r.externalUserId))
           .map(rosterUser => {
             return (
               <div className={classes.user}>

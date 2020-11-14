@@ -41,9 +41,7 @@ export const Connect: FC<ConnectProps> = ({ transition, user, setSuccessMessage,
               Contact us.
             </Typography>
             <Typography component='p' variant='body2' color='textPrimary' gutterBottom>
-              The fourth industrial revolution is here, ready to transform industry and open doors to new opportunities.
-              But this transformation requires an advanced kind of network—one that’s ready to help your business
-              innovate. Have questions? Let us help.
+              Have questions? We’re here to help.
             </Typography>
             <ContactForm
               isHelpRequest={false}

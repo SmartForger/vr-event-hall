@@ -34,7 +34,6 @@ import { ISubscriptionObject, ISession } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
 import { ConditionalWrapper, DialogCard } from 'components/shared'
-import { NullEngine } from 'babylonjs'
 import { findSessionById, Sessions } from '../../../helpers'
 
 interface ClassRoomVideoChatModalProps {}

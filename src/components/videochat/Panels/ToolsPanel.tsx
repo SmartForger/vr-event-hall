@@ -210,7 +210,7 @@ export const ToolsPanel = () => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails className={classes.internalChat}>
-            <ChatMessages internal videoChat={true} />
+            <ChatMessages internal videoChat={true} isLivestream />
           </AccordionDetails>
         </Accordion>
       ) : null}
