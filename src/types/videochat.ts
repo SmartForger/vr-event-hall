@@ -45,7 +45,7 @@ interface IAdminUser {
   id: string
   userId: string
   sessionId: string
-  user: IUser
+  user?: IUser
   userType: string
 }
 
@@ -61,7 +61,7 @@ export interface IParticipant {
   id: string
   userId: string
   sessionId: string
-  user: IUser
+  user?: IUser
 }
 
 export interface ISession {

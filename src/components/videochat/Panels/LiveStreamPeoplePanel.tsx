@@ -20,13 +20,13 @@ export const LiveStreamPeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
 
   useEffect(() => {
     const customRoster: CustomAttendee[] =
-      videoChatState?.session?.participants?.items.map((person: IParticipant) => {
+      videoChatState?.session?.participants?.items?.map?.((person: IParticipant) => {
         return {
           chimeAttendeeId: '',
-          externalUserId: person.userId,
-          email: person.user.email,
-          avatar: person.user.avatar,
-          name: `${person.user.firstName} ${person.user.lastName}`
+          externalUserId: person?.userId,
+          email: person?.user?.email,
+          avatar: person?.user?.avatar,
+          name: `${person?.user?.firstName} ${person?.user?.lastName}`
         } as CustomAttendee
       }) || []
 

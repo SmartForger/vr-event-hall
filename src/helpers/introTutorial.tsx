@@ -8,26 +8,25 @@ export const introTutorialSteps: (user: IUser | undefined) => Step[] = user => {
       target: 'body',
       title: (
         <>
-          Welcome to 5G Innovation Sessions, <span>{user?.firstName}</span>.
+          Welcome to 5G Innovation Session, <span>{user?.firstName}</span>.
         </>
       ),
-      content: 'Get to know how to make the most of your experience with us.',
+      content: 'Learn how to make the most of your experience with us',
       disableBeacon: true,
       placement: 'center'
     },
     {
       target: '#profileDrawer',
-      title: 'Main menu',
+      title: 'Use the top navigation bar or the side menu to navigate the experience',
       content:
-        'The menu allows you to access your profile, event info, and chat directly 1:1 with other users. You can also revisit the tutorial at any time.',
+        'Our side menu allows you to access your profile, event info, chat with other users and revisit this tutorial at any time from the main menu.',
       disableBeacon: true,
       placement: 'left'
     },
     {
       target: '#countdown-display',
       title: 'Countdown',
-      content:
-        'We’ll be tuning in live to hear the latest from our key leaders in 5G and subject matter experts. When the timer expires it will be replaced with a link to join us for our live programming.',
+      content: 'We’ll be tuning in to hear the latest from our key leaders in 5G and subject matter experts.',
       disableBeacon: true,
       placement: 'bottom'
     }

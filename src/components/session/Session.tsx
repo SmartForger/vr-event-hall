@@ -81,7 +81,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
       active: true
     })
 
-    const isAttendee = !sessionDetails.admins.items.some(admin => admin.userId === user?.id)
+    const isAttendee = !sessionDetails?.admins?.items?.some(admin => admin.userId === user?.id)
     if (isAttendee) {
       await meetingManager.audioVideo?.realtimeSetCanUnmuteLocalAudio(false)
       await meetingManager.audioVideo?.realtimeMuteLocalAudio()
@@ -103,7 +103,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
 
   const isSessionAdmin = sessionDetails.admins?.items.some(u => u.userId === user?.id)
   const sessionActive = sessionDetails.active === 'true'
-  const availableSeats = 200 - (sessionDetails.users?.items.length || 0)
+  const availableSeats = 200 - (sessionDetails.users?.items?.length || 0)
 
   return (
     <>
