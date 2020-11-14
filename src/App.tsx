@@ -35,7 +35,7 @@ const App = () => {
   function getEnvironment() {
     const domain = window.location.hostname
 
-    if (/^staging-.*\.innovationsessions/i.test(domain) || /staging\..*\.amplifyapp/i.test(domain)) {
+    if (/^staging.*\.innovationsessions/i.test(domain) || /staging\..*\.amplifyapp/i.test(domain)) {
       return Environments.STAGING
     } else if (/innovationsessions/i.test(domain) || /master\..*\.amplifyapp/i.test(domain)) {
       return Environments.PROD
