@@ -342,11 +342,10 @@ export const getSessionOverviewById = /* GraphQL */ `
           id
           userId
           sessionId
-          userType
           createdAt
           updatedAt
         }
-        nextItem
+        nextToken
       }
       users {
         items {
