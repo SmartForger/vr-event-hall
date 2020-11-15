@@ -201,7 +201,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 17
   },
   joinRowButtons: {
-    height: '36px',
+    minHeight: '36px',
+    height: 'initial',
     marginTop: '14px'
   },
   availableSeatsMessage: {

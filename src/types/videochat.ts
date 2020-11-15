@@ -79,6 +79,7 @@ export interface ISession {
   icPinnedMessageId: string
   icPinnedMessage: IMessage
   presenterPins: string[]
+  questions: { items: IQuestionObject[] }
   admins: IAdminUserList
   participants?: { items: IParticipant[] }
 }

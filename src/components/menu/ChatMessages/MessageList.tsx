@@ -168,7 +168,6 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef, isInterna
       } else {
         update.pinnedMessageId = messages[selectedIndex].id
       }
-      debugger
       const session = await graphQLMutation(updateSession, update, 'updateSession')
       dispatch({ type: 'SET_DETAILS', payload: { session } })
       resetDialog()
@@ -244,7 +243,10 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef, isInterna
       <AutoSizer>
         {({ height, width }) => (
           <VariableSizeList
-            height={icPinnedMessageAvail || pinnedMessageAvail ? height - 80 - pinnedMessageSize : height - 80}
+            height={
+              (icPinnedMessageAvail || pinnedMessageAvail ? height - 80 - pinnedMessageSize : height - 80) -
+              (isInternal ? 20 : 0)
+            }
             width={width}
             itemSize={i => getItemSize(filteredMessages[i])}
             itemCount={filteredMessages.length}
