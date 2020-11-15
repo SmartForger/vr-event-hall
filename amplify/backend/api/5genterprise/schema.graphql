@@ -49,6 +49,8 @@ type Session
   participants: [UserSessionParticipant] @connection(keyName: "byUserSessionParticipant", fields: ["id"])
   pinnedMessageId: ID!
   pinnedMessage: Message @connection(fields: ["pinnedMessageId"])
+  icPinnedMessageId: ID!
+  icPinnedMessage: Message @connection(fields: ["icPinnedMessageId"])
   raisedHands: [RaisedHand] @connection(keyName: "bySessionByDate", fields: ["id"])
   questions: [SessionQuestion] @connection(keyName: "bySessionQuestionByDate", fields: ["id"])
   polls: [SessionPoll] @connection(keyName: "bySessionPoll", fields: ["id"])

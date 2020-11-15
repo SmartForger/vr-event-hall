@@ -384,6 +384,46 @@ export const createSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      icPinnedMessageId
+      icPinnedMessage {
+        id
+        content
+        authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          onVideoCall
+          online
+          createdAt
+          updatedAt
+        }
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        deleted
+        createdAt
+        updatedAt
+      }
       raisedHands {
         items {
           id
@@ -511,6 +551,46 @@ export const updateSession = /* GraphQL */ `
       }
       pinnedMessageId
       pinnedMessage {
+        id
+        content
+        authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          onVideoCall
+          online
+          createdAt
+          updatedAt
+        }
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        deleted
+        createdAt
+        updatedAt
+      }
+      icPinnedMessageId
+      icPinnedMessage {
         id
         content
         authorId
@@ -714,6 +794,46 @@ export const deleteSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      icPinnedMessageId
+      icPinnedMessage {
+        id
+        content
+        authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          onVideoCall
+          online
+          createdAt
+          updatedAt
+        }
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        deleted
+        createdAt
+        updatedAt
+      }
       raisedHands {
         items {
           id
@@ -854,6 +974,16 @@ export const createSessionParticipant = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        icPinnedMessageId
+        icPinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
         raisedHands {
           nextToken
         }
@@ -950,6 +1080,16 @@ export const updateSessionParticipant = /* GraphQL */ `
         }
         pinnedMessageId
         pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        icPinnedMessageId
+        icPinnedMessage {
           id
           content
           authorId
@@ -1062,6 +1202,16 @@ export const deleteSessionParticipant = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        icPinnedMessageId
+        icPinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
         raisedHands {
           nextToken
         }
@@ -1166,6 +1316,16 @@ export const createSessionReservation = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        icPinnedMessageId
+        icPinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
         raisedHands {
           nextToken
         }
@@ -1262,6 +1422,16 @@ export const updateSessionReservation = /* GraphQL */ `
         }
         pinnedMessageId
         pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        icPinnedMessageId
+        icPinnedMessage {
           id
           content
           authorId
@@ -1894,6 +2064,16 @@ export const createAdminLink = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        icPinnedMessageId
+        icPinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
         raisedHands {
           nextToken
         }
@@ -1996,6 +2176,16 @@ export const updateAdminLink = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        icPinnedMessageId
+        icPinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
         raisedHands {
           nextToken
         }
@@ -2090,6 +2280,16 @@ export const deleteAdminLink = /* GraphQL */ `
         }
         pinnedMessageId
         pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        icPinnedMessageId
+        icPinnedMessage {
           id
           content
           authorId

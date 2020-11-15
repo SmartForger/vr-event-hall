@@ -9,13 +9,16 @@ import { ChatListContext, useAppState, useChatContext, useVideoChatContext } fro
 import { useWindowSize } from 'hooks/useWindowSize'
 import { graphQLMutation } from 'graphql/helpers'
 import { updateMessage, updateSession } from 'graphql/mutations'
-import { IMessage, IUser } from 'types'
+import { IMessage, IUser, ISession } from 'types'
 import { DialogCard } from './DialogCard'
+
+type TPinAction = 'pin' | 'unpin' | 'delete'
 
 interface MessageListProps {
   user?: IUser
   listRef?: MutableRefObject<VariableSizeProps>
   messages: IMessage[]
+  isInternal?: boolean
   isVideoChat?: boolean
 }
 // TODO: localize with i18n
@@ -37,7 +40,7 @@ const dialogInfo = {
   }
 }
 
-export const MessageList: FC<MessageListProps> = ({ messages, listRef, isVideoChat }) => {
+export const MessageList: FC<MessageListProps> = ({ messages, listRef, isInternal, isVideoChat }) => {
   const classes = useStyles()
   const [showDialog, setShowDialog] = useState<boolean>(false)
   const [dialogType, setDialogType] = useState<string>('')
@@ -105,14 +108,14 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef, isVideoCh
 
     if (chatState?.session?.admins?.items) {
       setAdmin(chatState?.session?.admins?.items.some(admin => admin.userId === user?.id))
-    } else if (user?.email?.includes('mvrk.co')) {
-      setAdmin(true)
+    } else if (videoChatState?.session?.admins?.items) {
+      setAdmin(videoChatState?.session?.admins?.items.some(admin => admin.userId === user?.id))
     } else if (verizonList.includes(lowerCaseEmail)) {
       setAdmin(true)
     }
   }, [])
 
-  const openDialog = (index: number, type: 'pin' | 'unpin' | 'delete') => {
+  const openDialog = (index: number, type: TPinAction) => {
     setSelectedIndex(index)
     setDialogType(type)
     setShowDialog(true)
@@ -127,8 +130,14 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef, isVideoCh
   }
 
   const unPinConfirm = async () => {
-    dispatch({ type: 'SET_DETAILS', payload: { session: { ...videoChatState.session, pinnedMessage: null } } })
-    const session = await graphQLMutation(updateSession, { id: videoChatState?.session?.id, pinnedMessageId: '0' })
+    dispatch({
+      type: 'SET_DETAILS',
+      payload: { session: { ...videoChatState.session, [isInternal ? 'icPinnedMessage' : 'pinnedMessage']: null } }
+    })
+    const session = await graphQLMutation(updateSession, {
+      id: videoChatState?.session?.id,
+      [isInternal ? 'icPinnedMessageId' : 'pinnedMessageId']: '0'
+    })
     dispatch({ type: 'SET_DETAILS', payload: { session } })
     resetDialog()
   }
@@ -147,16 +156,20 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef, isVideoCh
     if (selectedIndex !== null && selectedIndex >= 0) {
       dispatch({
         type: 'SET_DETAILS',
-        payload: { session: { ...chatState.session, pinnedMessage: messages[selectedIndex] } }
+        payload: {
+          session: { ...chatState.session, [isInternal ? 'icPinnedMessage' : 'pinnedMessage']: messages[selectedIndex] }
+        }
       })
-      const session = await graphQLMutation(
-        updateSession,
-        {
-          id: videoChatState?.session?.id || '',
-          pinnedMessageId: messages[selectedIndex].id
-        },
-        'updateSession'
-      )
+      let update: Partial<ISession> = {
+        id: videoChatState?.session?.id || ''
+      }
+      if (isInternal) {
+        update.icPinnedMessageId = messages[selectedIndex].id
+      } else {
+        update.pinnedMessageId = messages[selectedIndex].id
+      }
+      debugger
+      const session = await graphQLMutation(updateSession, update, 'updateSession')
       dispatch({ type: 'SET_DETAILS', payload: { session } })
       resetDialog()
     }
@@ -195,6 +208,25 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef, isVideoCh
     setPinnedMessageSize(0)
   }, [videoChatState?.session?.pinnedMessage])
 
+  const displayPinnedMessage = (message: IMessage) => {
+    if (message) {
+      return (
+        <ChatRow
+          data={message}
+          index={0}
+          skipSetSize={true}
+          isPinned={true}
+          className={classes.pinnedMessage}
+          id='pinnedMessage'
+        />
+      )
+    }
+    return null
+  }
+
+  const icPinnedMessageAvail = isInternal && isAdmin && videoChatState?.session?.icPinnedMessage
+  const pinnedMessageAvail = !isInternal && videoChatState?.session?.pinnedMessage
+
   return (
     <ChatListContext.Provider value={{ setSize, windowWidth, onPin, onDelete, unPin, isAdmin, isVideoChat }}>
       {showDialog ? (
@@ -207,20 +239,12 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef, isVideoCh
           containerHeight={listRef?.current?.offsetHeight}
         />
       ) : null}
-      {videoChatState?.session?.pinnedMessage ? (
-        <ChatRow
-          data={videoChatState?.session?.pinnedMessage}
-          index={0}
-          skipSetSize={true}
-          isPinned={true}
-          className={classes.pinnedMessage}
-          id='pinnedMessage'
-        />
-      ) : null}
+      {icPinnedMessageAvail ? displayPinnedMessage(videoChatState?.session?.icPinnedMessage!) : null}
+      {pinnedMessageAvail ? displayPinnedMessage(videoChatState?.session?.pinnedMessage!) : null}
       <AutoSizer>
         {({ height, width }) => (
           <VariableSizeList
-            height={videoChatState?.session?.pinnedMessage ? height - 80 - pinnedMessageSize : height - 80}
+            height={icPinnedMessageAvail || pinnedMessageAvail ? height - 80 - pinnedMessageSize : height - 80}
             width={width}
             itemSize={i => getItemSize(filteredMessages[i])}
             itemCount={filteredMessages.length}
