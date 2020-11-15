@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { Button, List, ListItem, Typography } from '@material-ui/core'
 import MuiAccordion from '@material-ui/core/Accordion'
@@ -15,7 +15,11 @@ import { updateSession, updateSessionPoll, updateSessionQuestion } from 'graphql
 import { DialogCard } from 'components/shared'
 import { onCreateSessionPoll, onCreateSessionQuestion } from 'graphql/subscriptions'
 
-export const ToolsPanel = () => {
+interface IToolsProps {
+  inLivestream?: boolean
+}
+
+export const ToolsPanel: FC<IToolsProps> = ({ inLivestream }) => {
   const classes = useStyles()
   const [expanded, setExpanded] = useState<string | false>('')
   const [nestedExpanded, setNestedExpanded] = useState<string | false>('')
@@ -210,7 +214,7 @@ export const ToolsPanel = () => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails className={classes.internalChat}>
-            <ChatMessages internal videoChat={true} isLivestream />
+            <ChatMessages internal videoChat={true} isLivestream={inLivestream} />
           </AccordionDetails>
         </Accordion>
       ) : null}

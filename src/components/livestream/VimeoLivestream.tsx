@@ -304,7 +304,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
                 </TabPanel>
                 {isAdmin ? (
                   <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
-                    <ToolsPanel />
+                    <ToolsPanel inLivestream={true} />
                   </TabPanel>
                 ) : (
                   <TabPanel value={tabValue} index={2} className={classes.tabPanel}>
