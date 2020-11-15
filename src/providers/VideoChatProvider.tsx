@@ -75,11 +75,14 @@ const reducer = (state, action) => {
         error: action.payload
       }
     case 'SET_DETAILS':
-      console.log('setting details')
-      console.log(action.paylod)
       return {
         ...state,
         ...action.payload
+      }
+    case 'CLEAR_CONVO_REFS':
+      return {
+        ...state,
+        ...initialState
       }
     default:
       return state
