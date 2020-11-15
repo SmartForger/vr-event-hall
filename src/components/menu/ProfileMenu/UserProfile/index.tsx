@@ -309,6 +309,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           className={classes.inlineButton}
           loading={loading}
           type='submit'
+          disabled={!profileInfo?.lastName || !profileInfo.firstName}
           onClick={() => updateUserData()}
           solid
         >
