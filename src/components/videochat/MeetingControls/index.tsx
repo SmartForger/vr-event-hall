@@ -44,11 +44,18 @@ const MeetingControls: FC<MeetingControlProps> = ({
     })
   }
 
-  const meetingHasEnded = () => {
+  const meetingHasEnded = async () => {
     setVisible(false)
     // explicitly clear out the meeting values
     // to start from scratch next time
     dispatch({ type: 'CLEAR_CONVO_REFS' })
+
+    // clear all meeting pinned presenters
+    // so that we start from fresh next time
+    await graphQLMutation(updateSession, {
+      id: videoChatState?.session?.id,
+      presenterPins: []
+    })
   }
 
   return (
