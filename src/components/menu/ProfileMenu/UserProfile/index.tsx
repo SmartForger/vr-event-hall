@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
 import { useHistory } from 'react-router-dom'
 
@@ -25,6 +26,8 @@ import { IUser, ISession } from 'types'
 import profileBg from 'assets/userProfileBg.jpg'
 import iconEditProfile from 'assets/icon-edit-profile.svg'
 import { UploadButton } from 'components/shared/controls/UploadButton'
+import { TemporaryAlert } from 'components/shared/alerts'
+import { AlertProps } from '@material-ui/lab'
 
 interface IProfileErrors {
   firstName: string
@@ -44,6 +47,11 @@ interface IUserProfileProps {
   user?: IUser
 }
 
+interface TemporaryMessage {
+  message: string
+  severity: AlertProps['severity']
+}
+
 export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -59,6 +67,8 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const [file, setFile] = useState<File>()
   const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState<string>()
   const [isUploadingAvatar, setIsUploadingAvatar] = useState<boolean>(false)
+  const [readyForProfileUpdate, setReadyForProfileUpdate] = useState<boolean>(true)
+  const [temporaryMessage, setTemporaryMessage] = useState<TemporaryMessage>({ message: '', severity: 'success' })
 
   const listRef = useRef<VariableSizeProps>()
 
@@ -79,15 +89,25 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           avatar
         })
       ])
-        .then(() => Storage.get(avatar))
-        .then(avatarUrl => {
+        .then(() => {
           if (!cancelled) {
-            setFile(undefined)
-            setIsUploadingAvatar(false)
-            setUploadedAvatarUrl(avatarUrl)
+            // Force avatar url refresh
+            setReadyForProfileUpdate(true)
+            setTemporaryMessage({
+              message: 'Image updated successfully!',
+              severity: 'success'
+            })
           }
         })
-        .catch(err => {
+        .catch(() => {
+          if (!cancelled) {
+            setTemporaryMessage({
+              message: 'We ran into an error uploading your image. Please try again.',
+              severity: 'error'
+            })
+          }
+        })
+        .finally(() => {
           if (!cancelled) {
             setIsUploadingAvatar(false)
             setFile(undefined)
@@ -99,8 +119,30 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
       // Prevent state updates if user closes drawer while uploading file
       cancelled = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file])
+
+  useEffect(() => {
+    let cancelled = false
+
+    if (readyForProfileUpdate && profileInfo?.avatar) {
+      Storage.get(profileInfo.avatar)
+        .then(avatarUrl => {
+          if (!cancelled && typeof avatarUrl === 'string') {
+            setUploadedAvatarUrl(avatarUrl)
+            setReadyForProfileUpdate(false)
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setReadyForProfileUpdate(false)
+          }
+        })
+    }
+
+    return () => {
+      cancelled = true
+    }
+  }, [readyForProfileUpdate])
 
   const getProfileInfo = async (userId: string) => {
     const foundUser = await graphQLQuery(getUser, 'getUser', { id: userId })
@@ -284,6 +326,12 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           </UploadButton>
         </Grid>
       </Grid>
+
+      <TemporaryAlert
+        message={temporaryMessage.message}
+        onClose={() => setTemporaryMessage({ message: '', severity: undefined })}
+        severity={temporaryMessage.severity}
+      />
 
       <TextField
         variant='outlined'
