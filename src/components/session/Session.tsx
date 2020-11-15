@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { useMeetingManager } from 'amazon-chime-sdk-component-library-react'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import { makeStyles, Theme, Container, Grid, Typography, Button, Box } from '@material-ui/core'
-
+import classnames from 'classnames'
 // Components
 import { PillButton } from 'components'
 import { Video } from 'components/shared'
@@ -107,6 +107,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
 
   const isSessionAdmin = sessionDetails.admins?.items.some(u => u.userId === user?.id)
   const sessionActive = sessionDetails.active === 'true'
+  const bluejeansSessionLink = session.bluejeans
   const availableSeats = 200 - (sessionDetails.users?.items?.length || 0)
 
   return (
@@ -139,21 +140,33 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
                 {session.side.body}
               </Typography>
               <Box display='flex'>
-                {(isSessionAdmin || sessionActive) && (
+                {/* MVRK JOIN */}
+                {!bluejeansSessionLink && (isSessionAdmin || sessionActive) && (
                   <PillButton
                     className={classes.joinRowButtons}
                     onClick={joinClassRoom}
                     variant='outlined'
-                    disabled={availableSeats < 1}
                     backgroundColor='transparent'
                     loading={loading}
                   >
                     Join Session
                   </PillButton>
                 )}
-                <Typography className={classes.availableSeatsMessage}>{availableSeats} Seats Available</Typography>
+                {/* BLUEJEANS JOIN */}
+                {bluejeansSessionLink && (
+                  <PillButton
+                    className={classes.joinRowButtons}
+                    onClick={() => window.open(bluejeansSessionLink)}
+                    variant='outlined'
+                    backgroundColor='transparent'
+                    loading={loading}
+                  >
+                    Join Session
+                  </PillButton>
+                )}
+                {/* <Typography className={classes.availableSeatsMessage}>{availableSeats} Seats Available</Typography> */}
                 <Button
-                  className={classes.joinRowButtons}
+                  className={classnames([classes.joinRowButtons, classes.backButton])}
                   startIcon={<ArrowBackIcon />}
                   onClick={() => {
                     setScene(GameFlowSteps.BackToSessions)
@@ -204,6 +217,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: '36px',
     height: 'initial',
     marginTop: '14px'
+  },
+  backButton: {
+    marginTop: '6px',
+    marginLeft: '20px'
   },
   availableSeatsMessage: {
     fontSize: '14px',

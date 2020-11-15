@@ -66,8 +66,12 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
     }
   }, [])
 
-  const checkUserConversations = (conversationId: string) => {
-    return user?.conversations?.items.some(item => item.conversationId === conversationId) || false
+  const checkUserConversations = (newConvoId: string) => {
+    return user?.conversations?.items.some(item => item.conversationId === newConvoId) || false
+  }
+
+  const checkOpenConversation = (newConvoId: string) => {
+    return newConvoId === chatState.conversationId || newConvoId === conversationId
   }
 
   const updateUnreadConversationMessages = ({ onCreateGlobalMessage }) => {
@@ -76,15 +80,13 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
     }
     const newMessageConversationId = onCreateGlobalMessage.conversationId
     // console.log('UNREAD')
-    // console.log(newMessageConversationId !== chatState.conversationId)
-    // console.log(newMessageConversationId !== conversationId)
-    // console.log(checkUserConversations(newMessageConversationId))
+    // console.log('oneofmyconvos', checkUserConversations(newMessageConversationId))
+    // console.log('one of myopen conovs', checkOpenConversation(newMessageConversationId))
     // console.log(onCreateGlobalMessage?.conversation?.members?.includes?.(user?.id))
     // increment the unread messages unless you're on the chat where the new message came in
     if (
-      newMessageConversationId !== chatState.conversationId &&
-      newMessageConversationId !== conversationId &&
       checkUserConversations(newMessageConversationId) &&
+      !checkOpenConversation(newMessageConversationId) &&
       onCreateGlobalMessage.conversation?.members?.includes(user?.id)
     ) {
       dispatch({

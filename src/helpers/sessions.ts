@@ -7,6 +7,7 @@ import healthcareServicesImage from 'assets/sessions/Breakout-Healthcare-Insuran
 export interface ISession {
   id: string // Horan - this is a horrible way to do this, but under tight deadline
   image: string
+  bluejeans?: string
   side: {
     category: string
     header: string
@@ -22,6 +23,7 @@ export const Sessions: { [key: string]: ISession } = {
   healthcareInsurance: {
     id: '4ab7c286-2a47-428c-8ca0-4cc765e153dd',
     image: healthcareServicesImage,
+    bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/vskdtxxj',
     side: {
       category: 'Breakout Session',
       header: 'Healthcare, Insurance & Life Sciences.',
