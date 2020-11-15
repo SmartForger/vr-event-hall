@@ -10,7 +10,8 @@ import { useVideoChatContext } from 'providers'
 import { graphQLQuery, graphQLMutation, graphQLSubscription } from 'graphql/helpers'
 import { getSessionQuestionsAndPolls } from 'graphql/customQueries'
 import { ChatMessages } from 'components/menu/ChatMessages'
-import { IPollObject, IQuestionObject, ISubscriptionObject } from 'types'
+import { withCountDisplay } from 'helpers'
+import { IPollObject, IQuestionObject, ISubscriptionObject, ISession } from 'types'
 import { updateSession, updateSessionPoll, updateSessionQuestion } from 'graphql/mutations'
 import { DialogCard } from 'components/shared'
 import { onCreateSessionPoll, onCreateSessionQuestion } from 'graphql/subscriptions'
@@ -24,6 +25,7 @@ export const ToolsPanel: FC<IToolsProps> = ({ inLivestream }) => {
   const [expanded, setExpanded] = useState<string | false>('')
   const [nestedExpanded, setNestedExpanded] = useState<string | false>('')
   const [questions, setQuestions] = useState<IQuestionObject[]>([])
+  const [currSession, setCurrSession] = useState<ISession>()
   const [polls, setPolls] = useState<IPollObject[]>([])
   const [dialogType, setDialogType] = useState<string>('')
   const [selectedPoll, setSelectedPoll] = useState<string>('')
@@ -42,7 +44,7 @@ export const ToolsPanel: FC<IToolsProps> = ({ inLivestream }) => {
   }
 
   const newQuestion = ({ onCreateSessionQuestion }) => {
-    setQuestions([...questions, onCreateSessionQuestion])
+    setQuestions([...(questions || currSession?.questions?.items), onCreateSessionQuestion])
   }
 
   const newPoll = ({ onCreateSessionPoll }) => {
@@ -51,19 +53,19 @@ export const ToolsPanel: FC<IToolsProps> = ({ inLivestream }) => {
 
   const getSessionQuestionsAndPollsInfo = async () => {
     const session = await graphQLQuery(getSessionQuestionsAndPolls, 'getSession', {
-      id: videoChatState?.session?.id || videoChatState.sessionId
+      id: videoChatState?.session?.id || videoChatState?.sessionId
     })
-    setQuestions(session.questions.items)
-    setPolls(session.polls.items)
+    setQuestions(session?.questions?.items)
+    setPolls(session?.polls?.items)
 
     questionSubscription.current = graphQLSubscription(
       onCreateSessionQuestion,
-      { sessionId: videoChatState?.session?.id },
+      { sessionId: videoChatState?.session?.id || videoChatState?.sessionId },
       newQuestion
     )
     pollSubscription.current = graphQLSubscription(
       onCreateSessionPoll,
-      { sessionId: videoChatState?.session?.id },
+      { sessionId: videoChatState?.session?.id || videoChatState?.sessionId },
       newPoll
     )
   }
@@ -83,7 +85,7 @@ export const ToolsPanel: FC<IToolsProps> = ({ inLivestream }) => {
 
   const toggleQA = async () => {
     await graphQLMutation(updateSession, {
-      id: videoChatState?.session?.id || videoChatState.sessionId,
+      id: videoChatState?.session?.id || videoChatState?.sessionId,
       qaActive: !videoChatState?.session?.qaActive
     })
   }
@@ -124,12 +126,14 @@ export const ToolsPanel: FC<IToolsProps> = ({ inLivestream }) => {
     setQuestions(questions.filter(x => x.id !== question.id))
   }
 
+  const unansweredQuestions = questions.filter(question => question.answered === 'false')
+
   return (
     <>
       <Accordion square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary aria-controls='panel1d-content' id='panel1d-header'>
           <Typography className={classes.title} variant='body1'>
-            Q&A
+            Q&A {withCountDisplay({ items: unansweredQuestions, showZero: true })}
           </Typography>
           <Button
             onClick={(e: React.MouseEvent) => {
@@ -144,34 +148,32 @@ export const ToolsPanel: FC<IToolsProps> = ({ inLivestream }) => {
         </AccordionSummary>
         <AccordionDetails className={classes.qaList}>
           <List>
-            {questions
-              .filter(question => question.answered === 'false')
-              .map(question => (
-                <ListItem className={classes.questionListItem} key={question.id}>
-                  <section className={classes.userInfo}>
-                    <Typography variant='subtitle1' className={classes.subtitle}>
-                      {question?.user?.firstName} {question?.user?.lastName}
-                    </Typography>
-                    <Button
-                      variant='outlined'
-                      className={`${classes.roundedButton} ${classes.clearButton}`}
-                      onClick={(e: React.MouseEvent) => {
-                        handleClearQA(question)
-                      }}
-                    >
-                      Clear
-                    </Button>
-                  </section>
-                  <Typography className={classes.questionContent}>{question.content}</Typography>
-                </ListItem>
-              ))}
+            {unansweredQuestions.map(question => (
+              <ListItem className={classes.questionListItem} key={question.id}>
+                <section className={classes.userInfo}>
+                  <Typography variant='subtitle1' className={classes.subtitle}>
+                    {question?.user?.firstName} {question?.user?.lastName}
+                  </Typography>
+                  <Button
+                    variant='outlined'
+                    className={`${classes.roundedButton} ${classes.clearButton}`}
+                    onClick={(e: React.MouseEvent) => {
+                      handleClearQA(question)
+                    }}
+                  >
+                    Clear
+                  </Button>
+                </section>
+                <Typography className={classes.questionContent}>{question.content}</Typography>
+              </ListItem>
+            ))}
           </List>
         </AccordionDetails>
       </Accordion>
       <Accordion square expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
         <AccordionSummary aria-controls='panel2d-content' id='panel2d-header'>
           <Typography className={classes.title} variant='body1'>
-            Polls available
+            Polls available {withCountDisplay({ items: polls, showZero: true })}
           </Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.nestedAccordion}>
@@ -265,10 +267,14 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold'
   },
   qaButton: {
+    marginTop: '4px',
+    marginBottom: '4px',
     borderColor: 'white',
     color: 'white'
   },
   clearButton: {
+    marginTop: '4px',
+    marginBottom: '4px',
     borderColor: 'black',
     color: 'black'
   },
@@ -309,7 +315,9 @@ const useStyles = makeStyles(() => ({
     borderColor: 'black',
     color: 'black',
     marginLeft: 'auto',
-    marginRight: '8px'
+    marginRight: '8px',
+    marginTop: '4px',
+    marginBottom: '4px'
   },
   pollContent: {
     padding: '8px 16px'

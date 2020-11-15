@@ -244,7 +244,10 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef, isInterna
       <AutoSizer>
         {({ height, width }) => (
           <VariableSizeList
-            height={icPinnedMessageAvail || pinnedMessageAvail ? height - 80 - pinnedMessageSize : height - 80}
+            height={
+              (icPinnedMessageAvail || pinnedMessageAvail ? height - 80 - pinnedMessageSize : height - 80) -
+              (isInternal ? 60 : 0)
+            }
             width={width}
             itemSize={i => getItemSize(filteredMessages[i])}
             itemCount={filteredMessages.length}
