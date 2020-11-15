@@ -72,7 +72,7 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
   const openConversation = async (conversationId: string) => {
     dispatch({ type: 'SET_DETAILS', payload: { conversationId, conversationOpen: true } })
     const conversation = await graphQLQuery(getConversationWithAssociated, 'getConversation', { id: conversationId })
-    dispatch({ type: 'SET_DETAILS', payload: { conversation } })
+    dispatch({ type: 'SET_DETAILS', payload: { conversationId, conversation } })
   }
 
   useEffect(() => {

@@ -332,6 +332,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
           {((videoConcluded && demo.end) || !activeTimestamp) && (
             <Box display='flex' className={classes.contentActionBox}>
               <Button
+                className={classes.inlineBottomButtons}
                 startIcon={<ArrowBackIcon />}
                 onClick={() => {
                   setScene(GameFlowSteps.BackToExplore)
@@ -340,7 +341,11 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
                 Back
               </Button>
 
-              <Button startIcon={<MailOutlineIcon />} onClick={() => actionClicked('connect')}>
+              <Button
+                className={classes.inlineBottomButtons}
+                startIcon={<MailOutlineIcon />}
+                onClick={() => actionClicked('connect')}
+              >
                 Send a message
               </Button>
             </Box>
@@ -380,6 +385,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       top: 40
     }
+  },
+  inlineBottomButtons: {
+    marginTop: '12px',
+    marginBottom: '12px'
   },
   introZIndex: {
     zIndex: 20000
@@ -505,21 +514,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center'
   },
   endContainer: {
-    padding: '4rem 5rem 3rem 0rem',
+    padding: '4rem 5rem 0rem 0rem',
     justifyContent: 'center',
     minHeight: '100%',
     [theme.breakpoints.down('lg')]: {
       paddingRight: '4rem'
     },
     [theme.breakpoints.only('sm')]: {
-      paddingRight: '3rem'
+      paddingRight: '3rem',
+      fontSize: '.9em'
     },
     [theme.breakpoints.only('xs')]: {
-      paddingRight: '2rem'
+      paddingRight: '2rem',
+      fontSize: '.75em'
     }
-  },
-  extraPaddingBottom: {
-    paddingBottom: 'calc(6rem + 60px)'
   },
   contentContainer: {
     '&:nth-child(2)': {
@@ -532,6 +540,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   endContentContainer: {
     maxWidth: '100%',
     minHeight: '50%',
+
     '&:nth-child(2)': {
       borderTop: '1px solid #DBDBDB'
     },

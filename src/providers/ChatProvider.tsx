@@ -33,6 +33,7 @@ interface IChatContextObject {
   conversation: IConversation | null
   userType: UserAdminType
   pinnedMessageId: string
+  icPinnedMessageId?: string
   session: IDemoSession | null
   unreadMessagesByConversation: IUnreadMessageCount
   selectedUser: IUser | null
@@ -46,6 +47,7 @@ const initialState = {
   conversation: null,
   userType: UserAdminType.GUEST,
   pinnedMessageId: '',
+  icPinnedMessageId: '',
   unreadMessagesByConversation: {},
   session: null,
   selectedUser: null

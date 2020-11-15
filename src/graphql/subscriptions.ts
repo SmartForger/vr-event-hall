@@ -343,6 +343,7 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
+          sessionId
           userType
           createdAt
           updatedAt
@@ -353,6 +354,7 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
+          sessionId
           createdAt
           updatedAt
         }
@@ -362,6 +364,7 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
+          sessionId
           createdAt
           updatedAt
         }
@@ -407,10 +410,51 @@ export const onUpdateSession = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      icPinnedMessageId
+      icPinnedMessage {
+        id
+        content
+        authorId
+        author {
+          id
+          firstName
+          lastName
+          email
+          avatar
+          phoneNumber
+          company
+          companySize
+          companyAddress1
+          companyCity
+          companyState
+          companyPostalCode
+          address1
+          city
+          state
+          postalCode
+          title
+          onVideoCall
+          online
+          createdAt
+          updatedAt
+        }
+        conversationId
+        conversation {
+          id
+          name
+          members
+          createdAt
+          updatedAt
+        }
+        deleted
+        createdAt
+        updatedAt
+      }
       raisedHands {
         items {
           id
           userId
+          sessionId
           dismissed
           createdAt
           updatedAt
@@ -421,6 +465,7 @@ export const onUpdateSession = /* GraphQL */ `
         items {
           id
           userId
+          sessionId
           answered
           content
           createdAt
@@ -431,6 +476,7 @@ export const onUpdateSession = /* GraphQL */ `
       polls {
         items {
           id
+          sessionId
           active
           name
           question
@@ -447,6 +493,7 @@ export const onUpdateSession = /* GraphQL */ `
       pollAnswers {
         items {
           id
+          sessionId
           userId
           answer
           createdAt
@@ -811,8 +858,8 @@ export const onUpdateVideoChatInvite = /* GraphQL */ `
   }
 `
 export const onCreateSessionParticipant = /* GraphQL */ `
-  subscription OnCreateSessionParticipant($userId: ID!) {
-    onCreateSessionParticipant(userId: $userId) {
+  subscription OnCreateSessionParticipant($sessionId: ID!) {
+    onCreateSessionParticipant(sessionId: $sessionId) {
       id
       userId
       sessionId
@@ -888,6 +935,16 @@ export const onCreateSessionParticipant = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        icPinnedMessageId
+        icPinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
         raisedHands {
           nextToken
         }
@@ -912,8 +969,8 @@ export const onCreateSessionParticipant = /* GraphQL */ `
   }
 `
 export const onUpdateSessionParticipant = /* GraphQL */ `
-  subscription OnUpdateSessionParticipant($id: ID!) {
-    onUpdateSessionParticipant(id: $id) {
+  subscription OnUpdateSessionParticipant($sessionId: ID!) {
+    onUpdateSessionParticipant(sessionId: $sessionId) {
       id
       userId
       sessionId
@@ -981,6 +1038,16 @@ export const onUpdateSessionParticipant = /* GraphQL */ `
         }
         pinnedMessageId
         pinnedMessage {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          createdAt
+          updatedAt
+        }
+        icPinnedMessageId
+        icPinnedMessage {
           id
           content
           authorId

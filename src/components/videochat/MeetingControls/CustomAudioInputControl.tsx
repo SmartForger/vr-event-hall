@@ -51,14 +51,19 @@ export const CustomAudioInputControl: FC<AudioInputControlProps> = ({
     }
   }, [videoChatState.globalMute])
 
+  useEffect(() => {
+    // toggle the mute button initially so that you come into the meetign muted
+    toggleMute()
+  }, [])
+
   return (
     <CustomControlBarButton
-      icon={<MuteIcon muted={muted} width={16} height={16} />}
+      icon={<MuteIcon muted={!muted} width={16} height={16} />}
       onClick={toggleMute}
-      label={muted ? muteLabel : unmuteLabel}
+      label={!muted ? muteLabel : unmuteLabel}
       popOver={dropdownOptions}
       removeSideMargin='right'
-      backgroundColor={muted ? 'white' : theme.palette.error.main}
+      backgroundColor={!muted ? 'white' : theme.palette.error.main}
     />
   )
 }

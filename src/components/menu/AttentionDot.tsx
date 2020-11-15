@@ -22,14 +22,15 @@ const useStyles = makeStyles({
     position: 'absolute',
     height: props.showing ? (props.number ? '16px' : '8px') : '0px',
     width: props.showing ? (props.number ? '16px' : '8px') : '0px',
-    marginTop: props.number ? '-10px' : '6px',
-    marginLeft: '-12px',
+    marginTop: props.number ? '-10px' : '0px',
+    marginLeft: '-10px',
     borderRadius: '50% 50%',
     fontSize: '10px',
     fontWeight: 'bold',
     fontFamily: 'monospace',
     textAlign: 'center',
     verticalAlign: 'middle',
+    lineHeight: '14px',
     background: 'red',
     tranform: '200ms'
   })

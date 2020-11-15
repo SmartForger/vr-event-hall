@@ -13,23 +13,6 @@ export const fiveGCoverage: IDemo = {
     nextDemo: E3DDemoNameVals.mecExplainer,
     nextDemoThumbnail: 'mec-thumbnail.png'
   },
-  timestamps: {
-    0: [
-      {
-        header: '5G Nationwide covers more than 200m Americans in over 1800 cities.'
-      }
-    ],
-    12000: [
-      {
-        header: '5G Ultra Wideband, the fastest 5G in the world, in 60 cities by the end of the year.'
-      }
-    ],
-    22000: [
-      {
-        header: '5G Edge is already in 5 cities and will be in more by the end of the year.'
-      }
-    ]
-  },
   poll: {
     id: '5gcoverage',
     header: "Have you used, or are you currently using Verizon's 5G network?",

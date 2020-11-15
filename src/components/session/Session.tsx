@@ -4,6 +4,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import { makeStyles, Theme, Container, Grid, Typography, Button, Box } from '@material-ui/core'
 
 // Components
+import { PillButton } from 'components'
 import { Video } from 'components/shared'
 
 // Types
@@ -26,6 +27,7 @@ interface SessionProps {
 export const Session: FC<SessionProps> = ({ session, setScene }) => {
   const classes = useStyles()
   const meetingManager = useMeetingManager()
+  const [loading, setLoading] = useState<boolean>()
   const { videoChatState, dispatch } = useVideoChatContext()
   const sessionDetails = useSessionDetails(session.id)
   const {
@@ -43,6 +45,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
   }, [])
 
   const joinClassRoom = async () => {
+    setLoading(true)
     dispatch({ type: 'SET_LOADING', payload: true })
     if (videoChatState?.session?.presenterPins.includes(user?.id as string)) {
       dispatch({ type: 'SET_DETAILS', payload: { adminType: UserAdminType.PRESENTER } })
@@ -63,7 +66,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
         const attendee = await graphQLQuery(getAttendeeInfo, 'getUser', { id: externalUserId })
 
         return {
-          name: `${attendee?.firstName} ${attendee?.lastName}`,
+          name: `${attendee?.firstName || ''} ${attendee?.lastName || ''}`,
           email: attendee?.email || '',
           avatar: attendee?.avatar || '',
           title: attendee?.title || '',
@@ -81,7 +84,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
       active: true
     })
 
-    const isAttendee = !sessionDetails.admins.items.some(admin => admin.userId === user?.id)
+    const isAttendee = !sessionDetails?.admins?.items?.some(admin => admin.userId === user?.id)
     if (isAttendee) {
       await meetingManager.audioVideo?.realtimeSetCanUnmuteLocalAudio(false)
       await meetingManager.audioVideo?.realtimeMuteLocalAudio()
@@ -99,11 +102,12 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
         isAttendee
       }
     })
+    setLoading(false)
   }
 
   const isSessionAdmin = sessionDetails.admins?.items.some(u => u.userId === user?.id)
   const sessionActive = sessionDetails.active === 'true'
-  const availableSeats = 200 - (sessionDetails.users?.items.length || 0)
+  const availableSeats = 200 - (sessionDetails.users?.items?.length || 0)
 
   return (
     <>
@@ -136,12 +140,20 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
               </Typography>
               <Box display='flex'>
                 {(isSessionAdmin || sessionActive) && (
-                  <Button onClick={joinClassRoom} variant='outlined' disabled={availableSeats < 1}>
+                  <PillButton
+                    className={classes.joinRowButtons}
+                    onClick={joinClassRoom}
+                    variant='outlined'
+                    disabled={availableSeats < 1}
+                    backgroundColor='transparent'
+                    loading={loading}
+                  >
                     Join Session
-                  </Button>
+                  </PillButton>
                 )}
                 <Typography className={classes.availableSeatsMessage}>{availableSeats} Seats Available</Typography>
                 <Button
+                  className={classes.joinRowButtons}
                   startIcon={<ArrowBackIcon />}
                   onClick={() => {
                     setScene(GameFlowSteps.BackToSessions)
@@ -188,9 +200,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   marginBottom: {
     marginBottom: 17
   },
+  joinRowButtons: {
+    minHeight: '36px',
+    height: 'initial',
+    marginTop: '14px'
+  },
   availableSeatsMessage: {
     fontSize: '14px',
-    margin: '46px 30px 36px 30px'
+    margin: '22px 30px 36px 30px'
   },
   sessionSplashImage: {
     position: 'relative',

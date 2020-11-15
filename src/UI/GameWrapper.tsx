@@ -559,7 +559,7 @@ const useStyles = makeStyles({
   toastESSButton: {
     height: '24px',
     fontSize: '12px',
-    marginBottom: '1rem',
+    margin: '0.5em',
     padding: 0,
     width: 140,
     display: 'flex',

@@ -11,11 +11,11 @@ import { HangupIcon } from 'assets/HangupIcon'
 import { CustomControlBarButton } from '../MeetingControls/Styled'
 
 interface EndMeetingControlProps {
-  setVisible: (val: boolean) => void
+  onMeetingEnd: () => void
   isPresenter?: boolean
 }
 
-export const EndMeetingControl: React.FC<EndMeetingControlProps> = ({ setVisible, isPresenter }) => {
+export const EndMeetingControl: React.FC<EndMeetingControlProps> = ({ onMeetingEnd, isPresenter }) => {
   const { roster } = useRosterState()
   const meetingManager = useMeetingManager()
   const dispatch = useNotificationDispatch()
@@ -32,10 +32,14 @@ export const EndMeetingControl: React.FC<EndMeetingControlProps> = ({ setVisible
         replaceAll: true
       }
     })
-    if (Object.keys(roster).length === 1 || isPresenter) {
+    // TODO: come back to this later to
+    // put in better logic and warnings
+    // kill the meeting if only one person is left
+    // if (Object.keys(roster).length === 1 || isPresenter) {
+    if (Object.keys(roster).length === 1) {
       endChimeMeeting(meetingId)
     }
-    setVisible(false)
+    onMeetingEnd()
   }
 
   const leaveMeeting = (): void => {

@@ -144,9 +144,12 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
 
       // delete the previous permisions
       await Promise.mapSeries(permissions, p => {
-        return graphQLMutation(deleteAdminLink, {
-          id: p.id
-        })
+        if (p.userId === authedUser?.id) {
+          return graphQLMutation(deleteAdminLink, {
+            id: p.id
+          })
+        }
+        return Promise.resolve()
       })
       // add the new permissions
       if (desiredAdminType === 'sme' || desiredAdminType === 'moderator') {
@@ -306,6 +309,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           className={classes.inlineButton}
           loading={loading}
           type='submit'
+          disabled={!profileInfo?.lastName || !profileInfo.firstName}
           onClick={() => updateUserData()}
           solid
         >
