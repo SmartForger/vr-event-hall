@@ -3,13 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { Collapse, IconButton, Theme, createStyles, makeStyles } from '@material-ui/core'
 import { Alert, AlertProps } from '@material-ui/lab'
 import { Close } from '@material-ui/icons'
-import classnames from 'classnames'
 
 interface TemporaryAlert {
   duration?: number
   message: string
-  severity?: AlertProps['severity']
   onClose: () => void
+  severity?: AlertProps['severity']
 }
 
 const ALERT_DEFAULT_DURATION = 10000
@@ -21,6 +20,7 @@ export const TemporaryAlert = ({
   severity
 }: TemporaryAlert) => {
   const [open, setOpen] = useState<boolean>(false)
+  const classes = useStyles()
 
   useEffect(() => {
     let timer: number
@@ -38,6 +38,7 @@ export const TemporaryAlert = ({
   return (
     <Collapse in={open} onExited={() => onClose()}>
       <Alert
+        className={classes.alert}
         severity={severity}
         action={
           <IconButton aria-label='close' color='inherit' size='small' onClick={() => setOpen(false)}>
@@ -50,3 +51,11 @@ export const TemporaryAlert = ({
     </Collapse>
   )
 }
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    alert: {
+      fontSize: '1rem'
+    }
+  })
+)
