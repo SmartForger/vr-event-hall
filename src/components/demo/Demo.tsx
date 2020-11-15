@@ -128,15 +128,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
   }
 
   const buildEndVideoSideLayout = content => (
-    <Grid
-      xs={4}
-      lg={3}
-      className={classnames(classes.endContainer, {
-        [classes.extraPaddingBottom]: !displayPoll
-      })}
-      container
-      direction={'column'}
-    >
+    <Grid xs={4} lg={3} className={classes.endContainer} container item direction={'column'}>
       <Grid xs={6} className={classes.endContentContainer} container alignItems='flex-start' direction='row'>
         {content.logo && (
           <Grid item xs={12}>
@@ -208,160 +200,157 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
         </div>
       )}
       {renderDemo && (
-        <Grid
-          className={classnames(classes.transition, classes.mainContainer, { [classes.maxHeightWidth]: displayPoll })}
-          container
-          direction='row'
-        >
-          {!displayPoll && (
-            <Grid item xs={8} lg={9} className={classnames(classes.demoContainer)}>
-              <Video
-                videoSrc={`${assetUrl}${demo.video}`}
-                posterSrc={demo.poster || ''}
-                onEnded={videoEnded}
-                autoPlay={autoPlay}
-                checkVideoTime={checkVideoTime}
-              />
-              <Box display='flex' className={classes.contentActionBox}>
-                <Button
-                  startIcon={<ArrowBackIcon />}
-                  onClick={() => {
-                    setScene(GameFlowSteps.BackToExplore)
-                  }}
-                >
-                  Back
-                </Button>
-
-                <Button startIcon={<MailOutlineIcon />} onClick={() => actionClicked('connect')}>
-                  Send a message
-                </Button>
-              </Box>
-            </Grid>
-          )}
-          {displayPoll && demo.poll && (
-            <Grid item xs={8} lg={9} className={classes.demoContainer}>
-              <Poll poll={demo.poll} user={user} />
-              <Box display='flex' className={classes.contentActionBox}>
-                <Button
-                  startIcon={<ArrowBackIcon />}
-                  onClick={() => {
-                    setScene(GameFlowSteps.BackToExplore)
-                  }}
-                >
-                  Back
-                </Button>
-
-                <Button startIcon={<MailOutlineIcon />} onClick={() => actionClicked('connect')}>
-                  Send a message
-                </Button>
-              </Box>
-            </Grid>
-          )}
-          {activeTimestamp && !videoConcluded && (
-            <Grid item xs={4} lg={3}>
-              <Grid className={classes.centerContent} container direction='row'>
-                {activeTimestamp.map(content => {
-                  return (
-                    <Grid className={classes.contentContainer} container direction='row'>
-                      {content.logo && (
-                        <Grid item xs={12}>
-                          <img src={require(`assets/demo/${content.logo}`)} alt={content.logo} />
-                        </Grid>
-                      )}
-                      {content.header && (
-                        <Grid item xs={12}>
-                          <Typography
-                            variant='h1'
-                            className={classnames(classes.header, {
-                              [classes.fontSize48]:
-                                (!content.logo && !content.body && !content.items && content.header.length < 40) ||
-                                content.header.length < 4,
-                              [classes.headerList]: !content.body && content.items
-                            })}
-                          >
-                            <span dangerouslySetInnerHTML={{ __html: content.header }} />
-                          </Typography>
-                        </Grid>
-                      )}
-                      {content.body && (
-                        <Grid item xs={12}>
-                          <Typography component='p' className={classes.body} paragraph>
-                            <span dangerouslySetInnerHTML={{ __html: content.body }} />
-                          </Typography>
-                        </Grid>
-                      )}
-                      {content.list && (
-                        <ul>
-                          {content.list.map(item => {
-                            return (
-                              <li className={classes.body}>
-                                <span> {item} </span>
-                              </li>
-                            )
-                          })}
-                        </ul>
-                      )}
-                      {content.items && (
-                        <Grid container justify='space-between'>
-                          {content.items.map(subItem => {
-                            return (
-                              <Grid
-                                className={classes.itemsContainer}
-                                container
-                                direction='row'
-                                md={subItem.gWidth || 12}
-                                justify='space-between'
-                              >
-                                <Grid item xs={12} classes={{ root: classes.inlineDisplay }} alignItems='center'>
-                                  {/* logo */}
-                                  {subItem.logo && (
-                                    <img
-                                      className={classes.subLogo}
-                                      src={require(`assets/demo/${subItem.logo}`)}
-                                      alt={subItem.logo}
-                                    />
-                                  )}
-                                  {/* heading */}
-                                  <Typography variant='h2' className={classes.subHeader}>
-                                    {subItem.header}
-                                  </Typography>
-                                </Grid>
-
-                                {/* Video */}
-                                <Grid item xs={12}>
-                                  {subItem.video && (
-                                    <Video
-                                      videoSrc={require(`assets/demo/${subItem.video}`)}
-                                      autoPlay={true}
-                                      autoLoop={true}
-                                      disableControls={true}
-                                    />
-                                  )}
-                                </Grid>
-
-                                {/* Image */}
-                                <Grid item xs={12}>
-                                  {subItem.video && (
-                                    <img
-                                      src={require(`assets/demo/${subItem.image}`)}
-                                      alt={content.logo}
-                                      className={classes.containedImage}
-                                    />
-                                  )}
-                                </Grid>
-                              </Grid>
-                            )
-                          })}
-                        </Grid>
-                      )}
-                    </Grid>
-                  )
-                })}
+        <div>
+          <Grid
+            className={classnames(classes.transition, classes.mainContainer, { [classes.maxHeightWidth]: displayPoll })}
+            container
+            direction='row'
+          >
+            {!displayPoll && (
+              <Grid item xs={8} lg={9} className={classnames(classes.demoContainer)}>
+                <Box className={classes.videoContainer}>
+                  <Video
+                    videoSrc={`${assetUrl}${demo.video}`}
+                    posterSrc={demo.poster || ''}
+                    onEnded={videoEnded}
+                    autoPlay={autoPlay}
+                    checkVideoTime={checkVideoTime}
+                  />
+                </Box>
               </Grid>
-            </Grid>
+            )}
+            {displayPoll && demo.poll && (
+              <Grid item xs={8} lg={9} className={classes.demoContainer}>
+                <Poll poll={demo.poll} user={user} />
+              </Grid>
+            )}
+            {activeTimestamp && !videoConcluded && (
+              <Grid item xs={4} lg={3}>
+                <Grid className={classes.centerContent} container direction='row'>
+                  {activeTimestamp.map(content => {
+                    return (
+                      <Grid className={classes.contentContainer} container direction='row'>
+                        {content.logo && (
+                          <Grid item xs={12}>
+                            <img src={require(`assets/demo/${content.logo}`)} alt={content.logo} />
+                          </Grid>
+                        )}
+                        {content.header && (
+                          <Grid item xs={12}>
+                            <Typography
+                              variant='h1'
+                              className={classnames(classes.header, {
+                                [classes.fontSize48]:
+                                  (!content.logo && !content.body && !content.items && content.header.length < 40) ||
+                                  content.header.length < 4,
+                                [classes.headerList]: !content.body && content.items
+                              })}
+                            >
+                              <span dangerouslySetInnerHTML={{ __html: content.header }} />
+                            </Typography>
+                          </Grid>
+                        )}
+                        {content.body && (
+                          <Grid item xs={12}>
+                            <Typography component='p' className={classes.body} paragraph>
+                              <span dangerouslySetInnerHTML={{ __html: content.body }} />
+                            </Typography>
+                          </Grid>
+                        )}
+                        {content.list && (
+                          <ul>
+                            {content.list.map(item => {
+                              return (
+                                <li className={classes.body}>
+                                  <span> {item} </span>
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        )}
+                        {content.items && (
+                          <Grid container justify='space-between'>
+                            {content.items.map(subItem => {
+                              return (
+                                <Grid
+                                  className={classes.itemsContainer}
+                                  container
+                                  direction='row'
+                                  md={subItem.gWidth || 12}
+                                  justify='space-between'
+                                >
+                                  <Grid item xs={12} classes={{ root: classes.inlineDisplay }} alignItems='center'>
+                                    {/* logo */}
+                                    {subItem.logo && (
+                                      <img
+                                        className={classes.subLogo}
+                                        src={require(`assets/demo/${subItem.logo}`)}
+                                        alt={subItem.logo}
+                                      />
+                                    )}
+                                    {/* heading */}
+                                    <Typography variant='h2' className={classes.subHeader}>
+                                      {subItem.header}
+                                    </Typography>
+                                  </Grid>
+
+                                  {/* Video */}
+                                  <Grid item xs={12}>
+                                    {subItem.video && (
+                                      <Video
+                                        videoSrc={require(`assets/demo/${subItem.video}`)}
+                                        autoPlay={true}
+                                        autoLoop={true}
+                                        disableControls={true}
+                                      />
+                                    )}
+                                  </Grid>
+
+                                  {/* Image */}
+                                  <Grid item xs={12}>
+                                    {subItem.video && (
+                                      <img
+                                        src={require(`assets/demo/${subItem.image}`)}
+                                        alt={content.logo}
+                                        className={classes.containedImage}
+                                      />
+                                    )}
+                                  </Grid>
+                                </Grid>
+                              )
+                            })}
+                          </Grid>
+                        )}
+                      </Grid>
+                    )
+                  })}
+                </Grid>
+              </Grid>
+            )}
+            {((videoConcluded && demo.end) || !activeTimestamp) && buildEndVideoSideLayout(demo.end)}
+          </Grid>
+          {((videoConcluded && demo.end) || !activeTimestamp) && (
+            <Box display='flex' className={classes.contentActionBox}>
+              <Button
+                className={classes.inlineBottomButtons}
+                startIcon={<ArrowBackIcon />}
+                onClick={() => {
+                  setScene(GameFlowSteps.BackToExplore)
+                }}
+              >
+                Back
+              </Button>
+
+              <Button
+                className={classes.inlineBottomButtons}
+                startIcon={<MailOutlineIcon />}
+                onClick={() => actionClicked('connect')}
+              >
+                Send a message
+              </Button>
+            </Box>
           )}
-          {((videoConcluded && demo.end) || !activeTimestamp) && buildEndVideoSideLayout(demo.end)}
-        </Grid>
+        </div>
       )}
     </div>
   )
@@ -388,7 +377,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 'calc(100% - 64px)',
     top: '115px',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'start',
     position: 'absolute',
     backgroundColor: 'transparent',
     color: '#000',
@@ -396,6 +385,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       top: 40
     }
+  },
+  inlineBottomButtons: {
+    marginTop: '12px',
+    marginBottom: '12px'
   },
   introZIndex: {
     zIndex: 20000
@@ -493,7 +486,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.2'
   },
   demoContainer: {
-    padding: '4rem 5rem 6rem 5rem',
+    padding: '4rem 5rem 3rem 5rem',
     width: '100%',
     [theme.breakpoints.down('lg')]: {
       paddingRight: '4rem',
@@ -508,6 +501,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: '2rem'
     }
   },
+  videoContainer: {
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center'
+  },
   centerContent: {
     padding: '0 6rem 0 0',
     height: '100%',
@@ -515,21 +514,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center'
   },
   endContainer: {
-    padding: '4rem 5rem 6rem 0rem',
+    padding: '4rem 5rem 0rem 0rem',
     justifyContent: 'center',
     minHeight: '100%',
     [theme.breakpoints.down('lg')]: {
       paddingRight: '4rem'
     },
     [theme.breakpoints.only('sm')]: {
-      paddingRight: '3rem'
+      paddingRight: '3rem',
+      fontSize: '.9em'
     },
     [theme.breakpoints.only('xs')]: {
-      paddingRight: '2rem'
+      paddingRight: '2rem',
+      fontSize: '.75em'
     }
-  },
-  extraPaddingBottom: {
-    paddingBottom: 'calc(6rem + 60px)'
   },
   contentContainer: {
     '&:nth-child(2)': {
@@ -542,6 +540,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   endContentContainer: {
     maxWidth: '100%',
     minHeight: '50%',
+
     '&:nth-child(2)': {
       borderTop: '1px solid #DBDBDB'
     },
@@ -550,7 +549,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   contentActionBox: {
-    marginTop: 27,
+    marginLeft: '5rem',
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: '4rem'
+    },
+    [theme.breakpoints.only('sm')]: {
+      marginLeft: '3rem'
+    },
+    [theme.breakpoints.only('xs')]: {
+      marginLeft: '2rem'
+    },
 
     '& .MuiButton-root': {
       marginRight: theme.spacing(4)
