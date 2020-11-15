@@ -32,7 +32,11 @@ export const EndMeetingControl: React.FC<EndMeetingControlProps> = ({ onMeetingE
         replaceAll: true
       }
     })
-    if (Object.keys(roster).length === 1 || isPresenter) {
+    // TODO: come back to this later to
+    // put in better logic and warnings
+    // kill the meeting if only one person is left
+    // if (Object.keys(roster).length === 1 || isPresenter) {
+    if (Object.keys(roster).length === 1) {
       endChimeMeeting(meetingId)
     }
     onMeetingEnd()
