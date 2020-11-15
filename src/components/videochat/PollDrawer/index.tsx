@@ -130,9 +130,9 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
 
   const submitQuestionAnswer = async () => {
     await graphQLMutation(createPollAnswer, {
-      pollId: pollState.question.id,
+      pollId: pollState?.question?.id,
       userId: user?.id,
-      answer: pollState.answerChoice
+      answer: pollState?.answerChoice
     })
     dispatch({ type: 'SET_MODE', payload: EPollDisplayMode.wait })
   }
@@ -157,7 +157,7 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
   )
 
   const roundToTenths = (resultCount: number = 0) => {
-    let raw = resultCount / (pollState?.results?.total || 1)
+    let raw = (resultCount / (pollState?.results?.total || 1)) * 100
     return Math.round(raw * 10) / 10
   }
 

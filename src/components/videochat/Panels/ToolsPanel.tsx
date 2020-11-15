@@ -126,7 +126,7 @@ export const ToolsPanel: FC<IToolsProps> = ({ inLivestream }) => {
     setQuestions(questions.filter(x => x.id !== question.id))
   }
 
-  const unansweredQuestions = questions.filter(question => question.answered === 'false')
+  const unansweredQuestions = questions //.filter(question => question.answered === 'false')
 
   return (
     <>
