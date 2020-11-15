@@ -65,7 +65,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const [profileInfo, setProfileInfo] = useState<IUser | undefined>(user)
   const [profileErrors, setProfileErrors] = useState<IProfileErrors>(initialProfileErrors)
   const [file, setFile] = useState<File>()
-  const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState<string>()
+  const [avatarUrl, setAvatarUrl] = useState<string>()
   const [isUploadingAvatar, setIsUploadingAvatar] = useState<boolean>(false)
   const [readyForProfileUpdate, setReadyForProfileUpdate] = useState<boolean>(true)
   const [temporaryMessage, setTemporaryMessage] = useState<TemporaryMessage>({ message: '', severity: 'success' })
@@ -126,9 +126,9 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
 
     if (readyForProfileUpdate && profileInfo?.avatar) {
       Storage.get(profileInfo.avatar)
-        .then(avatarUrl => {
-          if (!cancelled && typeof avatarUrl === 'string') {
-            setUploadedAvatarUrl(avatarUrl)
+        .then(updatedAvatarUrl => {
+          if (!cancelled && typeof updatedAvatarUrl === 'string') {
+            setAvatarUrl(updatedAvatarUrl)
             setReadyForProfileUpdate(false)
           }
         })
@@ -273,11 +273,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const profileDisplay = (
     <>
       <img src={profileBg} alt='profile background' />
-      <Avatar
-        alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
-        src={uploadedAvatarUrl || `https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
-        className={classes.avatar}
-      />
+      <Avatar alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`} src={avatarUrl} className={classes.avatar} />
       <section className={classes.profileMain}>
         <div className={classes.name}>
           {profileInfo?.firstName} {profileInfo?.lastName}
@@ -316,7 +312,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         <Grid item xs={4}>
           <Avatar
             alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
-            src={uploadedAvatarUrl || `https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+            src={avatarUrl}
             className={classNames(classes.avatar, classes.avatarEdit)}
           />
         </Grid>
