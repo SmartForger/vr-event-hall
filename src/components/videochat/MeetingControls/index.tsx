@@ -34,8 +34,7 @@ const MeetingControls: FC<MeetingControlProps> = ({
 }) => {
   const { isUserActive } = useUserActivityState()
   const { tiles } = useRemoteVideoTileState()
-  // TODO keep in state
-  const { videoChatState } = useVideoChatContext()
+  const { videoChatState, dispatch } = useVideoChatContext()
   const theme = useTheme()
 
   const toggleMuteAll = async () => {
@@ -43,6 +42,13 @@ const MeetingControls: FC<MeetingControlProps> = ({
       id: videoChatState.sessionId,
       muted: !videoChatState.globalMute
     })
+  }
+
+  const meetingHasEnded = () => {
+    setVisible(false)
+    // explicitly clear out the meeting values
+    // to start from scratch next time
+    dispatch({ type: 'CLEAR_CONVO_REFS' })
   }
 
   return (
@@ -60,7 +66,7 @@ const MeetingControls: FC<MeetingControlProps> = ({
         {/* {isClassroom && !isPresenter ? <CustomRaiseHandControl sessionId={videoChatState?.session?.id || ''} /> : null} */}
         {isClassroom && isVideoPresenter && tiles.length < 4 ? <CustomVideoInputControl /> : null}
         {!isClassroom ? <CustomVideoInputControl /> : null}
-        <EndMeetingControl setVisible={setVisible} isPresenter={isPresenter} />
+        <EndMeetingControl onMeetingEnd={() => meetingHasEnded()} isPresenter={isPresenter} />
         <section className='controls-menu-right'>
           {(isClassroom && isVideoPresenter) || !isClassroom ? <CustomContentShareControl /> : null}
           {/* {isClassroom && isPresenter ? (
