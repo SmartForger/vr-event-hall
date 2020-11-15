@@ -45,7 +45,7 @@ interface IAdminUser {
   id: string
   userId: string
   sessionId: string
-  user: IUser
+  user?: IUser
   userType: string
 }
 
@@ -55,6 +55,13 @@ interface IAdminUserList {
 
 interface IPollObjectList {
   items: IPollObject[]
+}
+
+export interface IParticipant {
+  id: string
+  userId: string
+  sessionId: string
+  user?: IUser
 }
 
 export interface ISession {
@@ -69,9 +76,12 @@ export interface ISession {
   polls?: IPollObjectList
   pinnedMessageId: string
   pinnedMessage: IMessage
+  icPinnedMessageId: string
+  icPinnedMessage: IMessage
   presenterPins: string[]
+  questions: { items: IQuestionObject[] }
   admins: IAdminUserList
-  participants?: IUser[]
+  participants?: { items: IParticipant[] }
 }
 
 export interface IVideoChatInvite {

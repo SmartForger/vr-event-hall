@@ -34,7 +34,6 @@ import { ISubscriptionObject, ISession } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
 import { ConditionalWrapper, DialogCard } from 'components/shared'
-import { NullEngine } from 'babylonjs'
 import { findSessionById, Sessions } from '../../../helpers'
 
 interface ClassRoomVideoChatModalProps {}
@@ -82,28 +81,32 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
     []
   )
 
-  const setGlobalMute = (globalMute: boolean) => dispatch({ type: 'SET_DETAILS', payload: { globalMute } })
+  const setGlobalMute = (globalMute: boolean = false) => dispatch({ type: 'SET_DETAILS', payload: { globalMute } })
 
   const updateSessionInfo = ({ onUpdateSession }) => {
-    setGlobalMute(onUpdateSession.muted)
-    setCurrentSession(onUpdateSession)
-    dispatch({
-      type: 'SET_DETAILS',
-      payload: {
-        session: onUpdateSession,
-        pinnedMessage: onUpdateSession.pinnedMessage
-      }
-    })
+    if (onUpdateSession) {
+      setGlobalMute(onUpdateSession?.muted)
+      setCurrentSession(onUpdateSession)
+      dispatch({
+        type: 'SET_DETAILS',
+        payload: {
+          session: onUpdateSession,
+          pinnedMessage: onUpdateSession.pinnedMessage,
+          icPinnedMessage: onUpdateSession.icPinnedMessage
+        }
+      })
+    }
   }
 
   const getSessionInfo = async () => {
     const session = await graphQLQuery(getSession, 'getSession', { id: videoChatState.sessionId })
     setCurrentSession(session)
-
     dispatch({
       type: 'SET_DETAILS',
       payload: {
         session: session,
+        conversationId: session?.conversationId,
+        icidId: session?.icId || '',
         pinnedMessage: session.pinnedMessage
       }
     })

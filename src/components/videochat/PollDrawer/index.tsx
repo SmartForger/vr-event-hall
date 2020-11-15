@@ -130,9 +130,9 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
 
   const submitQuestionAnswer = async () => {
     await graphQLMutation(createPollAnswer, {
-      pollId: pollState.question.id,
+      pollId: pollState?.question?.id,
       userId: user?.id,
-      answer: pollState.answerChoice
+      answer: pollState?.answerChoice
     })
     dispatch({ type: 'SET_MODE', payload: EPollDisplayMode.wait })
   }
@@ -156,11 +156,16 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
     </>
   )
 
+  const roundToTenths = (resultCount: number = 0) => {
+    let raw = (resultCount / (pollState?.results?.total || 1)) * 100
+    return Math.round(raw * 10) / 10
+  }
+
   const buildPollResultDisplay = () => {
-    const aPercentage = Math.round(pollState?.results?.optionA || 0 / (pollState?.results?.total || 1))
-    const bPercentage = Math.round(pollState?.results?.optionB || 0 / (pollState?.results?.total || 1))
-    const cPercentage = Math.round(pollState?.results?.optionC || 0 / (pollState?.results?.total || 1))
-    const dPercentage = Math.round(pollState?.results?.optionD || 0 / (pollState?.results?.total || 1))
+    const aPercentage = roundToTenths(pollState?.results?.optionA)
+    const bPercentage = roundToTenths(pollState?.results?.optionB)
+    const cPercentage = roundToTenths(pollState?.results?.optionC)
+    const dPercentage = roundToTenths(pollState?.results?.optionD)
     return (
       <>
         <Typography variant='subtitle1'>{pollState?.question?.question}</Typography>

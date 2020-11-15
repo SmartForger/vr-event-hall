@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import Joyride, { ACTIONS, CallBackProps, STATUS, Step, Styles } from 'react-joyride'
-import { JoyrideTutorialStyles } from './JoyrideTutorialStyles'
 
 interface IntroTutorialProps {
   run: boolean
@@ -24,7 +23,14 @@ export const IntroTutorial: FC<IntroTutorialProps> = ({ run, steps, onClose, sty
       disableOverlay={true}
       callback={handleJoyrideCallback}
       continuous={true}
-      floaterProps={{ disableAnimation: true }}
+      floaterProps={{
+        disableAnimation: true,
+        styles: {
+          floater: {
+            filter: 'drop-shadow(rgba(0, 0, 0, 1) 0px 0px 1px)'
+          }
+        }
+      }}
       locale={{ last: 'Close' }} // Changes the "Next" button text of the final step to "Close"
     />
   )
