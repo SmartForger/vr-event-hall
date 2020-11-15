@@ -104,7 +104,7 @@ export const Poll: FC<IPollProps> = ({ user, poll }) => {
           {!showResults && (
             <Grid item xs={12}>
               <PillButton
-                className={classes.button}
+                className={classnames([classes.button, classes.submitBtn])}
                 borderColor='white'
                 backgroundColor='transparent'
                 onClick={() => submitAnswer()}
@@ -156,7 +156,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     backgroundColor: 'black',
     color: 'white',
-    padding: '5rem',
+    padding: '4rem',
     [theme.breakpoints.down('md')]: {
       padding: '3rem'
     }
@@ -205,6 +205,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
     position: 'relative',
     left: '-10px'
+  },
+  submitBtn: {
+    marginBottom: 0
   },
   qr: {
     paddingTop: '3rem'

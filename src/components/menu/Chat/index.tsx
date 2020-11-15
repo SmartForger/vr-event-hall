@@ -75,11 +75,11 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
       return
     }
     const newMessageConversationId = onCreateGlobalMessage.conversationId
-    console.log('UNREAD')
-    console.log(newMessageConversationId !== chatState.conversationId)
-    console.log(newMessageConversationId !== conversationId)
-    console.log(checkUserConversations(newMessageConversationId))
-    console.log(onCreateGlobalMessage?.conversation?.members?.includes?.(user?.id))
+    // console.log('UNREAD')
+    // console.log(newMessageConversationId !== chatState.conversationId)
+    // console.log(newMessageConversationId !== conversationId)
+    // console.log(checkUserConversations(newMessageConversationId))
+    // console.log(onCreateGlobalMessage?.conversation?.members?.includes?.(user?.id))
     // increment the unread messages unless you're on the chat where the new message came in
     if (
       newMessageConversationId !== chatState.conversationId &&
