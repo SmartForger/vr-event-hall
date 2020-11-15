@@ -98,11 +98,12 @@ export const ClassRoomVideoChatModal: FC<ClassRoomVideoChatModalProps> = () => {
   const getSessionInfo = async () => {
     const session = await graphQLQuery(getSession, 'getSession', { id: videoChatState.sessionId })
     setCurrentSession(session)
-
     dispatch({
       type: 'SET_DETAILS',
       payload: {
         session: session,
+        conversationId: session?.conversationId,
+        icidId: session?.icId || '',
         pinnedMessage: session.pinnedMessage
       }
     })

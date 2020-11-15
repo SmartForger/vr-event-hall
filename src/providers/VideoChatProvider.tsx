@@ -9,7 +9,7 @@ interface IVideoChatContextObject {
   error: Error | null
   visible: boolean
   isClassroom: boolean
-  conversationId: string
+  conversationId: string | null
   icId: string
   conversationUser: IUser | null
   adminType: UserAdminType
@@ -30,8 +30,8 @@ const initialState = {
   error: null,
   visible: false,
   isClassroom: false,
-  conversationId: '17017b7e-9f86-413c-bae5-9f4c46e05de6',
-  icId: '1185630a-0cc6-4e22-848d-a98b6a34ee62',
+  conversationId: '',
+  icId: '',
   conversationUser: null,
   adminType: UserAdminType.GUEST,
   sessionId: '4a9b328b-85b5-4393-a232-550ac67962f9',
@@ -78,6 +78,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         ...action.payload
+      }
+    case 'CLEAR_CONVO_REFS':
+      return {
+        ...state,
+        ...initialState
       }
     default:
       return state
