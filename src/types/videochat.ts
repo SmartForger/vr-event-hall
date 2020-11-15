@@ -76,6 +76,8 @@ export interface ISession {
   polls?: IPollObjectList
   pinnedMessageId: string
   pinnedMessage: IMessage
+  icPinnedMessageId: string
+  icPinnedMessage: IMessage
   presenterPins: string[]
   admins: IAdminUserList
   participants?: { items: IParticipant[] }

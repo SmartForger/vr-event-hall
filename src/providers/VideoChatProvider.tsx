@@ -19,6 +19,7 @@ interface IVideoChatContextObject {
   presenterPins: string[]
   moderators: string[]
   pinnedMessage: IMessage | null
+  icPinnedMessage: IMessage | null
   isAttendee: boolean
   attendees: IUser[]
 }
@@ -41,6 +42,7 @@ const initialState = {
   moderators: [],
   attendees: [],
   pinnedMessage: null,
+  icPinnedMessage: null,
   isAttendee: true
 }
 
