@@ -155,7 +155,7 @@ export const ChatDrawer = ({ vcOff }) => {
       anchor={'right'}
       open={Boolean(chatState.conversationOpen && chatState.conversationId)}
       onClose={closeDrawer}
-      ModalProps={{ hideBackdrop: true }}
+      variant='persistent'
       classes={{
         paper: classes.messagePaper
       }}
