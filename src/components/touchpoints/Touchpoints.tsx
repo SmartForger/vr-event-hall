@@ -224,7 +224,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     height: 'calc(100% - 105px)',
-    width: 'calc(40% - 32px)',
+    width: 'calc(45% - 32px)',
     padding: '0 12.5% 0 6%',
     paddingTop: '120px',
     top: '105px',
