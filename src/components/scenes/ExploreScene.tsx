@@ -77,13 +77,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: '16px',
 
     [theme.breakpoints.down('md')]: {
-      fontSize: '3rem',
-      lineHeight: '3rem'
+      fontSize: '2.25rem',
+      lineHeight: '2.25rem',
+      top: '95px'
     },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-      fontSize: '2rem',
-      marginTop: '2rem',
-      lineHeight: '2rem'
+      fontSize: '1.5rem',
+      marginTop: '1.5rem',
+      lineHeight: '1.5rem',
+      top: '80px'
     }
   },
   button: {

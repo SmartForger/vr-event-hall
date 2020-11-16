@@ -51,7 +51,7 @@ export const WelcomeScene: FC<IWelcomeProps> = ({ user, setGameState, activeScen
               </Typography>
             </Grid>
             <Grid item>
-              <Typography classes={{ root: classes.heading }} component='h2' variant='h2'>
+              <Typography component='h1' variant='h1'>
                 Welcome to 5G Innovation Sessions.
               </Typography>
             </Grid>
@@ -103,7 +103,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '0 12.5% 0 10%'
     },
     [theme.breakpoints.down('md')]: {
-      padding: '0 12.5% 0 8%'
+      padding: '90 12.5% 0 8%',
+      paddingTop: '120px'
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: '90 12.5% 0 8%',
+      paddingTop: '120px'
     },
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {

@@ -198,7 +198,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '3rem'
     },
     [theme.breakpoints.down('sm')]: {
-      height: 'auto'
+      height: 'auto',
+      top: '95px'
     },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 740px)`]: {
       top: '85px'
