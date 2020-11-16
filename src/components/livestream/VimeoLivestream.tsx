@@ -211,13 +211,13 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
 
   // TODO: this should be moved to the Game Wrapper and
   // instead have a function prop trigger this from here
-  // const goToSession = (session: ISession | null) => {
-  //   if (participantId) {
-  //     console.log('DELETE')
-  //     graphQLMutation(deleteSessionParticipantMin, { id: participantId })
-  //   }
-  //   history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')
-  // }
+  const goToSession = (session: ISession | null) => {
+    if (participantId) {
+      console.log('DELETE')
+      graphQLMutation(deleteSessionParticipantMin, { id: participantId })
+    }
+    history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')
+  }
 
   return (
     <PollProvider>
@@ -225,11 +225,12 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
         <div className={showChatDrawer ? classes.streamSideWithChat : classes.streamSideFull}>
           <IconButton
             className={classes.closeButton}
-            onClick={() => setRedirectTrigger(true)}
+            onClick={() => setOpenModal(true)}
             disableFocusRipple
             disableRipple
             disableTouchRipple
-          >Exit
+          >
+            Exit
           </IconButton>
           {!useBackupStream ? (
             <>
@@ -318,7 +319,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
       </div>
       <RouteTransition animationTrigger={redirectTrigger} route='/event' timeout={300} />
       {/* TODO: Move this to gamewrapper */}
-      {/* {openModal && (
+      {openModal && (
         <div className={classes.modal}>
           <div className={classes.modalBody}>
             <Box p={4}>
@@ -351,7 +352,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
             </IconButton>
           </div>
         </div>
-      )} */}
+      )}
     </PollProvider>
   )
 }
