@@ -259,10 +259,10 @@ const useStyles = makeStyles((theme: Theme) =>
       },
 
       [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-        minHeight: '40px',
-        maxHeight: '40px',
+        minHeight: 52,
+        maxHeight: 52,
         '& img': {
-          height: '28px'
+          display: 'none'
         }
       }
     },

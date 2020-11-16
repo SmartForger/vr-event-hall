@@ -10,7 +10,7 @@ export const StyledOpenRightDrawer = styled.div`
   }
 
   @media (max-width: 960px), screen and (max-height: 540px) {
-    padding-top: 55px;
+    padding-top: 60px;
     padding-bottom: 20px;
   }
 `

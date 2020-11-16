@@ -94,8 +94,10 @@ export default class Receiver {
                   newDemo = Demos.shotTracker
                   break
                 case E3DDemoNameVals.tata:
-                  newDemo = Demos.tata
-                  break
+                  setGameState(GameFlowSteps.Robot)
+                  setActiveDemo(Demos.tata)
+                  setActiveRobotPart(ETouchpoints.None)
+                  return
                 case E3DDemoNameVals.avesha:
                   newDemo = Demos.avesha
                   break

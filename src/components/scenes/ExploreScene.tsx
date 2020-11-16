@@ -33,24 +33,18 @@ export const ExploreScene: FC<ExploreProps> = ({ setScene, sceneType, hideText, 
     <>
       {!loading && !hideText && (
         <div id='scene-explore' className={classnames(classes.transition, classes.root)}>
-          <Grid container direction='column' justify='center' spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant='h2' className={classes.heading}>
-                {sceneType === GameFlowSteps.Explore ? I18n.get('exploreSceneTitle') : I18n.get('sessionsSceneTitle')}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography component='p' paragraph>
-                {sceneType === GameFlowSteps.Explore ? I18n.get('exploreSceneBlurb') : I18n.get('sessionsSceneBlurb')}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography className={classes.fontSize14} component='span'>
-                {I18n.get('clickAndDragToExplore')}
-              </Typography>
-              <ArrowBackIcon className={`${classes.forwardArrow} ${classes.fontSize14}`} />
-            </Grid>
-          </Grid>
+          <Typography variant='h2' className={classes.heading}>
+            {sceneType === GameFlowSteps.Explore ? I18n.get('exploreSceneTitle') : I18n.get('sessionsSceneTitle')}
+          </Typography>
+
+          <Typography component='p' paragraph>
+            {sceneType === GameFlowSteps.Explore ? I18n.get('exploreSceneBlurb') : I18n.get('sessionsSceneBlurb')}
+          </Typography>
+
+          <Typography className={classes.fontSize14} component='span'>
+            {I18n.get('clickAndDragToExplore')}
+          </Typography>
+          <ArrowBackIcon className={`${classes.forwardArrow} ${classes.fontSize14}`} />
         </div>
       )}
     </>
@@ -63,12 +57,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 'calc(50% - 12.5% - 32px)',
     padding: '0 0 0 12.5%',
     top: '105px',
-    display: 'flex',
-    alignItems: 'center',
     position: 'absolute',
     backgroundColor: 'transparent',
     zIndex: 1300,
-    color: '#000'
+    color: '#000',
+
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      height: 'calc(100vh - 65px)',
+      paddingLeft: '4rem',
+      top: 65,
+      width: '40vw'
+    }
   },
   heading: {
     fontWeight: 700,
