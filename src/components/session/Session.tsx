@@ -185,7 +185,7 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: '0 3rem',
+    padding: '3rem',
     height: 'calc(100% - 115px)',
     width: '100vw',
     top: '115px',
@@ -194,8 +194,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#000',
     overflow: 'auto',
     [theme.breakpoints.down('sm')]: {
-      height: 'auto',
-      top: '95px'
+      height: 'auto'
     },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 740px)`]: {
       top: '75px',
