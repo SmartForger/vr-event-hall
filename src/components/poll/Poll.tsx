@@ -61,7 +61,9 @@ export const Poll: FC<IPollProps> = ({ user, poll }) => {
   return (
     <Grid container direction='row' className={classnames(classes.poll, { [classes.thankYou]: showThankYou })}>
       <Grid item xs={12}>
-        <Typography variant='h6'>Quick Poll</Typography>
+        <Typography variant='h6' className={classes.quickpoll}>
+          Quick Poll
+        </Typography>
       </Grid>
       {!showThankYou && (
         <>
@@ -76,7 +78,7 @@ export const Poll: FC<IPollProps> = ({ user, poll }) => {
             poll.options &&
             poll.options.map(option => {
               return (
-                <Grid item xs={12}>
+                <Grid item xs={12} className={classes.optionWrapper}>
                   {showResults && (
                     <Typography
                       component='span'
@@ -102,7 +104,7 @@ export const Poll: FC<IPollProps> = ({ user, poll }) => {
           {!showResults && (
             <Grid item xs={12}>
               <PillButton
-                className={classes.button}
+                className={classnames([classes.button, classes.submitBtn])}
                 borderColor='white'
                 backgroundColor='transparent'
                 onClick={() => submitAnswer()}
@@ -154,10 +156,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     backgroundColor: 'black',
     color: 'white',
-    padding: '5rem',
+    padding: '4rem',
     [theme.breakpoints.down('md')]: {
       padding: '3rem'
     }
+  },
+  quickpoll: {
+    fontSize: '20px',
+    lineHeight: '20px',
+    fontWeight: 700,
+    marginBottom: 22
   },
   thankYou: {
     alignContent: 'start'
@@ -165,8 +173,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   heading: {
     fontWeight: 700,
     paddingRight: '20%',
-    fontSize: '2.5rem',
-    lineHeight: '1.2',
+    fontSize: '34px',
+    lineHeight: '34px',
+    marginBottom: 45,
     [theme.breakpoints.down('md')]: {
       fontSize: '2rem !important',
       lineHeight: '2rem',
@@ -175,6 +184,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   thankYouHeading: {
     paddingTop: '3rem'
+  },
+  optionWrapper: {
+    marginBottom: '1rem'
   },
   option: {
     cursor: 'pointer',
@@ -188,12 +200,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Verizon-bold'
   },
   button: {
-    top: '1rem',
     width: 100,
     fontWeight: 600,
     color: 'white',
     position: 'relative',
     left: '-10px'
+  },
+  submitBtn: {
+    marginBottom: 0
   },
   qr: {
     paddingTop: '3rem'

@@ -17,7 +17,7 @@ export const Demos: IDemoCollection = {
   '5GCoverage': fiveGCoverage,
   '5StatesOfReady': {
     type: '5StatesOfReady',
-    video: '5statesofready720.mp4',
+    video: '5States_v22.mp4',
     poster: FivestatesofreadyImg,
     conversationId: '1d26e076-954e-4455-bf28-cc964f633f3d',
     end: {
@@ -91,8 +91,8 @@ export const Demos: IDemoCollection = {
     video: 'Zixi.mp4',
     poster: zixiImg,
     end: {
-      header: 'Zixi',
-      body: '<br/>' + 'Visit <a target="_blank" href="https://zixi.com">zixi.com</a> for viewing options ',
+      header: 'Streamlining the live broadcast industry.',
+      body: 'Changing the economics of the infrastructure-intensive broadcast business, moving quality content anywhere in the world in milliseconds.',
       nextDemoText: 'The 5 states of ready.',
       nextDemo: E3DDemoNameVals.fiveStatesOfReady,
       nextDemoThumbnail: 'five-states-of-ready-thumbnail.png'
@@ -103,9 +103,9 @@ export const Demos: IDemoCollection = {
     video: 'IceMobility.mp4',
     poster: iceImg,
     end: {
-      header: 'Ice Mobility',
+      header: 'Automating quality control processes.',
       body:
-        '<br/>' + 'Visit <a target="_blank" href="https://icemobility.com">icemobility.com</a> for viewing options ',
+        'Improving quality control processes through computer vision, removing steps and increasing accuracy.',
       nextDemoText: '5G built right for Indy 500.',
       nextDemo: E3DDemoNameVals.indy,
       nextDemoThumbnail: 'indy-thumbnail.png'
