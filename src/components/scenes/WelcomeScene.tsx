@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#000',
     [theme.breakpoints.down('lg')]: {
       padding: '0 12.5% 0 10%',
-      paddingTop: '20px'
+      paddingTop: '120px'
     },
     [theme.breakpoints.down('md')]: {
       padding: '90 12.5% 0 8%',

@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'calc(100% - 105px)',
     width: 'calc(50% - 12.5% - 32px)',
     padding: '0 0 0 12.5%',
-    paddingTop: '90px',
+    paddingTop: '120px',
     top: '105px',
     position: 'absolute',
     backgroundColor: 'transparent',
