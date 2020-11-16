@@ -115,10 +115,10 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
       {renderSession && (
         <Container className={`${classes.root} ${classes.transition}`} component='main' maxWidth={false}>
           <Grid container justify={'space-between'} spacing={2}>
-            <Grid item xs={7} className={classes.contentContainer}>
-              <img src={session.image} className={classes.sessionSplashImage} />
+            <Grid item md={7} xs={4} className={classes.contentContainer}>
+              <img className={classes.sessionSplashImage} src={session.image} alt={session.side.header} />
             </Grid>
-            <Grid container item direction='column' alignItems='flex-start' justify='center' xs={5}>
+            <Grid container item direction='column' alignItems='flex-start' justify='center' md={5} xs={8}>
               <Typography className={classes.marginBottom} component='h5' variant='h5' color='textPrimary' gutterBottom>
                 Session
               </Typography>
@@ -185,30 +185,36 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: '0 3rem',
+    padding: '3rem',
     height: 'calc(100% - 115px)',
-    width: 'calc(100% - 64px)',
+    width: '100vw',
     top: '115px',
-    display: 'flex',
-    alignItems: 'center',
     position: 'absolute',
     backgroundColor: 'transparent',
     color: '#000',
-    '& .MuiGrid-item': {
-      padding: '3rem'
-    },
+    overflow: 'auto',
     [theme.breakpoints.down('sm')]: {
       height: 'auto'
     },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 740px)`]: {
-      top: '85px'
+      top: '75px',
+      height: 'calc(100% - 75px)'
+    },
+    [theme.breakpoints.up('md')]: {
+      '& .MuiGrid-item': {
+        padding: '3rem'
+      }
     }
   },
   preEventVidPlaceholderImg: {
     width: '100%'
   },
   contentContainer: {
-    margin: 'auto'
+    margin: 'auto',
+
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 740px)`]: {
+      margin: 0
+    }
   },
   marginBottom: {
     marginBottom: 17
@@ -229,7 +235,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   sessionSplashImage: {
     position: 'relative',
     width: '100%',
-    height: '100%'
+    height: 'auto'
   },
   transition: {
     opacity: 1,

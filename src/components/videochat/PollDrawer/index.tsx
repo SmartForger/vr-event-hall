@@ -23,7 +23,7 @@ import { RadioButtons, CountdownTimer } from 'components'
 import { useAppState, usePollContext, useVideoChatContext } from 'providers'
 import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
 import { getSessionPolls } from 'graphql/customQueries'
-import { listPollAnswerss } from 'graphql/queries'
+import { answersByPoll } from 'graphql/queries'
 import { createPollAnswer, updateSessionPoll } from 'graphql/mutations'
 import { onUpdateSessionPoll } from 'graphql/subscriptions'
 import { ISubscriptionObject, IAskedPollQuestion, EPollDisplayMode, IPollAnswerResults } from 'types'
@@ -78,9 +78,9 @@ export const PollDrawer: FC<PollDrawerProps> = () => {
 
   const getAllUserAnswers = async () => {
     dispatch({ type: 'SET_POLL', payload: { loading: true } })
-    const allResponses = await graphQLQuery(listPollAnswerss, 'listPollAnswerss', {
-      pollId: pollState.questionId,
-      sessionId: videoChatState?.session?.id
+    const allResponses = await graphQLQuery(answersByPoll, 'answersByPoll', {
+      pollId: pollState?.question?.id,
+      limit: 10000
     })
     const results: IPollAnswerResults = {
       total: allResponses.length,

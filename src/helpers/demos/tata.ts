@@ -5,6 +5,7 @@ import roboMiddleImage from 'assets/touchpoints/tata-overhead-assembly.gif'
 import roboMiddleImageFallback from 'assets/touchpoints/thumbnail-robotMiddle.png'
 import roboBackImage from 'assets/touchpoints/tata-assembly.gif'
 import roboBackImageFallback from 'assets/touchpoints/thumbnail-robotBack.png'
+// import aveshaImg from 'assets/demo/avesha.png'
 
 export const tata: IDemo = {
   type: 'tata',
@@ -15,15 +16,15 @@ export const tata: IDemo = {
     header: 'The future of manufacturing.',
     body: '',
     expert: '',
-    nextDemoText: 'Transforming the fan experience',
+    nextDemoText: 'Factory Digitalization',
     nextDemo: E3DDemoNameVals.ybvr,
     nextDemoThumbnail: 'ybvr-thumbnail.png'
   },
   touchpoints: {
     [ETouchpoints.None]: [
       {
-        preHeader: 'Demo',
-        header: 'The future of manufacturing',
+        // preHeader: 'Demo',
+        header: 'The future of manufacturing.',
         body: 'Click, drag and interact with the model to get a look into the factory of the future.'
       },
       {
@@ -43,8 +44,10 @@ export const tata: IDemo = {
       {
         logo: 'ticker.svg',
         header: 'Data analysis and action in near real-time',
-        body:
-          'With private MEC, data can be gathered and acted on right where it’s created—which can result in greater performance, contextually aware applications and improved security.'
+        body: '',
+        // 'With private MEC, data can be gathered and acted on right where it’s created—which can result in greater performance, contextually aware applications and improved security.'
+        inlineBody1: 'Analysis:',
+        inlineBody2: 'No defects detected'
       },
       {
         image: roboFrontImage,
@@ -67,9 +70,11 @@ export const tata: IDemo = {
       {
         logo: 'wifi.svg',
         header: 'High-capacity data',
-        body:
-          '5G is expected to eventually support up to 1M devices in a square kilometer, allowing thousands of sensors and devices on the factory floor to simultaneously send a continuous stream of data to the cloud.',
-        video: '[NEED]'
+        inlineBody1: 'Devices on network:',
+        inlineBody2: '2,675',
+        body: '',
+        // '5G is expected to eventually support up to 1M devices in a square kilometer, allowing thousands of sensors and devices on the factory floor to simultaneously send a continuous stream of data to the cloud.',
+        video: ''
       },
       {
         image: roboMiddleImage,
@@ -92,9 +97,11 @@ export const tata: IDemo = {
       {
         logo: 'gpu.svg',
         header: 'The Fourth Industrial Revolution',
-        body:
-          '5G promises to enable transformative technologies like AI and automation to help launch the world into the Fourth Industrial Revolution.',
-        video: '[NEED]'
+        body: '',
+        // '5G promises to enable transformative technologies like AI and automation to help launch the world into the Fourth Industrial Revolution.',
+        inlineBody1: 'Automation:',
+        inlineBody2: 'Quality control',
+        video: ''
       },
       {
         image: roboBackImage,

@@ -1,8 +1,14 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Button, Grid, makeStyles, Theme, Typography } from '@material-ui/core'
+import { Button, Grid, makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { GameFlowSteps, ETouchpoints, IDemo, IDemoLinkConfig } from 'types'
+import { PillButton } from 'components'
+import { Video } from 'components/shared'
+import classnames from 'classnames'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import { GameFlowStepsConfig } from '../../helpers/steps'
+
+const assetUrl = 'https://d1oc551tl862q5.cloudfront.net/'
 
 interface ITouchpointsProps {
   demo: IDemo
@@ -13,11 +19,26 @@ interface ITouchpointsProps {
 
 export const Touchpoints: FC<ITouchpointsProps> = ({ demo, activeTouchpoint, setScene, changeActiveTouchpoint }) => {
   const classes = useStyles()
+  const [introTransitionActive, setIntroTransitionActive] = useState<boolean>(false)
+  const [renderIntro, setRenderIntro] = useState<boolean>(false)
   const tpDataBlocks = demo.touchpoints?.[(activeTouchpoint || ETouchpoints.None) as string]
   const [renderDemo, setRenderDemo] = useState<boolean>(false)
   const [renderTouchpoint, setRenderTouchpoint] = useState<boolean>(!!activeTouchpoint)
 
   useEffect(() => {
+    setRenderIntro(!!demo.intro)
+    setIntroTransitionActive(!!demo.intro)
+    if (!demo.intro) {
+      setTimeout(() => {
+        setRenderDemo(true)
+      }, GameFlowStepsConfig[GameFlowSteps.Demo].animation.time)
+    } else {
+      setTimeout(() => {
+        setRenderIntro(true)
+        setRenderDemo(false)
+        setIntroTransitionActive(true)
+      }, GameFlowStepsConfig[GameFlowSteps.Demo].animation.time)
+    }
     setTimeout(() => {
       setRenderDemo(true)
     }, [GameFlowStepsConfig[GameFlowSteps.Robot].animation.time])
@@ -25,7 +46,7 @@ export const Touchpoints: FC<ITouchpointsProps> = ({ demo, activeTouchpoint, set
     return () => {
       changeActiveTouchpoint(ETouchpoints.None)
     }
-  }, [])
+  }, [demo])
 
   useEffect(() => {
     setRenderTouchpoint(false)
@@ -45,21 +66,58 @@ export const Touchpoints: FC<ITouchpointsProps> = ({ demo, activeTouchpoint, set
     }
   }
 
+  function introEnded() {
+    setIntroTransitionActive(false)
+    setRenderIntro(false)
+    setRenderDemo(true)
+  }
+
+  const goToTataDemoVideo = () => {
+    setScene(GameFlowSteps.Demo)
+  }
+
   return (
     <div className={classes.root}>
+      {renderIntro && (
+        <div
+          className={classnames('video-containment', classes.intro, {
+            [classes.transition]: introTransitionActive,
+            [classes.transitionOut]: !introTransitionActive
+          })}
+        >
+          <Video videoSrc={`${assetUrl}${demo.intro}`} onEnded={introEnded} autoPlay={true} />
+        </div>
+      )}
       {renderDemo && (
-        <Grid className={classes.transition} container direction='column' spacing={2}>
+        <Grid className={classes.transition} container spacing={2}>
           {tpDataBlocks?.map(block => (
-            <>
-              {renderTouchpoint && (
+            <Grid item xs={12}>
+              {true && (
                 <div className={classes.transitionQuick}>
+                  {block?.logo && (
+                    <Grid item xs={12}>
+                      <img src={require(`assets/demo/${block?.logo}`)} alt={block?.logo} />
+                    </Grid>
+                  )}
                   {block?.header && (
                     <Grid item xs={12}>
                       <Typography variant='h6' className={classes.preheading}>
                         {block?.preHeader}
                       </Typography>
-                      <Typography variant='h2' className={classes.heading}>
+                      {activeTouchpoint !== ETouchpoints.None && <div className={classes.weightedHeaderLine} />}
+                      <Typography
+                        variant={activeTouchpoint === ETouchpoints.None ? 'h2' : 'h3'}
+                        className={classes.heading}
+                      >
                         {block?.header}
+                      </Typography>
+                    </Grid>
+                  )}
+
+                  {block?.inlineBody1 && (
+                    <Grid item xs={12}>
+                      <Typography component='p' paragraph>
+                        <strong>{block?.inlineBody1}</strong> {block?.inlineBody2}
                       </Typography>
                     </Grid>
                   )}
@@ -72,7 +130,7 @@ export const Touchpoints: FC<ITouchpointsProps> = ({ demo, activeTouchpoint, set
                     </Grid>
                   )}
 
-                  {block.image && (
+                  {/* {block.image && (
                     <Grid item xs={12}>
                       <img
                         alt={block?.header}
@@ -104,29 +162,91 @@ export const Touchpoints: FC<ITouchpointsProps> = ({ demo, activeTouchpoint, set
                           <ArrowBackIcon fontSize='small' classes={{ root: classes.forwardArrow }} />
                         </span>
                       </Grid>
-                    ))}
+                    ))} */}
                 </div>
               )}
-            </>
+            </Grid>
           ))}
+          <Grid item xs={12}>
+            <div className={classes.contentActionBox}>
+              <Button
+                startIcon={<ArrowBackIcon />}
+                onClick={() => {
+                  setScene(GameFlowSteps.BackToExplore)
+                }}
+              >
+                Back
+              </Button>
+
+              <Button startIcon={<MailOutlineIcon />} onClick={() => actionClicked('connect')}>
+                Send a message
+              </Button>
+            </div>
+          </Grid>
         </Grid>
+      )}
+      {renderDemo && (
+        <div className={classnames([classes.goToDemoVideoContainer, classes.transition])}>
+          <span>
+            <Typography component='p' className={classes.inline}>
+              Learn more about the future of manufacturing.
+            </Typography>
+          </span>
+          <span>
+            <PillButton className={classes.inline} solid onClick={() => goToTataDemoVideo()}>
+              Watch video
+            </PillButton>
+          </span>
+        </div>
       )}
     </div>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  intro: {
+    position: 'fixed',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 20000,
+    display: 'flex',
+    background: '#000',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    '& .video-react-control-bar': {
+      display: 'none !important'
+    }
+  },
+  introZIndex: {
+    zIndex: 20000
+  },
   root: {
     height: 'calc(100% - 105px)',
-    width: 'calc(50% - 32px)',
-    padding: '0 12.5%',
+    width: 'calc(45% - 32px)',
+    padding: '0 12.5% 0 6%',
+    paddingTop: '120px',
     top: '105px',
     display: 'flex',
-    alignItems: 'center',
     position: 'absolute',
     backgroundColor: 'transparent',
     zIndex: 1300,
-    color: '#000'
+    color: '#000',
+    [theme.breakpoints.down('md')]: {
+      width: 'calc(50% - 32px)'
+    }
+  },
+  inline: {
+    display: 'inline-block',
+    margin: '10px'
+  },
+  weightedHeaderLine: {
+    width: '100%',
+    height: '2px',
+    backgroundColor: 'black',
+    marginTop: '8px',
+    marginBottom: '8px'
   },
   preheading: {
     fontWeight: 700,
@@ -146,18 +266,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   heading: {
     fontWeight: 700,
-    fontSize: '3.125rem',
-    lineHeight: '1.2',
+    // fontSize: '3.125rem',
+    // lineHeight: '1.2',
     [theme.breakpoints.down('md')]: {
-      fontSize: '3rem',
-      lineHeight: '1.2'
+      // fontSize: '3rem',
+      // lineHeight: '1.2'
     },
     [theme.breakpoints.down('sm')]: {
       marginTop: '2rem'
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: '2rem',
-      lineHeight: '1.2'
+      // fontSize: '2rem',
+      // lineHeight: '1.2'
     }
   },
   forwardArrow: {
@@ -179,6 +299,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.2',
     fontWeight: 700
   },
+  maxHeightWidth: {
+    width: '100%',
+    height: '100%'
+  },
   subHeader: {
     fontSize: '20px',
     lineHeight: '1.2',
@@ -195,6 +319,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '4rem 2rem 6rem 0rem',
     height: '100%',
     alignContent: 'flex-start'
+  },
+  contentActionBox: {
+    marginTop: 27,
+
+    '& .MuiButton-root': {
+      marginRight: theme.spacing(4),
+      marginTop: 0,
+      marginBottom: 0
+    }
+  },
+  goToDemoVideoContainer: {
+    position: 'fixed',
+    bottom: '10px',
+    right: '00px',
+    marginRight: '80px'
   },
   transition: {
     opacity: 1,

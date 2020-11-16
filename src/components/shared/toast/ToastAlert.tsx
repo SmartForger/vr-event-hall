@@ -1,11 +1,12 @@
 import React, { FC } from 'react'
 import { I18n } from 'aws-amplify'
-import { Grid, makeStyles, Snackbar, IconButton } from '@material-ui/core'
+import { Grid, makeStyles, Snackbar, IconButton, createStyles, Theme } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
 import WarningIcon from '@material-ui/icons/Warning'
 import InfoIcon from '@material-ui/icons/Info'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import NotificationsIcon from '@material-ui/icons/Notifications'
+import { maxWidth, padding, color, backgroundColor } from 'styled-system'
 
 type TToastType = 'info' | 'warning' | 'success' | 'error' | 'notice'
 
@@ -48,40 +49,49 @@ export const ToastAlert: FC<IToastAlertProps> = ({ type = 'notice', isOpen, chil
   )
 }
 
-const sharedToastStyles = {
+const sharedToastStyles = (theme: Theme) => ({
   right: 88,
   maxWidth: '320px',
   padding: '0.5rem',
   color: '#000',
-  backgroundColor: '#fff'
-}
-const useStyles = makeStyles({
-  typeIconContainer: {
-    height: '48px',
-    width: '48px',
-    padding: '12px',
-    margin: '0 1rem 1rem',
-    color: 'inherit',
-    borderRadius: '50%',
-    backgroundColor: '#D8DADA'
-  },
-  'toastLevel-notice': {
-    ...sharedToastStyles,
-    backgroundColor: '#fff',
-    color: '#000'
-  },
-  'toastLevel-info': {
-    ...sharedToastStyles,
-    backgroundColor: '#fff',
-    color: '#000'
-  },
-  closeToastButton: {},
-  bodyContainer: {
-    padding: '0 1rem',
-    fontFamily: 'Verizon NHG DS',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: '24px',
-    lineHeight: '24px'
+  backgroundColor: '#fff',
+
+  [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+    right: '1rem',
+    top: 'calc(52px + 1rem)',
+    boxShadow: theme.shadows[1]
   }
 })
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    typeIconContainer: {
+      height: '48px',
+      width: '48px',
+      padding: '12px',
+      margin: '0 1rem 1rem',
+      color: 'inherit',
+      borderRadius: '50%',
+      backgroundColor: '#D8DADA'
+    },
+    'toastLevel-notice': {
+      ...sharedToastStyles(theme),
+      backgroundColor: '#fff',
+      color: '#000'
+    },
+    'toastLevel-info': {
+      ...sharedToastStyles(theme),
+      backgroundColor: '#fff',
+      color: '#000'
+    },
+    closeToastButton: {},
+    bodyContainer: {
+      padding: '0 1rem',
+      fontFamily: 'Verizon NHG DS',
+      fontStyle: 'normal',
+      fontWeight: 'bold',
+      fontSize: '24px',
+      lineHeight: '24px'
+    }
+  })
+)

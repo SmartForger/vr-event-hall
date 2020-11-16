@@ -62,8 +62,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...(preventFade ? {} : fadeInAnimationConfig),
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      backgroundColor: theme.palette.common.white,
+      boxShadow: 'inset 0 -1px 0 #D8DADA',
+      minHeight: 52,
+      paddingBottom: 0,
+      paddingTop: 0,
       top: 0,
-      'z-index': '1300'
+      zIndex: 1300
     }
   }),
   '@keyframes fadeInOpacity': {

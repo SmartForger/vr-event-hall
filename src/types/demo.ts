@@ -16,6 +16,8 @@ interface ISubItems {
   image?: string
   imgFallback?: string
   body?: string
+  inlineBody1?: string
+  inlineBody2?: string
   links?: IDemoLinkConfig[]
   gWidth?: GridSize
 }

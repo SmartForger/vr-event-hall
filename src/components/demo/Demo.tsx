@@ -35,11 +35,11 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
     setDisplayPoll(false)
     setVideoConcluded(false)
     setAutoPlay(demo.type === '5GCoverage')
-    setIntroTransitionActive(!!demo.intro)
-    setRenderIntro(!!demo.intro)
+    setIntroTransitionActive(!!demo.intro && !demo.touchpoints)
+    setRenderIntro(!!demo.intro && !demo.touchpoints)
     setActiveTimestamp((demo.timestamps || {})[0])
 
-    if (!demo.intro) {
+    if (!demo.intro || demo.touchpoints) {
       setTimeout(() => {
         setRenderDemo(true)
       }, GameFlowStepsConfig[GameFlowSteps.Demo].animation.time)
@@ -71,16 +71,15 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
 
   function introEnded() {
     setIntroTransitionActive(false)
-    setIntroTransitionActive(false)
     setRenderIntro(false)
     setRenderDemo(true)
     setAutoPlay(true)
   }
 
   function videoEnded() {
-    if (demo === Demos.tata && !renderIntro) {
-      setScene(GameFlowSteps.Robot)
-    }
+    // if (demo === Demos.tata && !renderIntro) {
+    //   setScene(GameFlowSteps.Robot)
+    // }
 
     setVideoConcluded(true)
 
@@ -393,8 +392,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'transparent',
     color: '#000',
     justifyContent: 'center',
+    overflowY: 'auto',
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-      top: 40
+      height: 'calc(100vh - 65px)',
+      top: 65,
+      width: '100vw'
     }
   },
   introZIndex: {
@@ -499,7 +501,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: '4rem',
       paddingLeft: '4rem'
     },
-    [theme.breakpoints.only('sm')]: {
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       paddingRight: '3rem',
       paddingLeft: '3rem'
     },
@@ -521,15 +523,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('lg')]: {
       paddingRight: '4rem'
     },
-    [theme.breakpoints.only('sm')]: {
-      paddingRight: '3rem'
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      display: 'block',
+      fontSize: '.9em',
+      justifyContent: 'flex-start',
+      padding: '0 2rem 0 1rem'
     },
     [theme.breakpoints.only('xs')]: {
       paddingRight: '2rem'
     }
   },
   extraPaddingBottom: {
-    paddingBottom: 'calc(6rem + 60px)'
+    [theme.breakpoints.up('md')]: {
+      paddingBottom: 'calc(6rem + 60px)'
+    }
   },
   contentContainer: {
     '&:nth-child(2)': {
@@ -547,6 +554,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& .MuiGrid-item': {
       padding: '5px 0'
+    },
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      minHeight: 'unset'
     }
   },
   contentActionBox: {
