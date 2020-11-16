@@ -156,10 +156,10 @@ export const theme: Theme = createMuiTheme({
       fontSize: '64px',
 
       [`${defaultTheme.breakpoints.down('md')}, screen and (max-height: ${mediaMaxHeight})`]: {
-        fontSize: '54px'
+        fontSize: '36px'
       },
       [`${defaultTheme.breakpoints.down('sm')}, screen and (max-height: ${mediaMaxHeight})`]: {
-        fontSize: '36px'
+        fontSize: '24px'
       }
     },
     h2: {
@@ -168,10 +168,10 @@ export const theme: Theme = createMuiTheme({
       'line-height': 1.2,
 
       [`${defaultTheme.breakpoints.down('md')}, screen and (max-height: ${mediaMaxHeight})`]: {
-        fontSize: '38px'
+        fontSize: '24px'
       },
       [`${defaultTheme.breakpoints.down('sm')}, screen and (max-height: ${mediaMaxHeight})`]: {
-        fontSize: '22px'
+        fontSize: '20px'
       }
     },
     h3: {
@@ -229,16 +229,21 @@ export const theme: Theme = createMuiTheme({
       'line-height': 1.2,
       'white-space': 'pre-line',
 
-      [`${defaultTheme.breakpoints.down('sm')}, screen and (max-height: ${mediaMaxHeight})`]: {
+      [`${defaultTheme.breakpoints.down('md')}, screen and (max-height: ${mediaMaxHeight})`]: {
         fontSize: '16px'
+      },
+      [`${defaultTheme.breakpoints.down('sm')}, screen and (max-height: ${mediaMaxHeight})`]: {
+        fontSize: '14px'
       }
     },
     body2: {
       fontSize: '20px',
       'line-height': 1.2,
-
-      [`${defaultTheme.breakpoints.down('sm')}, screen and (max-height: ${mediaMaxHeight})`]: {
+      [`${defaultTheme.breakpoints.down('md')}, screen and (max-height: ${mediaMaxHeight})`]: {
         fontSize: '16px'
+      },
+      [`${defaultTheme.breakpoints.down('sm')}, screen and (max-height: ${mediaMaxHeight})`]: {
+        fontSize: '14px'
       }
     }
   },
