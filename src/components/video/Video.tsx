@@ -10,6 +10,7 @@ export const Video = ({ visible, setVisibility, videoSrc, trackSrc }) => {
   useEffect(() => {
     if (videoPlayer && videoPlayer.video && videoPlayer.video.video) {
       videoPlayer.video.video.oncontextmenu = e => e.preventDefault()
+      videoPlayer.video.video.volume = 0.5
     }
   }, [videoPlayer])
 
