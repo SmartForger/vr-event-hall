@@ -9,7 +9,7 @@ import roboBackImageFallback from 'assets/touchpoints/thumbnail-robotBack.png'
 export const tata: IDemo = {
   type: 'tata',
   intro: 'TCS-intro_720.mp4',
-  video: 'tata720.mp4',
+  video: 'Manufacturing_v1.mp4',
   conversationId: '5faff25c-bbd7-4503-8747-a29e2e971014',
   end: {
     header: 'The future of manufacturing.',
@@ -18,41 +18,6 @@ export const tata: IDemo = {
     nextDemoText: 'Transforming the fan experience',
     nextDemo: E3DDemoNameVals.ybvr,
     nextDemoThumbnail: 'ybvr-thumbnail.png'
-  },
-  timestamps: {
-    0: [
-      {
-        header: 'Tata Consultancy Services 5G & MEC Use Case'
-      }
-    ],
-    11000: [
-      {
-        logo: 'manufacturing.svg',
-        header: 'Smart factory initiative',
-        body: 'One-third of factories have already been transformed into smart facilities of some sort'
-      }
-    ],
-    25000: [
-      {
-        logo: 'pda.svg',
-        header: '5G will someday be able to support up to 1 million devices per square kilometer'
-      }
-    ],
-    35000: [
-      {
-        logo: 'stock.svg',
-        header: '$3 trillion boost to global GDP',
-        body: 'The transition to 5G is estimated to produce over 22 million jobs by 2035.'
-      }
-    ],
-    45000: [
-      {
-        logo: 'cog.svg',
-        header: 'Revolutionizing operations',
-        body:
-          'Verizon is developing technologies for indoor private 5G applications for hospitals, manufacturing facilities, warehouses, ports and retail stores.'
-      }
-    ]
   },
   touchpoints: {
     [ETouchpoints.None]: [

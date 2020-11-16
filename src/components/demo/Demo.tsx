@@ -553,7 +553,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 27,
 
     '& .MuiButton-root': {
-      marginRight: theme.spacing(4)
+      marginRight: theme.spacing(4),
+      marginTop: 0,
+      marginBottom: 0
     }
   },
   transition: {

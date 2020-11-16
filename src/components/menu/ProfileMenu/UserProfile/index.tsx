@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
 import { useHistory } from 'react-router-dom'
 
@@ -6,7 +7,7 @@ import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconBut
 
 // Plugins
 import classNames from 'classnames'
-import { I18n, Auth } from 'aws-amplify'
+import { I18n, Auth, Storage } from 'aws-amplify'
 import { VariableSizeProps } from 'react-window'
 
 // Components
@@ -24,6 +25,9 @@ import { IUser, ISession } from 'types'
 // Images
 import profileBg from 'assets/userProfileBg.jpg'
 import iconEditProfile from 'assets/icon-edit-profile.svg'
+import { UploadButton } from 'components/shared/controls/UploadButton'
+import { TemporaryAlert } from 'components/shared/alerts'
+import { AlertProps } from '@material-ui/lab'
 
 interface IProfileErrors {
   firstName: string
@@ -43,6 +47,11 @@ interface IUserProfileProps {
   user?: IUser
 }
 
+interface TemporaryMessage {
+  message: string
+  severity: AlertProps['severity']
+}
+
 export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -55,8 +64,85 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const [editModeState, setEditModeState] = useState<boolean>(false)
   const [profileInfo, setProfileInfo] = useState<IUser | undefined>(user)
   const [profileErrors, setProfileErrors] = useState<IProfileErrors>(initialProfileErrors)
+  const [file, setFile] = useState<File>()
+  const [avatarUrl, setAvatarUrl] = useState<string>()
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState<boolean>(false)
+  const [readyForProfileUpdate, setReadyForProfileUpdate] = useState<boolean>(true)
+  const [temporaryMessage, setTemporaryMessage] = useState<TemporaryMessage>({ message: '', severity: 'success' })
 
   const listRef = useRef<VariableSizeProps>()
+
+  /**
+   * Avatar Upload
+   */
+  useEffect(() => {
+    let cancelled = false
+
+    if (file && profileInfo) {
+      const avatar = `${profileInfo.id}.${file.type.split('/')[1]}`
+      setIsUploadingAvatar(true)
+
+      Promise.all([
+        Storage.put(avatar, file, { level: 'public', contentType: file.type }),
+        graphQLMutation(updateUser, {
+          id: profileInfo.id,
+          avatar
+        })
+      ])
+        .then(() => {
+          if (!cancelled) {
+            // Force avatar url refresh
+            setReadyForProfileUpdate(true)
+            setTemporaryMessage({
+              message: 'Image updated successfully!',
+              severity: 'success'
+            })
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setTemporaryMessage({
+              message: 'We ran into an error uploading your image. Please try again.',
+              severity: 'error'
+            })
+          }
+        })
+        .finally(() => {
+          if (!cancelled) {
+            setIsUploadingAvatar(false)
+            setFile(undefined)
+          }
+        })
+    }
+
+    return () => {
+      // Prevent state updates if user closes drawer while uploading file
+      cancelled = true
+    }
+  }, [file])
+
+  useEffect(() => {
+    let cancelled = false
+
+    if (readyForProfileUpdate && profileInfo?.avatar) {
+      Storage.get(profileInfo.avatar)
+        .then(updatedAvatarUrl => {
+          if (!cancelled && typeof updatedAvatarUrl === 'string') {
+            setAvatarUrl(updatedAvatarUrl)
+            setReadyForProfileUpdate(false)
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setReadyForProfileUpdate(false)
+          }
+        })
+    }
+
+    return () => {
+      cancelled = true
+    }
+  }, [readyForProfileUpdate])
 
   const getProfileInfo = async (userId: string) => {
     const foundUser = await graphQLQuery(getUser, 'getUser', { id: userId })
@@ -178,14 +264,19 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     history.push('/')
   }
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target
+
+    if (files && files[0]) {
+      const file = files[0]
+      setFile(file)
+    }
+  }
+
   const profileDisplay = (
     <>
       <img src={profileBg} alt='profile background' />
-      <Avatar
-        alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
-        src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
-        className={classes.avatar}
-      />
+      <Avatar alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`} src={avatarUrl} className={classes.avatar} />
       <section className={classes.profileMain}>
         <div className={classes.name}>
           {profileInfo?.firstName} {profileInfo?.lastName}
@@ -224,15 +315,22 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         <Grid item xs={4}>
           <Avatar
             alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
-            src={`https://dx2ge6d9z64m9.cloudfront.net/public/${profileInfo?.avatar}`}
+            src={avatarUrl}
             className={classNames(classes.avatar, classes.avatarEdit)}
           />
         </Grid>
-        {/* TODO: Implement upload image feature */}
-        <Grid item xs={8} style={{ display: 'none' }}>
-          <PillButton onClick={() => console.debug('Upload avatar')}>Upload image</PillButton>
+        <Grid item xs={8}>
+          <UploadButton accept='image/jpeg, image/png' loading={isUploadingAvatar} onChange={handleFileChange}>
+            {isUploadingAvatar ? 'Uploading...' : 'Upload image'}
+          </UploadButton>
         </Grid>
       </Grid>
+
+      <TemporaryAlert
+        message={temporaryMessage.message}
+        onClose={() => setTemporaryMessage({ message: '', severity: undefined })}
+        severity={temporaryMessage.severity}
+      />
 
       <TextField
         variant='outlined'
