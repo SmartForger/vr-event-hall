@@ -229,8 +229,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
             disableFocusRipple
             disableRipple
             disableTouchRipple
-          >
-            <Close />
+          >Exit
           </IconButton>
           {!useBackupStream ? (
             <>
@@ -379,6 +378,7 @@ const useStyles = makeStyles(() => ({
     width: 'calc(100% - 351px)'
   },
   closeButton: {
+    color: 'white',
     position: 'absolute',
     top: 30,
     left: 30,
