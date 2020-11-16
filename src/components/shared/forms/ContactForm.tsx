@@ -8,7 +8,7 @@ import { validatePhoneNumber, validateEmail } from 'helpers'
 
 // Styles
 import { Box, Grid, FormControl, FormHelperText, TextField, Button } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import { IUser } from 'types'
 import { graphQLMutation } from '../../../graphql/helpers'
 import { createContactRequest, createUserInteraction } from '../../../graphql/mutations'
@@ -141,7 +141,7 @@ export const ContactForm: FC<ContactFormProps> = ({
   return (
     <form onSubmit={handleFormSubmit}>
       <Grid container spacing={3}>
-        <Grid item sm={6} xs={12}>
+        <Grid item md={6} xs={12}>
           <TextField
             required
             fullWidth
@@ -153,6 +153,12 @@ export const ContactForm: FC<ContactFormProps> = ({
                 input: classes.input
               }
             }}
+            InputLabelProps={{
+              classes: {
+                root: classes.label,
+                focused: classes.focusedLabel
+              }
+            }}
             error={!!errors.firstName}
             helperText={errors.firstName}
             label={I18n.get('firstName')}
@@ -161,7 +167,7 @@ export const ContactForm: FC<ContactFormProps> = ({
             onFocus={() => setErrors({ ...errors, firstName: '' })}
           />
         </Grid>
-        <Grid item sm={6} xs={12}>
+        <Grid item md={6} xs={12}>
           <TextField
             required
             fullWidth
@@ -173,6 +179,12 @@ export const ContactForm: FC<ContactFormProps> = ({
                 input: classes.input
               }
             }}
+            InputLabelProps={{
+              classes: {
+                root: classes.label,
+                focused: classes.focusedLabel
+              }
+            }}
             error={!!errors.lastName}
             helperText={errors.lastName}
             label={I18n.get('lastName')}
@@ -181,7 +193,7 @@ export const ContactForm: FC<ContactFormProps> = ({
             onFocus={() => setErrors({ ...errors, lastName: '' })}
           />
         </Grid>
-        <Grid item sm={6} xs={12}>
+        <Grid item md={6} xs={12}>
           <TextField
             required
             fullWidth
@@ -193,6 +205,12 @@ export const ContactForm: FC<ContactFormProps> = ({
                 input: classes.input
               }
             }}
+            InputLabelProps={{
+              classes: {
+                root: classes.label,
+                focused: classes.focusedLabel
+              }
+            }}
             error={!!errors.phoneNumber}
             helperText={errors.phoneNumber}
             label={I18n.get('phoneNumber')}
@@ -201,7 +219,7 @@ export const ContactForm: FC<ContactFormProps> = ({
             onFocus={() => setErrors({ ...errors, phoneNumber: '' })}
           />
         </Grid>
-        <Grid item sm={6} xs={12}>
+        <Grid item md={6} xs={12}>
           <TextField
             required
             fullWidth
@@ -211,6 +229,12 @@ export const ContactForm: FC<ContactFormProps> = ({
               classes: {
                 root: classes.inputRoot,
                 input: classes.input
+              }
+            }}
+            InputLabelProps={{
+              classes: {
+                root: classes.label,
+                focused: classes.focusedLabel
               }
             }}
             error={!!errors.email}
@@ -247,12 +271,20 @@ export const ContactForm: FC<ContactFormProps> = ({
   )
 }
 
-const useStyles = makeStyles({
-  inputRoot: {
-    borderRadius: 0,
-    borderBottom: '1px solid #000'
-  },
-  input: {
-    borderBottom: 'none'
-  }
-})
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    inputRoot: {
+      borderRadius: 0,
+      borderBottom: '1px solid #000'
+    },
+    input: {
+      borderBottom: 'none'
+    },
+    label: {
+      color: theme.palette.grey[800]
+    },
+    focusedLabel: {
+      color: `${theme.palette.grey[900]} !important`
+    }
+  })
+)

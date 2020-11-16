@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import { GameFlowSteps, IUser } from 'types'
-import { Grid, IconButton, makeStyles, Theme, Typography } from '@material-ui/core'
+import { Box, Grid, IconButton, makeStyles, Theme, Typography } from '@material-ui/core'
 import { PillButton, Video } from 'components'
 import classnames from 'classnames'
 import { GameFlowStepsConfig } from '../../helpers/steps'
@@ -44,42 +44,35 @@ export const WelcomeScene: FC<IWelcomeProps> = ({ user, setGameState, activeScen
             [classes.transitionOut]: exit
           })}
         >
-          <Grid container direction='column' justify='center' spacing={2}>
-            <Grid item>
-              <Typography component='h4' variant='h4'>
-                Hi <span>{user?.firstName}</span>.
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography classes={{ root: classes.heading }} component='h2' variant='h2'>
-                Welcome to 5G Innovation Sessions.
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography component='p' paragraph>
-                During this hour-long event, we’ll show how Verizon 5G Ultra Wideband can unleash new applications, use
-                cases and immersive customer experiences.
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography component='p' paragraph>
-                With thought provoking discussions, cutting edge demos, and breakout sessions customized to the way you
-                work, you'll learn how to take advantage of the exciting and transformative benefits of Verizon 5G.
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography component='p' paragraph>
-                This is the 5G businesses have been waiting for. This is 5G built right.
-              </Typography>
-            </Grid>
-            <Grid item container spacing={1}>
-              <Grid item xs={12} sm={6}>
-                <PillButton className={classes.button} backgroundColor='transparent' onClick={() => explore()}>
-                  Explore
-                </PillButton>
-              </Grid>
-            </Grid>
-          </Grid>
+          <Box marginBottom={2}>
+            <Typography component='h4' variant='h4'>
+              Hi <span>{user?.firstName}</span>.
+            </Typography>
+          </Box>
+
+          <Box marginBottom={3}>
+            <Typography classes={{ root: classes.heading }} component='h2' variant='h2'>
+              Welcome to 5G Innovation Sessions.
+            </Typography>
+          </Box>
+
+          <Typography component='p' paragraph>
+            During this hour-long event, we’ll show how Verizon 5G Ultra Wideband can unleash new applications, use
+            cases and immersive customer experiences.
+          </Typography>
+
+          <Typography component='p' paragraph>
+            With thought provoking discussions, cutting edge demos, and breakout sessions customized to the way you
+            work, you'll learn how to take advantage of the exciting and transformative benefits of Verizon 5G.
+          </Typography>
+
+          <Typography component='p' paragraph>
+            This is the 5G businesses have been waiting for. This is 5G built right.
+          </Typography>
+
+          <PillButton className={classes.button} backgroundColor='transparent' onClick={() => explore()}>
+            Explore
+          </PillButton>
         </div>
       )}
     </>
@@ -92,11 +85,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 'calc(50% - 32px)',
     padding: '0 12.5%',
     top: '105px',
-    display: 'flex',
-    alignItems: 'center',
     position: 'absolute',
     backgroundColor: 'transparent',
-    overflow: 'hidden',
+    overflowY: 'auto',
     zIndex: 1300,
     color: '#000',
     [theme.breakpoints.down('lg')]: {
@@ -107,17 +98,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-      flexDirection: 'row',
-      overflowY: 'auto',
-      height: '100%',
+      height: 'calc(100vh - 65px)',
+      paddingLeft: '4rem',
+      paddingRight: theme.spacing(4),
       textAlign: 'left',
-      justifyContent: 'flex-start',
-      top: '55px'
+      top: 65
     }
   },
   heading: {
     fontSize: 50,
-    lineHeight: '48px'
+    lineHeight: '48px',
+
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      fontSize: 18,
+      lineHeight: 1.1
+    }
   },
   introZIndex: {
     zIndex: 20000
@@ -158,6 +153,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       color: 'rgba(255, 255, 255, 0.75)'
     }
+  },
+  withMarginBottom: {
+    marginBottom: theme.spacing(2)
   },
   transition: {
     opacity: 1,
