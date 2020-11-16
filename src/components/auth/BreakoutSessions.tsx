@@ -97,11 +97,14 @@ export const BreakoutSessions: FC<BreakoutSessionsProps> = ({ setAuthState, user
               label={I18n.get('breakoutSession')}
               onChange={(e: React.ChangeEvent<{ value: unknown }>) => setSelectedBreakoutId(e.target.value as string)}
             >
-              {Array.from(breakoutSessions).map(([sessionName, session], index: number) => (
-                <MenuItem value={session.id} key={`${index}-${sessionName}`}>
-                  {I18n.get(`breakoutSessionName-${session.name}`)}
-                </MenuItem>
-              ))}
+              {Array.from(breakoutSessions).map(
+                ([sessionName, session], index: number) =>
+                  sessionName !== 'livestream' && (
+                    <MenuItem value={session.id} key={`${index}-${sessionName}`}>
+                      {I18n.get(`breakoutSessionName-${session.name}`)}
+                    </MenuItem>
+                  )
+              )}
             </Select>
           </FormControl>
         </Grid>
