@@ -37,7 +37,7 @@ export const Connect: FC<ConnectProps> = ({ transition, user, setSuccessMessage,
       {!loading && (
         <Container className={classes.root} component='main' maxWidth={false}>
           <Box className={classes.box}>
-            <Typography className={classes.title} component='h1' variant='h1' color='textPrimary' gutterBottom>
+            <Typography className={classes.title} component='h2' variant='h2' color='textPrimary' gutterBottom>
               Contact us.
             </Typography>
             <Typography component='p' variant='body2' color='textPrimary' gutterBottom>
@@ -80,11 +80,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-      flexDirection: 'row',
+      alignItems: 'flex-start',
+      height: 'calc(100vh - 65px)',
       overflowY: 'auto',
-      height: '100%',
-      textAlign: 'left',
-      justifyContent: 'flex-start'
+      padding: '0 2rem 0 4rem',
+      top: 65
     }
   },
   '@keyframes fadeInOpacity': {
@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   title: {
     [theme.breakpoints.down('sm')]: {
-      fontSize: '44px'
+      fontSize: '1.5rem'
     }
   }
 }))
