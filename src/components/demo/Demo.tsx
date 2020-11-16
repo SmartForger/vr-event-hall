@@ -128,7 +128,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
 
   const buildEndVideoSideLayout = content => (
     <Grid
-      xs={4}
+      xs={5}
       lg={3}
       className={classnames(classes.endContainer, {
         [classes.extraPaddingBottom]: !displayPoll
@@ -213,7 +213,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
           direction='row'
         >
           {!displayPoll && (
-            <Grid item xs={8} lg={9} className={classnames(classes.demoContainer)}>
+            <Grid item xs={7} lg={9} className={classnames(classes.demoContainer)}>
               <Video
                 videoSrc={`${assetUrl}${demo.video}`}
                 posterSrc={demo.poster || ''}
@@ -238,7 +238,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
             </Grid>
           )}
           {displayPoll && demo.poll && (
-            <Grid item xs={8} lg={9} className={classes.demoContainer}>
+            <Grid item xs={7} lg={9} className={classes.demoContainer}>
               <Poll poll={demo.poll} user={user} />
               <Box display='flex' className={classes.contentActionBox}>
                 <Button
@@ -257,7 +257,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
             </Grid>
           )}
           {activeTimestamp && !videoConcluded && (
-            <Grid item xs={4} lg={3}>
+            <Grid item xs={5} lg={3}>
               <Grid className={classes.centerContent} container direction='row'>
                 {activeTimestamp.map(content => {
                   return (
@@ -389,11 +389,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     position: 'absolute',
-    backgroundColor: 'transparent',
     color: '#000',
-    justifyContent: 'center',
+    overflowY: 'auto',
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-      top: 40
+      height: 'calc(100vh - 65px)',
+      top: 65,
+      width: '100vw'
     }
   },
   introZIndex: {
@@ -498,13 +499,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: '4rem',
       paddingLeft: '4rem'
     },
-    [theme.breakpoints.only('sm')]: {
-      paddingRight: '3rem',
-      paddingLeft: '3rem'
-    },
-    [theme.breakpoints.only('xs')]: {
-      paddingRight: '2rem',
-      paddingLeft: '2rem'
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      padding: '0 1rem 0 2rem'
     }
   },
   centerContent: {
@@ -520,15 +516,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('lg')]: {
       paddingRight: '4rem'
     },
-    [theme.breakpoints.only('sm')]: {
-      paddingRight: '3rem'
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      display: 'block',
+      fontSize: '.9em',
+      justifyContent: 'flex-start',
+      padding: '0 2rem 0 1rem'
     },
     [theme.breakpoints.only('xs')]: {
       paddingRight: '2rem'
     }
   },
   extraPaddingBottom: {
-    paddingBottom: 'calc(6rem + 60px)'
+    [theme.breakpoints.up('md')]: {
+      paddingBottom: 'calc(6rem + 60px)'
+    }
   },
   contentContainer: {
     '&:nth-child(2)': {
@@ -546,6 +547,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& .MuiGrid-item': {
       padding: '5px 0'
+    },
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      minHeight: 'unset'
     }
   },
   contentActionBox: {
