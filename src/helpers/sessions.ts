@@ -23,7 +23,7 @@ export const Sessions: { [key: string]: ISession } = {
   healthcareInsurance: {
     id: '4ab7c286-2a47-428c-8ca0-4cc765e153dd',
     image: healthcareServicesImage,
-    bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/vskdtxxj',
+    bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/cajqqaqj',
     side: {
       category: 'Breakout Session',
       header: 'Healthcare, Insurance & Life Sciences.',
@@ -39,6 +39,7 @@ export const Sessions: { [key: string]: ISession } = {
   retailTravelDistribution: {
     id: 'dc10cd28-efab-43c3-8cb7-b40402c0e78b',
     image: travelRetailImage,
+    bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/gudrhdtp',
     side: {
       category: 'Breakout Session',
       header: 'Retail/Hospitality, Travel & Distribution.',
@@ -54,6 +55,7 @@ export const Sessions: { [key: string]: ISession } = {
   financialServices: {
     id: '58a60c43-041f-4a6e-b1c9-d207ffd06c62',
     image: financialServicesImage,
+    bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/wpaurqwb',
     side: {
       category: 'Breakout Session',
       header: 'Financial Services.',
@@ -69,6 +71,7 @@ export const Sessions: { [key: string]: ISession } = {
   manufacturingEnergyUtilities: {
     id: 'aa4195e4-e9cd-483c-b6be-ad205d176227',
     image: manufacturingImage,
+    bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/kgbkhsvp',
     side: {
       category: 'Breakout Session',
       header: 'Manufacturing, Automotive, Construction, Energy & Utilities.',
@@ -84,6 +87,7 @@ export const Sessions: { [key: string]: ISession } = {
   mediaEntertainmentTech: {
     id: '4a9b328b-85b5-4393-a232-550ac67962f9',
     image: mediaImage,
+    bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/tyvrfgcs',
     side: {
       category: 'Breakout Session',
       header: 'Media, Entertainment, Technology & Service.',

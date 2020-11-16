@@ -49,7 +49,7 @@ export const Demos: IDemoCollection = {
       header: 'The transformation of healthcare.',
       body:
         'Avesha Systems is working with several hospitals to test how machine learning inference done at the edge utilizing Wavelength and Verizon 5G can assist doctors in identifying polyps in real-time.',
-      nextDemoText: 'TBD Ice Mobility',
+      nextDemoText: 'Automating quality control processes.',
       nextDemo: E3DDemoNameVals.iceMobility,
       nextDemoThumbnail: 'ice-mobility-thumbnail.png'
     }
@@ -63,7 +63,7 @@ export const Demos: IDemoCollection = {
     end: {
       header: '5G MEC and smart venues.',
       body: '',
-      nextDemoText: 'TBD ZIXI',
+      nextDemoText: 'Streamlining the live broadcast industry.',
       nextDemo: E3DDemoNameVals.zixi,
       nextDemoThumbnail: 'zixi-thumbnail.png'
     }
