@@ -51,6 +51,15 @@ export const MenuList: FC<MenuListProps> = ({
     toggleProfileDrawer()
   }
 
+  const handleSetGameState = (step: GameFlowSteps) => {
+    setGameState(step)
+
+    // Close menu if it's open when clicking a link
+    if (drawerOpen) {
+      toggleMenuDrawer()
+    }
+  }
+
   return (
     <StyledOpenRightDrawer>
       <div onClick={() => openProfileDrawer()}>
@@ -66,7 +75,7 @@ export const MenuList: FC<MenuListProps> = ({
       </div>
 
       <StyledMenuList className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
-        <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Welcome)}>
+        <StyledMenuListItem onClick={() => handleSetGameState(GameFlowSteps.Welcome)}>
           <MenuTooltip drawerOpen={drawerOpen} title='Welcome' placement='left'>
             <StyledMenuListIcon>
               <img src={homeIcon} alt='Home icon' width='25' />
@@ -74,7 +83,7 @@ export const MenuList: FC<MenuListProps> = ({
           </MenuTooltip>
           Welcome
         </StyledMenuListItem>
-        <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Explore)}>
+        <StyledMenuListItem onClick={() => handleSetGameState(GameFlowSteps.Explore)}>
           <MenuTooltip drawerOpen={drawerOpen} title='Explore' placement='left'>
             <StyledMenuListIcon>
               <img src={demoTvIcon} alt='Tv icon' width='23' />
@@ -82,7 +91,7 @@ export const MenuList: FC<MenuListProps> = ({
           </MenuTooltip>
           Explore
         </StyledMenuListItem>
-        <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Sessions)}>
+        <StyledMenuListItem onClick={() => handleSetGameState(GameFlowSteps.Sessions)}>
           <MenuTooltip drawerOpen={drawerOpen} title='Sessions' placement='left'>
             <StyledMenuListIcon>
               <img src={sessionIcon} alt='Session icon' width='16' />
@@ -90,7 +99,7 @@ export const MenuList: FC<MenuListProps> = ({
           </MenuTooltip>
           Breakout Sessions
         </StyledMenuListItem>
-        <StyledMenuListItem onClick={() => setGameState(GameFlowSteps.Connect)}>
+        <StyledMenuListItem onClick={() => handleSetGameState(GameFlowSteps.Connect)}>
           <MenuTooltip drawerOpen={drawerOpen} title='Connect' placement='left'>
             <StyledMenuListIcon>
               <img src={mailIcon} alt='Mail icon' width='19' />
