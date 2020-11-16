@@ -189,11 +189,11 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
                 />
                 <div className={classes.userInfo}>
                   <div className={classes.userActivityCircle} />
-                  <Typography variant='body1' component='p' align='center'>
+                  <Typography className={classes.userName} noWrap variant='body1' component='p' align='center'>
                     {rosterUser.name}
-                    <Typography variant='caption' className={classes.userType}>
-                      ({adminUser?.userType === 'sme' ? 'Presenter' : 'Moderator'})
-                    </Typography>
+                  </Typography>
+                  <Typography variant='caption' className={classes.userType}>
+                    ({adminUser?.userType === 'sme' ? 'Presenter' : 'Moderator'})
                   </Typography>
                   {isAdmin ? (
                     <div className={classes.moreButton}>
@@ -224,7 +224,7 @@ export const PeoplePanel: FC<PeoplePanelProps> = ({ isAdmin }) => {
                 />
                 <div className={classes.userInfo}>
                   <div className={classes.userActivityCircle} />
-                  <Typography variant='body1' component='p' align='center'>
+                  <Typography className={classes.userName} noWrap variant='body1' component='p' align='center'>
                     {rosterUser.name}
                   </Typography>
                 </div>
@@ -273,7 +273,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 12,
     height: 12,
     borderRadius: '50%',
-    marginRight: '16px'
+    marginRight: '12px'
+  },
+  userName: {
+    maxWidth: '132px'
   },
   userType: {
     color: '#767676',
