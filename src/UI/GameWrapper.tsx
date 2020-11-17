@@ -564,7 +564,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
                         {reservedBreakoutSession ? 'Join your breakout session.' : 'Join a breakout session.'}
                       </Typography>
                     </Box>
-                    <Typography style={{ color: '#000' }}>
+                    <Typography style={{ color: '#000' }} paragraph>
                       {reservedBreakoutSession
                         ? `Your breakout session for ${I18n.get(
                             `breakoutSessionName-${reservedBreakoutSession.nameKey}`
