@@ -25,7 +25,7 @@ I18n.putVocabularies(dict)
 // Init
 const App = () => {
   const [user, setUser] = useState<IUser>()
-  const [postLiveStream, setPotLiveStream] = useState<boolean>()
+  const [postStream, setPostLiveStream] = useState<boolean>(false)
   const [eventConfig, setEventConfig] = useState<any>(defaultEventConfigs[getEnvironment()])
   const [eventStage, setEventStage] = useState<EventStages>(EventStages.COUNTDOWN)
   const [useBackupStream, setUseBackupStream] = useState<boolean>(false)
@@ -103,7 +103,8 @@ const App = () => {
                         eventStage={eventStage}
                         streamStartTime={streamStartTime}
                         useBackupStream={useBackupStream}
-                        postLiveStream={postLiveStream}
+                        postLiveStream={postStream}
+                        setPostLiveStream={setPostLiveStream}
                         vcOff={vcOff}
                       />
                       <Footer />

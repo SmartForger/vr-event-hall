@@ -31,6 +31,7 @@ import { LiveStreamPeoplePanel } from 'components/videochat/Panels/LiveStreamPeo
 interface VimeoLiveStreamProps {
   useBackupStream: Boolean
   eventStage?: EventStages
+  setPostLiveStream?: () => void
 }
 export const LiveStreamWrapper: FC<VimeoLiveStreamProps> = (props: VimeoLiveStreamProps) => (
   <VideoChatProvider>
@@ -38,12 +39,12 @@ export const LiveStreamWrapper: FC<VimeoLiveStreamProps> = (props: VimeoLiveStre
   </VideoChatProvider>
 )
 
-const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage }) => {
+const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage, setPostLiveStream }) => {
   const classes = useStyles()
   const history = useHistory()
   const {
     appState: { user },
-    setPostLiveStream
+    dispatch: appDispatch
   } = useAppState()
 
   const [redirectTrigger, setRedirectTrigger] = useState<boolean>(false)
@@ -135,7 +136,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
 
     if (
       Array.isArray(videoChatState?.session?.participants?.items) &&
-      !videoChatState?.session?.participants?.items.some(p => p.userId === user?.id)
+      !videoChatState?.session?.participants?.items.some(p => p?.userId === user?.id)
     ) {
       const participantInfo = await graphQLMutation(
         createSessionParticipantMin,
@@ -158,7 +159,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
       })
       setParticipantId(participantInfo.id)
     } else {
-      const participant = videoChatState?.session?.participants?.items.find(p => p.userId === user?.id)
+      const participant = videoChatState?.session?.participants?.items.find(p => p?.userId === user?.id)
       setParticipantId(participant?.id || '')
     }
 
@@ -188,7 +189,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
   }, [eventStage])
 
   useEffect(() => {
-    if (videoChatState?.session?.admins?.items?.some?.(a => a.userId === user?.id)) {
+    if (videoChatState?.session?.admins?.items?.some?.(a => a?.userId === user?.id)) {
       setAdmin(true)
     }
   }, [videoChatState?.session?.admins])
@@ -197,7 +198,8 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
     if (participantId) {
       graphQLMutation(deleteSessionParticipantMin, { id: participantId })
     }
-    setPostLiveStream(true)
+    setPostLiveStream?.()
+    appDispatch({ type: 'SET_POST_LIVE_STREAM', payload: true })
     history.push(`/event`)
   }
 

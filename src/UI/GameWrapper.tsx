@@ -52,7 +52,7 @@ import {
 } from 'types'
 import { Demos } from '../helpers/demos'
 import { Alert } from '@material-ui/lab'
-import { VideoChatProvider } from 'providers'
+import { VideoChatProvider, useAppState } from 'providers'
 import { E3DSessionNameVals } from 'types'
 import { JoyrideTutorialStyles } from '../components/shared/tutorial/JoyrideTutorialStyles'
 import { useBrowserCache } from '../hooks'
@@ -71,10 +71,11 @@ interface IModalConfig {
 interface GameWrapperProps {
   user?: IUser
   users?: IUser[]
-  postLiveStream?: boolean
   eventStage?: EventStages
   streamStartTime?: string
   vcOff?: boolean
+  // postLiveStream?: boolean
+  setPostLiveStream?: (val: boolean) => void
 }
 
 export const GameWrapper: React.FC<GameWrapperProps> = ({
@@ -82,7 +83,8 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   users,
   eventStage,
   streamStartTime,
-  postLiveStream,
+  // postLiveStream,
+  setPostLiveStream,
   vcOff
 }) => {
   const dispatch = useDispatch()
@@ -92,14 +94,17 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   const history = useHistory()
   const { width } = useWindowSize()
   const classes = useStyles()
+  const {
+    appState: { postStream: postLiveStream }
+  } = useAppState()
 
   const localStorage = window.localStorage
   const [eventStartingSoon, setEventStartingSoonState] = useState<boolean>(false)
   const [eSSClosed, setESSClosed] = useState<boolean>(false)
   const [showTooltip, setShowTooltip] = useState<boolean>(false)
-  const [openBreakoutNotice, setBreakoutNoticeOpen] = useState(true)
+  const [openBreakoutNotice, setBreakoutNoticeOpen] = useState(postLiveStream)
   const [reservedBreakoutSession, setReservedBreakoutSession] = useState<ISession | undefined>()
-  console.log('post live stream ' + postLiveStream)
+
   setTimeout(() => {
     setShowTooltip(true)
   }, 8000)
@@ -297,6 +302,47 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
     // eslint-disable-next-line
   }, [])
 
+  useEffect(() => {
+    console.log('POSTLIVESTREAM: ' + postLiveStream)
+    setBreakoutNoticeOpen(postLiveStream)
+  }, [postLiveStream])
+
+  const getDetailsForReservedBreakoutSession = async () => {
+    console.log('useeffect openbreakout notice ' + openBreakoutNotice)
+    let reservedSessionId = user?.sessions?.items?.[0]
+    if (reservedSessionId) {
+      setReservedBreakoutSession(findSessionById(reservedSessionId))
+    } else if (setReservedBreakoutSession) {
+      setReservedBreakoutSession(undefined)
+    }
+  }
+
+  useEffect(() => {
+    console.log('useeffect openbreakout notice ' + openBreakoutNotice)
+    getDetailsForReservedBreakoutSession()
+  }, [openBreakoutNotice])
+
+  const goToReservedSession = () => {
+    if (reservedBreakoutSession) {
+      // go to the breakout session set as the user's resereved one
+      window.postMessage(`{"command":"sessions", "param": "${reservedBreakoutSession?.sceneKey}"`, '*')
+    } else {
+      // or go to the breakout session monoliths so the user can choose
+      setGameState(GameFlowSteps.Sessions)
+    }
+    setBreakoutNoticeOpen(false)
+    setEventStartingSoonState(false)
+    setReservedBreakoutSession(undefined)
+  }
+
+  const session: ISession | null = useMemo(() => {
+    // return Sessions.healthcareInsurance
+    if (!user || !user.sessions || !user.sessions.items) {
+      return null
+    }
+    return findSessionById(user.sessions.items[0]?.sessionId) || null
+  }, [user])
+
   // Updates the tutorial steps on window size change
   useEffect(() => {
     if (width > 766) {
@@ -379,38 +425,6 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
     setGameState(GameFlowSteps.Session)
     setActiveSession(session)
   }, [gameLoading])
-
-  const getDetailsForReservedBreakoutSession = async () => {
-    let reservedSessionId = user?.sessions?.items?.[0]
-    debugger
-    if (reservedSessionId) {
-      setReservedBreakoutSession(findSessionById(reservedSessionId))
-    }
-  }
-
-  useEffect(() => {
-    getDetailsForReservedBreakoutSession()
-  }, [openBreakoutNotice])
-
-  const goToReservedSession = () => {
-    if (reservedBreakoutSession) {
-      // go to the breakout session set as the user's resereved one
-      window.postMessage(`{"command":"sessions", "param": "${reservedBreakoutSession?.sceneKey}"`, '*')
-    } else {
-      // or go to the breakout session monoliths so the user can choose
-      setGameState(GameFlowSteps.Sessions)
-    }
-    setBreakoutNoticeOpen(false)
-    setReservedBreakoutSession(undefined)
-  }
-
-  const session: ISession | null = useMemo(() => {
-    // return Sessions.healthcareInsurance
-    if (!user || !user.sessions || !user.sessions.items) {
-      return null
-    }
-    return findSessionById(user.sessions.items[0]?.sessionId) || null
-  }, [user])
 
   return (
     <div id='game' className={classes.gameContainer}>
@@ -540,6 +554,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
                       variant='outlined'
                       textColor='white'
                       backgroundColor='black'
+                      solid
                       onClick={() => history.push('/stream')}
                       classes={{ root: classes.toastESSButton }}
                     >

@@ -18,6 +18,7 @@ export const AnalyticsWrapper = ({
   streamStartTime,
   useBackupStream,
   postLiveStream,
+  setPostLiveStream,
   vcOff
 }) => {
   const location = useLocation()
@@ -34,14 +35,19 @@ export const AnalyticsWrapper = ({
       </Route>
       <UserAuthenticatedRoutes user={user} setUser={setUser}>
         <Route exact path='/stream'>
-          <LiveStreamWrapper useBackupStream={useBackupStream} eventStage={eventStage} />
+          <LiveStreamWrapper
+            useBackupStream={useBackupStream}
+            eventStage={eventStage}
+            setPostLiveStream={setPostLiveStream}
+          />
         </Route>
         <Route exact path='/event'>
           <GameWrapper
             user={user}
             eventStage={eventStage}
             streamStartTime={streamStartTime}
-            postLiveStream={postLiveStream}
+            // postLiveStream={postLiveStream}
+            setPostLiveStream={setPostLiveStream}
             vcOff={vcOff}
           />
         </Route>
