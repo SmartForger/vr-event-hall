@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { menuDrawerOpen, toggleDrawer } from 'redux/menu'
 
 // Styles
-import MenuIcon from '@material-ui/icons/Menu'
+import { MenuIcon } from './MenuIcon'
 import { Theme, Toolbar, IconButton, makeStyles, AppBar, Grid } from '@material-ui/core'
 
 // Images
@@ -33,9 +33,9 @@ export const Header: FC<HeaderProps> = ({ children, preventFade }) => {
           </Grid>
           {children}
         </Grid>
-        <IconButton className={classes.button} color='default' aria-label='menu' onClick={handleToggleDrawer}>
-          <MenuIcon />
-        </IconButton>
+        <div className={classes.button} onClick={handleToggleDrawer}>
+          <MenuIcon opened={drawerOpen} />
+        </div>
       </Toolbar>
     </AppBar>
   )
@@ -65,8 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.palette.common.white,
       boxShadow: 'inset 0 -1px 0 #D8DADA',
       minHeight: 52,
-      paddingBottom: 0,
-      paddingTop: 0,
+      padding: '0 25px 0 30px',
       top: 0,
       zIndex: 1300
     }
@@ -99,7 +98,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     display: 'none',
-    padding: '9px',
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       display: 'block'
