@@ -6,8 +6,8 @@ export const indy: IDemo = {
   video: 'Indy500_v5.mp4',
   conversationId: '6299ec72-2b26-4730-8d9e-f532f1afae63',
   end: {
-    header: '5G built right for Indy 500.',
-    body: '',
+    header: 'Into the heart of the action.',
+    body: 'Verizon is dedicated to bringing immersive and improved sports experiences to fans around the world.',
     expert: '',
     nextDemoText: '5G MEC and smart venues.',
     nextDemo: E3DDemoNameVals.crowdVision,
