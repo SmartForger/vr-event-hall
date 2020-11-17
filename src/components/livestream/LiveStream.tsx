@@ -77,10 +77,6 @@ export const LiveStream = ({ visible, setVisibility, streamSrc, user, users }) =
     }
   }, [])
 
-  const handleChange = (_, newValue) => {
-    setTabValue(newValue)
-  }
-
   return (
     <Modal open={visible} onClose={() => setVisibility(false)}>
       <>
