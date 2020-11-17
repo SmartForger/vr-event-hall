@@ -369,6 +369,10 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
     } else {
       setShowLivestream(false)
     }
+
+    if (eventStage && [EventStages.LIVESTREAMENDING, EventStages.POSTLIVESTREAM].includes(eventStage)) {
+      setPostLiveStream(true)
+    }
   }, [eventStage, streamStartTime])
 
   useEffect(() => {

@@ -6,7 +6,8 @@ import { PillButton } from 'components'
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
 import { userByEmail, listSurveyQuestions } from 'graphql/queries'
 import { createSurveyAnswer } from 'graphql/mutations'
-import { AuthFlowSteps } from 'types'
+import { AuthFlowSteps, EventStages, IUser } from 'types'
+import { useHistory } from 'react-router-dom'
 
 interface ISurveyQuestion {
   id: string
@@ -17,10 +18,13 @@ interface ISurveyQuestion {
 interface SurveyProps {
   userEmail: string
   setAuthState: (state: AuthFlowSteps) => void
+  setUser: (payload: IUser) => void
+  eventStage?: EventStages
 }
 
-export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
+export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState, setUser, eventStage }) => {
   const classes = useStyles()
+  const history = useHistory()
   const [loading, setLoading] = useState<boolean>(false)
   const [surveyQuestions, setSurveyQuestions] = useState<Map<string, ISurveyQuestion>>(new Map())
 
@@ -77,7 +81,13 @@ export const Survey: FC<SurveyProps> = ({ userEmail, setAuthState }) => {
           }
         }
       }
-      setAuthState(AuthFlowSteps.ThankYou)
+
+      setUser(userRes)
+      if (eventStage !== EventStages.REGISTRATION) {
+        history.push('/event')
+      } else {
+        setAuthState(AuthFlowSteps.ThankYou)
+      }
     } catch (error) {
       console.log(error)
     } finally {
