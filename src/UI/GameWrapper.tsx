@@ -487,10 +487,6 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
               setConversationId={setConversationId}
               vcOff={vcOff}
             />
-          </>
-        )}
-        {!gameLoading && scene && (
-          <>
             <Tutorial run={stepsEnabled} steps={steps} onClose={() => toggleTutorial(false)} />
             <Video videoSrc={modalConfig.videoSrc || ''} />
             <Modal
