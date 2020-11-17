@@ -40,15 +40,16 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
       }
 
       foundUser.online = true
-      setUser(foundUser)
 
       await graphQLMutation(updateUser, {
         id: foundUser.id,
         online: true
       })
 
+      setUser(foundUser)
+
       // TODO: Uncomment after registration
-      // setAuthState(AuthFlowSteps.ThankYou)
+      setAuthState(AuthFlowSteps.ThankYou)
       history.push(redirectRoute)
     } else {
       setAuthState(AuthFlowSteps.Register)

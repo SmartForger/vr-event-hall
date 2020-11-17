@@ -31,7 +31,7 @@ export const AnalyticsWrapper = ({
   return (
     <Switch>
       <Route exact path='/'>
-        <AuthWrapper backgroundImage={AuthBG} setUser={setUser} />
+        <AuthWrapper user={user} eventStage={eventStage} backgroundImage={AuthBG} setUser={setUser} />
       </Route>
       <UserAuthenticatedRoutes user={user} setUser={setUser}>
         <Route exact path='/stream'>
