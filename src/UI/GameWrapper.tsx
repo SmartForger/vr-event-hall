@@ -327,7 +327,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   const goToReservedSession = () => {
     if (reservedBreakoutSession) {
       // go to the breakout session set as the user's resereved one
-      window.postMessage(`{"command":"sessions", "param": "${reservedBreakoutSession?.sceneKey}"`, '*')
+      window.postMessage(JSON.stringify({ command: 'sessions', param: reservedBreakoutSession?.sceneKey }), '*')
     } else {
       // or go to the breakout session monoliths so the user can choose
       setGameState(GameFlowSteps.Sessions)

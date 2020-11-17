@@ -74,9 +74,7 @@ const App = () => {
     })
   }
 
-  useEffect(() => {
-    console.log('APP: livestreamchangeto: ' + postLiveStream)
-  }, [postLiveStream])
+  useEffect(() => {}, [postLiveStream])
 
   useEffect(() => {
     I18n.setLanguage('en')
