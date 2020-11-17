@@ -312,7 +312,6 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
 
   const getDetailsForReservedBreakoutSession = async () => {
     let reservedSessionId = user?.sessions?.items?.[0]
-    debugger
     if (reservedSessionId) {
       setReservedBreakoutSession(findSessionById(reservedSessionId))
     } else if (setReservedBreakoutSession) {
