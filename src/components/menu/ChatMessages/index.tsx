@@ -76,8 +76,6 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
     })
 
     if (conversation && conversation.messages) {
-      console.log('settingMessages pre-filter')
-      console.log(conversation.messages)
       setMessages(conversation.messages.items.filter(message => message.deleted !== 'true'))
     }
 

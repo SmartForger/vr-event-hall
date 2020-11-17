@@ -352,7 +352,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
             <Typography>Live Chat</Typography>
           </div>
           <div>
-            {profileInfo && (
+            {profileInfo?.id === authedUser?.id && (
               <Switch color='primary' checked={profileInfo?.online || false} onChange={toggleOnlineStatus} />
             )}
           </div>
