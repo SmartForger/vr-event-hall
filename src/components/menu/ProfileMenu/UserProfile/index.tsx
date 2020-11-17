@@ -3,7 +3,7 @@ import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from '
 import { useHistory } from 'react-router-dom'
 
 import Promise from 'bluebird'
-import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
+import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton, Switch } from '@material-ui/core'
 
 // Plugins
 import classNames from 'classnames'
@@ -341,6 +341,22 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           <span className={classes.dotSeperator} />
           <span>{profileInfo?.title}</span>
         </div>
+
+        <div className={classes.liveChatContainer}>
+          <div className={classes.liveChat}>
+            <Typography>Live Chat</Typography>
+          </div>
+          <div>
+            {profileInfo && (
+              <Switch
+                color='primary'
+                checked={profileInfo?.online || false}
+                onChange={(event, checked) => setProfileInfo({ ...profileInfo, online: checked })}
+              />
+            )}
+          </div>
+        </div>
+
         <Button
           startIcon={<img src={iconEditProfile} alt='Edit profile' width='18px' />}
           onClick={() => setEditModeState(true)}
@@ -586,6 +602,17 @@ const useStyles = makeStyles(theme => ({
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       width: '10px'
     }
+  },
+  liveChatContainer: {
+    height: 42,
+    backgroundColor: '#F6F6F6',
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: 16,
+    paddingRight: 16
+  },
+  liveChat: {
+    flex: 1
   },
   uploadContainer: {
     position: 'relative'
