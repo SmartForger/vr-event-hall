@@ -9,9 +9,10 @@ import { UserDivider } from './UserDivider'
 import { UserListContext, useVideoChatContext, useChatContext } from 'providers'
 import { IUser, ToggleDrawer } from 'types'
 import { useWindowSize } from 'hooks/useWindowSize'
-
-import { createNewConversation, graphQLQuery } from 'graphql/helpers'
+import { updateUserBase } from 'graphql/customMutations'
+import { createNewConversation, graphQLQuery, graphQLMutation } from 'graphql/helpers'
 import { getConversationWithAssociated } from 'graphql/customQueries'
+import { useAppState } from 'providers'
 
 interface UserListProps {
   user?: IUser | null
@@ -23,6 +24,7 @@ interface UserListProps {
 export const UserList: FC<UserListProps> = ({ user, users, listRef, toggleDrawer }) => {
   const { dispatch: videoChatDispatch } = useVideoChatContext()
   const { dispatch: chatDispatch } = useChatContext()
+  const { setUser } = useAppState()
 
   const tmpUsers = users.map(user => ({
     ...user,
@@ -67,6 +69,17 @@ export const UserList: FC<UserListProps> = ({ user, users, listRef, toggleDrawer
       const conversationDetails = await graphQLQuery(getConversationWithAssociated, 'getConversation', {
         id: conversationId
       })
+      // TODO: REMOVE ME
+      // hacky way to make it work at the very last min
+      const updatedUser = await graphQLMutation(
+        updateUserBase,
+        {
+          id: user?.id,
+          title: user?.title
+        },
+        'updateUser'
+      )
+      setUser(updatedUser)
 
       // i really hate that we have multiple chat contexts,
       // and i dont want to go down this route, but i am worried
