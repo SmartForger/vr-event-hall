@@ -76,14 +76,16 @@ export const MessageList: FC<MessageListProps> = ({ messages, listRef, isInterna
 
     return rowHeight
   }
-
+  console.log('messages')
+  console.log(messages)
   const filteredMessages = messages
     .filter(message => message.id !== chatState?.session?.pinnedMessageId && message?.deleted !== 'true')
     .map((message, idx) => {
       setSize(idx, message.content.length * 2.25)
       return message
     })
-
+  console.log('filteredMessages')
+  console.log(filteredMessages)
   useEffect(() => {
     const verizonList = [
       'amelia.powell@verizonwireless.com',

@@ -64,13 +64,14 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
     return () => {
       updateUnreadMessageSubscription?.current?.unsubscribe()
     }
-  }, [])
+  }, [chatState.conversationId])
 
   const checkUserConversations = (newConvoId: string) => {
     return user?.conversations?.items.some(item => item.conversationId === newConvoId) || false
   }
 
   const checkOpenConversation = (newConvoId: string) => {
+    debugger
     return newConvoId === chatState.conversationId || newConvoId === conversationId
   }
 
@@ -104,6 +105,8 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
   }
 
   const setupUnreadSubscription = async () => {
+    updateUnreadMessageSubscription.current?.unsubscribe()
+
     updateUnreadMessageSubscription.current = graphQLSubscription(
       onCreateGlobalMessageMin,
       {},

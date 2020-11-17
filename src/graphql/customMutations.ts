@@ -82,3 +82,45 @@ export const deleteSessionParticipantMin = /* GraphQL */ `
     }
   }
 `
+
+export const updateUserBase = `mutation UpdateUser($input: UpdateUserInput!, $condition: ModelUserConditionInput) {
+  updateUser(input: $input, condition: $condition) {
+    id
+    firstName
+    lastName
+    phoneNumber
+    email
+    avatar
+    title
+    company
+    sessions {
+      items {
+        id
+        sessionId
+      }
+      nextToken
+    }
+    conversations {
+      items {
+        userId
+        conversationId
+        conversation {
+          associated {
+            items {
+              userId
+              user {
+                firstName
+                lastName
+                online
+              }
+            }
+          }
+          members
+        }
+      }
+    }
+    createdAt
+    updatedAt
+  }
+}
+`
