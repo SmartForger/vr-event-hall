@@ -24,7 +24,8 @@ export const AuthRoot: FC<SignInProps> = ({ setAuthState }) => {
     <Grid container direction='column' justify='center'>
       <Grid item>
         <Typography variant='h2' className={classes.heading}>
-          Join us for 5G Ready: Built Right for Business with Verizon
+          Join us for 5G <br />
+          Innovation Sessions
         </Typography>
       </Grid>
       <Grid item container alignItems='flex-start' spacing={2}>
