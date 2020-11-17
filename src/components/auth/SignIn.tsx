@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 import { PillButton } from 'components'
 import { validateEmail } from 'helpers'
-import { AuthFlowSteps } from 'types'
+import { AuthFlowSteps, EventStages, IUser } from 'types'
 import { graphQLQuery } from 'graphql/helpers'
 import { userByEmailBase } from 'graphql/customQueries'
 import { useAppState } from 'providers'
@@ -18,13 +18,21 @@ interface SignInProps {
   setUserEmail: (email: string) => void
   setUserPd: (pd: string) => void
   redirectRoute?: string
+  setUser: (payload: IUser) => void
+  eventStage?: EventStages
 }
 
-export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd, redirectRoute = '/event' }) => {
+export const SignIn: FC<SignInProps> = ({
+  setAuthState,
+  setUserEmail,
+  setUserPd,
+  redirectRoute = '/event',
+  setUser,
+  eventStage
+}) => {
   const defaultAvatar = 'defaultAvatar.jpg'
   const classes = useStyles()
   const history = useHistory()
-  const { setUser } = useAppState()
   const [loading, setLoading] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -48,9 +56,11 @@ export const SignIn: FC<SignInProps> = ({ setAuthState, setUserEmail, setUserPd,
 
       setUser(foundUser)
 
-      // TODO: Uncomment after registration
-      setAuthState(AuthFlowSteps.ThankYou)
-      history.push(redirectRoute)
+      if (eventStage !== EventStages.REGISTRATION) {
+        history.push(redirectRoute)
+      } else {
+        setAuthState(AuthFlowSteps.ThankYou)
+      }
     } else {
       setAuthState(AuthFlowSteps.Register)
     }

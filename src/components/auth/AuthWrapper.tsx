@@ -49,12 +49,12 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
   }, [])
 
   // TODO: Make it work
-  // useEffect(() => {
-  //   if (props.eventStage && props.user?.id && props.eventStage !== EventStages.REGISTRATION) {
-  //     return history.push('/event');
-  //   }
-  //   // eslint-disable-next-line
-  // }, [props.eventStage, props.user]);
+  useEffect(() => {
+    if (props.eventStage && props.user?.id && props.eventStage !== EventStages.REGISTRATION) {
+      return history.push('/event')
+    }
+    // eslint-disable-next-line
+  }, [props.eventStage, props.user])
 
   return (
     <div className={classNames(classes.root, props.backgroundImage && classes.backgroundImage)}>
@@ -70,6 +70,8 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
                   setUserEmail={setUserEmail}
                   setUserPd={setUserPd}
                   redirectRoute='/event'
+                  setUser={props.setUser}
+                  eventStage={props.eventStage}
                 />
               )}
               {authState === AuthFlowSteps.SignUp && (
@@ -90,7 +92,14 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
               {authState === AuthFlowSteps.HaveAQuestion && (
                 <HaveAQuestion setAuthState={setAuthState} userEmail={userEmail} />
               )}
-              {authState === AuthFlowSteps.Survey && <Survey setAuthState={setAuthState} userEmail={userEmail} />}
+              {authState === AuthFlowSteps.Survey && (
+                <Survey
+                  setAuthState={setAuthState}
+                  userEmail={userEmail}
+                  setUser={props.setUser}
+                  eventStage={props.eventStage}
+                />
+              )}
               {authState === AuthFlowSteps.ThankYou && <ThankYou />}
               {authState === AuthFlowSteps.ForgotPassword && <ForgotPassword setAuthState={setAuthState} />}
             </Grid>
