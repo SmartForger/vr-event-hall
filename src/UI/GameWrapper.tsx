@@ -92,14 +92,14 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   const history = useHistory()
   const { width } = useWindowSize()
   const classes = useStyles()
-  const [openBreakoutNotice, setBreakoutNoticeOpen] = useState(postLiveStream)
-  const [reservedBreakoutSession, setReservedBreakoutSession] = useState<ISession | undefined>()
 
   const localStorage = window.localStorage
   const [eventStartingSoon, setEventStartingSoonState] = useState<boolean>(false)
   const [eSSClosed, setESSClosed] = useState<boolean>(false)
   const [showTooltip, setShowTooltip] = useState<boolean>(false)
-
+  const [openBreakoutNotice, setBreakoutNoticeOpen] = useState(true)
+  const [reservedBreakoutSession, setReservedBreakoutSession] = useState<ISession | undefined>()
+  console.log('post live stream ' + postLiveStream)
   setTimeout(() => {
     setShowTooltip(true)
   }, 8000)
@@ -382,6 +382,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
 
   const getDetailsForReservedBreakoutSession = async () => {
     let reservedSessionId = user?.sessions?.items?.[0]
+    debugger
     if (reservedSessionId) {
       setReservedBreakoutSession(findSessionById(reservedSessionId))
     }
@@ -392,13 +393,15 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   }, [openBreakoutNotice])
 
   const goToReservedSession = () => {
-    // go to one set or go to the generic sessions page
     if (reservedBreakoutSession) {
+      // go to the breakout session set as the user's resereved one
       window.postMessage(`{"command":"sessions", "param": "${reservedBreakoutSession?.sceneKey}"`, '*')
     } else {
+      // or go to the breakout session monoliths so the user can choose
       setGameState(GameFlowSteps.Sessions)
     }
-    history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')
+    setBreakoutNoticeOpen(false)
+    setReservedBreakoutSession(undefined)
   }
 
   const session: ISession | null = useMemo(() => {
@@ -522,7 +525,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
                 />
               )}
 
-            {eventStartingSoon ? (
+            {eventStartingSoon && !openBreakoutNotice ? (
               <ToastAlert type='notice' isOpen={eventStartingSoon && !eSSClosed} onClose={() => setESSClosed(true)}>
                 <Grid container>
                   <Grid item xs={12}>
@@ -562,7 +565,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
                         ? `Your breakout session for ${I18n.get(
                             `breakoutSessionName-${reservedBreakoutSession}`
                           )} is starting soon. Click below to join your session. If you do not join within 5 minutes you may lose your seat to a guest on the waitlist.`
-                        : `It’s almost time to hear how your business can take advantage of the full, transformative power of Verizon 5G Ultra Wideband. Let our experts to take you on a deeper dive into vertical-specific use cases to demonstrate how Verizon 5G can benefit you. Each session includes a live Q&A. Click below to see which sessions are available to join.`}
+                        : I18n.get('genericBreakoutsStartingMessage')}
                     </Typography>
                     <Box>
                       <PillButton
@@ -638,8 +641,8 @@ const useStyles = makeStyles({
     height: '24px',
     fontSize: '12px',
     margin: '0.5em',
-    padding: 0,
-    width: 140,
+    padding: '6px 12px',
+    width: 'auto',
     display: 'flex',
     flexWrap: 'nowrap',
     justifyContent: 'center',

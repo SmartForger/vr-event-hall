@@ -41,8 +41,8 @@ export const AnalyticsWrapper = ({
             user={user}
             eventStage={eventStage}
             streamStartTime={streamStartTime}
-            vcOff={vcOff}
             postLiveStream={postLiveStream}
+            vcOff={vcOff}
           />
         </Route>
       </UserAuthenticatedRoutes>

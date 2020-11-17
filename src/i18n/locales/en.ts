@@ -148,7 +148,9 @@ const scenes: IScenesDict = {
   connect: 'Connect',
   liveStream: 'Live Stream',
   startingSoon: 'The Live Event is starting soon',
-  goToLiveStream: 'Go to Live Stream'
+  goToLiveStream: 'Go to Live Stream',
+  genericBreakoutsStartingMessage:
+    'It’s almost time to hear how your business can take advantage of the full, transformative power of Verizon 5G Ultra Wideband. Let our experts to take you on a deeper dive into vertical-specific use cases to demonstrate how Verizon 5G can benefit you. Each session includes a live Q&A. Click below to see which sessions are available to join.'
 }
 
 export const en = {
