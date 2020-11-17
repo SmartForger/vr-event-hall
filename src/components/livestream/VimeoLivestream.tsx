@@ -31,7 +31,7 @@ import { LiveStreamPeoplePanel } from 'components/videochat/Panels/LiveStreamPeo
 interface VimeoLiveStreamProps {
   useBackupStream: Boolean
   eventStage?: EventStages
-  setPostLiveStream?: () => void
+  setPostLiveStream: (changeVal: boolean) => void
 }
 export const LiveStreamWrapper: FC<VimeoLiveStreamProps> = (props: VimeoLiveStreamProps) => (
   <VideoChatProvider>
@@ -195,11 +195,10 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
   }, [videoChatState?.session?.admins])
 
   const exit = () => {
+    setPostLiveStream(true)
     if (participantId) {
       graphQLMutation(deleteSessionParticipantMin, { id: participantId })
     }
-    setPostLiveStream?.()
-    appDispatch({ type: 'SET_POST_LIVE_STREAM', payload: true })
     history.push(`/event`)
   }
 

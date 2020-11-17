@@ -3,7 +3,7 @@ import { IUser } from 'types'
 
 interface IAppContextObject {
   user: IUser | null
-  postStream: boolean
+  postStream?: boolean
 }
 
 const initialState = {
@@ -15,12 +15,12 @@ export const AppContext = createContext<{
   appState: IAppContextObject
   dispatch: Dispatch<any>
   setUser: (payload: IUser) => void
-  setPostLiveStream: (payload: boolean) => void
+  // setPostLiveStream: (payload: boolean) => void
 }>({
   appState: initialState,
   dispatch: () => null,
-  setUser: () => null,
-  setPostLiveStream: () => null
+  setUser: () => null
+  // setPostLiveStream: () => null
 })
 
 const reducer = (state, action) => {
@@ -51,11 +51,7 @@ export const AppStateProvider = props => {
     return dispatch({ type: 'SET_POST_LIVE_STREAM', payload: isPostLS })
   }
 
-  return (
-    <AppContext.Provider value={{ appState, dispatch, setUser, setPostLiveStream }}>
-      {props.children}
-    </AppContext.Provider>
-  )
+  return <AppContext.Provider value={{ appState, dispatch, setUser }}>{props.children}</AppContext.Provider>
 }
 
 export const useAppState = () => useContext(AppContext)

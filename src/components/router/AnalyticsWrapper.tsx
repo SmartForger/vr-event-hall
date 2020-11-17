@@ -46,7 +46,7 @@ export const AnalyticsWrapper = ({
             user={user}
             eventStage={eventStage}
             streamStartTime={streamStartTime}
-            // postLiveStream={postLiveStream}
+            postLiveStream={postLiveStream}
             setPostLiveStream={setPostLiveStream}
             vcOff={vcOff}
           />

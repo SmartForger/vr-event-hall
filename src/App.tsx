@@ -25,7 +25,7 @@ I18n.putVocabularies(dict)
 // Init
 const App = () => {
   const [user, setUser] = useState<IUser>()
-  const [postStream, setPostLiveStream] = useState<boolean>(false)
+  const [postLiveStream, setPostLiveStream] = useState<boolean>(false)
   const [eventConfig, setEventConfig] = useState<any>(defaultEventConfigs[getEnvironment()])
   const [eventStage, setEventStage] = useState<EventStages>(EventStages.COUNTDOWN)
   const [useBackupStream, setUseBackupStream] = useState<boolean>(false)
@@ -75,6 +75,10 @@ const App = () => {
   }
 
   useEffect(() => {
+    console.log('APP: livestreamchangeto: ' + postLiveStream)
+  }, [postLiveStream])
+
+  useEffect(() => {
     I18n.setLanguage('en')
     getEventConfiguration()
     setupEventConfigSub()
@@ -103,7 +107,7 @@ const App = () => {
                         eventStage={eventStage}
                         streamStartTime={streamStartTime}
                         useBackupStream={useBackupStream}
-                        postLiveStream={postStream}
+                        postLiveStream={postLiveStream}
                         setPostLiveStream={setPostLiveStream}
                         vcOff={vcOff}
                       />

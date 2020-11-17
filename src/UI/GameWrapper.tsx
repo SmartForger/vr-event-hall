@@ -74,8 +74,8 @@ interface GameWrapperProps {
   eventStage?: EventStages
   streamStartTime?: string
   vcOff?: boolean
-  // postLiveStream?: boolean
-  setPostLiveStream?: (val: boolean) => void
+  postLiveStream?: boolean
+  setPostLiveStream: (val: boolean) => void
 }
 
 export const GameWrapper: React.FC<GameWrapperProps> = ({
@@ -83,7 +83,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   users,
   eventStage,
   streamStartTime,
-  // postLiveStream,
+  postLiveStream,
   setPostLiveStream,
   vcOff
 }) => {
@@ -94,15 +94,15 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   const history = useHistory()
   const { width } = useWindowSize()
   const classes = useStyles()
-  const {
-    appState: { postStream: postLiveStream }
-  } = useAppState()
+  // const {
+  //   appState: { postStream: postLiveStream }
+  // } = useAppState()
 
   const localStorage = window.localStorage
   const [eventStartingSoon, setEventStartingSoonState] = useState<boolean>(false)
   const [eSSClosed, setESSClosed] = useState<boolean>(false)
   const [showTooltip, setShowTooltip] = useState<boolean>(false)
-  const [openBreakoutNotice, setBreakoutNoticeOpen] = useState(postLiveStream)
+  const [breakoutNoticeOpen, setBreakoutNoticeOpen] = useState<boolean>(!!postLiveStream)
   const [reservedBreakoutSession, setReservedBreakoutSession] = useState<ISession | undefined>()
 
   setTimeout(() => {
@@ -303,13 +303,16 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   }, [])
 
   useEffect(() => {
-    console.log('POSTLIVESTREAM: ' + postLiveStream)
-    setBreakoutNoticeOpen(postLiveStream)
+    console.log('postLiveStreamUpdated  to: ' + postLiveStream)
+    if (postLiveStream !== undefined) {
+      console.log('setBreakoutNoticeOpen to: ' + !!postLiveStream)
+      setBreakoutNoticeOpen(!!postLiveStream)
+    }
   }, [postLiveStream])
 
   const getDetailsForReservedBreakoutSession = async () => {
-    console.log('useeffect openbreakout notice ' + openBreakoutNotice)
     let reservedSessionId = user?.sessions?.items?.[0]
+    debugger
     if (reservedSessionId) {
       setReservedBreakoutSession(findSessionById(reservedSessionId))
     } else if (setReservedBreakoutSession) {
@@ -318,9 +321,12 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   }
 
   useEffect(() => {
-    console.log('useeffect openbreakout notice ' + openBreakoutNotice)
-    getDetailsForReservedBreakoutSession()
-  }, [openBreakoutNotice])
+    console.log('breakoutnotice opened to: ' + breakoutNoticeOpen)
+    if (breakoutNoticeOpen !== undefined) {
+      console.log('useeffect openbreakout notice to: ' + breakoutNoticeOpen)
+      getDetailsForReservedBreakoutSession()
+    }
+  }, [breakoutNoticeOpen])
 
   const goToReservedSession = () => {
     if (reservedBreakoutSession) {
@@ -426,6 +432,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
     setActiveSession(session)
   }, [gameLoading])
 
+  console.log('render val to: ' + breakoutNoticeOpen)
   return (
     <div id='game' className={classes.gameContainer}>
       <iframe
@@ -539,7 +546,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
                 />
               )}
 
-            {eventStartingSoon && !openBreakoutNotice ? (
+            {eventStartingSoon && !breakoutNoticeOpen ? (
               <ToastAlert type='notice' isOpen={eventStartingSoon && !eSSClosed} onClose={() => setESSClosed(true)}>
                 <Grid container>
                   <Grid item xs={12}>
@@ -550,7 +557,6 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
                   <Grid item xs={12}>
                     <PillButton
                       type='button'
-                      className='button'
                       variant='outlined'
                       textColor='white'
                       backgroundColor='black'
@@ -566,17 +572,17 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
             ) : null}
 
             {/* Post-Livestream Breakout Notice */}
-            {openBreakoutNotice && (
+            {!!breakoutNoticeOpen ? (
               <div className={classes.modal}>
                 <div className={classes.modalBody}>
                   <Box p={4}>
                     <Box mb={4} mt={2}>
                       <Typography style={{ color: '#000' }} variant='h4'>
-                        {session ? 'Join your breakout session.' : 'Join a breakout session.'}
+                        {reservedBreakoutSession ? 'Join your breakout session.' : 'Join a breakout session.'}
                       </Typography>
                     </Box>
                     <Typography style={{ color: '#000' }}>
-                      {session
+                      {reservedBreakoutSession
                         ? `Your breakout session for ${I18n.get(
                             `breakoutSessionName-${reservedBreakoutSession}`
                           )} is starting soon. Click below to join your session. If you do not join within 5 minutes you may lose your seat to a guest on the waitlist.`
@@ -585,7 +591,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
                     <Box>
                       <PillButton
                         type='button'
-                        className='button'
+                        classes={{ root: classes.toastESSButton }}
                         variant='outlined'
                         textColor='white'
                         backgroundColor='black'
@@ -600,7 +606,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
                   </IconButton>
                 </div>
               </div>
-            )}
+            ) : null}
 
             {/* Toast for Notice */}
             <ToastAlert type='notice' isOpen={!!activeNotice?.type} onClose={() => setActiveNotice({})}>
