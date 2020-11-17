@@ -44,9 +44,13 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
   )
   let updateUnreadMessageSubscription = useRef<ISubscriptionObject | null>(null)
 
-  const fetchNewConvoAndPopulateUser = async (convId: string) => {
-    let newRelevantConvo = await graphQLQuery(getConversationBase, 'getConversation', { id: convId })
+  const fetchNewConvoAndPopulateUser = async (convoId: string) => {
+    let newRelevantConvo = await graphQLQuery(getConversationBase, 'getConversation', { id: convoId })
     setUser({ ...user, conversations: { items: [...(user?.conversations?.items || []), newRelevantConvo] } })
+    dispatch({
+      type: 'INCREMENT_UNREAD_CONVO_MESSAGE',
+      payload: { conversationId: convoId }
+    })
   }
 
   useEffect(() => {
@@ -61,7 +65,6 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
   }
 
   const checkOpenConversation = (newConvoId: string) => {
-    debugger
     return newConvoId === chatState.conversationId || newConvoId === conversationId
   }
 
