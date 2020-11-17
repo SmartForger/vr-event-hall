@@ -323,7 +323,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   }
 
   useEffect(() => {
-    if (profileInfo?.online !== undefined) {
+    if (profileInfo?.online !== authedUser?.online) {
       updateUserData()
     }
   }, [profileInfo?.online])
@@ -352,7 +352,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
             <Typography>Live Chat</Typography>
           </div>
           <div>
-            {profileInfo && (
+            {profileInfo?.id === authedUser?.id && (
               <Switch color='primary' checked={profileInfo?.online || false} onChange={toggleOnlineStatus} />
             )}
           </div>
