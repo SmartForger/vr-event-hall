@@ -25,11 +25,13 @@ I18n.putVocabularies(dict)
 // Init
 const App = () => {
   const [user, setUser] = useState<IUser>()
+  const [postLiveStream, setPostLiveStream] = useState<boolean>(false)
   const [eventConfig, setEventConfig] = useState<any>(defaultEventConfigs[getEnvironment()])
   const [eventStage, setEventStage] = useState<EventStages>(EventStages.COUNTDOWN)
   const [useBackupStream, setUseBackupStream] = useState<boolean>(false)
   const [streamStartTime, setStreamStartTime] = useState<string | undefined>()
   const [vcOff, setVCOff] = useState<boolean>(false)
+
   let subscription
 
   function getEnvironment() {
@@ -72,6 +74,8 @@ const App = () => {
     })
   }
 
+  useEffect(() => {}, [postLiveStream])
+
   useEffect(() => {
     I18n.setLanguage('en')
     getEventConfiguration()
@@ -101,6 +105,8 @@ const App = () => {
                         eventStage={eventStage}
                         streamStartTime={streamStartTime}
                         useBackupStream={useBackupStream}
+                        postLiveStream={postLiveStream}
+                        setPostLiveStream={setPostLiveStream}
                         vcOff={vcOff}
                       />
                       <Footer />

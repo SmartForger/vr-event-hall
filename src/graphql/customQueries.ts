@@ -201,10 +201,7 @@ export const userByEmailBase = /* GraphQL */ `
         sessions {
           items {
             id
-            userId
             sessionId
-            createdAt
-            updatedAt
           }
           nextToken
         }

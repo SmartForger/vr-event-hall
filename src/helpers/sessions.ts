@@ -1,3 +1,5 @@
+import { E3DSessionNameVals } from 'types'
+
 import manufacturingImage from 'assets/sessions/Breakout-Manufacturing.png'
 import travelRetailImage from 'assets/sessions/Breakout-Travel-Retail.png'
 import mediaImage from 'assets/sessions/Breakout-Media.png'
@@ -6,6 +8,8 @@ import healthcareServicesImage from 'assets/sessions/Breakout-Healthcare-Insuran
 
 export interface ISession {
   id: string // Horan - this is a horrible way to do this, but under tight deadline
+  sceneKey?: E3DSessionNameVals
+  nameKey: string
   image: string
   bluejeans?: string
   side: {
@@ -22,6 +26,8 @@ export interface ISession {
 export const Sessions: { [key: string]: ISession } = {
   healthcareInsurance: {
     id: '4ab7c286-2a47-428c-8ca0-4cc765e153dd',
+    nameKey: 'healthcareInsurance',
+    sceneKey: E3DSessionNameVals.healthcareInsurance,
     image: healthcareServicesImage,
     bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/cajqqaqj',
     side: {
@@ -38,6 +44,8 @@ export const Sessions: { [key: string]: ISession } = {
   },
   retailTravelDistribution: {
     id: 'dc10cd28-efab-43c3-8cb7-b40402c0e78b',
+    nameKey: 'retailTravelDistribution',
+    sceneKey: E3DSessionNameVals.retailTravelDistribution,
     image: travelRetailImage,
     bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/gudrhdtp',
     side: {
@@ -54,6 +62,8 @@ export const Sessions: { [key: string]: ISession } = {
   },
   financialServices: {
     id: '58a60c43-041f-4a6e-b1c9-d207ffd06c62',
+    nameKey: 'financialServices',
+    sceneKey: E3DSessionNameVals.financialServices,
     image: financialServicesImage,
     bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/wpaurqwb',
     side: {
@@ -70,6 +80,8 @@ export const Sessions: { [key: string]: ISession } = {
   },
   manufacturingEnergyUtilities: {
     id: 'aa4195e4-e9cd-483c-b6be-ad205d176227',
+    nameKey: 'manufacturingEnergyUtilities',
+    sceneKey: E3DSessionNameVals.manufacturingEnergyUtilities,
     image: manufacturingImage,
     bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/kgbkhsvp',
     side: {
@@ -86,6 +98,8 @@ export const Sessions: { [key: string]: ISession } = {
   },
   mediaEntertainmentTech: {
     id: '4a9b328b-85b5-4393-a232-550ac67962f9',
+    nameKey: 'mediaEntertainmentTech',
+    sceneKey: E3DSessionNameVals.mediaEntertainmentTech,
     image: mediaImage,
     bluejeans: 'https://primetime.bluejeans.com/a2m/live-event/tyvrfgcs',
     side: {
@@ -103,6 +117,7 @@ export const Sessions: { [key: string]: ISession } = {
   livestream: {
     id: '009b358b-a5b5-4393-a232-550ac67962f9',
     image: mediaImage,
+    nameKey: 'livestream',
     side: {
       category: 'Breakout Session',
       header: 'Live Stream',

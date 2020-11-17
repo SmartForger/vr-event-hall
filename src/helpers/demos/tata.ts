@@ -16,7 +16,7 @@ export const tata: IDemo = {
     header: 'The future of manufacturing.',
     body: '',
     expert: '',
-    nextDemoText: 'Factory Digitalization',
+    nextDemoText: 'Transforming the fan experience.',
     nextDemo: E3DDemoNameVals.ybvr,
     nextDemoThumbnail: 'ybvr-thumbnail.png'
   },

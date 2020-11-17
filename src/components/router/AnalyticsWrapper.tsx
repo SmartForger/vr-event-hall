@@ -11,7 +11,16 @@ import { GameWrapper } from 'UI'
 import { Header } from 'components'
 import { LiveStreamWrapper } from 'components/livestream'
 
-export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, useBackupStream, vcOff }) => {
+export const AnalyticsWrapper = ({
+  user,
+  setUser,
+  eventStage,
+  streamStartTime,
+  useBackupStream,
+  postLiveStream,
+  setPostLiveStream,
+  vcOff
+}) => {
   const location = useLocation()
   useEffect(() => {
     ReactGA.initialize('UA-178694733-3')
@@ -26,10 +35,21 @@ export const AnalyticsWrapper = ({ user, setUser, eventStage, streamStartTime, u
       </Route>
       <UserAuthenticatedRoutes user={user} setUser={setUser}>
         <Route exact path='/stream'>
-          <LiveStreamWrapper useBackupStream={useBackupStream} eventStage={eventStage} />
+          <LiveStreamWrapper
+            useBackupStream={useBackupStream}
+            eventStage={eventStage}
+            setPostLiveStream={setPostLiveStream}
+          />
         </Route>
         <Route exact path='/event'>
-          <GameWrapper user={user} eventStage={eventStage} streamStartTime={streamStartTime} vcOff={vcOff} />
+          <GameWrapper
+            user={user}
+            eventStage={eventStage}
+            streamStartTime={streamStartTime}
+            postLiveStream={postLiveStream}
+            setPostLiveStream={setPostLiveStream}
+            vcOff={vcOff}
+          />
         </Route>
       </UserAuthenticatedRoutes>
     </Switch>

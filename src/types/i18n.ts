@@ -136,6 +136,7 @@ export interface IScenesDict {
   liveStream: string
   startingSoon: string
   goToLiveStream: string
+  genericBreakoutsStartingMessage: string
 }
 
 export interface IScenesDict {
@@ -152,4 +153,5 @@ export interface IScenesDict {
   liveStream: string
   startingSoon: string
   goToLiveStream: string
+  genericBreakoutsStartingMessage: string
 }
