@@ -303,15 +303,14 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   }, [])
 
   useEffect(() => {
-    console.log('postLiveStreamUpdated  to: ' + postLiveStream)
     if (postLiveStream !== undefined) {
-      console.log('setBreakoutNoticeOpen to: ' + !!postLiveStream)
-      setBreakoutNoticeOpen(!!postLiveStream)
+      setBreakoutNoticeOpen(postLiveStream)
+      setESSClosed(postLiveStream === true)
     }
   }, [postLiveStream])
 
   const getDetailsForReservedBreakoutSession = async () => {
-    let reservedSessionId = user?.sessions?.items?.[0]
+    let reservedSessionId = user?.sessions?.items?.[0]?.sessionId
     if (reservedSessionId) {
       setReservedBreakoutSession(findSessionById(reservedSessionId))
     } else if (setReservedBreakoutSession) {
@@ -320,9 +319,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   }
 
   useEffect(() => {
-    console.log('breakoutnotice opened to: ' + breakoutNoticeOpen)
     if (breakoutNoticeOpen !== undefined) {
-      console.log('useeffect openbreakout notice to: ' + breakoutNoticeOpen)
       getDetailsForReservedBreakoutSession()
     }
   }, [breakoutNoticeOpen])
@@ -339,14 +336,6 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
     setEventStartingSoonState(false)
     setReservedBreakoutSession(undefined)
   }
-
-  const session: ISession | null = useMemo(() => {
-    // return Sessions.healthcareInsurance
-    if (!user || !user.sessions || !user.sessions.items) {
-      return null
-    }
-    return findSessionById(user.sessions.items[0]?.sessionId) || null
-  }, [user])
 
   // Updates the tutorial steps on window size change
   useEffect(() => {
@@ -431,7 +420,6 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
     setActiveSession(session)
   }, [gameLoading])
 
-  console.log('render val to: ' + breakoutNoticeOpen)
   return (
     <div id='game' className={classes.gameContainer}>
       <iframe
@@ -567,7 +555,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
             ) : null}
 
             {/* Post-Livestream Breakout Notice */}
-            {!!breakoutNoticeOpen ? (
+            {breakoutNoticeOpen ? (
               <div className={classes.modal}>
                 <div className={classes.modalBody}>
                   <Box p={4}>
@@ -579,7 +567,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
                     <Typography style={{ color: '#000' }}>
                       {reservedBreakoutSession
                         ? `Your breakout session for ${I18n.get(
-                            `breakoutSessionName-${reservedBreakoutSession}`
+                            `breakoutSessionName-${reservedBreakoutSession.nameKey}`
                           )} is starting soon. Click below to join your session. If you do not join within 5 minutes you may lose your seat to a guest on the waitlist.`
                         : I18n.get('genericBreakoutsStartingMessage')}
                     </Typography>
@@ -592,7 +580,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
                         backgroundColor='black'
                         onClick={() => goToReservedSession()}
                       >
-                        {session ? 'Join session' : 'Pick your breakout session'}
+                        {reservedBreakoutSession ? 'Join session' : 'Pick your breakout session'}
                       </PillButton>
                     </Box>
                   </Box>
@@ -654,7 +642,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
 const useStyles = makeStyles({
   toastESSTitle: {},
   toastESSButton: {
-    height: '24px',
+    height: '32px',
     fontSize: '12px',
     margin: '0.5em',
     padding: '6px 12px',
