@@ -1,29 +1,26 @@
-import React, { FC, useEffect, useState, useCallback, useRef, useMemo } from 'react'
-import { Box, IconButton, makeStyles, Typography, Tab, Tabs, Drawer, Toolbar } from '@material-ui/core'
-import { Close } from '@material-ui/icons'
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { Drawer, IconButton, makeStyles, Tab, Tabs, Toolbar } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 import classnames from 'classnames'
 
-import { PillButton, RouteTransition } from 'components'
+import { ChatMessages, RouteTransition, TabPanel } from 'components'
 import { graphQLMutation } from '../../graphql/helpers'
 import { createUserInteraction } from '../../graphql/mutations'
 import { EventStages } from '../../types'
-import { findSessionById, ISession } from '../../helpers'
+import { ISession, Sessions } from '../../helpers'
 
 // import { StyledLayout, StyledContent, StyledGrid } from './Styled'
 import { DetailsPanel, ToolsPanel } from '../videochat/Panels'
 import { PollDrawer } from '../videochat/PollDrawer'
-import { ChatMessages, TabPanel } from 'components'
 
 // import { useMeetingEndedRedirect } from 'hooks'
-import { useAppState, useVideoChatContext, PollProvider, VideoChatProvider } from 'providers'
+import { PollProvider, useAppState, useVideoChatContext, VideoChatProvider } from 'providers'
 import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
 import { onCreateSessionParticipant, onUpdateSession } from 'graphql/subscriptions'
 import { ISubscriptionObject } from 'types'
 
 import { ReactComponent as Logo } from 'assets/verizon-logo.svg'
 import { DialogCard } from 'components/shared'
-import { Sessions } from '../../helpers'
 import { getSessionWithParticipants } from 'graphql/customQueries'
 import { createSessionParticipantMin, deleteSessionParticipantMin } from 'graphql/customMutations'
 import { LiveStreamPeoplePanel } from 'components/videochat/Panels/LiveStreamPeoplePanel'
@@ -183,7 +180,10 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
   }, [user, videoChatState?.session?.participants?.items])
 
   useEffect(() => {
-    if (eventStage && ![EventStages.COUNTDOWN, EventStages.LIVESTREAM].includes(eventStage)) {
+    if (
+      eventStage &&
+      ![EventStages.COUNTDOWN, EventStages.LIVESTREAM, EventStages.LIVESTREAMENDING].includes(eventStage)
+    ) {
       setRedirectTrigger(true)
     }
   }, [eventStage])
@@ -195,7 +195,9 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
   }, [videoChatState?.session?.admins])
 
   const exit = () => {
-    setPostLiveStream(true)
+    if (eventStage && [EventStages.LIVESTREAMENDING, EventStages.POSTLIVESTREAM].includes(eventStage)) {
+      setPostLiveStream(true)
+    }
     if (participantId) {
       graphQLMutation(deleteSessionParticipantMin, { id: participantId })
     }

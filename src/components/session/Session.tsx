@@ -11,7 +11,7 @@ import { Video } from 'components/shared'
 import { createChimeMeeting } from 'helpers'
 import { ISession } from 'helpers/sessions'
 import { GameFlowStepsConfig } from 'helpers/steps'
-import { GameFlowSteps, IUser } from 'types'
+import { EventStages, GameFlowSteps, IUser } from 'types'
 import { useSessionDetails } from 'hooks/useSessionDetails'
 import { useAppState, UserAdminType, useVideoChatContext } from 'providers'
 
@@ -22,12 +22,14 @@ import { getAttendeeInfo, getSessionOverviewById } from 'graphql/customQueries'
 interface SessionProps {
   session: ISession
   setScene: (sceneTo: GameFlowSteps) => void
+  eventStage?: EventStages
 }
 
-export const Session: FC<SessionProps> = ({ session, setScene }) => {
+export const Session: FC<SessionProps> = ({ session, setScene, eventStage }) => {
   const classes = useStyles()
   const meetingManager = useMeetingManager()
   const [loading, setLoading] = useState<boolean>()
+  const [showJoinSession, setShowJoinSession] = useState<boolean>(checkEventStage())
   const { videoChatState, dispatch } = useVideoChatContext()
   const sessionDetails = useSessionDetails(session.id)
   const {
@@ -43,6 +45,14 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
       setRenderSession(true)
     }, timeoutTime)
   }, [])
+
+  useEffect(() => {
+    setShowJoinSession(checkEventStage())
+  }, [eventStage])
+
+  function checkEventStage() {
+    return Boolean(eventStage && [EventStages.LIVESTREAMENDING, EventStages.POSTLIVESTREAM].includes(eventStage))
+  }
 
   const joinClassRoom = async () => {
     setLoading(true)
@@ -141,28 +151,32 @@ export const Session: FC<SessionProps> = ({ session, setScene }) => {
               </Typography>
               <Box display='flex'>
                 {/* MVRK JOIN */}
-                {!bluejeansSessionLink && (isSessionAdmin || sessionActive) && (
-                  <PillButton
-                    className={classes.joinRowButtons}
-                    onClick={joinClassRoom}
-                    variant='outlined'
-                    backgroundColor='transparent'
-                    loading={loading}
-                  >
-                    Join Session
-                  </PillButton>
-                )}
-                {/* BLUEJEANS JOIN */}
-                {bluejeansSessionLink && (
-                  <PillButton
-                    className={classes.joinRowButtons}
-                    onClick={() => window.open(bluejeansSessionLink)}
-                    variant='outlined'
-                    backgroundColor='transparent'
-                    loading={loading}
-                  >
-                    Join Session
-                  </PillButton>
+                {showJoinSession && (
+                  <>
+                    {!bluejeansSessionLink && (isSessionAdmin || sessionActive) && (
+                      <PillButton
+                        className={classes.joinRowButtons}
+                        onClick={joinClassRoom}
+                        variant='outlined'
+                        backgroundColor='transparent'
+                        loading={loading}
+                      >
+                        Join Session
+                      </PillButton>
+                    )}
+                    {/* BLUEJEANS JOIN */}
+                    {bluejeansSessionLink && (
+                      <PillButton
+                        className={classes.joinRowButtons}
+                        onClick={() => window.open(bluejeansSessionLink)}
+                        variant='outlined'
+                        backgroundColor='transparent'
+                        loading={loading}
+                      >
+                        Join Session
+                      </PillButton>
+                    )}
+                  </>
                 )}
                 {/* <Typography className={classes.availableSeatsMessage}>{availableSeats} Seats Available</Typography> */}
                 <Button

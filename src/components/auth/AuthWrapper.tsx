@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { makeStyles, Theme, Grid } from '@material-ui/core'
 import { useLocation } from 'react-router-dom'
 import { Welcome, Header } from 'components'
+import { useHistory } from 'react-router-dom'
 import {
   SignUp,
   ConfirmSignUp,
@@ -16,13 +17,16 @@ import {
   ThankYou,
   AuthRoot
 } from './index'
-import { AuthFlowSteps, IUser } from 'types'
+import { AuthFlowSteps, EventStages, IUser } from 'types'
 
 interface IAuthWrapper {
   backgroundImage?: string
+  user?: IUser
   setUser: (user: IUser) => void
+  eventStage?: EventStages
 }
 export const AuthWrapper: FC<IAuthWrapper> = props => {
+  const history = useHistory()
   const queryParams = new URLSearchParams(useLocation().search)
   const classes = useStyles(props)
 
@@ -43,6 +47,14 @@ export const AuthWrapper: FC<IAuthWrapper> = props => {
     }
     // eslint-disable-next-line
   }, [])
+
+  // TODO: Make it work
+  // useEffect(() => {
+  //   if (props.eventStage && props.user?.id && props.eventStage !== EventStages.REGISTRATION) {
+  //     return history.push('/event');
+  //   }
+  //   // eslint-disable-next-line
+  // }, [props.eventStage, props.user]);
 
   return (
     <div className={classNames(classes.root, props.backgroundImage && classes.backgroundImage)}>
