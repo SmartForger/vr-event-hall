@@ -62,7 +62,7 @@ export const Demos: IDemoCollection = {
     conversationId: 'ccc0fec7-4bdc-4dc4-8356-1406276294dd',
     end: {
       header: '5G MEC and smart venues.',
-      body: '',
+      body: 'CrowdVision uses sensors to generate highly detailed pictures of crowds in public places. This normally requires massive infrastructure. Using Verizon 5G Edge and AWS Wavelength for processing and backbone reduces that requirement, opening up new opportunities. ',
       nextDemoText: 'Streamlining the live broadcast industry.',
       nextDemo: E3DDemoNameVals.zixi,
       nextDemoThumbnail: 'zixi-thumbnail.png'
@@ -77,7 +77,7 @@ export const Demos: IDemoCollection = {
     end: {
       header: 'Speed of Thought',
       body:
-        'From robotic devices that could allow doctors to perform surgeries thousands of miles away to a smart city that aims to eliminate pedestrian deaths, innovators are using 5G to change the world as we know it. Visit <a target="_blank" href="https://speedofthoughtfilm.com">speedofthoughtfilm.com</a> for viewing options.',
+        'From robotic devices that could allow doctors to perform surgeries thousands of miles away to a smart city that aims to eliminate pedestrian deaths, innovators are using 5G to change the world as we know it. Visit <a target="_blank" href="https://speedofthoughtfilm.com">speedofthoughtfilm.com</a> and learn where you can watch the film.',
       nextDemoText: 'The future of manufacturing.',
       nextDemo: E3DDemoNameVals.tata,
       nextDemoThumbnail: 'tata-thumbnail.png'
