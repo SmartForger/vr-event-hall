@@ -46,17 +46,7 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
 
   const fetchNewConvoAndPopulateUser = async (convId: string) => {
     let newRelevantConvo = await graphQLQuery(getConversationBase, 'getConversation', { id: convId })
-    if (newRelevantConvo.members.includes(user?.id)) {
-      let updatedUserConvos = user?.conversations?.items || []
-      updatedUserConvos.push({
-        conversationId: convId,
-        user: user!,
-        userId: user?.id || '',
-        conversation: newRelevantConvo
-      })
-      setUser({ ...user, conversations: { items: updatedUserConvos } })
-    }
-    // addConversation(newRelevantConvo)
+    setUser({ ...user, conversations: { items: [...(user?.conversations?.items || []), newRelevantConvo] } })
   }
 
   useEffect(() => {
@@ -64,13 +54,14 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
     return () => {
       updateUnreadMessageSubscription?.current?.unsubscribe()
     }
-  }, [])
+  }, [chatState.conversationId])
 
   const checkUserConversations = (newConvoId: string) => {
     return user?.conversations?.items.some(item => item.conversationId === newConvoId) || false
   }
 
   const checkOpenConversation = (newConvoId: string) => {
+    debugger
     return newConvoId === chatState.conversationId || newConvoId === conversationId
   }
 
@@ -79,10 +70,6 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
       return
     }
     const newMessageConversationId = onCreateGlobalMessage.conversationId
-    // console.log('UNREAD')
-    // console.log('oneofmyconvos', checkUserConversations(newMessageConversationId))
-    // console.log('one of myopen conovs', checkOpenConversation(newMessageConversationId))
-    // console.log(onCreateGlobalMessage?.conversation?.members?.includes?.(user?.id))
     // increment the unread messages unless you're on the chat where the new message came in
     if (
       checkUserConversations(newMessageConversationId) &&
@@ -104,6 +91,8 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
   }
 
   const setupUnreadSubscription = async () => {
+    updateUnreadMessageSubscription.current?.unsubscribe()
+
     updateUnreadMessageSubscription.current = graphQLSubscription(
       onCreateGlobalMessageMin,
       {},

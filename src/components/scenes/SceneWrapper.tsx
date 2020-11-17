@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 
 import { Connect, ContactForm } from 'components'
 import { ExploreScene, WelcomeScene } from './index'
-import { GameFlowSteps, IUser, IDemo, ETouchpoints } from 'types'
+import { GameFlowSteps, IUser, IDemo, ETouchpoints, EventStages } from 'types'
 import { Demo } from '../demo'
 import { Touchpoints } from '../touchpoints'
 import { ISession } from '../../helpers'
@@ -24,6 +24,7 @@ interface ISceneWrapper {
   user?: IUser
   setErrorMessage: (message: string | null) => void
   setSuccessMessage: (message: string | null) => void
+  eventStage?: EventStages
 }
 export const SceneWrapper: FC<ISceneWrapper> = ({
   user,
@@ -38,7 +39,8 @@ export const SceneWrapper: FC<ISceneWrapper> = ({
   changeScene,
   changeActiveTouchpoint,
   setSuccessMessage,
-  setErrorMessage
+  setErrorMessage,
+  eventStage
 }) => {
   const [transition, setTransition] = useState<boolean>(true)
   const [previousState, setPreviousState] = useState<GameFlowSteps>(activeScene)
@@ -107,7 +109,9 @@ export const SceneWrapper: FC<ISceneWrapper> = ({
         />
       )}
       {activeScene === GameFlowSteps.Demo && <Demo setScene={changeScene} demo={activeDemo} user={user} />}
-      {activeScene === GameFlowSteps.Session && <Session setScene={changeScene} session={activeSession} />}
+      {activeScene === GameFlowSteps.Session && (
+        <Session setScene={changeScene} session={activeSession} eventStage={eventStage} />
+      )}
     </>
   )
 }

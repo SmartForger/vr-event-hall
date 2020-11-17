@@ -45,9 +45,6 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
     initialConvoId = chatState?.conversationId || ''
   }
 
-  console.log('initial conversation id: ' + initialConvoId)
-
-  let [currentConversationId, setConversationId] = useState<string>(initialConvoId)
   const listRef = useRef<VariableSizeProps>()
 
   let subscription = useRef<ISubscriptionObject | null>(null)
@@ -56,7 +53,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
   const addNewMessage = ({ onCreateMessage }) => {
     if (internal && videoChat && onCreateMessage.conversationId === videoChatState?.session?.icId) {
       setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
-    } else if (videoChat && onCreateMessage.conversationId === currentConversationId) {
+    } else if (videoChat && onCreateMessage.conversationId === videoChatState.conversationId) {
       setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
     } else if (!videoChat && onCreateMessage.conversationId === chatState?.conversationId) {
       setMessages(prevMessageList => [...prevMessageList, onCreateMessage])
@@ -75,44 +72,45 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
 
   const getConversationDetails = async () => {
     const conversation = await graphQLQuery(getConversationFiltered, 'getConversation', {
-      id: currentConversationId
+      id: chatState.conversationId
     })
+
     if (conversation && conversation.messages) {
       setMessages(conversation.messages.items.filter(message => message.deleted !== 'true'))
     }
 
     subscription.current = graphQLSubscription(
       onCreateMessageWithAuthor,
-      { conversationId: currentConversationId },
+      { conversationId: chatState.conversationId },
       addNewMessage
     )
 
     updateSubscription.current = graphQLSubscription(
       onUpdateMessageWithAuthor,
-      { conversationId: currentConversationId },
+      { conversationId: chatState.conversationId },
       messageUpdated
     )
   }
 
   useEffect(() => {
-    if (currentConversationId) {
+    if (chatState.conversationId) {
       subscription?.current?.unsubscribe()
       updateSubscription?.current?.unsubscribe()
       getConversationDetails()
-      dispatch({ type: 'CLEAR_UNREAD_CONVO_MESSAGE', payload: { conversationId: currentConversationId } })
+      dispatch({ type: 'CLEAR_UNREAD_CONVO_MESSAGE', payload: { conversationId: chatState.conversationId } })
     }
     // eslint-disable-next-line
-  }, [currentConversationId])
+  }, [chatState.conversationId])
 
   // if this changes after initial load (stream player)
   // then we should set the new conversation id
-  useEffect(() => {
-    if (!internal && videoChatState.conversationId) {
-      setConversationId(videoChatState.conversationId)
-    } else if (internal && videoChatState.icId && isUserAdmin(user)) {
-      setConversationId(videoChatState?.session?.icId || videoChatState.icId)
-    }
-  }, [videoChatState.conversationId, videoChatState?.session?.icId])
+  // useEffect(() => {
+  //   // if (!internal && videoChatState.conversationId) {
+  //   //   setConversationId(videoChatState.conversationId)
+  //   // } else if (internal && videoChatState.icId && isUserAdmin(user)) {
+  //   //   setConversationId(videoChatState?.session?.icId || videoChatState.icId)
+  //   // }
+  // }, [videoChatState.conversationId, videoChatState?.session?.icId])
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -137,7 +135,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
   return (
     <div className={classes.root}>
       <MessageList listRef={listRef} isInternal={internal} messages={messages} isVideoChat={videoChat} />
-      <MessageInput userId={user?.id || ''} internal={internal} conversationId={currentConversationId} />
+      <MessageInput userId={user?.id || ''} internal={internal} conversationId={chatState.conversationId} />
     </div>
   )
 }

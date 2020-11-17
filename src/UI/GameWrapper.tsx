@@ -305,7 +305,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
   useEffect(() => {
     if (postLiveStream !== undefined) {
       setBreakoutNoticeOpen(postLiveStream)
-      setESSClosed(postLiveStream === true)
+      setESSClosed(postLiveStream)
     }
   }, [postLiveStream])
 
@@ -460,6 +460,7 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
               drawerOpen={drawerOpen}
               setSuccessMessage={setSuccessMessage}
               setErrorMessage={setErrorMessage}
+              eventStage={eventStage}
             />
             <ProfileMenu
               toggleTutorial={() => toggleTutorial(true)}

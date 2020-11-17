@@ -19,6 +19,7 @@ import { ResetConfirm } from './ResetConfirm'
 import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
 import { getUser, listSessions, listAdminUsers } from 'graphql/queries'
 import { updateUser, createAdminLink, deleteAdminLink } from 'graphql/mutations'
+import { updateUserBase } from 'graphql/customMutations'
 import { useAppState } from 'providers'
 
 // Types
@@ -176,14 +177,18 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const updateUserData = async () => {
     try {
       setLoading(true)
-      await graphQLMutation(updateUser, {
-        id: profileInfo?.id,
-        firstName: profileInfo?.firstName,
-        lastName: profileInfo?.lastName,
-        title: profileInfo?.title,
-        online: profileInfo?.online
-      })
-      setUser(profileInfo!)
+      const updatedUser = await graphQLMutation(
+        updateUserBase,
+        {
+          id: profileInfo?.id,
+          firstName: profileInfo?.firstName,
+          lastName: profileInfo?.lastName,
+          title: profileInfo?.title,
+          online: profileInfo?.online
+        },
+        'updateUser'
+      )
+      setUser(updatedUser)
       await getProfileInfo(profileInfo!.id as string)
       setEditModeState(false)
       setLoading(false)
@@ -318,7 +323,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   }
 
   useEffect(() => {
-    if (profileInfo?.online !== undefined) {
+    if (profileInfo?.online !== authedUser?.online) {
       updateUserData()
     }
   }, [profileInfo?.online])
@@ -347,7 +352,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
             <Typography>Live Chat</Typography>
           </div>
           <div>
-            {profileInfo && (
+            {profileInfo?.id === authedUser?.id && (
               <Switch color='primary' checked={profileInfo?.online || false} onChange={toggleOnlineStatus} />
             )}
           </div>

@@ -109,6 +109,7 @@ type Message
   conversation: Conversation @connection(fields: ["conversationId"])
   # will still be true or false but Booleans are not indexable in dynamo
   deleted: String!
+  recipientId: ID
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -184,6 +185,8 @@ enum EventStage {
   PRESHOW
   COUNTDOWN
   LIVESTREAM
+  LIVESTREAMENDING
+  POSTLIVESTREAM
   POSTSHOW
 }
 
@@ -310,10 +313,11 @@ type VideoChatInvite @model(subscriptions: null) {
 }
 
 type Subscription {
-  onCreateConvoLink(convoLinkUserId: ID!): ConvoLink @aws_subscribe(mutations: ["createConvoLink"])
+  onCreateConvoLink(userId: ID!): ConvoLink @aws_subscribe(mutations: ["createConvoLink"])
   onCreateMessage(conversationId: ID!): Message @aws_subscribe(mutations: ["createMessage"])
   onUpdateMessage(conversationId: ID!): Message @aws_subscribe(mutations: ["updateMessage"])
   onCreateGlobalMessage: Message @aws_subscribe(mutations: ["createMessage"])
+  onCreateUserMessage(recipientId: ID!): Message @aws_subscribe(mutations: ["createMessage"])
   onCreateUser: User @aws_subscribe(mutations: ["createUser"])
   onCreateNotification: Notification @aws_subscribe(mutations: ["createNotification"])
   onUpdateSession(id: ID!): Session @aws_subscribe(mutations: ["updateSession"])
