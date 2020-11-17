@@ -56,17 +56,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'calc(100% - 105px)',
     width: 'calc(50% - 12.5% - 32px)',
     padding: '0 0 0 12.5%',
-    paddingTop: '120px',
+    paddingTop: '250px',
     top: '105px',
     position: 'absolute',
     backgroundColor: 'transparent',
     zIndex: 1300,
     color: '#000',
 
+    [`${theme.breakpoints.down('md')}, screen and (max-height: 720px)`]: {
+      paddingTop: '140px'
+    },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       height: 'calc(100vh - 65px)',
-      paddingLeft: '4rem',
       top: 65,
+      paddingTop: '120px',
+      paddingLeft: '4rem',
       width: '40vw'
     }
   },

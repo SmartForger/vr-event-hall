@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflowY: 'auto',
     zIndex: 1300,
     color: '#000',
-    padding-top: '140px',
+    paddingTop: '140px',
     [theme.breakpoints.down('lg')]: {
       padding: '0 12.5% 0 10%',
       paddingTop: '120px'
