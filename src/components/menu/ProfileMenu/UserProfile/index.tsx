@@ -269,7 +269,15 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
 
     if (files && files[0]) {
       const file = files[0]
-      setFile(file)
+
+      if (['image/jpeg', 'image/png'].includes(file.type)) {
+        setFile(file)
+      } else {
+        setTemporaryMessage({
+          message: 'Invalid file type.',
+          severity: 'error'
+        })
+      }
     }
   }
 
