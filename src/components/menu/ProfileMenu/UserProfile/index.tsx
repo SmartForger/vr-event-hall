@@ -323,7 +323,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   }
 
   useEffect(() => {
-    if (profileInfo?.online !== undefined) {
+    if (profileInfo?.online !== authedUser?.online) {
       updateUserData()
     }
   }, [profileInfo?.online])

@@ -45,8 +45,6 @@ export const ChatMessages: FC<ChatMessagesProps> = ({ internal, videoChat, isLiv
     initialConvoId = chatState?.conversationId || ''
   }
 
-  console.log('initial conversation id: ' + initialConvoId)
-
   const listRef = useRef<VariableSizeProps>()
 
   let subscription = useRef<ISubscriptionObject | null>(null)
