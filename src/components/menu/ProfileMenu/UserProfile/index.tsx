@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import Promise from 'bluebird'
 import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton, Switch } from '@material-ui/core'
+import classnames from 'classnames'
 
 // Plugins
 import classNames from 'classnames'
@@ -57,7 +58,8 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const classes = useStyles()
   const history = useHistory()
   const {
-    appState: { user: authedUser }
+    appState: { user: authedUser },
+    setUser
   } = useAppState()
 
   const [showSecretManageTools, setSecretManagementToolsVisible] = useState<boolean>()
@@ -173,30 +175,18 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
 
   const updateUserData = async () => {
     try {
-      // if (acceptedFiles && acceptedFiles[0]) {
-      //   const file = acceptedFiles[0]
-      //   const avatar = `${userInfo.id}.${file.type.split('/')[1]}`
-
-      //   // eslint-disable-next-line
-      //   await Promise.all([
-      //     Storage.put(avatar, file, { level: 'public', contentType: file.type }),
-      //     graphQLMutation(createUser, {
-      //       ...userInfo,
-      //       email: lowerCaseEmail,
-      //       avatar
-      //     })
-      //   ])
-      // } else {
-      //   await graphQLMutation(createUser, { ...userInfo, email: lowerCaseEmail })
-      // }
-
+      setLoading(true)
       await graphQLMutation(updateUser, {
         id: profileInfo?.id,
         firstName: profileInfo?.firstName,
         lastName: profileInfo?.lastName,
-        title: profileInfo?.title
+        title: profileInfo?.title,
+        online: profileInfo?.online
       })
+      setUser(profileInfo!)
+      await getProfileInfo(profileInfo!.id as string)
       setEditModeState(false)
+      setLoading(false)
     } catch (e) {
       console.log(e)
       return
@@ -327,6 +317,16 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     }
   }
 
+  useEffect(() => {
+    if (profileInfo?.online !== undefined) {
+      updateUserData()
+    }
+  }, [profileInfo?.online])
+
+  const toggleOnlineStatus = (event, checked) => {
+    setProfileInfo({ ...profileInfo, online: checked })
+  }
+
   const profileDisplay = (
     <>
       <img src={profileBg} alt='profile background' />
@@ -348,11 +348,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           </div>
           <div>
             {profileInfo && (
-              <Switch
-                color='primary'
-                checked={profileInfo?.online || false}
-                onChange={(event, checked) => setProfileInfo({ ...profileInfo, online: checked })}
-              />
+              <Switch color='primary' checked={profileInfo?.online || false} onChange={toggleOnlineStatus} />
             )}
           </div>
         </div>
@@ -613,6 +609,12 @@ const useStyles = makeStyles(theme => ({
   },
   liveChat: {
     flex: 1
+  },
+  switchColor: {
+    color: 'red'
+  },
+  onlineIndicator: {
+    position: 'absolute'
   },
   uploadContainer: {
     position: 'relative'
