@@ -12,6 +12,7 @@ import { VariableSizeProps } from 'react-window'
 
 // Components
 import { PillButton } from 'components'
+import { ResetConfirm } from './ResetConfirm'
 
 // Helpers
 import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
@@ -69,6 +70,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const [isUploadingAvatar, setIsUploadingAvatar] = useState<boolean>(false)
   const [readyForProfileUpdate, setReadyForProfileUpdate] = useState<boolean>(true)
   const [temporaryMessage, setTemporaryMessage] = useState<TemporaryMessage>({ message: '', severity: 'success' })
+  const [showModal, setShowModal] = useState<boolean>(false)
 
   const listRef = useRef<VariableSizeProps>()
 
@@ -269,7 +271,59 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
 
     if (files && files[0]) {
       const file = files[0]
-      setFile(file)
+
+      if (['image/jpeg', 'image/png'].includes(file.type)) {
+        setFile(file)
+      } else {
+        setTemporaryMessage({
+          message: 'Invalid file type.',
+          severity: 'error'
+        })
+      }
+    }
+  }
+
+  const handleResetImage = () => {
+    let cancelled = false
+
+    if (avatarUrl && profileInfo) {
+      setIsUploadingAvatar(true)
+
+      Promise.all([
+        graphQLMutation(updateUser, {
+          id: profileInfo.id,
+          avatar: ''
+        })
+      ])
+        .then(() => {
+          if (!cancelled) {
+            setTemporaryMessage({
+              message: 'Image reset successfully!',
+              severity: 'success'
+            })
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setTemporaryMessage({
+              message: 'We ran into an error resetting your image. Please try again.',
+              severity: 'error'
+            })
+          }
+        })
+        .finally(() => {
+          if (!cancelled) {
+            setIsUploadingAvatar(false)
+            setProfileInfo({ ...profileInfo, avatar: '' })
+            setAvatarUrl('')
+            setShowModal(false)
+          }
+        })
+    }
+
+    return () => {
+      // Prevent state updates if user closes drawer while uploading file
+      cancelled = true
     }
   }
 
@@ -336,9 +390,16 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           />
         </Grid>
         <Grid item xs={8}>
-          <UploadButton accept='image/jpeg, image/png' loading={isUploadingAvatar} onChange={handleFileChange}>
-            {isUploadingAvatar ? 'Uploading...' : 'Upload image'}
-          </UploadButton>
+          <div className={classes.uploadContainer}>
+            <UploadButton accept='image/jpeg, image/png' loading={isUploadingAvatar} onChange={handleFileChange}>
+              {isUploadingAvatar ? 'Uploading...' : 'Upload image'}
+            </UploadButton>
+            {avatarUrl && (
+              <Button className={classes.resetButton} size='small' onClick={() => setShowModal(true)}>
+                Reset image
+              </Button>
+            )}
+          </div>
         </Grid>
       </Grid>
 
@@ -437,6 +498,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     <div className={classes.root}>
       {!editModeState && profileDisplay}
       {editModeState && editModeDispaly}
+      {showModal && <ResetConfirm showModal={showModal} setShowModal={setShowModal} onSubmit={handleResetImage} />}
     </div>
   )
 }
@@ -551,5 +613,17 @@ const useStyles = makeStyles(theme => ({
   },
   liveChat: {
     flex: 1
+  },
+  uploadContainer: {
+    position: 'relative'
+  },
+  resetButton: {
+    fontFamily: 'Verizon-Regular',
+    fontSize: '12px',
+    position: 'absolute',
+    padding: '2px 10px',
+    margin: 0,
+    bottom: 6,
+    right: 55
   }
 }))
