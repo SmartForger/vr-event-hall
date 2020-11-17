@@ -6,9 +6,9 @@ export const mecExplainer: IDemo = {
   conversationId: 'e23af63b-2c83-44e2-87cb-43207209feed',
   video: 'MECExplained_v1.mp4',
   end: {
-    header: 'Multi-access edge computing explained by IndyCar champion Will Power',
+    header: 'Harness the cloud.',
     body:
-      '',
+      '5G Edge puts the power of the cloud right into the Verizon network - bringing computing power closer to where it’s needed. It’s the world’s first mobile edge compute platform with AWS Wavelength.',
     expert: '',
     nextDemoText: 'Speed of Thought',
     nextDemo: E3DDemoNameVals.sot,
