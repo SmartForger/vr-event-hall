@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 import { Scene } from 'babylonjs/scene'
 import { useWindowSize } from 'react-use'
 import { I18n } from 'aws-amplify'
 import { Step } from 'react-joyride'
-import { Grid, makeStyles, Snackbar, Typography } from '@material-ui/core'
+import { Grid, makeStyles, Snackbar, Typography, Box, IconButton } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
+import { Close } from '@material-ui/icons'
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
 import { menuDrawerOpen, toggleDrawer } from 'redux/menu'
@@ -52,6 +53,7 @@ import {
 import { Demos } from '../helpers/demos'
 import { Alert } from '@material-ui/lab'
 import { VideoChatProvider } from 'providers'
+import { E3DSessionNameVals } from 'types'
 import { JoyrideTutorialStyles } from '../components/shared/tutorial/JoyrideTutorialStyles'
 import { useBrowserCache } from '../hooks'
 import { RosterProvider } from 'providers/RosterProvider'
@@ -69,12 +71,20 @@ interface IModalConfig {
 interface GameWrapperProps {
   user?: IUser
   users?: IUser[]
+  postLiveStream?: boolean
   eventStage?: EventStages
   streamStartTime?: string
   vcOff?: boolean
 }
 
-export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStage, streamStartTime, vcOff }) => {
+export const GameWrapper: React.FC<GameWrapperProps> = ({
+  user,
+  users,
+  eventStage,
+  streamStartTime,
+  postLiveStream,
+  vcOff
+}) => {
   const dispatch = useDispatch()
 
   // Selectors
@@ -82,6 +92,8 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
   const history = useHistory()
   const { width } = useWindowSize()
   const classes = useStyles()
+  const [openBreakoutNotice, setBreakoutNoticeOpen] = useState(postLiveStream)
+  const [reservedBreakoutSession, setReservedBreakoutSession] = useState<ISession | undefined>()
 
   const localStorage = window.localStorage
   const [eventStartingSoon, setEventStartingSoonState] = useState<boolean>(false)
@@ -368,6 +380,35 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
     setActiveSession(session)
   }, [gameLoading])
 
+  const getDetailsForReservedBreakoutSession = async () => {
+    let reservedSessionId = user?.sessions?.items?.[0]
+    if (reservedSessionId) {
+      setReservedBreakoutSession(findSessionById(reservedSessionId))
+    }
+  }
+
+  useEffect(() => {
+    getDetailsForReservedBreakoutSession()
+  }, [openBreakoutNotice])
+
+  const goToReservedSession = () => {
+    // go to one set or go to the generic sessions page
+    if (reservedBreakoutSession) {
+      window.postMessage(`{"command":"sessions", "param": "${reservedBreakoutSession?.sceneKey}"`, '*')
+    } else {
+      setGameState(GameFlowSteps.Sessions)
+    }
+    history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')
+  }
+
+  const session: ISession | null = useMemo(() => {
+    // return Sessions.healthcareInsurance
+    if (!user || !user.sessions || !user.sessions.items) {
+      return null
+    }
+    return findSessionById(user.sessions.items[0]?.sessionId) || null
+  }, [user])
+
   return (
     <div id='game' className={classes.gameContainer}>
       <iframe
@@ -506,6 +547,43 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({ user, users, eventStag
               </ToastAlert>
             ) : null}
 
+            {/* Post-Livestream Breakout Notice */}
+            {openBreakoutNotice && (
+              <div className={classes.modal}>
+                <div className={classes.modalBody}>
+                  <Box p={4}>
+                    <Box mb={4} mt={2}>
+                      <Typography style={{ color: '#000' }} variant='h4'>
+                        {session ? 'Join your breakout session.' : 'Join a breakout session.'}
+                      </Typography>
+                    </Box>
+                    <Typography style={{ color: '#000' }}>
+                      {session
+                        ? `Your breakout session for ${I18n.get(
+                            `breakoutSessionName-${reservedBreakoutSession}`
+                          )} is starting soon. Click below to join your session. If you do not join within 5 minutes you may lose your seat to a guest on the waitlist.`
+                        : `It’s almost time to hear how your business can take advantage of the full, transformative power of Verizon 5G Ultra Wideband. Let our experts to take you on a deeper dive into vertical-specific use cases to demonstrate how Verizon 5G can benefit you. Each session includes a live Q&A. Click below to see which sessions are available to join.`}
+                    </Typography>
+                    <Box>
+                      <PillButton
+                        type='button'
+                        className='button'
+                        variant='outlined'
+                        textColor='white'
+                        backgroundColor='black'
+                        onClick={() => goToReservedSession()}
+                      >
+                        {session ? 'Join session' : 'Pick your breakout session'}
+                      </PillButton>
+                    </Box>
+                  </Box>
+                  <IconButton className={classes.closeButtonModal} onClick={() => setBreakoutNoticeOpen(false)}>
+                    <Close />
+                  </IconButton>
+                </div>
+              </div>
+            )}
+
             {/* Toast for Notice */}
             <ToastAlert type='notice' isOpen={!!activeNotice?.type} onClose={() => setActiveNotice({})}>
               <Grid container>
@@ -580,5 +658,27 @@ const useStyles = makeStyles({
   frameContainer: {
     marginTop: 60,
     height: 'calc(100vh - 60px)'
+  },
+  modal: {
+    position: 'fixed',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    zIndex: 9999,
+    height: '100vh',
+    width: '100vw',
+    top: 0,
+    left: 0
+  },
+  modalBody: {
+    backgroundColor: '#fff',
+    width: 560,
+    position: 'relative'
+  },
+  closeButtonModal: {
+    position: 'absolute',
+    right: 0,
+    top: 0
   }
 })

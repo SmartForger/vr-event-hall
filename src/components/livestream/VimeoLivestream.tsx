@@ -42,11 +42,11 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
   const classes = useStyles()
   const history = useHistory()
   const {
-    appState: { user }
+    appState: { user },
+    setPostLiveStream
   } = useAppState()
 
   const [redirectTrigger, setRedirectTrigger] = useState<boolean>(false)
-  const [openModal, setOpenModal] = useState(false)
   const [qaDialogOpen, setQADialogOpen] = useState<boolean>(false)
   const [tabValue, setTabValue] = useState<number>(0)
   const [isAdmin, setAdmin] = useState<boolean>(false)
@@ -55,22 +55,6 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
   const { videoChatState, dispatch } = useVideoChatContext()
   const [currentSession, setCurrentSession] = useState<ISession | null>(null)
   const [participantId, setParticipantId] = useState<string>('')
-
-  const session: ISession | null = useMemo(() => {
-    // return Sessions.healthcareInsurance
-    if (!user || !user.sessions || !user.sessions.items) {
-      return null
-    }
-    return findSessionById(user.sessions.items[0]?.sessionId) || null
-  }, [user])
-
-  const sessionName = useMemo(() => {
-    try {
-      return session?.side.header.slice(-1) === '.' ? session?.side.header.slice(0, -1) : session?.side.header
-    } catch (e) {
-      return ''
-    }
-  }, [session])
 
   const setLoading = useCallback((payload: boolean) => dispatch({ type: 'SET_LOADING', payload }), [])
 
@@ -209,14 +193,12 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
     }
   }, [videoChatState?.session?.admins])
 
-  // TODO: this should be moved to the Game Wrapper and
-  // instead have a function prop trigger this from here
-  const goToSession = (session: ISession | null) => {
+  const exit = () => {
     if (participantId) {
-      console.log('DELETE')
       graphQLMutation(deleteSessionParticipantMin, { id: participantId })
     }
-    history.push(session ? `/event/?sessionId=${session.id}` : '/event/?sessionId=home')
+    setPostLiveStream(true)
+    history.push(`/event`)
   }
 
   return (
@@ -225,7 +207,7 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
         <div className={showChatDrawer ? classes.streamSideWithChat : classes.streamSideFull}>
           <IconButton
             className={classes.closeButton}
-            onClick={() => setOpenModal(true)}
+            onClick={() => exit()}
             disableFocusRipple
             disableRipple
             disableTouchRipple
@@ -318,41 +300,6 @@ const VimeoLiveStream: FC<VimeoLiveStreamProps> = ({ useBackupStream, eventStage
         )}
       </div>
       <RouteTransition animationTrigger={redirectTrigger} route='/event' timeout={300} />
-      {/* TODO: Move this to gamewrapper */}
-      {openModal && (
-        <div className={classes.modal}>
-          <div className={classes.modalBody}>
-            <Box p={4}>
-              <Box mb={4} mt={2}>
-                <Typography style={{ color: '#000' }} variant='h4'>
-                  {session ? 'Join your breakout session.' : 'Join a breakout session.'}
-                </Typography>
-              </Box>
-              <Typography style={{ color: '#000' }}>
-                {session
-                  ? `Your breakout session for ${sessionName} is starting soon. Click below to join your session. If you do not join within 5 minutes you may lose your seat to a guest on the waitlist.`
-                  : `It’s almost time to hear how your business can take advantage of the full, transformative power of Verizon 5G Ultra Wideband. Let our experts to take you on a deeper dive into vertical-specific use cases to demonstrate how Verizon 5G can benefit you. Each session includes a live Q&A. Click below to see which sessions are available to join.`}
-              </Typography>
-              <Box>
-                <PillButton
-                  type='button'
-                  className='button'
-                  variant='outlined'
-                  textColor='white'
-                  backgroundColor='black'
-                  onClick={() => goToSession(session)}
-                  classes={{ root: classes.toastESSButton }}
-                >
-                  {session ? 'Join session' : 'Pick your breakout session'}
-                </PillButton>
-              </Box>
-            </Box>
-            <IconButton className={classes.closeButtonModal} onClick={() => setOpenModal(false)}>
-              <Close />
-            </IconButton>
-          </div>
-        </div>
-      )}
     </PollProvider>
   )
 }
@@ -387,28 +334,6 @@ const useStyles = makeStyles(() => ({
     '& svg': {
       color: '#fff'
     }
-  },
-  modal: {
-    position: 'fixed',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    zIndex: 9999,
-    height: '100vh',
-    width: '100vw',
-    top: 0,
-    left: 0
-  },
-  modalBody: {
-    backgroundColor: '#fff',
-    width: 560,
-    position: 'relative'
-  },
-  closeButtonModal: {
-    position: 'absolute',
-    right: 0,
-    top: 0
   },
   toastESSButton: {
     height: '24px',

@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify'
 import { Demos } from './helpers/demos'
-import { GameFlowSteps, ETouchpoints, E3DDemoNameVals } from './types'
+import { GameFlowSteps, ETouchpoints, E3DDemoNameVals, E3DSessionNameVals } from './types'
 import { Sessions } from './helpers'
 import { createUserInteraction } from './graphql/mutations'
 import { graphQLMutation } from './graphql/helpers'
@@ -164,19 +164,19 @@ export default class Receiver {
             case 'sessions':
               let newSession
               switch (JSONdata!.param) {
-                case '1':
-                  newSession = Sessions['healthcareInsurance']
+                case E3DSessionNameVals.healthcareInsurance:
+                  newSession = Sessions.healthcareInsurance
                   break
-                case '2':
-                  newSession = Sessions['retailTravelDistribution']
+                case E3DSessionNameVals.retailTravelDistribution:
+                  newSession = Sessions.retailTravelDistribution
                   break
-                case '3':
+                case E3DSessionNameVals.financialServices:
                   newSession = Sessions.financialServices
                   break
-                case '4':
+                case E3DSessionNameVals.manufacturingEnergyUtilities:
                   newSession = Sessions.manufacturingEnergyUtilities
                   break
-                case '5':
+                case E3DSessionNameVals.mediaEntertainmentTech:
                   newSession = Sessions.mediaEntertainmentTech
                   break
               }

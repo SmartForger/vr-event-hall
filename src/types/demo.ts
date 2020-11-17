@@ -89,3 +89,12 @@ export enum E3DDemoNameVals {
   crowdVision = '11',
   zixi = '12'
 }
+
+export enum E3DSessionNameVals {
+  unknown = '0',
+  healthcareInsurance = '1',
+  retailTravelDistribution = '1',
+  financialServices = '1',
+  manufacturingEnergyUtilities = '1',
+  mediaEntertainmentTech = '1'
+}
