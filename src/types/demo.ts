@@ -93,8 +93,8 @@ export enum E3DDemoNameVals {
 export enum E3DSessionNameVals {
   unknown = '0',
   healthcareInsurance = '1',
-  retailTravelDistribution = '1',
-  financialServices = '1',
-  manufacturingEnergyUtilities = '1',
-  mediaEntertainmentTech = '1'
+  retailTravelDistribution = '2',
+  financialServices = '3',
+  manufacturingEnergyUtilities = '4',
+  mediaEntertainmentTech = '5'
 }

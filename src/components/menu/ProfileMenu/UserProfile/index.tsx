@@ -3,7 +3,8 @@ import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from '
 import { useHistory } from 'react-router-dom'
 
 import Promise from 'bluebird'
-import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton } from '@material-ui/core'
+import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton, Switch } from '@material-ui/core'
+import classnames from 'classnames'
 
 // Plugins
 import classNames from 'classnames'
@@ -57,7 +58,8 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const classes = useStyles()
   const history = useHistory()
   const {
-    appState: { user: authedUser }
+    appState: { user: authedUser },
+    setUser
   } = useAppState()
 
   const [showSecretManageTools, setSecretManagementToolsVisible] = useState<boolean>()
@@ -173,30 +175,18 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
 
   const updateUserData = async () => {
     try {
-      // if (acceptedFiles && acceptedFiles[0]) {
-      //   const file = acceptedFiles[0]
-      //   const avatar = `${userInfo.id}.${file.type.split('/')[1]}`
-
-      //   // eslint-disable-next-line
-      //   await Promise.all([
-      //     Storage.put(avatar, file, { level: 'public', contentType: file.type }),
-      //     graphQLMutation(createUser, {
-      //       ...userInfo,
-      //       email: lowerCaseEmail,
-      //       avatar
-      //     })
-      //   ])
-      // } else {
-      //   await graphQLMutation(createUser, { ...userInfo, email: lowerCaseEmail })
-      // }
-
+      setLoading(true)
       await graphQLMutation(updateUser, {
         id: profileInfo?.id,
         firstName: profileInfo?.firstName,
         lastName: profileInfo?.lastName,
-        title: profileInfo?.title
+        title: profileInfo?.title,
+        online: profileInfo?.online
       })
+      setUser(profileInfo!)
+      await getProfileInfo(profileInfo!.id as string)
       setEditModeState(false)
+      setLoading(false)
     } catch (e) {
       console.log(e)
       return
@@ -327,6 +317,16 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     }
   }
 
+  useEffect(() => {
+    if (profileInfo?.online !== undefined) {
+      updateUserData()
+    }
+  }, [profileInfo?.online])
+
+  const toggleOnlineStatus = (event, checked) => {
+    setProfileInfo({ ...profileInfo, online: checked })
+  }
+
   const profileDisplay = (
     <>
       <img src={profileBg} alt='profile background' />
@@ -341,6 +341,18 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           <span className={classes.dotSeperator} />
           <span>{profileInfo?.title}</span>
         </div>
+
+        <div className={classes.liveChatContainer}>
+          <div className={classes.liveChat}>
+            <Typography>Live Chat</Typography>
+          </div>
+          <div>
+            {profileInfo && (
+              <Switch color='primary' checked={profileInfo?.online || false} onChange={toggleOnlineStatus} />
+            )}
+          </div>
+        </div>
+
         <Button
           startIcon={<img src={iconEditProfile} alt='Edit profile' width='18px' />}
           onClick={() => setEditModeState(true)}
@@ -586,6 +598,23 @@ const useStyles = makeStyles(theme => ({
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       width: '10px'
     }
+  },
+  liveChatContainer: {
+    height: 42,
+    backgroundColor: '#F6F6F6',
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: 16,
+    paddingRight: 16
+  },
+  liveChat: {
+    flex: 1
+  },
+  switchColor: {
+    color: 'red'
+  },
+  onlineIndicator: {
+    position: 'absolute'
   },
   uploadContainer: {
     position: 'relative'

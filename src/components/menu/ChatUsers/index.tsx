@@ -39,7 +39,8 @@ export const ChatUsers: FC<ChatUsersProps> = ({ toggleDrawer }) => {
       users.filter(
         u =>
           u.id !== user?.id &&
-          !user?.conversations?.items?.some(convo => convo?.conversation?.members.includes(u.id as string))
+          user?.online &&
+          !user?.conversations?.items?.some(convo => convo?.conversation?.members?.includes?.(u.id as string))
       ),
       'firstName'
     )
