@@ -204,6 +204,7 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     backdrop: {
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
       display: 'none',
       zIndex: theme.zIndex.drawer - 1,
 
@@ -229,6 +230,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
         width: '256px',
+        top: 52,
         overflowX: 'unset'
       }
     },
@@ -241,7 +243,8 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '64px',
 
       [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-        width: '0'
+        width: '0',
+        top: 52
       }
     },
     header: {
@@ -259,11 +262,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
 
       [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-        minHeight: 52,
-        maxHeight: 52,
-        '& img': {
-          display: 'none'
-        }
+        display: 'none'
       }
     },
     footer: {
@@ -283,7 +282,12 @@ const useStyles = makeStyles((theme: Theme) =>
     messagePaper: {
       '&.MuiPaper-root': {
         backgroundColor: 'white !important',
-        marginTop: '60px'
+        marginTop: '60px',
+
+        [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+          marginTop: 52,
+          boxShadow: 'none'
+        }
       }
     },
     displayMenu: {
@@ -291,7 +295,12 @@ const useStyles = makeStyles((theme: Theme) =>
       color: 'white',
       height: 'calc(100% - 60px)',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+
+      [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+        width: '256px',
+        height: 'calc(100% - 52px)'
+      }
     },
     tabPanel: { flex: 1 },
     userCloseContainer: {

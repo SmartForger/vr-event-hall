@@ -8,8 +8,8 @@ export const ybvr: IDemo = {
   end: {
     header: 'Transforming the fan experience.',
     body:
-      '',
-    qr: '5GQR.png',
+      'For years, the ambitions of innovative organizations have outpaced the cloud’s ability to meet them. Not anymore. Introducing Verizon 5G Edge, the first mobile edge compute platform with AWS Wavelength in the world.',
+    qr: '',
     expert: '',
     nextDemoText: '5G Edge and data-driven decision making',
     nextDemo: E3DDemoNameVals.shotTracker,

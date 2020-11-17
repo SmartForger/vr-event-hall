@@ -200,7 +200,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: 'white !important',
       marginTop: '60px',
       [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-        marginTop: '40px'
+        marginTop: 52,
+        boxShadow: 'none'
       }
     }
   },
@@ -213,7 +214,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-      width: '256px'
+      width: '256px',
+      height: 'calc(100% - 52px)'
     }
   },
   toolbar: {
