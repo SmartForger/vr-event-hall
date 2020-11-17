@@ -12,6 +12,9 @@ const buttonStyles: React.CSSProperties = {
 }
 
 export const JoyrideTutorialStyles: Styles = {
+  options: {
+    overlayColor: 'transparent'
+  },
   tooltip: {
     borderRadius: 0
   },
