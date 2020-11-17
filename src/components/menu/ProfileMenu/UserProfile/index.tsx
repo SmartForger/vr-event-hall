@@ -58,7 +58,8 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const classes = useStyles()
   const history = useHistory()
   const {
-    appState: { user: authedUser }
+    appState: { user: authedUser },
+    setUser
   } = useAppState()
 
   const [showSecretManageTools, setSecretManagementToolsVisible] = useState<boolean>()
@@ -182,6 +183,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         title: profileInfo?.title,
         online: profileInfo?.online
       })
+      setUser(profileInfo!)
       await getProfileInfo(profileInfo!.id as string)
       setEditModeState(false)
       setLoading(false)
