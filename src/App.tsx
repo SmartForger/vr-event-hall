@@ -51,11 +51,9 @@ const App = () => {
   }
 
   const getEventConfiguration = async () => {
-    console.log(eventConfig)
     if (!eventConfig.attempts || eventConfig.attempts < 3) {
       try {
         const eventConfigData = await graphQLQuery(getEventConfig, 'getEventConfig', { id: eventConfig.id })
-        console.log(eventConfigData)
         setEventConfig({ ...eventConfigData })
         setStreamStartTime(eventConfigData.streamStartTime)
         setEventStage(eventConfigData.stage)
