@@ -128,6 +128,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
 
   const buildEndVideoSideLayout = content => (
     <Grid
+      item
       xs={12}
       md={4}
       lg={3}
@@ -137,7 +138,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
       container
       direction={'column'}
     >
-      <Grid xs={6} className={classes.endContentContainer} container alignItems='flex-start' direction='row'>
+      <Grid item xs={6} className={classes.endContentContainer} container alignItems='flex-start' direction='row'>
         {content.logo && (
           <Grid item xs={12}>
             <img src={require(`assets/demo/${content.logo}`)} alt={content.logo} />
@@ -512,12 +513,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: '4rem'
     },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-      paddingRight: '3rem',
-      paddingLeft: '3rem'
+      padding: ' 3rem 6rem 0 3rem'
     },
     [theme.breakpoints.only('xs')]: {
-      paddingRight: '2rem',
-      paddingLeft: '2rem'
+      padding: '0 2rem'
     }
   },
   centerContent: {
@@ -537,10 +536,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'block',
       fontSize: '.9em',
       justifyContent: 'flex-start',
-      padding: '0 2rem 0 1rem'
+      padding: '3rem 8rem 0 3rem'
     },
     [theme.breakpoints.only('xs')]: {
-      paddingRight: '2rem'
+      padding: '0 2rem'
     }
   },
   extraPaddingBottom: {

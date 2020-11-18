@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom'
 export const Footer = () => {
   const classes = useStyles()
   const location = useLocation()
-  console.log(location)
   return location.pathname.match(/stream/i) ? null : (
     <footer className={classes.footer}>
       <Grid container className={classes.container}>
