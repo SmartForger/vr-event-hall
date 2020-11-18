@@ -180,13 +180,24 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '2rem !important',
       lineHeight: '2rem',
       paddingBottom: '1rem'
+    },
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      paddingTop: 0,
+      paddingBottom: 0,
+      marginBottom: '1rem'
     }
   },
   thankYouHeading: {
-    paddingTop: '3rem'
+    paddingTop: '3rem',
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      paddingTop: '1rem'
+    }
   },
   optionWrapper: {
-    marginBottom: '1rem'
+    marginBottom: '1rem',
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      marginBottom: '.5rem'
+    }
   },
   option: {
     cursor: 'pointer',
@@ -194,6 +205,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: '1rem',
     [theme.breakpoints.down('md')]: {
       lineHeight: '2rem'
+    },
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      lineHeight: '1.2rem'
     }
   },
   selected: {
@@ -204,12 +218,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 600,
     color: 'white',
     position: 'relative',
-    left: '-10px'
+    left: '-10px',
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      marginTop: '1rem'
+    }
   },
   submitBtn: {
     marginBottom: 0
   },
   qr: {
-    paddingTop: '3rem'
+    paddingTop: '3rem',
+    [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      paddingTop: '1rem'
+    }
   }
 }))
