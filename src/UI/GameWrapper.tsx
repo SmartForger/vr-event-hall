@@ -26,7 +26,7 @@ import {
   Tutorial
 } from 'components'
 import { ToastAlert, Video } from 'components/shared'
-import { graphQLSubscription } from 'graphql/helpers'
+import { graphQLMutation, graphQLSubscription } from 'graphql/helpers'
 // TODO: rename once we  have the real thing
 import { onCreateNotification } from 'graphql/subscriptions'
 import Receiver from '../Receiver'
@@ -58,6 +58,7 @@ import { JoyrideTutorialStyles } from '../components/shared/tutorial/JoyrideTuto
 import { useBrowserCache } from '../hooks'
 import { RosterProvider } from 'providers/RosterProvider'
 import { VideoChatContainer } from 'components/videochat/VideoChatContainer'
+import { createUserInteraction } from '../graphql/mutations'
 
 interface IModalConfig {
   videoSrc?: string
@@ -282,6 +283,14 @@ export const GameWrapper: React.FC<GameWrapperProps> = ({
       setConversationId,
       user
     )
+
+    // Track when a user enters the event
+    graphQLMutation(createUserInteraction, {
+      name: 'welcome',
+      trigger: 'joined',
+      type: 'welcome',
+      userId: user?.id
+    })
 
     window.loadScene(defaultSceneFile)
 
