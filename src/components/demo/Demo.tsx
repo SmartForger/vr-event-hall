@@ -549,9 +549,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   endContentContainer: {
     maxWidth: '100%',
     minHeight: '50%',
-    '&:nth-child(2)': {
-      borderTop: '1px solid #DBDBDB'
-    },
     '& .MuiGrid-item': {
       padding: '5px 0'
     },
