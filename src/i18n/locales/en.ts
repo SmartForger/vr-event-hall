@@ -60,6 +60,8 @@ const registration: IRegistrationDict = {
   manager: 'Manager',
   staff: 'Staff',
   joinUs: 'Join us for 5G<br /> Innovation Sessions.',
+  registerToSecureYourSpot:
+    'By registering, you are securing your spot for the upcoming event on our virtual platform.',
   mailingAddress: 'Mailing address',
   mailingAddressReason:
     'If you would like to receive a complimentary program package, please provide your mailing address below.',

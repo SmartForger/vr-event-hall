@@ -166,7 +166,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
       }
 
       // Logic for setting Small Business or Enterprise
-      const campaignURL = userInfo.companySize == '500+' ? 'enterprise1Ent' : 'enterprise1Small'
+      const campaignURL = userInfo.companySize === '500+' ? 'enterprise1Ent' : 'enterprise1Small'
 
       const response = await axios({
         method: 'post',
@@ -392,7 +392,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           </FormControl>
         </Grid>
 
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Typography variant='h5' classes={{ root: classes.spaceAbove }}>
             {I18n.get('mailingAddress')}
           </Typography>
@@ -474,7 +474,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             onChange={handleChange}
             onKeyPress={handleKeyPress}
           />
-        </Grid>
+        </Grid>*/}
       </Grid>
       {/* advance to the next section */}
       <Grid item>
@@ -546,7 +546,6 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             {!!companyErrors.companySize && <FormHelperText>{companyErrors.companySize}</FormHelperText>}
           </FormControl>
         </Grid>
-
         <Grid item xs={12}>
           <TextField
             variant='outlined'
