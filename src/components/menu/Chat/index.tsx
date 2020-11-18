@@ -4,7 +4,7 @@ import React, { FC, useRef, useEffect } from 'react'
 import { MenuTooltip, AttentionDot } from 'components'
 import { ChatSection } from '../ChatSection'
 import { StyledChat, StyledChatHeader, StyledChatSection } from './Styled'
-import { IUser } from 'types'
+import { IConvoLink, IUser } from 'types'
 
 import { useAppState } from 'providers'
 import { ChatProvider, useChatContext } from 'providers'
@@ -19,6 +19,8 @@ import liveChatBubbleIcon from 'assets/liveChatBubbleIcon.svg'
 import { ChatDrawer } from './ChatDrawer'
 import { IconButton } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
+import { onUpdateUserInfo } from 'graphql/customSubscriptions'
+import { checkConversationUserOnlineStatus } from 'helpers'
 
 interface ChatProps {
   users?: IUser[]
@@ -43,6 +45,7 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
     0
   )
   let updateUnreadMessageSubscription = useRef<ISubscriptionObject | null>(null)
+  let dmOnlineStatusSubscription = useRef<ISubscriptionObject | null>(null)
 
   const fetchNewConvoAndPopulateUser = async (convoId: string) => {
     let newRelevantConvo = await graphQLQuery(getConversationBase, 'getConversation', { id: convoId })
@@ -70,6 +73,7 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
     setupUnreadSubscription()
     return () => {
       updateUnreadMessageSubscription?.current?.unsubscribe()
+      dmOnlineStatusSubscription?.current?.unsubscribe()
     }
   }, [chatState.conversationId, user?.conversations?.items])
 
@@ -106,14 +110,31 @@ export const Chat: FC<ChatProps> = ({ drawerOpen, conversationId, toggleDrawer, 
     }
   }
 
+  const userUpdated = ({ onUpdateUser }) => {
+    const updatedConvoLinks = checkConversationUserOnlineStatus(onUpdateUser, user?.conversations?.items || [])
+    if (!updatedConvoLinks) {
+      return
+    } else if (Array.isArray(updatedConvoLinks) && updatedConvoLinks.length > 0) {
+      setUser({
+        ...user,
+        conversations: {
+          items: updatedConvoLinks as IConvoLink[]
+        }
+      })
+    }
+  }
+
   const setupUnreadSubscription = async () => {
     updateUnreadMessageSubscription.current?.unsubscribe()
+    dmOnlineStatusSubscription.current?.unsubscribe()
 
     updateUnreadMessageSubscription.current = graphQLSubscription(
       onCreateGlobalMessageMin,
       {},
       updateUnreadConversationMessages
     )
+
+    dmOnlineStatusSubscription.current = graphQLSubscription(onUpdateUserInfo, {}, userUpdated)
   }
 
   return (

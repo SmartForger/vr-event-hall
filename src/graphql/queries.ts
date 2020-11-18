@@ -39,6 +39,7 @@ export const getUser = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -113,6 +114,7 @@ export const getConversation = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -256,6 +258,7 @@ export const getSession = /* GraphQL */ `
           updatedAt
         }
         deleted
+        recipientId
         createdAt
         updatedAt
       }
@@ -296,6 +299,7 @@ export const getSession = /* GraphQL */ `
           updatedAt
         }
         deleted
+        recipientId
         createdAt
         updatedAt
       }
@@ -398,6 +402,7 @@ export const listSessions = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -408,6 +413,7 @@ export const listSessions = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -532,6 +538,7 @@ export const getAdminUser = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -542,6 +549,7 @@ export const getAdminUser = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -1095,6 +1103,7 @@ export const sessionByConversationId = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -1105,6 +1114,7 @@ export const sessionByConversationId = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -1183,6 +1193,7 @@ export const messageByAuthor = /* GraphQL */ `
           updatedAt
         }
         deleted
+        recipientId
         createdAt
         updatedAt
       }
@@ -1243,6 +1254,7 @@ export const messageByAuthorByDate = /* GraphQL */ `
           updatedAt
         }
         deleted
+        recipientId
         createdAt
         updatedAt
       }
@@ -1303,6 +1315,7 @@ export const messageByConversation = /* GraphQL */ `
           updatedAt
         }
         deleted
+        recipientId
         createdAt
         updatedAt
       }
@@ -1363,6 +1376,7 @@ export const messageByConversationDate = /* GraphQL */ `
           updatedAt
         }
         deleted
+        recipientId
         createdAt
         updatedAt
       }
