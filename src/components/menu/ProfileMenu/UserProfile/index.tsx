@@ -1,22 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
+import React, { FC, useEffect, useState, ChangeEvent } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Promise from 'bluebird'
-import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton, Switch } from '@material-ui/core'
+import {
+  Grid,
+  Select,
+  MenuItem,
+  Avatar,
+  Theme,
+  Typography,
+  makeStyles,
+  TextField,
+  Button,
+  IconButton,
+  Switch
+} from '@material-ui/core'
 import classnames from 'classnames'
 
 // Plugins
 import classNames from 'classnames'
 import { I18n, Auth, Storage } from 'aws-amplify'
-import { VariableSizeProps } from 'react-window'
 
 // Components
 import { PillButton } from 'components'
 import { ResetConfirm } from './ResetConfirm'
 
 // Helpers
-import { graphQLQuery, graphQLSubscription, graphQLMutation } from 'graphql/helpers'
+import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
 import { getUser, listSessions, listAdminUsers } from 'graphql/queries'
 import { updateUser, createAdminLink, deleteAdminLink } from 'graphql/mutations'
 import { updateUserBase } from 'graphql/customMutations'
@@ -47,7 +58,6 @@ const initialProfileErrors: IProfileErrors = {
 interface IUserProfileProps {
   internal?: boolean
   toggleDrawer: () => void
-  user?: IUser
 }
 
 interface TemporaryMessage {
@@ -55,18 +65,17 @@ interface TemporaryMessage {
   severity: AlertProps['severity']
 }
 
-export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
+export const UserProfile: FC<IUserProfileProps> = () => {
   const classes = useStyles()
   const history = useHistory()
   const {
-    appState: { user: authedUser },
+    appState: { user },
     setUser
   } = useAppState()
 
   const [showSecretManageTools, setSecretManagementToolsVisible] = useState<boolean>()
   const [loading, setLoading] = useState<boolean>(false)
   const [editModeState, setEditModeState] = useState<boolean>(false)
-  const [profileInfo, setProfileInfo] = useState<IUser | undefined>(user)
   const [profileErrors, setProfileErrors] = useState<IProfileErrors>(initialProfileErrors)
   const [file, setFile] = useState<File>()
   const [avatarUrl, setAvatarUrl] = useState<string>()
@@ -75,29 +84,27 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const [temporaryMessage, setTemporaryMessage] = useState<TemporaryMessage>({ message: '', severity: 'success' })
   const [showModal, setShowModal] = useState<boolean>(false)
 
-  const listRef = useRef<VariableSizeProps>()
-
   /**
    * Avatar Upload
    */
   useEffect(() => {
     let cancelled = false
 
-    if (file && profileInfo) {
-      const avatar = `${profileInfo.id}.${file.type.split('/')[1]}`
+    if (file && user) {
+      const avatar = `${user.id}.${file.type.split('/')[1]}`
       setIsUploadingAvatar(true)
 
       Promise.all([
         Storage.put(avatar, file, { level: 'public', contentType: file.type }),
         graphQLMutation(updateUser, {
-          id: profileInfo.id,
+          id: user.id,
           avatar
         })
       ])
         .then(() => {
           if (!cancelled) {
-            // Force avatar url refresh
-            setReadyForProfileUpdate(true)
+            setUser({ ...user, avatar })
+            setReadyForProfileUpdate(true) // Force avatar url refresh
             setTemporaryMessage({
               message: 'Image updated successfully!',
               severity: 'success'
@@ -129,8 +136,8 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   useEffect(() => {
     let cancelled = false
 
-    if (readyForProfileUpdate && profileInfo?.avatar) {
-      Storage.get(profileInfo.avatar)
+    if (readyForProfileUpdate && user?.avatar) {
+      Storage.get(user.avatar)
         .then(updatedAvatarUrl => {
           if (!cancelled && typeof updatedAvatarUrl === 'string') {
             setAvatarUrl(updatedAvatarUrl)
@@ -147,11 +154,11 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     return () => {
       cancelled = true
     }
-  }, [readyForProfileUpdate])
+  }, [readyForProfileUpdate, user?.avatar])
 
   const getProfileInfo = async (userId: string) => {
     const foundUser = await graphQLQuery(getUser, 'getUser', { id: userId })
-    setProfileInfo(foundUser)
+    setUser(foundUser)
   }
 
   useEffect(() => {
@@ -166,10 +173,18 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     }
   }
 
+  const handleTitleChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const { target } = e
+    setUser({
+      ...user,
+      title: target.value as string
+    })
+  }
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { target } = e
-    setProfileInfo({
-      ...profileInfo,
+    setUser({
+      ...user,
       [target.name]: target.value
     })
   }
@@ -180,38 +195,22 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
       const updatedUser = await graphQLMutation(
         updateUserBase,
         {
-          id: profileInfo?.id,
-          firstName: profileInfo?.firstName,
-          lastName: profileInfo?.lastName,
-          title: profileInfo?.title,
-          online: profileInfo?.online
+          id: user?.id,
+          firstName: user?.firstName,
+          lastName: user?.lastName,
+          title: user?.title,
+          online: user?.online
         },
         'updateUser'
       )
       setUser(updatedUser)
-      await getProfileInfo(profileInfo!.id as string)
+      await getProfileInfo(user!.id as string)
       setEditModeState(false)
       setLoading(false)
     } catch (e) {
       console.log(e)
       return
     }
-  }
-
-  const profileFormHasErrors = (): boolean => {
-    const errorObj: IProfileErrors = {
-      firstName: profileInfo?.firstName ? I18n.get('requiredField') : '',
-      lastName: profileInfo?.lastName ? I18n.get('requiredField') : '',
-      title: ''
-    }
-    const hasErrors = Object.keys(errorObj).some(key => errorObj[key] !== '')
-
-    if (hasErrors) {
-      setProfileErrors(errorObj)
-      return true
-    }
-
-    return false
   }
 
   // allows MVRK users to change their own permissions
@@ -222,12 +221,12 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     try {
       const sessions = await graphQLQuery(listSessions, 'listSessions', {})
       let permissions = await graphQLQuery(listAdminUsers, 'listAdminUsers', {
-        userId: authedUser?.id
+        userId: user?.id
       })
 
       // delete the previous permisions
       await Promise.mapSeries(permissions, p => {
-        if (p.userId === authedUser?.id) {
+        if (p.userId === user?.id) {
           return graphQLMutation(deleteAdminLink, {
             id: p.id
           })
@@ -239,7 +238,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         await Promise.mapSeries(sessions, async (sess: ISession) => {
           await graphQLMutation(createAdminLink, {
             sessionId: sess?.id,
-            userId: authedUser?.id,
+            userId: user?.id,
             userType: desiredAdminType
           })
         })
@@ -253,10 +252,10 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
 
   const logout = () => {
     // online is now used for private mode instead of online/offline
-    // graphQLMutation(updateUser, {
-    //   id: profileInfo?.id,
-    //   online: false
-    // })
+    graphQLMutation(updateUser, {
+      id: user?.id,
+      online: false
+    })
 
     Auth.signOut()
     history.push('/')
@@ -282,15 +281,13 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   const handleResetImage = () => {
     let cancelled = false
 
-    if (avatarUrl && profileInfo) {
+    if (avatarUrl && user) {
       setIsUploadingAvatar(true)
 
-      Promise.all([
-        graphQLMutation(updateUser, {
-          id: profileInfo.id,
-          avatar: ''
-        })
-      ])
+      graphQLMutation(updateUser, {
+        id: user.id,
+        avatar: ''
+      })
         .then(() => {
           if (!cancelled) {
             setTemporaryMessage({
@@ -310,7 +307,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         .finally(() => {
           if (!cancelled) {
             setIsUploadingAvatar(false)
-            setProfileInfo({ ...profileInfo, avatar: '' })
+            setUser({ ...user, avatar: '' })
             setAvatarUrl('')
             setShowModal(false)
           }
@@ -324,28 +321,28 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   }
 
   useEffect(() => {
-    if (profileInfo?.online !== authedUser?.online) {
+    if (user?.online !== user?.online) {
       updateUserData()
     }
-  }, [profileInfo?.online])
+  }, [user?.online])
 
   const toggleOnlineStatus = (event, checked) => {
-    setProfileInfo({ ...profileInfo, online: checked })
+    setUser({ ...user, online: checked })
   }
 
   const profileDisplay = (
     <>
       <img src={profileBg} alt='profile background' />
-      <Avatar alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`} src={avatarUrl} className={classes.avatar} />
+      <Avatar alt={`${user?.firstName} ${user?.lastName}`} src={avatarUrl} className={classes.avatar} />
       <section className={classes.profileMain}>
         <div className={classes.name}>
-          {profileInfo?.firstName} {profileInfo?.lastName}
+          {user?.firstName} {user?.lastName}
         </div>
 
         <div className={classes.title} onClick={() => setSecretManagementToolsVisible(true)}>
-          <span>{profileInfo?.company}</span>
+          <span>{user?.company}</span>
           <span className={classes.dotSeperator} />
-          <span>{profileInfo?.title}</span>
+          <span>{user?.title}</span>
         </div>
 
         <div className={classes.liveChatContainer}>
@@ -353,8 +350,8 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
             <Typography>Live Chat</Typography>
           </div>
           <div>
-            {profileInfo?.id === authedUser?.id && (
-              <Switch color='primary' checked={profileInfo?.online || false} onChange={toggleOnlineStatus} />
+            {user?.id === user?.id && (
+              <Switch color='primary' checked={user?.online || false} onChange={toggleOnlineStatus} />
             )}
           </div>
         </div>
@@ -386,7 +383,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
       <Grid container alignItems='center' spacing={4}>
         <Grid item xs={4}>
           <Avatar
-            alt={`${profileInfo?.firstName} ${profileInfo?.lastName}`}
+            alt={`${user?.firstName} ${user?.lastName}`}
             src={avatarUrl}
             className={classNames(classes.avatar, classes.avatarEdit)}
           />
@@ -418,7 +415,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         helperText={profileErrors.firstName}
         onFocus={() => setProfileErrors({ ...profileErrors, firstName: '' })}
         fullWidth
-        defaultValue={profileInfo?.firstName}
+        defaultValue={user?.firstName}
         className={classes.input}
         type='text'
         name='firstName'
@@ -434,7 +431,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         helperText={profileErrors.lastName}
         onFocus={() => setProfileErrors({ ...profileErrors, lastName: '' })}
         fullWidth
-        defaultValue={profileInfo?.lastName}
+        defaultValue={user?.lastName}
         className={classes.input}
         type='text'
         name='lastName'
@@ -443,22 +440,24 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         onKeyPress={handleKeyPress}
       />
 
-      <TextField
-        variant='outlined'
-        label={I18n.get('title')}
-        error={!!profileErrors.title}
-        helperText={profileErrors.title}
-        onFocus={() => setProfileErrors({ ...profileErrors, title: '' })}
+      <Select
+        labelId='personal-size-input'
         fullWidth
-        defaultValue={profileInfo?.title}
-        className={classes.input}
-        type='text'
         name='title'
-        required
-        onChange={handleChange}
-        onKeyPress={handleKeyPress}
-      />
-      {showSecretManageTools && authedUser?.email?.match(/@mvrk.co$/i) && (
+        value={user?.title}
+        label={I18n.get('title')}
+        onFocus={() => setProfileErrors({ ...profileErrors, title: '' })}
+        onChange={(e: React.ChangeEvent<{ value: unknown }>) => handleTitleChange(e)}
+        inputProps={{ className: classes.titleSelect }}
+      >
+        <MenuItem value='c-suite'>{I18n.get('cSuite')}</MenuItem>
+        <MenuItem value='vp'>{I18n.get('vp')}</MenuItem>
+        <MenuItem value='director'>{I18n.get('director')}</MenuItem>
+        <MenuItem value='manager'>{I18n.get('manager')}</MenuItem>
+        <MenuItem value='staff'>{I18n.get('staff')}</MenuItem>
+      </Select>
+
+      {showSecretManageTools && user?.email?.match(/@mvrk.co$/i) && (
         <>
           <h5>Permissions (Visible to MVRK Users Only)</h5>
           <Button className={classes.permissionButton} onClick={() => changePermissions('moderator')}>
@@ -486,7 +485,7 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
           className={classes.inlineButton}
           loading={loading}
           type='submit'
-          disabled={!profileInfo?.lastName || !profileInfo.firstName}
+          disabled={!user?.lastName || !user.firstName}
           onClick={() => updateUserData()}
           solid
         >
@@ -633,5 +632,8 @@ const useStyles = makeStyles(theme => ({
     margin: 0,
     bottom: 6,
     right: 55
+  },
+  titleSelect: {
+    padding: '11.7px 14px'
   }
 }))

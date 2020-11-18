@@ -161,7 +161,7 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
               </IconButton>
             </div>
             <TabPanel value={0} index={0} className={classes.tabPanel}>
-              <UserProfile toggleDrawer={toggleProfileDrawer} user={user} />
+              <UserProfile toggleDrawer={toggleProfileDrawer} />
             </TabPanel>
           </div>
         </Drawer>

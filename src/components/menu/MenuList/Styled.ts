@@ -80,6 +80,7 @@ export const StyledMenuListItem = styled.div`
   line-height: 1;
   cursor: pointer;
   font-family: 'Verizon-Bold';
+  white-space: nowrap;
 
   &:last-child {
     margin-bottom: 0;
