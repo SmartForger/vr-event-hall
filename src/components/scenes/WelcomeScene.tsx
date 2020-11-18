@@ -96,13 +96,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('lg')]: {
-      padding: '0 12.5% 0 10%'
+      padding: '0 12.5% 0 10%',
+      paddingTop: '120px'
     },
     [theme.breakpoints.down('md')]: {
-      padding: '90 12.5% 0 8%'
+      padding: '90 12.5% 0 8%',
+      paddingTop: '100px'
     },
     [theme.breakpoints.down('sm')]: {
-      padding: '90 12.5% 0 8%'
+      padding: '90 12.5% 0 8%',
+      paddingTop: '120px'
     },
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
