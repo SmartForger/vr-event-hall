@@ -144,11 +144,12 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           graphQLMutation(createUser, {
             ...userInfo,
             email: lowerCaseEmail,
+            online: true,
             avatar
           })
         ])
       } else {
-        await graphQLMutation(createUser, { ...userInfo, email: lowerCaseEmail })
+        await graphQLMutation(createUser, { ...userInfo, email: lowerCaseEmail, online: true })
       }
     } catch (e) {
       console.log(e)
