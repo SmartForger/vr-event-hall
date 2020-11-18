@@ -119,10 +119,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: '#fff',
     minHeight: 'calc(100vh - 125px)',
     marginTop: '0px',
-    width: '46%',
+    width: '40%',
     display: 'flex',
     alignItems: 'center',
-    padding: '120px 4rem 90px',
+    padding: '120px 6rem 90px',
     [theme.breakpoints.down('md')]: {
       width: '70%'
     },

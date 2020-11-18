@@ -206,7 +206,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   button: {
-    width: 165
+    width: 165,
+    marginTop: '0 !important'
   },
   input: {
     color: '#000',

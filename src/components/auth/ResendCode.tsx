@@ -87,24 +87,18 @@ export const ResendCode: FC<ResendCodeProps> = ({ userEmail, setAuthState }) => 
           />
         </Grid>
       </Grid>
-      <Grid item container spacing={2} justify='space-between'>
+      <Grid item container spacing={2}>
         <Grid item>
-          <PillButton
-            type='submit'
-            className={classes.button}
-            onClick={() => resendCode()}
-            backgroundColor='transparent'
-          >
-            {I18n.get('submit')}
+          <PillButton type='submit' className={classes.button} solid onClick={() => resendCode()}>
+            {I18n.get('continue')}
           </PillButton>
         </Grid>
-
         <Grid item>
           <PillButton
             loading={loading}
             className={classes.button}
+            backgroundColor='transparent'
             onClick={() => setAuthState(AuthFlowSteps.ConfirmSignUp)}
-            solid
           >
             {I18n.get('back')}
           </PillButton>
