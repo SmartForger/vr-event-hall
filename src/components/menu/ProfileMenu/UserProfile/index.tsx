@@ -3,7 +3,19 @@ import React, { FC, useEffect, useRef, useState, ChangeEvent, FormEvent } from '
 import { useHistory } from 'react-router-dom'
 
 import Promise from 'bluebird'
-import { Grid, Avatar, Theme, Typography, makeStyles, TextField, Button, IconButton, Switch } from '@material-ui/core'
+import {
+  Grid,
+  Select,
+  MenuItem,
+  Avatar,
+  Theme,
+  Typography,
+  makeStyles,
+  TextField,
+  Button,
+  IconButton,
+  Switch
+} from '@material-ui/core'
 import classnames from 'classnames'
 
 // Plugins
@@ -164,6 +176,14 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
     if (e.key === 'Enter') {
       updateUserData()
     }
+  }
+
+  const handleTitleChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const { target } = e
+    setProfileInfo({
+      ...profileInfo,
+      title: target.value as string
+    })
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -443,21 +463,23 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
         onKeyPress={handleKeyPress}
       />
 
-      <TextField
-        variant='outlined'
-        label={I18n.get('title')}
-        error={!!profileErrors.title}
-        helperText={profileErrors.title}
-        onFocus={() => setProfileErrors({ ...profileErrors, title: '' })}
+      <Select
+        labelId='personal-size-input'
         fullWidth
-        defaultValue={profileInfo?.title}
-        className={classes.input}
-        type='text'
         name='title'
-        required
-        onChange={handleChange}
-        onKeyPress={handleKeyPress}
-      />
+        value={profileInfo?.title}
+        label={I18n.get('title')}
+        onFocus={() => setProfileErrors({ ...profileErrors, title: '' })}
+        onChange={(e: React.ChangeEvent<{ value: unknown }>) => handleTitleChange(e)}
+        inputProps={{ className: classes.titleSelect }}
+      >
+        <MenuItem value='c-suite'>{I18n.get('cSuite')}</MenuItem>
+        <MenuItem value='vp'>{I18n.get('vp')}</MenuItem>
+        <MenuItem value='director'>{I18n.get('director')}</MenuItem>
+        <MenuItem value='manager'>{I18n.get('manager')}</MenuItem>
+        <MenuItem value='staff'>{I18n.get('staff')}</MenuItem>
+      </Select>
+
       {showSecretManageTools && authedUser?.email?.match(/@mvrk.co$/i) && (
         <>
           <h5>Permissions (Visible to MVRK Users Only)</h5>
@@ -633,5 +655,8 @@ const useStyles = makeStyles(theme => ({
     margin: 0,
     bottom: 6,
     right: 55
+  },
+  titleSelect: {
+    padding: '11.7px 14px'
   }
 }))
