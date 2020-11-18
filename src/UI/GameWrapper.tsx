@@ -662,7 +662,8 @@ const useStyles = makeStyles({
     }
   },
   toastPosition: {
-    right: 88
+    right: 88,
+    zIndex: 13000
   },
   gameContainer: {
     backgroundColor: '#e7e7e7'
