@@ -22,25 +22,27 @@ export const Support: FC<SupportProps> = ({ showModal, setShowModal, user, setEr
   return (
     <Modal open={showModal} onClose={() => setShowModal(false)}>
       <Box className={classes.root}>
-        <IconButton
-          className={classes.closeButton}
-          color='default'
-          aria-label='close'
-          onClick={() => setShowModal(false)}
-        >
-          <CloseIcon fontSize='large' />
-        </IconButton>
-        <Typography component='h1' variant='h4' color='textPrimary' gutterBottom>
-          Support.
-        </Typography>
-        <ContactForm
-          setShowModal={setShowModal}
-          isHelpRequest={true}
-          setSuccessMessage={setSuccessMessage}
-          setErrorMessage={setErrorMessage}
-          messageHelper='Please let us know what issues you’re experiencing.'
-          user={user}
-        />
+        <div className={classes.container}>
+          <IconButton
+            className={classes.closeButton}
+            color='default'
+            aria-label='close'
+            onClick={() => setShowModal(false)}
+          >
+            <CloseIcon fontSize='large' />
+          </IconButton>
+          <Typography component='h1' variant='h3' className={classes.title} color='textPrimary' gutterBottom>
+            Support.
+          </Typography>
+          <ContactForm
+            setShowModal={setShowModal}
+            isHelpRequest={true}
+            setSuccessMessage={setSuccessMessage}
+            setErrorMessage={setErrorMessage}
+            messageHelper='Please let us know what issues you’re experiencing.'
+            user={user}
+          />
+        </div>
       </Box>
     </Modal>
   )
@@ -60,6 +62,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
       padding: '20px'
     }
+  },
+  container: {
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 260,
+      margin: '0 auto'
+    }
+  },
+  title: {
+    fontSize: 24
   },
   closeButton: {
     position: 'absolute',

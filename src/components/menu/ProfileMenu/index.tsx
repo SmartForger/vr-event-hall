@@ -297,7 +297,6 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
 
       [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-        width: '256px',
         height: 'calc(100% - 52px)'
       }
     },
