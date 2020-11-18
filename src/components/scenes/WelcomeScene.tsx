@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.down('sm')]: {
       padding: '90 12.5% 0 8%',
-      paddingTop: '120px'
+      paddingTop: '130px'
     },
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
