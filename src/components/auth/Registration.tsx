@@ -24,6 +24,8 @@ import { States, validatePhoneNumber, validateZip, validateNonNumeric } from 'he
 import { graphQLMutation } from 'graphql/helpers'
 import { createUser } from 'graphql/mutations'
 
+import classnames from 'classnames'
+
 interface RegistrationProps {
   userEmail: string
   setAuthState: (state: AuthFlowSteps) => void
@@ -166,7 +168,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
       }
 
       // Logic for setting Small Business or Enterprise
-      const campaignURL = userInfo.companySize == '500+' ? 'enterprise1Ent' : 'enterprise1Small'
+      const campaignURL = userInfo.companySize === '500+' ? 'enterprise1Ent' : 'enterprise1Small'
 
       const response = await axios({
         method: 'post',
@@ -392,7 +394,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
           </FormControl>
         </Grid>
 
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Typography variant='h5' classes={{ root: classes.spaceAbove }}>
             {I18n.get('mailingAddress')}
           </Typography>
@@ -474,7 +476,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             onChange={handleChange}
             onKeyPress={handleKeyPress}
           />
-        </Grid>
+        </Grid>*/}
       </Grid>
       {/* advance to the next section */}
       <Grid item>
@@ -546,7 +548,6 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             {!!companyErrors.companySize && <FormHelperText>{companyErrors.companySize}</FormHelperText>}
           </FormControl>
         </Grid>
-
         <Grid item xs={12}>
           <TextField
             variant='outlined'
@@ -596,7 +597,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             renderInput={params => (
               <TextField
                 {...params}
-                className={classes.input}
+                className={classnames([classes.input, classes.innerInput])}
                 error={!!companyErrors.companyState}
                 helperText={companyErrors.companyState}
                 onFocus={() => setCompanyErrors({ ...companyErrors, companyState: '' })}
@@ -699,6 +700,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderColor: '#dadada',
       borderBottomColor: '#000'
     }
+  },
+  innerInput: {
+    border: 0
   },
   inlineButton: {
     color: '#000',

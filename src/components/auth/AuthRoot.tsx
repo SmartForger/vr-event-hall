@@ -23,8 +23,9 @@ export const AuthRoot: FC<SignInProps> = ({ setAuthState }) => {
   return (
     <Grid container direction='column' justify='center'>
       <Grid item>
-        <Typography variant='h2' className={classes.heading}>
-          Join us for 5G <br />
+        <Typography variant='h2' className={classes.heading} paragraph>
+          Join us for 5G
+          <br />
           Innovation Sessions
         </Typography>
       </Grid>

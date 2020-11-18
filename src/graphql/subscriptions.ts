@@ -392,6 +392,7 @@ export const onUpdateUser = /* GraphQL */ `
           conversationId
           deleted
           recipientId
+>>>>>>> 3e3b5b181b3d90103cfc6d034c54eb96881cafc5
           createdAt
           updatedAt
         }

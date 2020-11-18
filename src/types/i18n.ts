@@ -94,6 +94,7 @@ export interface IRegistrationDict {
   employeeRange2: string
   employeeRange3: string
   joinUs: string
+  registerToSecureYourSpot: string
   mailingAddress: string
   mailingAddressReason: string
   phoneNumber: string
