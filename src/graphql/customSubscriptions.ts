@@ -55,3 +55,19 @@ export const onCreateGlobalMessageMin = /* GraphQL */ `
     }
   }
 `
+export const onUpdateUserInfo = /* GraphQL */ `
+  subscription OnUpdateUser {
+    onUpdateUser {
+      id
+      firstName
+      lastName
+      email
+      avatar
+      company
+      title
+      online
+      createdAt
+      updatedAt
+    }
+  }
+`

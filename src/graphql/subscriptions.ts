@@ -3,8 +3,8 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateConvoLink = /* GraphQL */ `
-  subscription OnCreateConvoLink($convoLinkUserId: ID!) {
-    onCreateConvoLink(convoLinkUserId: $convoLinkUserId) {
+  subscription OnCreateConvoLink($userId: ID!) {
+    onCreateConvoLink(userId: $userId) {
       id
       userId
       conversationId
@@ -111,6 +111,7 @@ export const onCreateMessage = /* GraphQL */ `
         updatedAt
       }
       deleted
+      recipientId
       createdAt
       updatedAt
     }
@@ -169,6 +170,7 @@ export const onUpdateMessage = /* GraphQL */ `
         updatedAt
       }
       deleted
+      recipientId
       createdAt
       updatedAt
     }
@@ -227,6 +229,66 @@ export const onCreateGlobalMessage = /* GraphQL */ `
         updatedAt
       }
       deleted
+      recipientId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onCreateUserMessage = /* GraphQL */ `
+  subscription OnCreateUserMessage($recipientId: ID!) {
+    onCreateUserMessage(recipientId: $recipientId) {
+      id
+      content
+      authorId
+      author {
+        id
+        firstName
+        lastName
+        email
+        avatar
+        phoneNumber
+        company
+        companySize
+        companyAddress1
+        companyCity
+        companyState
+        companyPostalCode
+        address1
+        city
+        state
+        postalCode
+        title
+        conversations {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        sessions {
+          nextToken
+        }
+        onVideoCall
+        online
+        createdAt
+        updatedAt
+      }
+      conversationId
+      conversation {
+        id
+        name
+        members
+        messages {
+          nextToken
+        }
+        associated {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      deleted
+      recipientId
       createdAt
       updatedAt
     }
@@ -269,6 +331,68 @@ export const onCreateUser = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      sessions {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      onVideoCall
+      online
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser {
+    onUpdateUser {
+      id
+      firstName
+      lastName
+      email
+      avatar
+      phoneNumber
+      company
+      companySize
+      companyAddress1
+      companyCity
+      companyState
+      companyPostalCode
+      address1
+      city
+      state
+      postalCode
+      title
+      conversations {
+        items {
+          id
+          userId
+          conversationId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      messages {
+        items {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          recipientId
+>>>>>>> 3e3b5b181b3d90103cfc6d034c54eb96881cafc5
           createdAt
           updatedAt
         }
@@ -407,6 +531,7 @@ export const onUpdateSession = /* GraphQL */ `
           updatedAt
         }
         deleted
+        recipientId
         createdAt
         updatedAt
       }
@@ -447,6 +572,7 @@ export const onUpdateSession = /* GraphQL */ `
           updatedAt
         }
         deleted
+        recipientId
         createdAt
         updatedAt
       }
@@ -932,6 +1058,7 @@ export const onCreateSessionParticipant = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -942,6 +1069,7 @@ export const onCreateSessionParticipant = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -1043,6 +1171,7 @@ export const onUpdateSessionParticipant = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }
@@ -1053,6 +1182,7 @@ export const onUpdateSessionParticipant = /* GraphQL */ `
           authorId
           conversationId
           deleted
+          recipientId
           createdAt
           updatedAt
         }

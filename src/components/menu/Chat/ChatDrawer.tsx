@@ -170,11 +170,11 @@ export const ChatDrawer = ({ vcOff }) => {
           </IconButton>
         </div>
         <Toolbar className={classes.toolbar}>
-          {!vcOff ? (
+          {/* {!vcOff ? (
             <IconButton className={classes.cameraButton} onClick={joinVideoCall}>
               <VideocamOutlined />
             </IconButton>
-          ) : null}
+          ) : null} */}
           <Tabs
             value={tabValue}
             onChange={handleChange}
