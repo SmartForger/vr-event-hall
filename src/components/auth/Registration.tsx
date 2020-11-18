@@ -455,6 +455,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
                 helperText={personalErrors.state}
                 onFocus={() => setPersonalErrors({ ...personalErrors, state: '' })}
                 fullWidth
+                type='text'
                 label={I18n.get('state')}
                 variant='outlined'
               ></TextField>
@@ -695,6 +696,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiInputBase-root': {
       backgroundColor: '#fff'
     },
+    '& .MuiInputBase-root .MuiAutocomplete-input': {
+      border: 'none',
+      padding: '3px 7px'
+    },
     '& fieldset': {
       borderRadius: 0,
       borderColor: '#dadada',
@@ -725,7 +730,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inlinePillButton: {
     minWidth: 165,
-    marginTop: 0,
+    marginTop: '0 !important',
+    marginBottom: '0 !important',
+
     [theme.breakpoints.down('md')]: {
       marginBottom: '1rem',
       backgroundColor: '#fff !important'

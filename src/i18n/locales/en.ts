@@ -13,7 +13,7 @@ const common: ICommonDict = {
   alreadyHaveAnAccount: 'Already have an account?',
   back: 'Back',
   completeRegistration: 'Complete Registration',
-  confirmationCode: 'Confirmation Code',
+  confirmationCode: 'Confirmation code',
   confirmEmail: 'Confirm E-mail',
   confirmEmailInstructions:
     'A confirmation code was sent to your e-mail. Didn’t receive it? Check your spam folder or hit back and try again.',
@@ -71,10 +71,10 @@ const registration: IRegistrationDict = {
   selectedImage: 'Selected image: ',
   state: 'State',
   aboutYourCompany: 'About your organization',
-  companySize: 'Organization Size',
+  companySize: 'Organization size',
   titlePosition: 'Title / Position',
   youreIn: "Congrats, You're In!",
-  zip: 'Postal Code',
+  zip: 'Postal code',
   emailWillBecomeUsername: 'Your email will automatically become your username.'
 }
 
@@ -116,7 +116,7 @@ const thankYou: IThankYouDict = {
   registrationCompleteBlurb:
     'Your registration is complete! We look forward to seeing you at the 5G Innovation Sessions on November 18, 2020.',
   stayTuned: ' Please check your email for the registration confirmation and for updates as the event approaches.',
-  eventInfo: 'Event Info',
+  eventInfo: 'Event info',
   verizonHub: 'Verizon Hub'
 }
 
