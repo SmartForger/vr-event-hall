@@ -183,7 +183,7 @@ export default class Receiver {
               if (newSession) {
                 graphQLMutation(createUserInteraction, {
                   name: JSONdata!.param,
-                  trigger: 'sessions',
+                  trigger: 'viewed',
                   type: 'sessions',
                   userId: user?.id
                 })
