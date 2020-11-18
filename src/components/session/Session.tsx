@@ -130,7 +130,7 @@ export const Session: FC<SessionProps> = ({ session, setScene, eventStage }) => 
             </Grid>
             <Grid container item direction='column' alignItems='flex-start' justify='center' md={5} xs={8}>
               <Typography className={classes.marginBottom} component='h5' variant='h5' color='textPrimary' gutterBottom>
-                Session
+                Breakout Session
               </Typography>
               <Typography className={classes.marginBottom} component='h1' variant='h2' color='textPrimary' gutterBottom>
                 {session.side.header}
