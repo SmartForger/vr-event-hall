@@ -18,6 +18,7 @@ import { listConversations } from 'graphql/queries'
 import { DirectMessage } from './DirectMessage'
 import { useAppState } from 'providers'
 import { getConversationWithAssociated } from 'graphql/customQueries'
+import { IConvoLink } from 'types'
 
 export const sortBy = (list: any[], key: string) => {
   return list.sort((a, b) => (a[key] > b[key] ? 1 : -1))
@@ -73,6 +74,22 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
     }
   }, [conversationId])
 
+  const sortByName = (convoLinkA: IConvoLink, convoLinkB: IConvoLink) => {
+    const userA = convoLinkA.conversation.associated.items.find(a => a.userId !== user?.id)
+    const userB = convoLinkB.conversation.associated.items.find(a => a.userId !== user?.id)
+    var nameA = (userA?.user?.firstName || '').toUpperCase() // ignore upper and lowercase
+    var nameB = (userB?.user?.firstName || '').toUpperCase() // ignore upper and lowercase
+    if (nameA < nameB) {
+      return -1
+    }
+    if (nameA > nameB) {
+      return 1
+    }
+
+    // names must be equal
+    return 0
+  }
+
   return (
     <StyledChatSection>
       <StyledChatSectionHeader>
@@ -115,6 +132,7 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
           {user?.conversations?.items
             ?.filter(item => item?.conversation?.members.length === 2)
             .slice(0, previewCount)
+            .sort(sortByName)
             .map((data, index) => {
               const unreadInChannel = chatState.unreadMessagesByConversation[data.conversationId] > 0
               return (
