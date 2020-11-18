@@ -32,12 +32,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '80vw',
     height: 'auto',
     display: 'flex',
+    maxHeight: '100vh',
+    overflow: 'hidden',
 
     outline: '0',
     '& *': { outline: '0' },
 
-    [theme.breakpoints.only('xs')]: {
-      width: '100%'
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: '100%'
     }
   }
 }))
