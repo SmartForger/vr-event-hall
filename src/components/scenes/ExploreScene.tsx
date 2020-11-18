@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 1300,
     color: '#000',
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
     
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       paddingLeft: '4rem',
