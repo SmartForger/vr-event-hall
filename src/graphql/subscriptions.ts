@@ -354,6 +354,67 @@ export const onCreateUser = /* GraphQL */ `
     }
   }
 `
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser {
+    onUpdateUser {
+      id
+      firstName
+      lastName
+      email
+      avatar
+      phoneNumber
+      company
+      companySize
+      companyAddress1
+      companyCity
+      companyState
+      companyPostalCode
+      address1
+      city
+      state
+      postalCode
+      title
+      conversations {
+        items {
+          id
+          userId
+          conversationId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      messages {
+        items {
+          id
+          content
+          authorId
+          conversationId
+          deleted
+          recipientId
+>>>>>>> 3e3b5b181b3d90103cfc6d034c54eb96881cafc5
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      sessions {
+        items {
+          id
+          userId
+          sessionId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      onVideoCall
+      online
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const onCreateNotification = /* GraphQL */ `
   subscription OnCreateNotification {
     onCreateNotification {

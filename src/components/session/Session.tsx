@@ -16,7 +16,7 @@ import { useSessionDetails } from 'hooks/useSessionDetails'
 import { useAppState, UserAdminType, useVideoChatContext } from 'providers'
 
 import { graphQLQuery, graphQLMutation } from 'graphql/helpers'
-import { updateSession } from 'graphql/mutations'
+import { createUserInteraction, updateSession } from 'graphql/mutations'
 import { getAttendeeInfo, getSessionOverviewById } from 'graphql/customQueries'
 
 interface SessionProps {
@@ -51,7 +51,7 @@ export const Session: FC<SessionProps> = ({ session, setScene, eventStage }) => 
   }, [eventStage])
 
   function checkEventStage() {
-    return Boolean(eventStage && [EventStages.LIVESTREAMENDING, EventStages.POSTLIVESTREAM].includes(eventStage))
+    return Boolean(eventStage && ![EventStages.POSTSHOW].includes(eventStage))
   }
 
   const joinClassRoom = async () => {
@@ -115,6 +115,17 @@ export const Session: FC<SessionProps> = ({ session, setScene, eventStage }) => 
     setLoading(false)
   }
 
+  const openBlueJeansLink = () => {
+    graphQLMutation(createUserInteraction, {
+      name: bluejeansSessionLink,
+      trigger: 'joined',
+      type: 'sessions',
+      userId: user?.id
+    })
+
+    window.open(bluejeansSessionLink)
+  }
+
   const isSessionAdmin = sessionDetails.admins?.items.some(u => u.userId === user?.id)
   const sessionActive = sessionDetails.active === 'true'
   const bluejeansSessionLink = session.bluejeans
@@ -168,7 +179,7 @@ export const Session: FC<SessionProps> = ({ session, setScene, eventStage }) => 
                     {bluejeansSessionLink && (
                       <PillButton
                         className={classes.joinRowButtons}
-                        onClick={() => window.open(bluejeansSessionLink)}
+                        onClick={openBlueJeansLink}
                         variant='outlined'
                         backgroundColor='transparent'
                         loading={loading}

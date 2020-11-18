@@ -24,6 +24,8 @@ import { States, validatePhoneNumber, validateZip, validateNonNumeric } from 'he
 import { graphQLMutation } from 'graphql/helpers'
 import { createUser } from 'graphql/mutations'
 
+import classnames from 'classnames'
+
 interface RegistrationProps {
   userEmail: string
   setAuthState: (state: AuthFlowSteps) => void
@@ -595,7 +597,7 @@ export const Registration: FC<RegistrationProps> = ({ userEmail, setAuthState, s
             renderInput={params => (
               <TextField
                 {...params}
-                className={classes.input}
+                className={classnames([classes.input, classes.innerInput])}
                 error={!!companyErrors.companyState}
                 helperText={companyErrors.companyState}
                 onFocus={() => setCompanyErrors({ ...companyErrors, companyState: '' })}
@@ -698,6 +700,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderColor: '#dadada',
       borderBottomColor: '#000'
     }
+  },
+  innerInput: {
+    border: 0
   },
   inlineButton: {
     color: '#000',

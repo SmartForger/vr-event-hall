@@ -93,6 +93,7 @@ export const updateUserBase = `mutation UpdateUser($input: UpdateUserInput!, $co
     avatar
     title
     company
+    online
     sessions {
       items {
         id

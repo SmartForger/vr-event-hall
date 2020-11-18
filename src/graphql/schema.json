@@ -15613,6 +15613,18 @@
               "deprecationReason": null
             },
             {
+              "name": "onUpdateUser",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "onCreateNotification",
               "description": null,
               "args": [],
