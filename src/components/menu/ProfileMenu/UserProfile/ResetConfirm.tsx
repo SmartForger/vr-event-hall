@@ -21,30 +21,32 @@ export const ResetConfirm: FC<ResetConfirmProps> = ({ setShowModal, showModal, o
   return (
     <Modal open={showModal} onClose={() => setShowModal(false)}>
       <Box className={classes.root}>
-        <IconButton
-          className={classes.closeButton}
-          color='default'
-          aria-label='close'
-          onClick={() => setShowModal(false)}
-        >
-          <CloseIcon fontSize='large' />
-        </IconButton>
-        <Typography component='h1' variant='h4' color='textPrimary' gutterBottom>
-          Are you sure you want to reset your profile image?
-        </Typography>
+        <div className={classes.container}>
+          <IconButton
+            className={classes.closeButton}
+            color='default'
+            aria-label='close'
+            onClick={() => setShowModal(false)}
+          >
+            <CloseIcon fontSize='large' />
+          </IconButton>
+          <Typography component='h1' variant='h3' className={classes.title} color='textPrimary' gutterBottom>
+            Are you sure you want to reset your profile image?
+          </Typography>
 
-        <Grid container direction='row' justify='center' alignItems='center' spacing={10}>
-          <Grid item xs={6}>
-            <Button className={classes.button} variant='outlined' size='large' onClick={() => setShowModal(false)}>
-              Cancel
-            </Button>
+          <Grid container direction='row' justify='center' alignItems='center' spacing={10}>
+            <Grid item xs={6}>
+              <Button className={classes.button} variant='outlined' size='large' onClick={() => setShowModal(false)}>
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button className={classes.button} variant='contained' size='large' onClick={onSubmit}>
+                Submit
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <Button className={classes.button} variant='contained' size='large' onClick={onSubmit}>
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
+        </div>
       </Box>
     </Modal>
   )
@@ -69,6 +71,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: '0',
     right: '0'
+  },
+  container: {
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 260,
+      margin: '0 auto'
+    }
+  },
+  title: {
+    fontSize: 24
   },
   button: {
     width: 132,

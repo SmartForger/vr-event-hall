@@ -30,27 +30,29 @@ export const About: FC<AboutProps> = ({
   return (
     <Modal open={showModal} onClose={() => setShowModal(false)}>
       <Box className={classes.root}>
-        <IconButton
-          className={classes.closeButton}
-          color='default'
-          aria-label='close'
-          onClick={() => setShowModal(false)}
-        >
-          <CloseIcon fontSize='large' />
-        </IconButton>
-        <Typography component='h1' variant='h4' color='textPrimary' gutterBottom>
-          5G Innovation Sessions.
-        </Typography>
-        <Typography component='h6' variant='h6' color='textPrimary' gutterBottom>
-          {eventDate}
-        </Typography>
-        <Typography
-          component='p'
-          variant='body1'
-          color='textPrimary'
-          gutterBottom
-          dangerouslySetInnerHTML={{ __html: eventDescription }}
-        />
+        <div className={classes.container}>
+          <IconButton
+            className={classes.closeButton}
+            color='default'
+            aria-label='close'
+            onClick={() => setShowModal(false)}
+          >
+            <CloseIcon fontSize='large' />
+          </IconButton>
+          <Typography component='h1' variant='h4' className={classes.title} color='textPrimary' gutterBottom>
+            5G Innovation Sessions.
+          </Typography>
+          <Typography component='h6' variant='h6' color='textPrimary' gutterBottom>
+            {eventDate}
+          </Typography>
+          <Typography
+            component='p'
+            variant='body1'
+            color='textPrimary'
+            gutterBottom
+            dangerouslySetInnerHTML={{ __html: eventDescription }}
+          />
+        </div>
       </Box>
     </Modal>
   )
@@ -70,6 +72,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
       padding: '20px'
     }
+  },
+  container: {
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 260,
+      margin: '0 auto'
+    }
+  },
+  title: {
+    fontSize: 24
   },
   closeButton: {
     position: 'absolute',
