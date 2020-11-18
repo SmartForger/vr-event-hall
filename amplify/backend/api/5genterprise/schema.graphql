@@ -319,6 +319,7 @@ type Subscription {
   onCreateGlobalMessage: Message @aws_subscribe(mutations: ["createMessage"])
   onCreateUserMessage(recipientId: ID!): Message @aws_subscribe(mutations: ["createMessage"])
   onCreateUser: User @aws_subscribe(mutations: ["createUser"])
+  onUpdateUser: User @aws_subscribe(mutations: ["updateUser"])
   onCreateNotification: Notification @aws_subscribe(mutations: ["createNotification"])
   onUpdateSession(id: ID!): Session @aws_subscribe(mutations: ["updateSession"])
   onCreateSessionPoll(sessionId: ID!): SessionPoll @aws_subscribe(mutations: ["createSessionPoll"])

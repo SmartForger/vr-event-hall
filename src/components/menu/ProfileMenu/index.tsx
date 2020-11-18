@@ -59,7 +59,6 @@ export const ProfileMenu: FC<ProfileMenuProps> = ({
   }
 
   const toggleProfileDrawer = () => {
-    console.log('toggling profile drawer')
     setShowProfileDrawer(!showProfileDrawer)
   }
 

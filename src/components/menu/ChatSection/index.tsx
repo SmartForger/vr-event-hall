@@ -1,24 +1,20 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
-import { IconButton, Collapse, createStyles, makeStyles } from '@material-ui/core'
+import React, { FC, useEffect, useState } from 'react'
+import { IconButton, createStyles, makeStyles } from '@material-ui/core'
 import { ExpandMore } from '@material-ui/icons'
 import classnames from 'classnames'
 
 import {
-  StyledChannel,
   StyledChatSection,
   StyledChatSectionItem,
   StyledChatSectionHeader,
   StyledChatSectionHeaderTitle
 } from './Styled'
 
-import { AttentionDot } from 'components'
 import { Channel } from './Channel'
 
 import { useChatContext } from 'providers/ChatProvider'
-import { IConversation, ISubscriptionObject, IUser, UserStatus } from 'types'
-import { graphQLQuery, graphQLSubscription } from 'graphql/helpers'
-import { listConversations, sessionByConversationId, getConversation } from 'graphql/queries'
-import { onUpdateSession } from 'graphql/subscriptions'
+import { graphQLQuery } from 'graphql/helpers'
+import { listConversations } from 'graphql/queries'
 import { DirectMessage } from './DirectMessage'
 import { useAppState } from 'providers'
 import { getConversationWithAssociated } from 'graphql/customQueries'
