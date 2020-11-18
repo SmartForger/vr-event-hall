@@ -42,8 +42,6 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
   const [expanded, setExpanded] = useState<boolean>(false)
   const { chatState, dispatch } = useChatContext()
 
-  let updateSessionSubscription = useRef<ISubscriptionObject | null>(null)
-
   const getConversationList = async () => {
     const conversations = await graphQLQuery(listConversations, 'listConversations')
     dispatch({
@@ -56,18 +54,14 @@ export const ChatSection: FC<IChatChannels> = ({ title, previewCount, conversati
   }
 
   useEffect(() => {
+    getConversationList()
+  }, [Object.keys(chatState.unreadMessagesByConversation).length])
+
+  useEffect(() => {
     if (chatState.conversations.length === 0) {
       getConversationList()
     }
-
-    return () => {
-      updateSessionSubscription?.current?.unsubscribe()
-    }
   }, [])
-
-  const updateSessionInfo = ({ onUpdateSession }) => {
-    dispatch({ type: 'SET_DETAILS', payload: { session: onUpdateSession } })
-  }
 
   const openConversation = async (conversationId: string) => {
     dispatch({ type: 'SET_DETAILS', payload: { conversationId, conversationOpen: true } })
