@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import classnames from 'classnames'
+import { makeStyles, Tooltip } from '@material-ui/core'
 
 import {
   StyledDirectMessage,
@@ -20,6 +21,7 @@ interface IChatDirectMessage {
 }
 
 export const DirectMessage: FC<IChatDirectMessage> = ({ data, openConversation, isUnread }) => {
+  const classes = useStyles()
   const {
     appState: { user }
   } = useAppState()
@@ -30,7 +32,12 @@ export const DirectMessage: FC<IChatDirectMessage> = ({ data, openConversation, 
     <StyledDirectMessage onClick={() => openConversation(conversationId)}>
       <StyledDirectMessageItem>
         <StyledLeftContent>
-          <StyledUserStatus className={classnames([messageUser?.user?.online ? 'online' : 'offline'])} />
+          <Tooltip
+            classes={{ popper: classes.tooltip, tooltip: classes.tooltip }}
+            title={messageUser?.user?.online ? 'Available' : 'Unavailable'}
+          >
+            <StyledUserStatus className={classnames([messageUser?.user?.online ? 'online' : 'offline'])} />
+          </Tooltip>
           <StyledUserName>
             {messageUser?.user.firstName} {messageUser?.user.lastName}
           </StyledUserName>
@@ -40,3 +47,10 @@ export const DirectMessage: FC<IChatDirectMessage> = ({ data, openConversation, 
     </StyledDirectMessage>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  tooltip: {
+    fontWeight: 600,
+    fontSize: '16px'
+  }
+}))
