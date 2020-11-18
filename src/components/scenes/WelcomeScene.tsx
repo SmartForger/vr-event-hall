@@ -91,6 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflowY: 'auto',
     zIndex: 1300,
     color: '#000',
+    top: '105px',
     paddingTop: '140px',
     display: 'flex',
     alignItems: 'center',
