@@ -65,8 +65,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     padding: '58px 52px 38px',
     backgroundColor: '#ffffff',
+    overflow: 'auto',
 
-    [theme.breakpoints.only('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
       padding: '20px'
     }
