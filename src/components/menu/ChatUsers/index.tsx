@@ -23,15 +23,17 @@ export const ChatUsers: FC<ChatUsersProps> = ({ toggleDrawer }) => {
     appState: { user }
   } = useAppState()
 
-  let [users, setUsers] = useState<IUser[]>([])
-  let [filteredOnlineusers, setFilteredOnlineUsers] = useState<IUser[]>([])
+  let [filteredOnlineUsers, setFilteredOnlineUsers] = useState<IUser[]>([])
   let [filteredUsers, setFilteredUsers] = useState<IUser[]>([])
   const listRef = useRef<VariableSizeProps>()
 
   let subscription = useRef<ISubscriptionObject | null>(null)
 
   const addNewUser = ({ onCreateUser }) => {
-    setUsers(prevUserList => sortBy([...prevUserList, onCreateUser], 'firstName'))
+    setFilteredUsers(prevUserList => sortBy([...prevUserList, onCreateUser], 'firstName'))
+    if (onCreateUser.online) {
+      setFilteredOnlineUsers(prevUserList => sortBy([...prevUserList, onCreateUser], 'firstName'))
+    }
   }
 
   const getUsers = async () => {
@@ -43,9 +45,8 @@ export const ChatUsers: FC<ChatUsersProps> = ({ toggleDrawer }) => {
       ),
       'firstName'
     )
-    setUsers(userList)
     setFilteredUsers(userList)
-    setFilteredOnlineUsers(users)
+    setFilteredOnlineUsers(notMeOnline)
 
     subscription.current = graphQLSubscription(onCreateUser, {}, addNewUser)
   }
@@ -61,7 +62,7 @@ export const ChatUsers: FC<ChatUsersProps> = ({ toggleDrawer }) => {
 
   return (
     <>
-      <UserSearch users={filteredOnlineusers} setUsers={setFilteredUsers} />
+      <UserSearch users={filteredOnlineUsers} setUsers={setFilteredUsers} />
       <div className={classes.root}>
         <UserList user={user} listRef={listRef} users={filteredUsers} toggleDrawer={toggleDrawer} />
       </div>
