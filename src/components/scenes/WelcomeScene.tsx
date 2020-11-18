@@ -44,35 +44,37 @@ export const WelcomeScene: FC<IWelcomeProps> = ({ user, setGameState, activeScen
             [classes.transitionOut]: exit
           })}
         >
-          <Box marginBottom={2}>
-            <Typography component='h4' variant='h4'>
-              Hi <span>{user?.firstName}</span>.
+          <div>
+            <Box marginBottom={2}>
+              <Typography component='h4' variant='h4'>
+                Hi <span>{user?.firstName}</span>.
+              </Typography>
+            </Box>
+
+            <Box marginBottom={3}>
+              <Typography component='h2' variant='h2'>
+                Welcome to 5G Innovation Sessions.
+              </Typography>
+            </Box>
+
+            <Typography component='p' paragraph>
+              During this hour-long event, we’ll show how Verizon 5G Ultra Wideband can unleash new applications, use
+              cases and immersive customer experiences.
             </Typography>
-          </Box>
 
-          <Box marginBottom={3}>
-            <Typography component='h2' variant='h2'>
-              Welcome to 5G Innovation Sessions.
+            <Typography component='p' paragraph>
+              With thought provoking discussions, cutting edge demos, and breakout sessions customized to the way you
+              work, you'll learn how to take advantage of the exciting and transformative benefits of Verizon 5G.
             </Typography>
-          </Box>
 
-          <Typography component='p' paragraph>
-            During this hour-long event, we’ll show how Verizon 5G Ultra Wideband can unleash new applications, use
-            cases and immersive customer experiences.
-          </Typography>
+            <Typography component='p' paragraph>
+              This is the 5G businesses have been waiting for. This is 5G built right.
+            </Typography>
 
-          <Typography component='p' paragraph>
-            With thought provoking discussions, cutting edge demos, and breakout sessions customized to the way you
-            work, you'll learn how to take advantage of the exciting and transformative benefits of Verizon 5G.
-          </Typography>
-
-          <Typography component='p' paragraph>
-            This is the 5G businesses have been waiting for. This is 5G built right.
-          </Typography>
-
-          <PillButton className={classes.button} backgroundColor='transparent' onClick={() => explore()}>
-            Explore
-          </PillButton>
+            <PillButton className={classes.button} backgroundColor='transparent' onClick={() => explore()}>
+              Explore
+            </PillButton>
+          </div>
         </div>
       )}
     </>
@@ -84,24 +86,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'calc(100% - 105px)',
     width: 'calc(50% - 32px)',
     padding: '0 12.5%',
-    top: '105px',
     position: 'absolute',
     backgroundColor: 'transparent',
     overflowY: 'auto',
     zIndex: 1300,
     color: '#000',
     paddingTop: '140px',
+    display: 'flex',
+    alignItems: 'center',
     [theme.breakpoints.down('lg')]: {
-      padding: '0 12.5% 0 10%',
-      paddingTop: '120px'
+      padding: '0 12.5% 0 10%'
     },
     [theme.breakpoints.down('md')]: {
-      padding: '90 12.5% 0 8%',
-      paddingTop: '100px'
+      padding: '90 12.5% 0 8%'
     },
     [theme.breakpoints.down('sm')]: {
-      padding: '90 12.5% 0 8%',
-      paddingTop: '120px'
+      padding: '90 12.5% 0 8%'
     },
 
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
