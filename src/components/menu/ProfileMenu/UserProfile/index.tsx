@@ -252,10 +252,11 @@ export const UserProfile: FC<IUserProfileProps> = ({ user }) => {
   }
 
   const logout = () => {
-    graphQLMutation(updateUser, {
-      id: profileInfo?.id,
-      online: false
-    })
+    // online is now used for private mode instead of online/offline
+    // graphQLMutation(updateUser, {
+    //   id: profileInfo?.id,
+    //   online: false
+    // })
 
     Auth.signOut()
     history.push('/')
