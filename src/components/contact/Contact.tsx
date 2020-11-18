@@ -32,26 +32,28 @@ export const Contact: FC<ContactProps> = ({
   return (
     <Modal open={showModal} onClose={() => setShowModal(false)}>
       <Box className={classes.root}>
-        <IconButton
-          className={classes.closeButton}
-          color='default'
-          aria-label='close'
-          onClick={() => setShowModal(false)}
-        >
-          <CloseIcon fontSize='large' />
-        </IconButton>
-        <Typography component='h1' variant='h4' color='textPrimary' gutterBottom>
-          Let's connect.
-        </Typography>
-        <ContactForm
-          setShowModal={setShowModal}
-          isHelpRequest={false}
-          setSuccessMessage={setSuccessMessage}
-          setErrorMessage={setErrorMessage}
-          demo={demo}
-          messageHelper='Please let us know what we can do to serve your needs.'
-          user={user}
-        />
+        <div className={classes.container}>
+          <IconButton
+            className={classes.closeButton}
+            color='default'
+            aria-label='close'
+            onClick={() => setShowModal(false)}
+          >
+            <CloseIcon fontSize='large' />
+          </IconButton>
+          <Typography component='h1' variant='h3' className={classes.title} color='textPrimary' gutterBottom>
+            Let's connect.
+          </Typography>
+          <ContactForm
+            setShowModal={setShowModal}
+            isHelpRequest={false}
+            setSuccessMessage={setSuccessMessage}
+            setErrorMessage={setErrorMessage}
+            demo={demo}
+            messageHelper='Please let us know what we can do to serve your needs.'
+            user={user}
+          />
+        </div>
       </Box>
     </Modal>
   )
@@ -71,6 +73,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
       padding: '20px'
     }
+  },
+  container: {
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 260,
+      margin: '0 auto'
+    }
+  },
+  title: {
+    fontSize: 24
   },
   closeButton: {
     position: 'absolute',
