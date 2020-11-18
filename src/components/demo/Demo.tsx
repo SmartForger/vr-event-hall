@@ -128,7 +128,8 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
 
   const buildEndVideoSideLayout = content => (
     <Grid
-      xs={4}
+      xs={12}
+      md={4}
       lg={3}
       className={classnames(classes.endContainer, {
         [classes.extraPaddingBottom]: !displayPoll
@@ -177,16 +178,18 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
               </Grid>
               {buildLink({ text: 'View all demos', goTo: 'explore', colSize: 6 }, classes.textAlignRight)}
             </Grid>
-            <Box flexGrow={1}>
-              <figure className={classes.thumbnail} onClick={() => actionClicked('demo', content.nextDemo)}>
-                <img src={require(`assets/demo/${content.nextDemoThumbnail}`)} alt='Demo thumbnail' />
-                <figcaption>
-                  <Typography variant='h2' className={classnames(classes.subHeader)}>
-                    {content.nextDemoText}
-                  </Typography>
-                </figcaption>
-              </figure>
-            </Box>
+            <Grid xs={12}>
+              <Box flexGrow={1}>
+                <figure className={classes.thumbnail} onClick={() => actionClicked('demo', content.nextDemo)}>
+                  <img src={require(`assets/demo/${content.nextDemoThumbnail}`)} alt='Demo thumbnail' />
+                  <figcaption>
+                    <Typography variant='h2' className={classnames(classes.subHeader)}>
+                      {content.nextDemoText}
+                    </Typography>
+                  </figcaption>
+                </figure>
+              </Box>
+            </Grid>
           </>
         )}
       </Grid>
@@ -213,7 +216,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
           direction='row'
         >
           {!displayPoll && (
-            <Grid item xs={8} lg={9} className={classnames(classes.demoContainer)}>
+            <Grid item sm={12} md={7} lg={9} className={classnames(classes.demoContainer)}>
               <Video
                 videoSrc={`${assetUrl}${demo.video}`}
                 posterSrc={demo.poster || ''}
@@ -238,7 +241,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
             </Grid>
           )}
           {displayPoll && demo.poll && (
-            <Grid item xs={8} lg={9} className={classes.demoContainer}>
+            <Grid item sm={12} md={7} lg={9} className={classes.demoContainer}>
               <Poll poll={demo.poll} user={user} />
               <Box display='flex' className={classes.contentActionBox}>
                 <Button
@@ -257,7 +260,7 @@ export const Demo: FC<DemoProps> = ({ demo, setScene, user }) => {
             </Grid>
           )}
           {activeTimestamp && !videoConcluded && (
-            <Grid item xs={4} lg={3}>
+            <Grid item sm={12} md={4} lg={3}>
               <Grid className={classes.centerContent} container direction='row'>
                 {activeTimestamp.map(content => {
                   return (
@@ -393,7 +396,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#000',
     justifyContent: 'center',
     overflowY: 'auto',
+    [`${theme.breakpoints.down('md')}, screen and (max-height: 760px)`]: {
+      display: 'block',
+      height: 'calc(100vh - 65px)',
+      top: 65,
+      width: '100vw'
+    },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
+      display: 'block',
       height: 'calc(100vh - 65px)',
       top: 65,
       width: '100vw'
