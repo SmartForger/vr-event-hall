@@ -33,18 +33,20 @@ export const ExploreScene: FC<ExploreProps> = ({ setScene, sceneType, hideText, 
     <>
       {!loading && !hideText && (
         <div id='scene-explore' className={classnames(classes.transition, classes.root)}>
-          <Typography variant='h2' className={classes.heading}>
-            {sceneType === GameFlowSteps.Explore ? I18n.get('exploreSceneTitle') : I18n.get('sessionsSceneTitle')}
-          </Typography>
+          <div id='scene-explore-inner'>
+            <Typography variant='h2' className={classes.heading}>
+              {sceneType === GameFlowSteps.Explore ? I18n.get('exploreSceneTitle') : I18n.get('sessionsSceneTitle')}
+            </Typography>
 
-          <Typography component='p' paragraph>
-            {sceneType === GameFlowSteps.Explore ? I18n.get('exploreSceneBlurb') : I18n.get('sessionsSceneBlurb')}
-          </Typography>
+            <Typography component='p' paragraph>
+              {sceneType === GameFlowSteps.Explore ? I18n.get('exploreSceneBlurb') : I18n.get('sessionsSceneBlurb')}
+            </Typography>
 
-          <Typography className={classes.fontSize14} component='span'>
-            {I18n.get('clickAndDragToExplore')}
-          </Typography>
-          <ArrowBackIcon className={`${classes.forwardArrow} ${classes.fontSize14}`} />
+            <Typography className={classes.fontSize14} component='span'>
+              {I18n.get('clickAndDragToExplore')}
+            </Typography>
+            <ArrowBackIcon className={`${classes.forwardArrow} ${classes.fontSize14}`} />
+          </div>
         </div>
       )}
     </>
@@ -53,23 +55,18 @@ export const ExploreScene: FC<ExploreProps> = ({ setScene, sceneType, hideText, 
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    height: 'calc(100% - 105px)',
+    height: '100%',
     width: 'calc(50% - 12.5% - 32px)',
     padding: '0 0 0 12.5%',
-    paddingTop: '250px',
-    top: '105px',
+    top: '0',
     position: 'absolute',
     backgroundColor: 'transparent',
     zIndex: 1300,
     color: '#000',
+    display: 'flex',
+    alignItems: 'center',
 
-    [`${theme.breakpoints.down('md')}, screen and (max-height: 720px)`]: {
-      paddingTop: '140px'
-    },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
-      height: 'calc(100vh - 65px)',
-      top: 65,
-      paddingTop: '120px',
       paddingLeft: '4rem',
       width: '40vw'
     }
@@ -80,16 +77,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '3.125rem',
     marginBottom: '16px',
 
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       fontSize: '2.25rem',
-      lineHeight: '2.25rem',
-      top: '95px'
+      lineHeight: '2.25rem'
     },
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       fontSize: '1.5rem',
       marginTop: '1.5rem',
-      lineHeight: '1.5rem',
-      top: '80px'
+      lineHeight: '1.5rem'
     }
   },
   button: {

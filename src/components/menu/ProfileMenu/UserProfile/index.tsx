@@ -3,7 +3,20 @@ import React, { FC, useEffect, useState, ChangeEvent } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Promise from 'bluebird'
-import { Grid, Avatar, Typography, makeStyles, TextField, Button, Switch } from '@material-ui/core'
+import {
+  Grid,
+  Select,
+  MenuItem,
+  Avatar,
+  Theme,
+  Typography,
+  makeStyles,
+  TextField,
+  Button,
+  IconButton,
+  Switch
+} from '@material-ui/core'
+import classnames from 'classnames'
 
 // Plugins
 import classNames from 'classnames'
@@ -160,6 +173,14 @@ export const UserProfile: FC<IUserProfileProps> = () => {
     }
   }
 
+  const handleTitleChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const { target } = e
+    setUser({
+      ...user,
+      title: target.value as string
+    })
+  }
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { target } = e
     setUser({
@@ -230,6 +251,7 @@ export const UserProfile: FC<IUserProfileProps> = () => {
   }
 
   const logout = () => {
+    // online is now used for private mode instead of online/offline
     graphQLMutation(updateUser, {
       id: user?.id,
       online: false
@@ -418,21 +440,23 @@ export const UserProfile: FC<IUserProfileProps> = () => {
         onKeyPress={handleKeyPress}
       />
 
-      <TextField
-        variant='outlined'
-        label={I18n.get('title')}
-        error={!!profileErrors.title}
-        helperText={profileErrors.title}
-        onFocus={() => setProfileErrors({ ...profileErrors, title: '' })}
+      <Select
+        labelId='personal-size-input'
         fullWidth
-        defaultValue={user?.title}
-        className={classes.input}
-        type='text'
         name='title'
-        required
-        onChange={handleChange}
-        onKeyPress={handleKeyPress}
-      />
+        value={user?.title}
+        label={I18n.get('title')}
+        onFocus={() => setProfileErrors({ ...profileErrors, title: '' })}
+        onChange={(e: React.ChangeEvent<{ value: unknown }>) => handleTitleChange(e)}
+        inputProps={{ className: classes.titleSelect }}
+      >
+        <MenuItem value='c-suite'>{I18n.get('cSuite')}</MenuItem>
+        <MenuItem value='vp'>{I18n.get('vp')}</MenuItem>
+        <MenuItem value='director'>{I18n.get('director')}</MenuItem>
+        <MenuItem value='manager'>{I18n.get('manager')}</MenuItem>
+        <MenuItem value='staff'>{I18n.get('staff')}</MenuItem>
+      </Select>
+
       {showSecretManageTools && user?.email?.match(/@mvrk.co$/i) && (
         <>
           <h5>Permissions (Visible to MVRK Users Only)</h5>
@@ -608,5 +632,8 @@ const useStyles = makeStyles(theme => ({
     margin: 0,
     bottom: 6,
     right: 55
+  },
+  titleSelect: {
+    padding: '11.7px 14px'
   }
 }))

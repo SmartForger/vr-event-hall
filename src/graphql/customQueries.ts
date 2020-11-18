@@ -360,6 +360,7 @@ export const getSessionOverviewById = /* GraphQL */ `
 export const getConversationBase = /* GraphQL */ `
   query GetConversation($id: ID!) {
     getConversation(id: $id) {
+      id
       members
       associated {
         items {
@@ -368,6 +369,7 @@ export const getConversationBase = /* GraphQL */ `
           user {
             firstName
             lastName
+            online
           }
         }
         nextToken
