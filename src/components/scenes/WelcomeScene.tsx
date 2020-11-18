@@ -96,24 +96,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('lg')]: {
-      padding: '0 12.5% 0 10%',
-      paddingTop: '120px'
+      padding: '0 12.5% 0 10%'
     },
     [theme.breakpoints.down('md')]: {
       padding: '90 12.5% 0 8%',
-      paddingTop: '100px'
+      paddingTop: '120px'
     },
     [theme.breakpoints.down('sm')]: {
       padding: '90 12.5% 0 8%',
-      paddingTop: '130px'
+      paddingTop: '260px'
     },
-
     [`${theme.breakpoints.down('sm')}, screen and (max-height: 540px)`]: {
       height: 'calc(100vh - 65px)',
       paddingLeft: '4rem',
       paddingRight: theme.spacing(4),
       textAlign: 'left',
       top: 65
+    },
+    [`${theme.breakpoints.down('xs')}`]: {
+      padding: '90 12.5% 0 8%',
+      paddingTop: '400px',
+      height: 'calc(100% - 135px)',
+      paddingBottom: '300px'
     }
   },
   heading: {
