@@ -37,8 +37,10 @@ export const ChatUsers: FC<ChatUsersProps> = ({ toggleDrawer }) => {
   }
 
   const getUsers = async () => {
-    const users = await graphQLQuery(listUsers, 'listUsers', {})
-    const notMeOnline = users.filter(u => u.id !== user?.id && u?.online)
+    const users = await graphQLQuery(listUsers, 'listUsers', {
+      limit: 10000
+    })
+    const notMeOnline = users.filter(u => u.id !== user?.id && u?.online !== false && u?.online !== 'false')
     const userList = sortBy(
       notMeOnline.filter(
         u => !user?.conversations?.items?.some(convo => convo?.conversation?.members?.includes?.(u.id as string))
