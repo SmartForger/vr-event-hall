@@ -77,5 +77,12 @@ export const GameFlowStepsConfig = {
       state: 4,
       time: 2000
     }
+  },
+  [GameFlowSteps.EventReplay]: {
+    title: GameFlowSteps.EventReplay.toUpperCase(),
+    animation: {
+      state: 5,
+      time: 1500
+    }
   }
 }

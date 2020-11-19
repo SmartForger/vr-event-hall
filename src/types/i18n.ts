@@ -150,6 +150,7 @@ export interface IScenesDict {
   theEventWillStartOn: string
   explore: string
   sessions: string
+  eventReplay: string
   connect: string
   liveStream: string
   startingSoon: string

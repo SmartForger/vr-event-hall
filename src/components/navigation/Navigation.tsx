@@ -35,7 +35,12 @@ export const Navigation: FC<NavigationProps> = ({
     if (!changingState) {
       setActiveTab(state)
 
-      const welcomeScene = [GameFlowSteps.Welcome, GameFlowSteps.Intro, GameFlowSteps.Connect]
+      const welcomeScene = [
+        GameFlowSteps.Welcome,
+        GameFlowSteps.Intro,
+        GameFlowSteps.Connect,
+        GameFlowSteps.EventReplay
+      ]
       if (!(welcomeScene.includes(state) && welcomeScene.includes(previousState))) {
         setChangingState(true)
         setTimeout(() => {
@@ -62,6 +67,14 @@ export const Navigation: FC<NavigationProps> = ({
             onClick={() => onClick(GameFlowSteps.Welcome)}
           >
             Welcome
+          </Typography>
+          <Typography
+            component='span'
+            variant='h5'
+            className={activeTab === GameFlowSteps.EventReplay ? classes.navItemActive : classes.navItem}
+            onClick={() => onClick(GameFlowSteps.EventReplay)}
+          >
+            {I18n.get('eventReplay')}
           </Typography>
           <Typography
             component='span'

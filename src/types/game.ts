@@ -10,7 +10,8 @@ export enum GameFlowSteps {
   Session = 'session',
   Connect = 'connect',
   LiveStream = 'livestream',
-  Transition = 'transition'
+  Transition = 'transition',
+  EventReplay = 'eventreplay'
 }
 
 export interface IGameFlowState {

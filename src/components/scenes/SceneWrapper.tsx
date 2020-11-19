@@ -8,6 +8,7 @@ import { Demo } from '../demo'
 import { Touchpoints } from '../touchpoints'
 import { ISession } from '../../helpers'
 import { Session } from '../session'
+import { EventRelay } from '../eventreplay'
 
 interface ISceneWrapper {
   backgroundImage?: string
@@ -112,6 +113,7 @@ export const SceneWrapper: FC<ISceneWrapper> = ({
       {activeScene === GameFlowSteps.Session && (
         <Session setScene={changeScene} session={activeSession} eventStage={eventStage} />
       )}
+      {activeScene === GameFlowSteps.EventReplay && <EventRelay />}
     </>
   )
 }

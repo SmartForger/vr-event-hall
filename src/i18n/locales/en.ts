@@ -147,6 +147,7 @@ const scenes: IScenesDict = {
   theEventWillStartOn: 'The next session will start on',
   explore: 'Explore',
   sessions: 'Sessions',
+  eventReplay: 'Event replay',
   connect: 'Connect',
   liveStream: 'Live Stream',
   startingSoon: 'The Live Event is starting soon',

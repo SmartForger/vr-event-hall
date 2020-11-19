@@ -17,7 +17,7 @@ import {
 } from './Styled'
 
 // Images
-import homeIcon from 'assets/homeIcon.svg'
+import exploreIcon from 'assets/exploreIcon.svg'
 import demoTvIcon from 'assets/demoTvIcon.svg'
 import mailIcon from 'assets/mailIcon.svg'
 import sessionIcon from 'assets/breakout.svg'
@@ -75,18 +75,18 @@ export const MenuList: FC<MenuListProps> = ({
       </div>
 
       <StyledMenuList className={drawerOpen ? 'drawer-open' : 'drawer-close'}>
-        <StyledMenuListItem onClick={() => handleSetGameState(GameFlowSteps.Welcome)}>
-          <MenuTooltip drawerOpen={drawerOpen} title='Welcome' placement='left'>
+        <StyledMenuListItem onClick={() => handleSetGameState(GameFlowSteps.EventReplay)}>
+          <MenuTooltip drawerOpen={drawerOpen} title='Event Replay' placement='left'>
             <StyledMenuListIcon>
-              <img src={homeIcon} alt='Home icon' width='25' />
+              <img src={demoTvIcon} alt='Tv icon' width='25' />
             </StyledMenuListIcon>
           </MenuTooltip>
-          Welcome
+          Event Replay
         </StyledMenuListItem>
         <StyledMenuListItem onClick={() => handleSetGameState(GameFlowSteps.Explore)}>
           <MenuTooltip drawerOpen={drawerOpen} title='Explore' placement='left'>
             <StyledMenuListIcon>
-              <img src={demoTvIcon} alt='Tv icon' width='23' />
+              <img src={exploreIcon} alt='Explore icon' width='23' />
             </StyledMenuListIcon>
           </MenuTooltip>
           Explore
