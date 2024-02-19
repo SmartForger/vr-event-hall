@@ -1,10 +1,3 @@
-# Verizon 5G Enterprise
-
----
-
-- [Verizon 5G Enterprise](#verizon-5g-enterprise)
-  - [Quick Install](#quick-install)
-
 ## Quick Install
 
 ```
